@@ -4,3 +4,4 @@ coverage
 **/.svn
 **/.hg
 **/node_modules
+**/.angular
