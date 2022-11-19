@@ -22,5 +22,8 @@
     "max-len": ["off", "always"],
     "import/prefer-default-export": ["off", "always"],
     "@typescript-eslint/comma-dangle": ["off", "always"]
+  },
+  "settings": {
+    "import/ignore": ["node_modules"]
   }
 }
