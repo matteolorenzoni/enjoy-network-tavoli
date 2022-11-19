@@ -1,3 +1,5 @@
+/** MODULE */
+@use './general' as *;
 
 // Custom Theming for Angular Material
 // For more information: https://material.angular.io/guide/theming
@@ -20,20 +22,31 @@ $enjoy-network-tavoli-warn: mat.define-palette(mat.$red-palette);
 
 // Create the theme object. A theme consists of configurations for individual
 // theming systems such as "color" or "typography".
-$enjoy-network-tavoli-theme: mat.define-light-theme((
-  color: (
-    primary: $enjoy-network-tavoli-primary,
-    accent: $enjoy-network-tavoli-accent,
-    warn: $enjoy-network-tavoli-warn,
+$enjoy-network-tavoli-theme: mat.define-light-theme(
+  (
+    color: (
+      primary: $enjoy-network-tavoli-primary,
+      accent: $enjoy-network-tavoli-accent,
+      warn: $enjoy-network-tavoli-warn
+    )
   )
-));
+);
 
 // Include theme styles for core and each component used in your app.
 // Alternatively, you can import and @include the theme mixins for each component
 // that you are using.
 @include mat.all-component-themes($enjoy-network-tavoli-theme);
 
-/* You can add global styles to this file, and also import other style files */
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+/* GLOBAL  */
+html,
+body {
+  height: 100%;
+}
+body {
+  margin: 0;
+  font-family: Roboto, 'Helvetica Neue', sans-serif;
+}
