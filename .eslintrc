@@ -21,7 +21,14 @@
   "rules": {
     "max-len": ["off", "always"],
     "import/prefer-default-export": ["off", "always"],
-    "@typescript-eslint/comma-dangle": ["off", "always"]
+    "@typescript-eslint/comma-dangle": ["off", "always"],
+    "object-curly-newline": [
+      "error",
+      {
+        "ImportDeclaration": "never",
+        "ExportDeclaration": { "multiline": true, "minProperties": 3 }
+      }
+    ]
   },
   "settings": {
     "import/ignore": ["node_modules"]

@@ -1,10 +1,11 @@
 @use './reset' as *;
 @use './color' as *;
+@use './font' as *;
 
-:root {
-  @each $color, $shades in $colors {
-    @each $shade, $value in $shades {
-      --color-#{$color}-#{$shade}: #{$value};
-    }
-  }
-}
+// :root {
+//   @each $color, $shades in $colors {
+//     @each $shade, $value in $shades {
+//       --color-#{$color}-#{$shade}: #{$value};
+//     }
+//   }
+// }
