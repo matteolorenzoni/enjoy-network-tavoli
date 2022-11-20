@@ -17,7 +17,7 @@ module.exports = {
       }
     },
     fontFamily: {
-      RobotoMono: ['Roboto Mono']
+      gruppo: ['Gruppo']
     }
   },
   plugins: []
