@@ -8,7 +8,7 @@ import { Component } from '@angular/core';
 export class LoginComponent {
   logginSelected = false;
 
-  toggle() {
+  onShowFormEvent() {
     this.logginSelected = true;
   }
 }

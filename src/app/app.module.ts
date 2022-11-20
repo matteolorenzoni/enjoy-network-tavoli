@@ -10,9 +10,11 @@ import { AppRoutingModule } from '../router/app-routing.module';
 import { AppComponent } from './app.component';
 import { LoginComponent } from './page/login/login.component';
 import { PageNotFoundComponent } from './page/page-not-found/page-not-found.component';
+import { LoginLogoComponent } from './page/login/login-logo/login-logo.component';
+import { LoginFormComponent } from './page/login/login-form/login-form.component';
 
 @NgModule({
-  declarations: [AppComponent, LoginComponent, PageNotFoundComponent],
+  declarations: [AppComponent, LoginComponent, PageNotFoundComponent, LoginLogoComponent, LoginFormComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,

@@ -1,48 +1,7 @@
-<main class="h-full w-full bg-black overflow-hidden font-RobotoMono">
-  <section class="h-full flex flex-col items-center text-white">
-    <div class="grow-6 p-4 grid place-items-center">
-      <img src="../../../assets/images/logo-light.png" alt="" />
-    </div>
-    <div class="grow-6 flex flex-col">
-      <p class="grow-1 grid place-items-center">WE MAKE PEOPLE HAPPY</p>
-      <div class="grow-1 grid place-items-center z-0">
-        <button mat-raised-button color="accent" class="w-4/5" (click)="toggle()">ENJOY</button>
-      </div>
-    </div>
-  </section>
-  <section class="h-full flex flex-col" [ngClass]="{ 'login-slide': logginSelected }">
-    <div class="max-h-40">
-      <svg viewBox="0 24 150 28" preserveAspectRatio="none" shape-rendering="auto" class="max-h-full w-full">
-        <defs>
-          <path id="gentle-wave" d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z" />
-        </defs>
-        <g class="parallax">
-          <use xlink:href="#gentle-wave" x="48" y="0" fill="rgba(255, 138, 8, 0.7)" />
-          <use xlink:href="#gentle-wave" x="48" y="3" fill="rgba(255, 138, 8, 0.5)" />
-          <use xlink:href="#gentle-wave" x="48" y="5" fill="rgba(255, 138, 8, 0.3)" />
-          <use xlink:href="#gentle-wave" x="48" y="7" fill="rgba(255, 138, 8, 1.0)" />
-        </g>
-      </svg>
-    </div>
-    <div class="wave__content grow-10 px-8 pt-24 flex flex-col items-center">
-      <form class="h-full w-full max-w-3xl flex flex-col">
-        <div>
-          <mat-form-field class="w-full">
-            <mat-label>Nome</mat-label>
-            <input matInput />
-          </mat-form-field>
-        </div>
-        <div>
-          <mat-form-field class="w-full">
-            <mat-label>Passowrd</mat-label>
-            <input matInput />
-          </mat-form-field>
-        </div>
-        <div class="grid place-items-center">
-          <button mat-raised-button color="primary" class="w-1/4">ENTRA</button>
-        </div>
-      </form>
-    </div>
-  </section>
+<main class="h-full w-full bg-black overflow-hidden font-gruppo">
+  <app-login-logo
+    class="h-full flex flex-col items-center text-white"
+    (showFormEvent)="onShowFormEvent()"></app-login-logo>
+  <app-login-form class="h-full flex flex-col" [ngClass]="{ 'login-slide': logginSelected }"></app-login-form>
 </main>
 <!-- p-6 backdrop-blur-sm bg-white/10 rounded-lg -->
