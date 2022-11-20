@@ -1,19 +1,18 @@
-<main class="h-full w-full bg-black overflow-hidden">
+<main class="h-full w-full bg-black overflow-hidden font-RobotoMono">
   <section class="h-full flex flex-col items-center text-white">
-    <div class="grow-8 grid place-items-center">
+    <div class="grow-6 p-4 grid place-items-center">
       <img src="../../../assets/images/logo-light.png" alt="" />
     </div>
-    <div class="grow-2 flex flex-col">
-      <p class="grow-1 grid place-items-center font-RobotoMono">WE MAKE PEOPLE HAPPY</p>
-      <div class="grow-1 grid place-items-center">
-        <button mat-raised-button color="primary" class="w-4/5" (click)="toggle()">ENTRA</button>
+    <div class="grow-6 flex flex-col">
+      <p class="grow-1 grid place-items-center">WE MAKE PEOPLE HAPPY</p>
+      <div class="grow-1 grid place-items-center z-0">
+        <button mat-raised-button color="accent" class="w-4/5" (click)="toggle()">ENJOY</button>
       </div>
     </div>
   </section>
-  <section class="h-full z-10 flex flex-col" [ngClass]="{ 'login-slide': logginSelected }">
-    <div class="wave__inner grow-1"></div>
-    <div class="wave">
-      <svg viewBox="0 24 150 28" preserveAspectRatio="none" shape-rendering="auto">
+  <section class="h-full flex flex-col" [ngClass]="{ 'login-slide': logginSelected }">
+    <div class="max-h-40">
+      <svg viewBox="0 24 150 28" preserveAspectRatio="none" shape-rendering="auto" class="max-h-full w-full">
         <defs>
           <path id="gentle-wave" d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z" />
         </defs>
@@ -25,19 +24,22 @@
         </g>
       </svg>
     </div>
-    <div class="wave__content grow-10 flex flex-col items-center">
-      <form class="h-full w-full flex flex-col justify-center">
+    <div class="wave__content grow-10 px-8 pt-24 flex flex-col items-center">
+      <form class="h-full w-full max-w-3xl flex flex-col">
         <div>
-          <mat-form-field appearance="outline">
+          <mat-form-field class="w-full">
             <mat-label>Nome</mat-label>
-            <input matInput placeholder="Placeholder" />
+            <input matInput />
           </mat-form-field>
         </div>
         <div>
-          <mat-form-field appearance="outline">
+          <mat-form-field class="w-full">
             <mat-label>Passowrd</mat-label>
-            <input matInput placeholder="Placeholder" />
+            <input matInput />
           </mat-form-field>
+        </div>
+        <div class="grid place-items-center">
+          <button mat-raised-button color="primary" class="w-1/4">ENTRA</button>
         </div>
       </form>
     </div>

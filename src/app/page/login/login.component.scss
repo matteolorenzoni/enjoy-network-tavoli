@@ -9,12 +9,13 @@
     transform: translateY(0);
   }
   to {
-    transform: translateY(-100%);
+    transform: translateY(-60%);
   }
 }
 
 .wave__content {
   position: relative;
+  bottom: -10px;
   background-color: rgba(255 138 8);
 }
 
