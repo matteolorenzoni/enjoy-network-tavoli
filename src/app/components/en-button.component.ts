@@ -32,7 +32,14 @@ enum ButtonStyle {
       {{ text | uppercase }}
     </button>
   </div>`,
-  styles: [':host { display: block; width: 100% }']
+  styles: [
+    `
+      :host {
+        display: block;
+        width: 100%;
+      }
+    `
+  ]
 })
 export class EnButtonComponent implements OnInit {
   @Input() name?: string = '';
