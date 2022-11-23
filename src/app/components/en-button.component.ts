@@ -1,10 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-
-enum ButtonStyle {
-  Primary = 'primary',
-  Secondary = 'secondary',
-  Outline = 'outline'
-}
+import { PaletteType } from '../models/enum';
 
 @Component({
   selector: 'en-button[text][click]',
@@ -13,9 +8,7 @@ enum ButtonStyle {
     <button
       type="button"
       [name]="name"
-      [ngClass]="
-        buttonStyle === 'primary' ? 'text-orangePalette bg-blackPalette' : 'text-blackPalette bg-orangePalette'
-      "
+      [ngClass]="palette === 'primary' ? 'text-orangePalette bg-blackPalette' : 'text-blackPalette bg-orangePalette'"
       class="
         hover:bg-white
         hover:text-orangePalette
@@ -44,7 +37,7 @@ enum ButtonStyle {
 export class EnButtonComponent implements OnInit {
   @Input() name?: string = '';
   @Input() text!: string;
-  @Input() buttonStyle?: `${ButtonStyle}` = ButtonStyle.Primary;
+  @Input() palette?: `${PaletteType}` = PaletteType.PRIMARY;
 
   @Output() click: EventEmitter<unknown> = new EventEmitter<unknown>();
 
