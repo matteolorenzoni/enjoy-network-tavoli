@@ -7,6 +7,7 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { ServiceWorkerModule } from '@angular/service-worker';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { AppRoutingModule } from '../router/app-routing.module';
 import { AppComponent } from './app.component';
 import { LoginComponent } from './page/login/login.component';
@@ -14,6 +15,7 @@ import { PageNotFoundComponent } from './page/page-not-found/page-not-found.comp
 import { LoginLogoComponent } from './page/login/login-logo/login-logo.component';
 import { LoginFormComponent } from './page/login/login-form/login-form.component';
 import { EnButtonComponent } from './components/en-button.component';
+import { EnFieldComponent } from './components/en-field.component';
 
 @NgModule({
   declarations: [
@@ -22,7 +24,8 @@ import { EnButtonComponent } from './components/en-button.component';
     PageNotFoundComponent,
     LoginLogoComponent,
     LoginFormComponent,
-    EnButtonComponent
+    EnButtonComponent,
+    EnFieldComponent
   ],
   imports: [
     BrowserModule,
@@ -37,7 +40,8 @@ import { EnButtonComponent } from './components/en-button.component';
       // Register the ServiceWorker as soon as the application is stable
       // or after 30 seconds (whichever comes first).
       registrationStrategy: 'registerWhenStable:30000'
-    })
+    }),
+    FontAwesomeModule
   ],
   providers: [],
   bootstrap: [AppComponent]
