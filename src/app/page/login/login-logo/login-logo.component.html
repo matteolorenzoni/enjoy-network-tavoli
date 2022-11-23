@@ -1,11 +1,11 @@
-<section class="h-full flex flex-col items-center text-white">
-  <div class="grow-6 p-4 grid place-items-center">
+<section class="h-full max-w-[36rem] lg:max-w-[52rem] flex flex-col items-center">
+  <div class="grow-6 center">
     <img src="../../../assets/images/logo-light.png" alt="" />
   </div>
-  <div class="grow-6 flex flex-col">
-    <p class="grow-1 grid place-items-center">WE MAKE PEOPLE HAPPY</p>
-    <div class="grow-1 grid place-items-center z-0">
-      <button mat-raised-button color="accent" class="w-4/5" (click)="showForm()">ENJOY</button>
-    </div>
+  <div class="grow-3 center">
+    <blockquote class="text-center">WE MAKE PEOPLE HAPPY</blockquote>
+  </div>
+  <div class="grow-3 w-40 mt-auto center">
+    <en-button text="Enjoy" buttonStyle="secondary" (click)="showForm()"></en-button>
   </div>
 </section>

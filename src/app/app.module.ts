@@ -13,9 +13,17 @@ import { LoginComponent } from './page/login/login.component';
 import { PageNotFoundComponent } from './page/page-not-found/page-not-found.component';
 import { LoginLogoComponent } from './page/login/login-logo/login-logo.component';
 import { LoginFormComponent } from './page/login/login-form/login-form.component';
+import { EnButtonComponent } from './components/en-button.component';
 
 @NgModule({
-  declarations: [AppComponent, LoginComponent, PageNotFoundComponent, LoginLogoComponent, LoginFormComponent],
+  declarations: [
+    AppComponent,
+    LoginComponent,
+    PageNotFoundComponent,
+    LoginLogoComponent,
+    LoginFormComponent,
+    EnButtonComponent
+  ],
   imports: [
     BrowserModule,
     AppRoutingModule,
