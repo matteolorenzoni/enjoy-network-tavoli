@@ -13,22 +13,10 @@
     </svg>
   </div>
   <div class="wave__content grow flex flex-col items-center">
-    <form class="h-full w-full max-w-3xl flex flex-col">
-      <div>
-        <mat-form-field class="w-full">
-          <mat-label>Nome</mat-label>
-          <input matInput />
-        </mat-form-field>
-      </div>
-      <div>
-        <mat-form-field class="w-full">
-          <mat-label>Passowrd</mat-label>
-          <input matInput />
-        </mat-form-field>
-      </div>
-      <div class="grid place-items-center">
-        <button mat-raised-button color="primary" class="w-1/4">ENTRA</button>
-      </div>
+    <form class="h-full w-full max-w-3xl p-4 flex flex-col">
+      <en-field [icon]="nameIcon" placeholder="Nome"></en-field>
+      <en-field [icon]="passwordIcon" placeholder="Password" fieldType="password"></en-field>
+      <en-button text="Entra" buttonStyle="primary" (click)="(null)"></en-button>
     </form>
   </div>
 </section>
