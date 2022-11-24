@@ -26,5 +26,6 @@ export enum InputType {
 export enum PaletteType {
   PRIMARY = 'primary',
   SECONDARY = 'secondary',
-  OUTLINE = 'outline'
+  PRIMARY_OUTLINE = 'primary-outline',
+  SECONDARY_OUTLINE = 'secondary-outline'
 }

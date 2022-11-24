@@ -9,3 +9,19 @@
     align-items: center;
   }
 }
+
+.theme-primary {
+  --en-color-primary: theme(colors.black.900);
+  --en-color-secondary: theme(colors.orange.500);
+}
+
+.theme-secondary {
+  --en-color-primary: theme(colors.orange.500);
+  --en-color-secondary: theme(colors.black.900);
+}
+
+.theme-primary-outline {
+}
+
+.theme-secondary-outline {
+}
