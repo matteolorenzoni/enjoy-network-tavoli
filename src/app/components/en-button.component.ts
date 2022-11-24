@@ -4,24 +4,25 @@ import { PaletteType } from '../models/enum';
 @Component({
   selector: 'en-button[text][click]',
   // eslint-disable-next-line prettier/prettier
-  template: ` <div class="container">
+  template: ` <div [ngClass]="['container', 'mx-auto', 'theme-' + palette]">
     <button
       type="button"
       [name]="name"
-      [ngClass]="palette === 'primary' ? 'text-orangePalette bg-blackPalette' : 'text-blackPalette bg-orangePalette'"
       class="
-        hover:bg-white
-        hover:text-orangePalette
-        hover:-translate-y-1
-        hover:scale-110
         w-full
+        rounded-lg
+        bg-secondary
         px-5
         py-2.5
         font-bold
-        rounded-lg
+        text-primary
         transition
+        duration-300
         ease-in-out
-        duration-300">
+        hover:-translate-y-1
+        hover:scale-110
+        hover:bg-white
+        hover:text-secondary">
       {{ text | uppercase }}
     </button>
   </div>`,
