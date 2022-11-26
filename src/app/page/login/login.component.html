@@ -1,7 +1,4 @@
-<main class="h-full w-full bg-black overflow-hidden font-gruppo">
-  <app-login-logo
-    class="h-full flex flex-col items-center text-white"
-    (showFormEvent)="onShowFormEvent()"></app-login-logo>
-  <app-login-form class="h-full flex flex-col" [ngClass]="{ 'login-slide': logginSelected }"></app-login-form>
+<main class="h-full w-full overflow-hidden bg-primary-3 font-gruppo">
+  <app-login-logo class="flex h-full flex-col items-center" (showFormEvent)="onShowFormEvent()"></app-login-logo>
+  <app-login-form class="flex h-full flex-col" [ngClass]="{ 'login-slide': logginSelected }"></app-login-form>
 </main>
-<!-- p-6 backdrop-blur-sm bg-white/10 rounded-lg -->

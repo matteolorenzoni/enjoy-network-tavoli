@@ -11,18 +11,21 @@ import { PaletteType } from '../models/enum';
       class="
         w-full
         rounded-lg
-        bg-secondary
+        bg-palette
         px-5
         py-2.5
         font-bold
-        text-primary
+        text-palette
+        shadow-md
         transition
         duration-300
         ease-in-out
         hover:-translate-y-1
         hover:scale-110
-        hover:bg-white
-        hover:text-secondary">
+        hover:bg-paletteHover
+        hover:text-paletteHover
+        active:bg-paletteActive
+        active:shadow-lg">
       {{ text | uppercase }}
     </button>
   </div>`,

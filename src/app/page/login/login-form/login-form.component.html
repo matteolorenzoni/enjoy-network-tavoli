@@ -1,4 +1,4 @@
-<section class="h-full flex flex-col">
+<section class="flex h-full flex-col">
   <div class="h-[15%]">
     <svg viewBox="0 24 150 28" preserveAspectRatio="none" shape-rendering="auto" class="h-full w-full">
       <defs>
@@ -12,11 +12,13 @@
       </g>
     </svg>
   </div>
-  <div class="wave__content grow flex flex-col items-center">
-    <form class="h-full w-full max-w-3xl p-4 flex flex-col">
+  <div class="wave__content flex grow flex-col items-center">
+    <form class="flex h-full w-full max-w-3xl flex-col p-4">
       <en-field [icon]="nameIcon" placeholder="Nome"></en-field>
       <en-field [icon]="passwordIcon" placeholder="Password" fieldType="password"></en-field>
-      <en-button text="Entra" palette="secondary" (click)="(null)"></en-button>
+      <div class="w-56">
+        <en-button text="Entra" palette="primary-inverse" (click)="(null)"></en-button>
+      </div>
     </form>
   </div>
 </section>
