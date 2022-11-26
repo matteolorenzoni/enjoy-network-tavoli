@@ -4,26 +4,47 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        black: {
-          100: '#ffffff',
-          200: '#dfdfdf',
-          300: '#bfbfbf',
-          400: '#9f9f9f',
-          500: '#808080',
-          600: '#606060',
-          700: '#404040',
-          800: '#202020',
-          900: '#000000',
-          DEFAULT: '#000000'
+        primary: {
+          0: 'hsl(25, 95%, 0%)',
+          1: 'hsl(25, 95%, 1%)',
+          2: 'hsl(25, 95%, 2%)',
+          3: 'hsl(25, 95%, 3%)',
+          4: 'hsl(25, 95%, 4%)',
+          5: 'hsl(25, 95%, 5%)',
+          10: 'hsl(25, 95%, 10%)',
+          15: 'hsl(25, 95%, 15%)',
+          20: 'hsl(25, 95%, 20%)',
+          25: 'hsl(25, 95%, 25%)',
+          30: 'hsl(25, 95%, 30%)',
+          35: 'hsl(25, 95%, 35%)',
+          40: 'hsl(25, 95%, 40%)',
+          45: 'hsl(25, 95%, 45%)',
+          50: 'hsl(25, 95%, 50%)',
+          55: 'hsl(25, 95%, 55%)',
+          60: 'hsl(25, 95%, 60%)',
+          65: 'hsl(25, 95%, 65%)',
+          70: 'hsl(25, 95%, 70%)',
+          75: 'hsl(25, 95%, 75%)',
+          80: 'hsl(25, 95%, 80%)',
+          85: 'hsl(25, 95%, 85%)',
+          90: 'hsl(25, 95%, 90%)',
+          95: 'hsl(25, 95%, 95%)',
+          96: 'hsl(25, 95%, 96%)',
+          97: 'hsl(25, 95%, 97%)',
+          98: 'hsl(25, 95%, 98%)',
+          99: 'hsl(25, 95%, 99%)',
+          100: 'hsl(25, 95%, 100%)'
         }
       },
       textColor: {
-        primary: 'var(--en-color-primary)',
-        secondary: 'var(--en-color-secondary)'
+        palette: 'var(--en-color)',
+        paletteHover: 'var(--en-color-hover)',
+        paletteActive: 'var(--en-color-active)'
       },
       backgroundColor: {
-        primary: 'var(--en-color-primary)',
-        secondary: 'var(--en-color-secondary)'
+        palette: 'var(--en-background-color)',
+        paletteHover: 'var(--en-background-color-hover)',
+        paletteActive: 'var(--en-background-color-active)'
       },
       flexGrow: {
         1: 1,

@@ -11,17 +11,17 @@
 }
 
 .theme-primary {
-  --en-color-primary: theme(colors.black.900);
-  --en-color-secondary: theme(colors.orange.500);
+  --en-color: theme(colors.primary.3);
+  --en-color-hover: theme(colors.primary.10);
+  --en-background-color: theme(colors.primary.55);
+  --en-background-color-hover: theme(colors.primary.90);
+  --en-background-color-active: theme(colors.primary.80);
 }
 
-.theme-secondary {
-  --en-color-primary: theme(colors.orange.500);
-  --en-color-secondary: theme(colors.black.900);
-}
-
-.theme-primary-outline {
-}
-
-.theme-secondary-outline {
+.theme-primary-inverse {
+  --en-color: theme(colors.primary.55);
+  --en-color-hover: theme(colors.primary.90);
+  --en-background-color: theme(colors.primary.3);
+  --en-background-color-hover: theme(colors.primary.10);
+  --en-background-color-active: theme(colors.primary.5);
 }

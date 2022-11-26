@@ -25,7 +25,7 @@ export enum InputType {
 
 export enum PaletteType {
   PRIMARY = 'primary',
+  PRIMARY_INVERSE = 'primary-inverse',
   SECONDARY = 'secondary',
-  PRIMARY_OUTLINE = 'primary-outline',
-  SECONDARY_OUTLINE = 'secondary-outline'
+  SECONDARY_INVERSE = 'secondary-inverse'
 }
