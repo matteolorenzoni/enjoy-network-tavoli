@@ -13,11 +13,32 @@
     </svg>
   </div>
   <div class="relative -inset-y-px flex grow-1 bg-primary-60">
-    <form class="m-auto flex w-full max-w-2xl flex-col items-center p-6 portrait:space-y-4 landscape:space-y-2">
-      <en-field [icon]="nameIcon" placeholder="Nome"></en-field>
-      <en-field [icon]="passwordIcon" placeholder="Password" fieldType="password"></en-field>
+    <form
+      class="m-auto flex w-full max-w-2xl flex-col items-center p-6 portrait:space-y-4 landscape:space-y-2"
+      [formGroup]="loginForm"
+      (ngSubmit)="onSubmit()">
+      <en-field
+        fieldType="email"
+        fieldName="email"
+        formControlName="email"
+        palette="primary-inverse"
+        [filedIcon]="emailIcon"
+        fieldPlaceholder="Nome"></en-field>
+      <en-field
+        [fieldType]="passwordFieldType"
+        fieldName="password"
+        formControlName="password"
+        palette="primary-inverse"
+        [filedIcon]="passwordIcon"
+        fieldPlaceholder="Password"></en-field>
+      <p class="bold animate-pulse text-center font-extrabold text-red-700">Utente o password sbagliata, riprovare.</p>
       <div class="w-56">
-        <en-button text="Entra" palette="primary-inverse" (click)="hideForm()"></en-button>
+        <en-button
+          buttonName="login-button"
+          buttonText="Entra"
+          buttonType="submit"
+          [buttonIsDisabled]="!loginForm.valid"
+          palette="primary-inverse"></en-button>
       </div>
     </form>
   </div>
