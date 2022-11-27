@@ -13,13 +13,13 @@
 .theme-primary {
   --en-color: theme(colors.primary.3);
   --en-color-hover: theme(colors.primary.10);
-  --en-background-color: theme(colors.primary.55);
+  --en-background-color: theme(colors.primary.60);
   --en-background-color-hover: theme(colors.primary.90);
   --en-background-color-active: theme(colors.primary.80);
 }
 
 .theme-primary-inverse {
-  --en-color: theme(colors.primary.55);
+  --en-color: theme(colors.primary.60);
   --en-color-hover: theme(colors.primary.90);
   --en-background-color: theme(colors.primary.3);
   --en-background-color-hover: theme(colors.primary.10);
