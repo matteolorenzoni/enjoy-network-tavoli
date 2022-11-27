@@ -1,12 +1,12 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { PaletteType } from '../models/enum';
+import { ButtonType, PaletteType } from '../models/enum';
 
 @Component({
   selector: 'en-button[text]',
   // eslint-disable-next-line prettier/prettier
   template: ` <div [ngClass]="['container', 'mx-auto', 'theme-' + palette]">
     <button
-      type="button"
+      [type]="buttonType"
       [name]="name"
       class="
         w-full
@@ -43,6 +43,7 @@ export class EnButtonComponent implements OnInit {
   @Input() name?: string = '';
   @Input() text!: string;
   @Input() palette?: `${PaletteType}` = PaletteType.PRIMARY;
+  @Input() buttonType?: `${ButtonType}` = ButtonType.BUTTON;
 
   @Output() customClick: EventEmitter<unknown> = new EventEmitter<unknown>();
 

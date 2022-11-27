@@ -1,3 +1,8 @@
+export enum ButtonType {
+  BUTTON = 'button',
+  SUBMIT = 'submit',
+  RESET = 'reset'
+}
 export enum InputType {
   BUTTON = 'button',
   CHECKBOX = 'checkbox',
