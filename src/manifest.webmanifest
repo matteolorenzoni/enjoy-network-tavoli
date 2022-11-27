@@ -1,11 +1,11 @@
 {
   "name": "enjoy-network-tavoli",
   "short_name": "enjoy-network-tavoli",
-  "theme_color": "#000",
-  "background_color": "#f97316",
+  "theme_color": "hsl(25, 95%, 3%)",
+  "background_color": "hsl(25, 95%, 50%)",
   "display": "standalone",
   "scope": "./",
-  "start_url": "./",
+  "start_url": "./login",
   "icons": [
     {
       "src": "assets/icons/icon-72x72.png",
