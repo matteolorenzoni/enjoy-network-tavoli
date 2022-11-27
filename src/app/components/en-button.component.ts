@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { PaletteType } from '../models/enum';
 
 @Component({
-  selector: 'en-button[text][click]',
+  selector: 'en-button[text]',
   // eslint-disable-next-line prettier/prettier
   template: ` <div [ngClass]="['container', 'mx-auto', 'theme-' + palette]">
     <button
@@ -25,7 +25,8 @@ import { PaletteType } from '../models/enum';
         hover:bg-paletteHover
         hover:text-paletteHover
         active:bg-paletteActive
-        active:shadow-lg">
+        active:shadow-lg"
+      (click)="triggerClickCustom()">
       {{ text | uppercase }}
     </button>
   </div>`,
@@ -43,11 +44,15 @@ export class EnButtonComponent implements OnInit {
   @Input() text!: string;
   @Input() palette?: `${PaletteType}` = PaletteType.PRIMARY;
 
-  @Output() click: EventEmitter<unknown> = new EventEmitter<unknown>();
+  @Output() customClick: EventEmitter<unknown> = new EventEmitter<unknown>();
 
   constructor() {
     // do nothing
   }
 
   ngOnInit(): void {}
+
+  triggerClickCustom() {
+    this.customClick.emit();
+  }
 }
