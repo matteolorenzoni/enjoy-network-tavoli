@@ -5,19 +5,19 @@
         <path id="gentle-wave" d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z" />
       </defs>
       <g class="parallax">
-        <use xlink:href="#gentle-wave" x="48" y="0" fill="rgba(255, 138, 8, 0.7)" />
-        <use xlink:href="#gentle-wave" x="48" y="3" fill="rgba(255, 138, 8, 0.5)" />
-        <use xlink:href="#gentle-wave" x="48" y="5" fill="rgba(255, 138, 8, 0.3)" />
-        <use xlink:href="#gentle-wave" x="48" y="7" fill="rgba(255, 138, 8, 1.0)" />
+        <use xlink:href="#gentle-wave" x="48" y="0" fill="rgba(250, 137, 36, 0.7)" />
+        <use xlink:href="#gentle-wave" x="48" y="3" fill="rgba(250, 137, 36, 0.5)" />
+        <use xlink:href="#gentle-wave" x="48" y="5" fill="rgba(250, 137, 36, 0.3)" />
+        <use xlink:href="#gentle-wave" x="48" y="7" fill="rgba(250, 137, 36, 1.0)" />
       </g>
     </svg>
   </div>
-  <div class="wave__content flex grow flex-col items-center">
-    <form class="flex h-full w-full max-w-3xl flex-col p-4">
+  <div class="relative -inset-y-px flex grow-1 bg-primary-60">
+    <form class="m-auto flex w-full max-w-2xl flex-col items-center p-6 portrait:space-y-4 landscape:space-y-2">
       <en-field [icon]="nameIcon" placeholder="Nome"></en-field>
       <en-field [icon]="passwordIcon" placeholder="Password" fieldType="password"></en-field>
       <div class="w-56">
-        <en-button text="Entra" palette="primary-inverse" (click)="(null)"></en-button>
+        <en-button text="Entra" palette="primary-inverse" (click)="hideForm()"></en-button>
       </div>
     </form>
   </div>

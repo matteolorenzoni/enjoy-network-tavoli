@@ -1,4 +1,10 @@
 <main class="h-full w-full overflow-hidden bg-primary-3 font-gruppo">
-  <app-login-logo class="flex h-full flex-col items-center" (showFormEvent)="onShowFormEvent()"></app-login-logo>
-  <app-login-form class="flex h-full flex-col" [ngClass]="{ 'login-slide': logginSelected }"></app-login-form>
+  <app-login-logo class="flex h-full flex-col items-center" (setStepEvent)="incrementSection()"></app-login-logo>
+  <app-login-form
+    [@openCloseFirst]="section === 0 ? 'first' : section === 1 ? 'second' : 'third'"
+    class="flex h-[60%] flex-col"
+    (setStepEvent)="incrementSection()"></app-login-form>
+  <section
+    [@openCloseSecond]="section === 0 ? 'first' : section === 1 ? 'second' : 'third'"
+    class="h-full w-full bg-primary-60"></section>
 </main>
