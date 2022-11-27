@@ -2,12 +2,14 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ButtonType, PaletteType } from '../models/enum';
 
 @Component({
-  selector: 'en-button[text]',
+  selector: 'en-button[buttonName][buttonText]',
   // eslint-disable-next-line prettier/prettier
   template: ` <div [ngClass]="['container', 'mx-auto', 'theme-' + palette]">
     <button
+      [name]="buttonName"
       [type]="buttonType"
-      [name]="name"
+      [disabled]="buttonIsDisabled"
+      (click)="triggerClickCustom()"
       class="
         w-full
         rounded-lg
@@ -20,14 +22,15 @@ import { ButtonType, PaletteType } from '../models/enum';
         transition
         duration-300
         ease-in-out
-        hover:-translate-y-1
-        hover:scale-110
-        hover:bg-paletteHover
-        hover:text-paletteHover
-        active:bg-paletteActive
-        active:shadow-lg"
-      (click)="triggerClickCustom()">
-      {{ text | uppercase }}
+        enabled:hover:-translate-y-1
+        enabled:hover:scale-110
+        enabled:hover:bg-paletteHover
+        enabled:hover:text-paletteHover
+        enabled:active:bg-paletteActive
+        enabled:active:shadow-lg
+        disabled:bg-gray-700
+        disabled:opacity-20">
+      {{ buttonText | uppercase }}
     </button>
   </div>`,
   styles: [
@@ -40,10 +43,11 @@ import { ButtonType, PaletteType } from '../models/enum';
   ]
 })
 export class EnButtonComponent implements OnInit {
-  @Input() name?: string = '';
-  @Input() text!: string;
-  @Input() palette?: `${PaletteType}` = PaletteType.PRIMARY;
+  @Input() buttonName!: string;
+  @Input() buttonText!: string;
   @Input() buttonType?: `${ButtonType}` = ButtonType.BUTTON;
+  @Input() buttonIsDisabled?: boolean = false;
+  @Input() palette?: `${PaletteType}` = PaletteType.PRIMARY;
 
   @Output() customClick: EventEmitter<unknown> = new EventEmitter<unknown>();
 
