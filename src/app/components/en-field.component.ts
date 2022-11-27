@@ -6,25 +6,22 @@ import { InputType, PaletteType } from '../models/enum';
   selector: 'en-field',
   template: `
     <div class="relative">
-      <div
-        *ngIf="icon"
-        [ngClass]="palette === 'primary' ? 'text-orangePalette' : 'text-blackPalette'"
-        class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none ">
+      <div *ngIf="icon" class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 ">
         <fa-icon [icon]="icon"></fa-icon>
       </div>
       <input
         [type]="fieldType"
         [ngClass]="palette === 'primary' ? 'text-white' : 'text-blackPalette'"
         class="
-          focus:outline-none
+          bg-black-900
           block
           w-full
+          rounded-lg
           p-4
           pl-10
-          rounded-lg
           text-white
-          bg-blackPalette-900
-          placeholder-orangePalette"
+          placeholder-orange-500
+          focus:outline-none"
         [placeholder]="placeholder"
         required />
     </div>
