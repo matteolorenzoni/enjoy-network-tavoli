@@ -16,6 +16,9 @@ import { LoginLogoComponent } from './page/login/login-logo/login-logo.component
 import { LoginFormComponent } from './page/login/login-form/login-form.component';
 import { EnButtonComponent } from './components/en-button.component';
 import { EnFieldComponent } from './components/en-field.component';
+import { AdministratorComponent } from './page/administrator/administrator.component';
+import { InspectorComponent } from './page/inspector/inspector.component';
+import { PrComponent } from './page/pr/pr.component';
 
 @NgModule({
   declarations: [
@@ -25,7 +28,10 @@ import { EnFieldComponent } from './components/en-field.component';
     LoginLogoComponent,
     LoginFormComponent,
     EnButtonComponent,
-    EnFieldComponent
+    EnFieldComponent,
+    AdministratorComponent,
+    InspectorComponent,
+    PrComponent
   ],
   imports: [
     BrowserModule,
