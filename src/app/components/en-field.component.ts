@@ -84,7 +84,6 @@ export class EnFieldComponent implements OnInit, ControlValueAccessor {
   }
 
   public onBlur(): void {
-    console.log('sium');
     this.touched();
   }
 
