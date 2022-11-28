@@ -1,5 +1,14 @@
 {
   "projects": {
     "default": "enjoy-network-tavoli"
+  },
+  "targets": {
+    "enjoy-network-tavoli": {
+      "hosting": {
+        "enjoy-network-tavoli": [
+          "enjoy-network-tavoli"
+        ]
+      }
+    }
   }
 }
