@@ -4,12 +4,12 @@ import { faAt, faKey } from '@fortawesome/free-solid-svg-icons';
 import { InputType } from '../../../models/enum';
 
 @Component({
-  selector: 'app-login-form[setStepEvent]',
+  selector: 'app-login-form[setSectionEvent]',
   templateUrl: './login-form.component.html',
   styleUrls: ['./login-form.component.scss']
 })
 export class LoginFormComponent implements OnInit {
-  @Output() setStepEvent = new EventEmitter<boolean>();
+  @Output() setSectionEvent = new EventEmitter<boolean>();
 
   /** Icons */
   emailIcon = faAt;
@@ -34,7 +34,7 @@ export class LoginFormComponent implements OnInit {
   public onSubmit() {
     if (this.loginForm.valid) {
       console.log(this.loginForm.value);
-      this.setStepEvent.emit(true);
+      this.setSectionEvent.emit(true);
     }
   }
 

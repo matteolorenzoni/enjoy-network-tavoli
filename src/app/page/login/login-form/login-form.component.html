@@ -1,5 +1,5 @@
 <section class="flex h-full flex-col">
-  <div class="h-[15%]">
+  <div class="relative inset-y-px h-[8%]">
     <svg viewBox="0 24 150 28" preserveAspectRatio="none" shape-rendering="auto" class="h-full w-full">
       <defs>
         <path id="gentle-wave" d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z" />
@@ -12,9 +12,9 @@
       </g>
     </svg>
   </div>
-  <div class="relative -inset-y-px flex grow-1 bg-primary-60">
+  <div class="flex h-[30%] bg-primary-60">
     <form
-      class="m-auto flex w-full max-w-2xl flex-col items-center p-6 portrait:space-y-4 landscape:space-y-2"
+      class="m-auto flex w-full max-w-2xl flex-col items-center px-6 portrait:space-y-4 landscape:space-y-2"
       [formGroup]="loginForm"
       (ngSubmit)="onSubmit()">
       <en-field
@@ -41,4 +41,5 @@
       </div>
     </form>
   </div>
+  <div id="login-support-block" class="relative -inset-y-px h-[62%] w-full bg-primary-60"></div>
 </section>

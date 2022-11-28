@@ -1,10 +1,9 @@
 <main class="h-full w-full overflow-hidden bg-primary-3 font-gruppo">
-  <app-login-logo class="flex h-full flex-col items-center" (setStepEvent)="incrementSection()"></app-login-logo>
+  <app-login-logo class="flex h-full flex-col items-center" (setSectionEvent)="incrementSection()"></app-login-logo>
   <app-login-form
-    [@openCloseFirst]="section === 0 ? 'first' : section === 1 ? 'second' : 'third'"
-    class="flex h-[60%] flex-col"
-    (setStepEvent)="incrementSection()"></app-login-form>
-  <section
-    [@openCloseSecond]="section === 0 ? 'first' : section === 1 ? 'second' : 'third'"
-    class="h-full w-full bg-primary-60"></section>
+    class="flex h-[160%] flex-col"
+    [@loginFormAnimation]="section === 0 ? 'bottom' : section === 1 ? 'center' : 'top'"
+    [@loginFormAnimation2]="section === 0 ? 'bottom' : section === 1 ? 'center' : 'top'"
+    (@loginFormAnimation2.done)="section === 2 && goToDashboard()"
+    (setSectionEvent)="incrementSection()"></app-login-form>
 </main>
