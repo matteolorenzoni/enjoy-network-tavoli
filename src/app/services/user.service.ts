@@ -17,14 +17,17 @@ import { UserBaseInfo } from '../models/type';
 })
 export class UserService {
   /**
-   * User info
+   * User info from authetication
    *
    * They are persisted, after login they are available even after page refresh or app restart.
    * To delete them, use the signOut method.
    */
   userData$: Observable<User | null>;
 
+  /** Basic infos */
   userBaseInfo: UserBaseInfo | null = null;
+
+  /** User acess token */
   userAccessToken: IdTokenResult | null = null;
 
   constructor(private auth: Auth) {
@@ -43,6 +46,8 @@ export class UserService {
   public disableUser() {}
 
   public logout(): Promise<void> {
+    this.userBaseInfo = null;
+    this.userAccessToken = null;
     return signOut(this.auth);
   }
 }
