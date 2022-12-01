@@ -52,3 +52,9 @@ export enum FirebaseLoginErrorEnum {
   INVALID_PASSWORD = 'Firebase: Error (auth/invalid-password).',
   EMAIL_NOT_FOUND = 'Firebase: Error (auth/email-not-found).'
 }
+
+export enum RoleTypeEnum {
+  ADMINISTRATOR = 'administrator',
+  INSPECTOR = 'inspector',
+  PR = 'pr'
+}

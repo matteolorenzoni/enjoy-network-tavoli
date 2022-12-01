@@ -5,6 +5,7 @@ import { faAt, faKey } from '@fortawesome/free-solid-svg-icons';
 import { UserService } from 'src/app/services/user.service';
 import { ToastService } from 'src/app/services/toast.service';
 import { translateFirebaseErrorMessage } from 'src/app/translate/translate';
+import { EmployeeService } from '../../../services/employee.service';
 import { FirebaseLoginErrorEnum, InputTypeEnum } from '../../../models/enum';
 
 @Component({
@@ -26,7 +27,11 @@ export class LoginFormComponent implements OnInit {
   loginForm: FormGroup;
 
   /* ---------------------------- constructor ---------------------------- */
-  constructor(private userService: UserService, private toastService: ToastService) {
+  constructor(
+    private userService: UserService,
+    private employeeService: EmployeeService,
+    private toastService: ToastService
+  ) {
     this.loginForm = new FormGroup({
       email: new FormControl('', [Validators.required]),
       password: new FormControl('', [Validators.required])
@@ -56,16 +61,12 @@ export class LoginFormComponent implements OnInit {
               const { displayName, email, photoURL, emailVerified, uid } = userCredential.user;
               this.userService.userBaseInfo = { displayName, email, photoURL, emailVerified, uid };
               this.userService.userAccessToken = idTokenResult;
+              this.employeeService.setEmployee(uid);
+              this.employeeService.setEmployees();
+              const employee = this.employeeService.getEmployee();
+              const employees = this.employeeService.getEmployees();
+              console.log(employee, employees);
             });
-            // const db = getFirestore();
-            // const docRef = doc(db, 'employees', uid);
-            // const docSnap = await getDoc(docRef);
-            // if (docSnap.exists()) {
-            //   console.log('Document data:', docSnap.data());
-            // } else {
-            //   // doc.data() will be undefined in this case
-            //   console.log('No such document!');
-            // }
           }
         })
         .catch((error: Error) => {
