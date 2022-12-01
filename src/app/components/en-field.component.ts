@@ -1,7 +1,7 @@
 import { Component, Input, OnInit, forwardRef } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR, FormGroup } from '@angular/forms';
 import { IconDefinition } from '@fortawesome/fontawesome-common-types/index';
-import { InputType, PaletteType } from '../models/enum';
+import { InputTypeEnum, PaletteTypeEnum } from '../models/enum';
 
 @Component({
   selector: 'en-field[fieldName]',
@@ -20,15 +20,14 @@ import { InputType, PaletteType } from '../models/enum';
           (blur)="onBlur()"
           [placeholder]="fieldPlaceholder"
           class="
-            block
+            input
             w-full
-            rounded-lg
             bg-palette
             p-4
             pl-10
             text-palette
             placeholder-gray-200
-            focus:outline-none" />
+            focus:outline-primary-70" />
       </div>
       <!-- Da aggiungere al componente input => [ngClass]="{ 'has-error': formField?.invalid && formField?.dirty }"
         <label [for]="fieldName">
@@ -56,10 +55,10 @@ import { InputType, PaletteType } from '../models/enum';
 })
 export class EnFieldComponent implements OnInit, ControlValueAccessor {
   @Input() fieldName!: string;
-  @Input() fieldType?: `${InputType}` = InputType.TEXT;
+  @Input() fieldType?: `${InputTypeEnum}` = InputTypeEnum.TEXT;
   @Input() filedIcon?: IconDefinition;
   @Input() fieldPlaceholder?: string;
-  @Input() palette?: `${PaletteType}` = PaletteType.PRIMARY;
+  @Input() palette?: `${PaletteTypeEnum}` = PaletteTypeEnum.PRIMARY;
   @Input() parentForm?: FormGroup;
 
   /** For form control */

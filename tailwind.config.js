@@ -63,7 +63,7 @@ module.exports = {
       gruppo: ['Gruppo']
     }
   },
-  plugins: []
+  plugins: [require('daisyui')]
 };
 
 // Breakpoint

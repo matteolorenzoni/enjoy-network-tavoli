@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { ButtonType, PaletteType } from '../models/enum';
+import { ButtonTypeEnum, PaletteTypeEnum } from '../models/enum';
 
 @Component({
   selector: 'en-button[buttonName][buttonText]',
@@ -11,6 +11,7 @@ import { ButtonType, PaletteType } from '../models/enum';
       [disabled]="buttonIsDisabled"
       (click)="triggerClickCustom()"
       class="
+        btn
         w-full
         rounded-lg
         bg-palette
@@ -22,8 +23,6 @@ import { ButtonType, PaletteType } from '../models/enum';
         transition
         duration-300
         ease-in-out
-        enabled:hover:-translate-y-1
-        enabled:hover:scale-110
         enabled:hover:bg-paletteHover
         enabled:hover:text-paletteHover
         enabled:active:bg-paletteActive
@@ -45,9 +44,9 @@ import { ButtonType, PaletteType } from '../models/enum';
 export class EnButtonComponent implements OnInit {
   @Input() buttonName!: string;
   @Input() buttonText!: string;
-  @Input() buttonType?: `${ButtonType}` = ButtonType.BUTTON;
+  @Input() buttonType?: `${ButtonTypeEnum}` = ButtonTypeEnum.BUTTON;
   @Input() buttonIsDisabled?: boolean = false;
-  @Input() palette?: `${PaletteType}` = PaletteType.PRIMARY;
+  @Input() palette?: `${PaletteTypeEnum}` = PaletteTypeEnum.PRIMARY;
 
   @Output() customClick: EventEmitter<unknown> = new EventEmitter<unknown>();
 
