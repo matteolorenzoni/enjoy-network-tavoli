@@ -13,7 +13,6 @@ import { AppRoutingModule } from '../router/app-routing.module';
 import { AppComponent } from './app.component';
 import { LoginComponent } from './page/login/login.component';
 import { PageNotFoundComponent } from './page/page-not-found/page-not-found.component';
-import { LoginLogoComponent } from './page/login/login-logo/login-logo.component';
 import { LoginFormComponent } from './page/login/login-form/login-form.component';
 import { EnButtonComponent } from './components/en-button.component';
 import { EnFieldComponent } from './components/en-field.component';
@@ -22,20 +21,21 @@ import { InspectorComponent } from './page/inspector/inspector.component';
 import { PrComponent } from './page/pr/pr.component';
 import { environment } from '../environments/environment';
 import { EnToastComponent } from './components/en-toast.component';
+import { HeroComponent } from './page/hero/hero.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
     PageNotFoundComponent,
-    LoginLogoComponent,
     LoginFormComponent,
     EnButtonComponent,
     EnFieldComponent,
     AdministratorComponent,
     InspectorComponent,
     PrComponent,
-    EnToastComponent
+    EnToastComponent,
+    HeroComponent
   ],
   imports: [
     BrowserModule,
