@@ -15,7 +15,7 @@ import { ToastService } from '../services/toast.service';
         'bg-emerald-600': toast.type === ToastTypeEnum.SUCCESS,
         'bg-red-600': toast.type === ToastTypeEnum.ERROR
       }"
-      class="relative z-10 mx-auto flex w-[80%] max-w-3xl items-center rounded-lg  py-3 px-6 text-base font-extrabold text-white"
+      class="absolute bottom-0 z-10 mx-auto flex w-[80%] max-w-3xl items-center rounded-lg  py-3 px-6 text-base font-extrabold text-white"
       role="alert">
       <svg
         aria-hidden="true"
@@ -40,7 +40,8 @@ import { ToastService } from '../services/toast.service';
   styles: [
     `
       :host {
-        display: block;
+        display: flex;
+        justify-content: center;
       }
     `
   ],
@@ -59,7 +60,6 @@ export class EnToastComponent {
 
   constructor(private toastService: ToastService) {
     this.toastService.toast$.subscribe((toast) => {
-      console.log(toast);
       this.toast = toast;
     });
   }

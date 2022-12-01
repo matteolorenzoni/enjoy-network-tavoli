@@ -14,7 +14,7 @@
   </div>
   <div class="flex h-[30%] bg-primary-60">
     <form
-      class="m-auto flex w-full max-w-2xl flex-col items-center px-6 portrait:space-y-4 landscape:space-y-2"
+      class="m-auto flex w-full max-w-2xl flex-col items-center px-8 portrait:space-y-4 landscape:space-y-2"
       [formGroup]="loginForm"
       (ngSubmit)="onSubmit()">
       <en-field
@@ -31,7 +31,7 @@
         palette="primary-inverse"
         [filedIcon]="passwordIcon"
         fieldPlaceholder="Password"></en-field>
-      <div class="w-56">
+      <div class="w-40">
         <en-button
           buttonName="login-button"
           buttonText="Entra"

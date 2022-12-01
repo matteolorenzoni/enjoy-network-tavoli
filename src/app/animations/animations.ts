@@ -19,7 +19,7 @@ export const toastAnimation = trigger('toastAnimation', [
   transition(':enter', [
     style({ opacity: 0, transform: 'translateY(0%)' }),
     sequence([
-      animate('1000ms ease', style({ opacity: 1, transform: 'translatey(-120%)' })),
+      animate('1000ms ease', style({ opacity: 1, transform: 'translatey(-40%)' })),
       animate('1000ms 2000ms ease', style({ opacity: 0, transform: 'translatey(0%)' }))
     ])
   ])
