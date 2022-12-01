@@ -1,7 +1,7 @@
 import { Component, Input, OnInit, forwardRef } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR, FormGroup } from '@angular/forms';
 import { IconDefinition } from '@fortawesome/fontawesome-common-types/index';
-import { InputTypeEnum, PaletteTypeEnum } from '../models/enum';
+import { InputType, PaletteType } from '../models/enum';
 
 @Component({
   selector: 'en-field[fieldName]',
@@ -55,10 +55,10 @@ import { InputTypeEnum, PaletteTypeEnum } from '../models/enum';
 })
 export class EnFieldComponent implements OnInit, ControlValueAccessor {
   @Input() fieldName!: string;
-  @Input() fieldType?: `${InputTypeEnum}` = InputTypeEnum.TEXT;
+  @Input() fieldType?: `${InputType}` = InputType.TEXT;
   @Input() filedIcon?: IconDefinition;
   @Input() fieldPlaceholder?: string;
-  @Input() palette?: `${PaletteTypeEnum}` = PaletteTypeEnum.PRIMARY;
+  @Input() palette?: `${PaletteType}` = PaletteType.PRIMARY;
   @Input() parentForm?: FormGroup;
 
   /** For form control */

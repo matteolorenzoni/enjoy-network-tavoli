@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { ButtonTypeEnum, PaletteTypeEnum } from '../models/enum';
+import { ButtonType, PaletteType } from '../models/enum';
 
 @Component({
   selector: 'en-button[buttonName][buttonText]',
@@ -44,9 +44,9 @@ import { ButtonTypeEnum, PaletteTypeEnum } from '../models/enum';
 export class EnButtonComponent implements OnInit {
   @Input() buttonName!: string;
   @Input() buttonText!: string;
-  @Input() buttonType?: `${ButtonTypeEnum}` = ButtonTypeEnum.BUTTON;
+  @Input() buttonType?: `${ButtonType}` = ButtonType.BUTTON;
   @Input() buttonIsDisabled?: boolean = false;
-  @Input() palette?: `${PaletteTypeEnum}` = PaletteTypeEnum.PRIMARY;
+  @Input() palette?: `${PaletteType}` = PaletteType.PRIMARY;
 
   @Output() customClick: EventEmitter<unknown> = new EventEmitter<unknown>();
 

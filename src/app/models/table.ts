@@ -1,4 +1,4 @@
-import { RoleTypeEnum } from './enum';
+import { RoleType } from './enum';
 
 export enum Table {
   EMPLOYEE = 'employees'
@@ -7,6 +7,6 @@ export enum Table {
 export type Employee = {
   name: string;
   lastName: string;
-  role: RoleTypeEnum;
+  role: RoleType;
   active: boolean;
 };

@@ -6,7 +6,7 @@ import { UserService } from 'src/app/services/user.service';
 import { ToastService } from 'src/app/services/toast.service';
 import { translateFirebaseErrorMessage } from 'src/app/translate/translate';
 import { EmployeeService } from '../../../services/employee.service';
-import { FirebaseLoginErrorEnum, InputTypeEnum } from '../../../models/enum';
+import { FirebaseLoginErrorType, InputType } from '../../../models/enum';
 
 @Component({
   selector: 'app-login-form[setSectionEvent]',
@@ -21,7 +21,7 @@ export class LoginFormComponent implements OnInit {
   passwordIcon = faKey;
 
   /** Variables */
-  passwordFieldType: InputTypeEnum = InputTypeEnum.PASSWORD;
+  passwordFieldType: InputType = InputType.PASSWORD;
 
   /** Form */
   loginForm: FormGroup;
@@ -70,7 +70,7 @@ export class LoginFormComponent implements OnInit {
           }
         })
         .catch((error: Error) => {
-          const errorMessageTranslated = translateFirebaseErrorMessage(error.message as FirebaseLoginErrorEnum);
+          const errorMessageTranslated = translateFirebaseErrorMessage(error.message as FirebaseLoginErrorType);
           this.toastService.showError(errorMessageTranslated);
         });
     }

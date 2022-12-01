@@ -1,4 +1,4 @@
-import { ToastTypeEnum } from './enum';
+import { ToastType } from './enum';
 
 export type UserBaseInfo = {
   displayName: string | null;
@@ -9,7 +9,7 @@ export type UserBaseInfo = {
 };
 
 export type Toast = {
-  type: ToastTypeEnum | null;
+  type: ToastType | null;
   message: string | null;
   isVisible: boolean;
 };

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { ToastTypeEnum } from '../models/enum';
+import { ToastType } from '../models/enum';
 import { Toast } from '../models/type';
 
 @Injectable({
@@ -18,22 +18,22 @@ export class ToastService {
   }
 
   public showSuccess(message: string): void {
-    this.show(ToastTypeEnum.SUCCESS, message);
+    this.show(ToastType.SUCCESS, message);
   }
 
   public showError(message: string): void {
-    this.show(ToastTypeEnum.ERROR, message);
+    this.show(ToastType.ERROR, message);
   }
 
   public showWarning(message: string): void {
-    this.show(ToastTypeEnum.WARNING, message);
+    this.show(ToastType.WARNING, message);
   }
 
   public showInfo(message: string): void {
-    this.show(ToastTypeEnum.INFO, message);
+    this.show(ToastType.INFO, message);
   }
 
-  private show(type: ToastTypeEnum, message: string): void {
+  private show(type: ToastType, message: string): void {
     this.toast$.next({
       type,
       message,
@@ -51,13 +51,13 @@ export class ToastService {
 
   public getToastStyle(): string {
     switch (this.toast$.value.type) {
-      case ToastTypeEnum.SUCCESS:
+      case ToastType.SUCCESS:
         return 'bg-emerald-400 text-emerald-700';
-      case ToastTypeEnum.ERROR:
+      case ToastType.ERROR:
         return 'bg-red-400 text-red-700';
-      case ToastTypeEnum.WARNING:
+      case ToastType.WARNING:
         return 'bg-yellow-400 text-yellow-700';
-      case ToastTypeEnum.INFO:
+      case ToastType.INFO:
         return 'bg-blue-400 text-blue-700';
       default:
         return 'bg-emerald-400 text-emerald-700';

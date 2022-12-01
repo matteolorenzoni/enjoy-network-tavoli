@@ -1,9 +1,9 @@
-export enum ButtonTypeEnum {
+export enum ButtonType {
   BUTTON = 'button',
   SUBMIT = 'submit',
   RESET = 'reset'
 }
-export enum InputTypeEnum {
+export enum InputType {
   BUTTON = 'button',
   CHECKBOX = 'checkbox',
   COLOR = 'color',
@@ -28,21 +28,21 @@ export enum InputTypeEnum {
   WEEK = 'week'
 }
 
-export enum PaletteTypeEnum {
+export enum PaletteType {
   PRIMARY = 'primary',
   PRIMARY_INVERSE = 'primary-inverse',
   SECONDARY = 'secondary',
   SECONDARY_INVERSE = 'secondary-inverse'
 }
 
-export enum ToastTypeEnum {
+export enum ToastType {
   SUCCESS = 'success',
   ERROR = 'error',
   WARNING = 'warning',
   INFO = 'info'
 }
-// enumeration of firebase errors with signInWithEmailAndPassworf
-export enum FirebaseLoginErrorEnum {
+
+export enum FirebaseLoginErrorType {
   INVALID_EMAIL = 'Firebase: Error (auth/invalid-email).',
   USER_DISABLED = 'Firebase: Error (auth/user-disabled).',
   USER_NOT_FOUND = 'Firebase: Error (auth/user-not-found).',
@@ -53,7 +53,7 @@ export enum FirebaseLoginErrorEnum {
   EMAIL_NOT_FOUND = 'Firebase: Error (auth/email-not-found).'
 }
 
-export enum RoleTypeEnum {
+export enum RoleType {
   ADMINISTRATOR = 'administrator',
   INSPECTOR = 'inspector',
   PR = 'pr'
