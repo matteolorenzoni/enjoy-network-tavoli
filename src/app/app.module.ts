@@ -21,6 +21,7 @@ import { AdministratorComponent } from './page/administrator/administrator.compo
 import { InspectorComponent } from './page/inspector/inspector.component';
 import { PrComponent } from './page/pr/pr.component';
 import { environment } from '../environments/environment';
+import { EnToastComponent } from './components/en-toast.component';
 
 @NgModule({
   declarations: [
@@ -33,7 +34,8 @@ import { environment } from '../environments/environment';
     EnFieldComponent,
     AdministratorComponent,
     InspectorComponent,
-    PrComponent
+    PrComponent,
+    EnToastComponent
   ],
   imports: [
     BrowserModule,
