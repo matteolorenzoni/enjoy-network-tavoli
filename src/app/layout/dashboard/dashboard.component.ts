@@ -1,6 +1,6 @@
 import { UserService } from 'src/app/services/user.service';
 import { Component, OnInit } from '@angular/core';
-import { faCalendarDay, faGear, faUserTie, faWineBottle } from '@fortawesome/free-solid-svg-icons';
+import { faCalendarDay, faGear, faUsers, faWineBottle } from '@fortawesome/free-solid-svg-icons';
 import { BottomNavigation, IconLink } from 'src/app/models/type';
 import { RoleType } from '../../models/enum';
 import { EmployeeService } from '../../services/employee.service';
@@ -11,12 +11,6 @@ import { EmployeeService } from '../../services/employee.service';
   styleUrls: ['./dashboard.component.scss']
 })
 export class DashboardComponent implements OnInit {
-  /* Icons */
-  calendarDayIcon = faCalendarDay;
-  userTieIcon = faUserTie;
-  wineBottleIcon = faWineBottle;
-  gearIcon = faGear;
-
   /* Navigation bottom */
   navigationMenuSettings: BottomNavigation[] = [
     {
@@ -25,7 +19,7 @@ export class DashboardComponent implements OnInit {
       icons: [
         { link: '/dashboard/administrator/event', defination: faCalendarDay },
         { link: '/dashboard/administrator/table', defination: faWineBottle },
-        { link: '/dashboard/administrator/employee', defination: faUserTie }
+        { link: '/dashboard/administrator/employee', defination: faUsers }
       ]
     }
   ];
