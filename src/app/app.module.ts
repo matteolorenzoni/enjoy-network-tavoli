@@ -23,6 +23,7 @@ import { DashboardComponent } from './layout/dashboard/dashboard.component';
 import { EventComponent } from './page/administrator/event/event.component';
 import { EmployeeComponent } from './page/administrator/employee/employee.component';
 import { TableComponent } from './page/administrator/table/table.component';
+import { EnBottomNavigationComponent } from './components/en-bottom-navigation.component';
 
 @NgModule({
   declarations: [
@@ -37,7 +38,8 @@ import { TableComponent } from './page/administrator/table/table.component';
     DashboardComponent,
     EventComponent,
     EmployeeComponent,
-    TableComponent
+    TableComponent,
+    EnBottomNavigationComponent
   ],
   imports: [
     BrowserModule,
