@@ -16,13 +16,11 @@ import { PageNotFoundComponent } from './page/page-not-found/page-not-found.comp
 import { LoginFormComponent } from './page/login/login-form/login-form.component';
 import { EnButtonComponent } from './components/en-button.component';
 import { EnFieldComponent } from './components/en-field.component';
-import { AdministratorComponent } from './page/administrator/administrator.component';
-import { InspectorComponent } from './page/inspector/inspector.component';
-import { PrComponent } from './page/pr/pr.component';
 import { environment } from '../environments/environment';
 import { EnToastComponent } from './components/en-toast.component';
 import { HeroComponent } from './page/hero/hero.component';
 import { DashboardComponent } from './layout/dashboard/dashboard.component';
+import { EventComponent } from './page/administrator/event/event.component';
 
 @NgModule({
   declarations: [
@@ -32,12 +30,10 @@ import { DashboardComponent } from './layout/dashboard/dashboard.component';
     LoginFormComponent,
     EnButtonComponent,
     EnFieldComponent,
-    AdministratorComponent,
-    InspectorComponent,
-    PrComponent,
     EnToastComponent,
     HeroComponent,
-    DashboardComponent
+    DashboardComponent,
+    EventComponent
   ],
   imports: [
     BrowserModule,
