@@ -1,4 +1,4 @@
-import { animate, state, style, transition, trigger, sequence, query } from '@angular/animations';
+import { animate, state, style, transition, trigger, sequence, query, group } from '@angular/animations';
 
 export const loginFormAnimation = trigger('loginFormAnimation', [
   state('bottom', style({ transform: 'translateY(0%)' })),
@@ -21,6 +21,120 @@ export const toastAnimation = trigger('toastAnimation', [
     sequence([
       animate('1000ms ease', style({ opacity: 1, transform: 'translatey(-40%)' })),
       animate('1000ms 2000ms ease', style({ opacity: 0, transform: 'translatey(0%)' }))
+    ])
+  ])
+]);
+
+export const slideInAnimation = trigger('routeAnimations', [
+  transition('FirstPage => SecondPage', [
+    style({ position: 'relative' }),
+    query(':enter, :leave', [style({ position: 'absolute', top: 0, left: 0, width: '100%' })]),
+    query(':enter', [style({ left: '100%' })]),
+    group([
+      query(':leave', [animate('200ms ease-out', style({ left: '-100%', opacity: 0 }))]),
+      query(':enter', [animate('300ms ease-out', style({ left: '0%' }))])
+    ])
+  ]),
+  transition('FirstPage => ThirdPage', [
+    style({ position: 'relative' }),
+    query(':enter, :leave', [style({ position: 'absolute', top: 0, left: 0, width: '100%' })]),
+    query(':enter', [style({ left: '100%' })]),
+    group([
+      query(':leave', [animate('200ms ease-out', style({ left: '-100%', opacity: 0 }))]),
+      query(':enter', [animate('300ms ease-out', style({ left: '0%' }))])
+    ])
+  ]),
+  transition('FirstPage => FourthPage', [
+    style({ position: 'relative' }),
+    query(':enter, :leave', [style({ position: 'absolute', top: 0, left: 0, width: '100%' })]),
+    query(':enter', [style({ left: '100%' })]),
+    group([
+      query(':leave', [animate('200ms ease-out', style({ left: '-100%', opacity: 0 }))]),
+      query(':enter', [animate('300ms ease-out', style({ left: '0%' }))])
+    ])
+  ]),
+
+  transition('SecondPage => FirstPage', [
+    style({ position: 'relative' }),
+    query(':enter, :leave', [style({ position: 'absolute', top: 0, left: 0, width: '100%' })]),
+    query(':enter', [style({ left: '-100%' })]),
+    group([
+      query(':leave', [animate('200ms ease-out', style({ left: '100%', opacity: 0 }))]),
+      query(':enter', [animate('300ms ease-out', style({ left: '0%' }))])
+    ])
+  ]),
+  transition('SecondPage => ThirdPage', [
+    style({ position: 'relative' }),
+    query(':enter, :leave', [style({ position: 'absolute', top: 0, left: 0, width: '100%' })]),
+    query(':enter', [style({ left: '100%' })]),
+    group([
+      query(':leave', [animate('200ms ease-out', style({ left: '-100%', opacity: 0 }))]),
+      query(':enter', [animate('300ms ease-out', style({ left: '0%' }))])
+    ])
+  ]),
+  transition('SecondPage => FourthPage', [
+    style({ position: 'relative' }),
+    query(':enter, :leave', [style({ position: 'absolute', top: 0, left: 0, width: '100%' })]),
+    query(':enter', [style({ left: '100%' })]),
+    group([
+      query(':leave', [animate('200ms ease-out', style({ left: '-100%', opacity: 0 }))]),
+      query(':enter', [animate('300ms ease-out', style({ left: '0%' }))])
+    ])
+  ]),
+
+  transition('ThirdPage => FirstPage', [
+    style({ position: 'relative' }),
+    query(':enter, :leave', [style({ position: 'absolute', top: 0, left: 0, width: '100%' })]),
+    query(':enter', [style({ left: '-100%' })]),
+    group([
+      query(':leave', [animate('200ms ease-out', style({ left: '100%', opacity: 0 }))]),
+      query(':enter', [animate('300ms ease-out', style({ left: '0%' }))])
+    ])
+  ]),
+  transition('ThirdPage => SecondPage', [
+    style({ position: 'relative' }),
+    query(':enter, :leave', [style({ position: 'absolute', top: 0, left: 0, width: '100%' })]),
+    query(':enter', [style({ left: '-100%' })]),
+    group([
+      query(':leave', [animate('200ms ease-out', style({ left: '100%', opacity: 0 }))]),
+      query(':enter', [animate('300ms ease-out', style({ left: '0%' }))])
+    ])
+  ]),
+  transition('ThirdPage => FourthPage', [
+    style({ position: 'relative' }),
+    query(':enter, :leave', [style({ position: 'absolute', top: 0, left: 0, width: '100%' })]),
+    query(':enter', [style({ left: '100%' })]),
+    group([
+      query(':leave', [animate('200ms ease-out', style({ left: '-100%', opacity: 0 }))]),
+      query(':enter', [animate('300ms ease-out', style({ left: '0%' }))])
+    ])
+  ]),
+
+  transition('FourthPage => FirstPage', [
+    style({ position: 'relative' }),
+    query(':enter, :leave', [style({ position: 'absolute', top: 0, left: 0, width: '100%' })]),
+    query(':enter', [style({ left: '-100%' })]),
+    group([
+      query(':leave', [animate('200ms ease-out', style({ left: '100%', opacity: 0 }))]),
+      query(':enter', [animate('300ms ease-out', style({ left: '0%' }))])
+    ])
+  ]),
+  transition('FourthPage => SecondPage', [
+    style({ position: 'relative' }),
+    query(':enter, :leave', [style({ position: 'absolute', top: 0, left: 0, width: '100%' })]),
+    query(':enter', [style({ left: '-100%' })]),
+    group([
+      query(':leave', [animate('200ms ease-out', style({ left: '100%', opacity: 0 }))]),
+      query(':enter', [animate('300ms ease-out', style({ left: '0%' }))])
+    ])
+  ]),
+  transition('FourthPage => ThirdPage', [
+    style({ position: 'relative' }),
+    query(':enter, :leave', [style({ position: 'absolute', top: 0, left: 0, width: '100%' })]),
+    query(':enter', [style({ left: '-100%' })]),
+    group([
+      query(':leave', [animate('200ms ease-out', style({ left: '100%', opacity: 0 }))]),
+      query(':enter', [animate('300ms ease-out', style({ left: '0%' }))])
     ])
   ])
 ]);

@@ -1,14 +1,17 @@
 import { UserService } from 'src/app/services/user.service';
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { faCalendarDay, faGear, faUsers, faWineBottle } from '@fortawesome/free-solid-svg-icons';
 import { BottomNavigation, IconLink } from 'src/app/models/type';
+import { RouterOutlet } from '@angular/router';
+import { slideInAnimation } from 'src/app/animations/animations';
 import { RoleType } from '../../models/enum';
 import { EmployeeService } from '../../services/employee.service';
 
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
-  styleUrls: ['./dashboard.component.scss']
+  styleUrls: ['./dashboard.component.scss'],
+  animations: [slideInAnimation]
 })
 export class DashboardComponent implements OnInit {
   /* Navigation bottom */
@@ -26,7 +29,11 @@ export class DashboardComponent implements OnInit {
   ];
   navigationMenu: IconLink[] = [];
 
-  constructor(private employeeService: EmployeeService, private serService: UserService) {}
+  constructor(
+    private employeeService: EmployeeService,
+    private serService: UserService,
+    private cdref: ChangeDetectorRef
+  ) {}
 
   ngOnInit(): void {
     const employeeRole = this.employeeService.getEmployeeRole();
@@ -35,5 +42,13 @@ export class DashboardComponent implements OnInit {
     } else {
       this.serService.logout();
     }
+  }
+
+  ngAfterContentChecked() {
+    this.cdref.detectChanges();
+  }
+
+  getRouteAnimationData(outlet: RouterOutlet) {
+    return outlet && outlet.activatedRouteData && outlet.activatedRouteData['animation'];
   }
 }

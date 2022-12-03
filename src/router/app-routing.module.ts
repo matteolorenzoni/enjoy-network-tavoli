@@ -17,10 +17,10 @@ const routes: Routes = [
       {
         path: 'administrator',
         children: [
-          { path: 'event', component: EventComponent },
-          { path: 'table', component: TableComponent },
-          { path: 'employee', component: EmployeeComponent },
-          { path: 'setting', component: SettingComponent },
+          { path: 'event', component: EventComponent, data: { animation: 'FirstPage' } },
+          { path: 'table', component: TableComponent, data: { animation: 'SecondPage' } },
+          { path: 'employee', component: EmployeeComponent, data: { animation: 'ThirdPage' } },
+          { path: 'setting', component: SettingComponent, data: { animation: 'FourthPage' } },
           { path: '', redirectTo: 'event', pathMatch: 'full' }
         ]
       },
