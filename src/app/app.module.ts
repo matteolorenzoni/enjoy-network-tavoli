@@ -22,6 +22,7 @@ import { HeroComponent } from './page/hero/hero.component';
 import { DashboardComponent } from './layout/dashboard/dashboard.component';
 import { EventComponent } from './page/administrator/event/event.component';
 import { EmployeeComponent } from './page/administrator/employee/employee.component';
+import { TableComponent } from './page/administrator/table/table.component';
 
 @NgModule({
   declarations: [
@@ -35,7 +36,8 @@ import { EmployeeComponent } from './page/administrator/employee/employee.compon
     HeroComponent,
     DashboardComponent,
     EventComponent,
-    EmployeeComponent
+    EmployeeComponent,
+    TableComponent
   ],
   imports: [
     BrowserModule,
