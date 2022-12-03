@@ -4,11 +4,11 @@ import { IconLink } from '../models/type';
 
 @Component({
   selector: 'en-bottom-navigation[navigationMenu]',
-  template: ` <div [ngClass]="['theme-' + palette]">
-    <nav>
+  template: ` <div [ngClass]="['theme-' + palette, 'mt-24']">
+    <nav class="fixed left-0 bottom-0 right-0 h-24 p-4 backdrop-blur-sm">
       <!-- <ul class="btm-nav btm-nav-md"> -->
       <ul
-        class="fixed right-2.5 bottom-2.5 left-2.5 m-auto flex h-16 max-w-[48rem] flex-row items-center justify-center overflow-hidden rounded-lg bg-gray-800">
+        class="m-auto flex h-full max-w-[48rem] flex-row items-center justify-center overflow-hidden rounded-lg bg-gray-800">
         <li
           *ngFor="let icon of navigationMenu"
           [routerLink]="icon.link"
