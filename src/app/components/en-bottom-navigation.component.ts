@@ -4,7 +4,7 @@ import { IconLink } from '../models/type';
 
 @Component({
   selector: 'en-bottom-navigation[navigationMenu]',
-  template: ` <div [ngClass]="['theme-' + palette, 'mt-24']">
+  template: ` <div [ngClass]="['theme-' + palette]">
     <nav class="fixed left-0 bottom-0 right-0 h-24 p-4 backdrop-blur-sm">
       <!-- <ul class="btm-nav btm-nav-md"> -->
       <ul
