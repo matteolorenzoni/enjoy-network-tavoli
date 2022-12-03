@@ -19,6 +19,6 @@ export class LoginComponent {
   }
 
   goToDashboard() {
-    this.router.navigate(['/dashboard']);
+    this.router.navigate(['/dashboard/administrator/event']);
   }
 }
