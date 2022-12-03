@@ -25,6 +25,7 @@ export class LoginFormComponent implements OnInit {
 
   /** Form */
   loginForm: FormGroup;
+  isLoading: boolean;
 
   /* ---------------------------- constructor ---------------------------- */
   constructor(
@@ -36,6 +37,7 @@ export class LoginFormComponent implements OnInit {
       email: new FormControl('', [Validators.required]),
       password: new FormControl('', [Validators.required])
     });
+    this.isLoading = false;
   }
 
   /* ---------------------------- lifecycle hooks ---------------------------- */
@@ -50,11 +52,13 @@ export class LoginFormComponent implements OnInit {
    */
   public onSubmit() {
     if (this.loginForm.valid) {
+      this.isLoading = true;
       const emailForm = this.loginForm.get('email')?.value;
       const passwordForm = this.loginForm.get('password')?.value;
       this.userService
         .login(emailForm, passwordForm)
         .then(async (userCredential: UserCredential) => {
+          this.isLoading = false;
           if (userCredential !== null) {
             userCredential.user.getIdTokenResult().then((idTokenResult) => {
               const { displayName, email, photoURL, emailVerified, uid } = userCredential.user;
@@ -68,6 +72,7 @@ export class LoginFormComponent implements OnInit {
           }
         })
         .catch((error: Error) => {
+          this.isLoading = false;
           const errorMessageTranslated = translateFirebaseErrorMessage(error.message as FirebaseLoginErrorType);
           this.toastService.showError(errorMessageTranslated);
         });
