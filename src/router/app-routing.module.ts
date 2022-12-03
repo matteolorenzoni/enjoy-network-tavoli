@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { DashboardComponent } from 'src/app/layout/dashboard/dashboard.component';
+import { SettingComponent } from 'src/app/page/setting/setting.component';
 import { EmployeeComponent } from '../app/page/administrator/employee/employee.component';
 import { TableComponent } from '../app/page/administrator/table/table.component';
 import { EventComponent } from '../app/page/administrator/event/event.component';
@@ -19,6 +20,7 @@ const routes: Routes = [
           { path: 'event', component: EventComponent },
           { path: 'table', component: TableComponent },
           { path: 'employee', component: EmployeeComponent },
+          { path: 'setting', component: SettingComponent },
           { path: '', redirectTo: 'event', pathMatch: 'full' }
         ]
       },

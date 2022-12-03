@@ -19,7 +19,8 @@ export class DashboardComponent implements OnInit {
       icons: [
         { link: '/dashboard/administrator/event', defination: faCalendarDay },
         { link: '/dashboard/administrator/table', defination: faWineBottle },
-        { link: '/dashboard/administrator/employee', defination: faUsers }
+        { link: '/dashboard/administrator/employee', defination: faUsers },
+        { link: '/dashboard/administrator/setting', defination: faGear }
       ]
     }
   ];
@@ -30,7 +31,6 @@ export class DashboardComponent implements OnInit {
   ngOnInit(): void {
     const employeeRole = this.employeeService.getEmployeeRole();
     if (employeeRole) {
-      console.log('employeeRole', employeeRole);
       this.navigationMenu = this.navigationMenuSettings.find((item) => item.role === employeeRole)?.icons || [];
     } else {
       this.serService.logout();
