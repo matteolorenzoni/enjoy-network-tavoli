@@ -24,6 +24,7 @@ import { EventComponent } from './page/administrator/event/event.component';
 import { EmployeeComponent } from './page/administrator/employee/employee.component';
 import { TableComponent } from './page/administrator/table/table.component';
 import { EnBottomNavigationComponent } from './components/en-bottom-navigation.component';
+import { SettingComponent } from './page/setting/setting.component';
 
 @NgModule({
   declarations: [
@@ -39,7 +40,8 @@ import { EnBottomNavigationComponent } from './components/en-bottom-navigation.c
     EventComponent,
     EmployeeComponent,
     TableComponent,
-    EnBottomNavigationComponent
+    EnBottomNavigationComponent,
+    SettingComponent
   ],
   imports: [
     BrowserModule,
