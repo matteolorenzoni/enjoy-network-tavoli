@@ -8,7 +8,7 @@ import { IconLink } from '../models/type';
     <nav>
       <!-- <ul class="btm-nav btm-nav-md"> -->
       <ul
-        class="fixed right-2.5 bottom-2.5 left-2.5 m-auto flex h-16 max-w-[48rem] flex-row items-center justify-center overflow-hidden rounded-lg">
+        class="fixed right-2.5 bottom-2.5 left-2.5 m-auto flex h-16 max-w-[48rem] flex-row items-center justify-center overflow-hidden rounded-lg bg-gray-800">
         <li
           *ngFor="let icon of navigationMenu"
           [routerLink]="icon.link"
