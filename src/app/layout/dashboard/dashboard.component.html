@@ -1,1 +1,13 @@
-<p>dashboard works!</p>
+<header></header>
+<main>
+  <router-outlet></router-outlet>
+</main>
+<footer>
+  <nav>
+    <ul class="btm-nav btm-nav-md">
+      <li *ngFor="let icon of navigationMenu" [routerLink]="icon.link" routerLinkActive="active">
+        <a><fa-icon [icon]="icon.defination"></fa-icon></a>
+      </li>
+    </ul>
+  </nav>
+</footer>
