@@ -9,4 +9,5 @@ export type Employee = {
   lastName: string;
   role: RoleType;
   active: boolean;
+  phone: string;
 };
