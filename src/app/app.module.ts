@@ -21,6 +21,7 @@ import { EnToastComponent } from './components/en-toast.component';
 import { HeroComponent } from './page/hero/hero.component';
 import { DashboardComponent } from './layout/dashboard/dashboard.component';
 import { EventComponent } from './page/administrator/event/event.component';
+import { EmployeeComponent } from './page/administrator/employee/employee.component';
 
 @NgModule({
   declarations: [
@@ -33,7 +34,8 @@ import { EventComponent } from './page/administrator/event/event.component';
     EnToastComponent,
     HeroComponent,
     DashboardComponent,
-    EventComponent
+    EventComponent,
+    EmployeeComponent
   ],
   imports: [
     BrowserModule,
