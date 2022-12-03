@@ -22,6 +22,7 @@ import { PrComponent } from './page/pr/pr.component';
 import { environment } from '../environments/environment';
 import { EnToastComponent } from './components/en-toast.component';
 import { HeroComponent } from './page/hero/hero.component';
+import { DashboardComponent } from './layout/dashboard/dashboard.component';
 
 @NgModule({
   declarations: [
@@ -35,7 +36,8 @@ import { HeroComponent } from './page/hero/hero.component';
     InspectorComponent,
     PrComponent,
     EnToastComponent,
-    HeroComponent
+    HeroComponent,
+    DashboardComponent
   ],
   imports: [
     BrowserModule,

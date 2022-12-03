@@ -66,6 +66,9 @@ export class LoginFormComponent implements OnInit {
               const employee = this.employeeService.getEmployee();
               const employees = this.employeeService.getEmployees();
               console.log(employee, employees);
+
+              /* Go to dashboard */
+              this.setSectionEvent.emit(true);
             });
           }
         })
