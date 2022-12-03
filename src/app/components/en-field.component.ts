@@ -27,7 +27,7 @@ import { InputType, PaletteType } from '../models/enum';
             pl-10
             text-palette
             placeholder-gray-200
-            focus:outline-primary-70" />
+            focus:outline-none" />
       </div>
       <!-- Da aggiungere al componente input => [ngClass]="{ 'has-error': formField?.invalid && formField?.dirty }"
         <label [for]="fieldName">
