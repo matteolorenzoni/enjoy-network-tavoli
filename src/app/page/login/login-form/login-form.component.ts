@@ -55,17 +55,12 @@ export class LoginFormComponent implements OnInit {
       this.userService
         .login(emailForm, passwordForm)
         .then(async (userCredential: UserCredential) => {
-          console.log(userCredential);
           if (userCredential !== null) {
             userCredential.user.getIdTokenResult().then((idTokenResult) => {
               const { displayName, email, photoURL, emailVerified, uid } = userCredential.user;
               this.userService.userBaseInfo = { displayName, email, photoURL, emailVerified, uid };
               this.userService.userAccessToken = idTokenResult;
               this.employeeService.setEmployee(uid);
-              this.employeeService.setEmployees();
-              const employee = this.employeeService.getEmployee();
-              const employees = this.employeeService.getEmployees();
-              console.log(employee, employees);
 
               /* Go to dashboard */
               this.setSectionEvent.emit(true);

@@ -9,6 +9,7 @@ import {
   User,
   UserCredential
 } from '@angular/fire/auth';
+import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { UserBaseInfo } from '../models/type';
 
@@ -30,7 +31,7 @@ export class UserService {
   /** User acess token */
   userAccessToken: IdTokenResult | null = null;
 
-  constructor(private auth: Auth) {
+  constructor(private auth: Auth, private router: Router) {
     this.userData$ = authState(this.auth);
   }
 
@@ -46,6 +47,7 @@ export class UserService {
   public disableUser() {}
 
   public logout(): Promise<void> {
+    this.router.navigate(['/login']);
     this.userBaseInfo = null;
     this.userAccessToken = null;
     return signOut(this.auth);
