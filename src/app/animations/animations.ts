@@ -29,6 +29,10 @@ export const floatingButtonAnimation = trigger('floatingButtonAnimation', [
   transition(':enter', [
     style({ transform: 'translatex(150%)', opacity: 0 }),
     animate('1000ms ease', style({ transform: 'translatex(0%)', opacity: 1 }))
+  ]),
+  transition(':leave', [
+    style({ transform: 'translatex(0%)', opacity: 1 }),
+    animate('1000ms ease', style({ transform: 'translatex(150%)', opacity: 0 }))
   ])
 ]);
 
@@ -36,6 +40,10 @@ export const bottomNavigationAnimation = trigger('bottomNavigationAnimation', [
   transition(':enter', [
     style({ transform: 'translateY(100%)', opacity: 0 }),
     animate('1000ms ease', style({ transform: 'translateY(0%)', opacity: 1 }))
+  ]),
+  transition(':leave', [
+    style({ transform: 'translateY(0%)', opacity: 1 }),
+    animate('1000ms ease', style({ transform: 'translateY(100%)', opacity: 0 }))
   ])
 ]);
 
@@ -151,4 +159,20 @@ export const slideInAnimation = trigger('routeAnimations', [
       query(':enter', [animate('300ms ease-out', style({ left: '0%' }))])
     ])
   ])
+]);
+
+export const slidInHeader = trigger('slidInHeader', [
+  transition(':enter', [
+    style({ transform: 'translateY(-100%)', opacity: 0 }),
+    animate('600ms ease-out', style({ transform: 'translateY(0%)', opacity: 1 }))
+  ]),
+  transition(':leave', [
+    style({ transform: 'translateY(0%)', opacity: 1 }),
+    animate('600ms ease-out', style({ transform: 'translateY(-100%)', opacity: 0 }))
+  ])
+]);
+
+export const fadeInMain = trigger('fadeInMain', [
+  transition(':enter', [style({ opacity: 0 }), animate('600ms 600ms ease-out', style({ opacity: 1 }))]),
+  transition(':leave', [style({ opacity: 1 }), animate('600ms 600ms ease-out', style({ opacity: 0 }))])
 ]);
