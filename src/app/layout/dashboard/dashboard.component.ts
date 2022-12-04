@@ -18,12 +18,12 @@ export class DashboardComponent implements OnInit {
   navigationMenuSettings: BottomNavigation[] = [
     {
       role: RoleType.ADMINISTRATOR,
-      label: 'Amministratore',
+      name: 'Amministratore',
       icons: [
-        { link: '/dashboard/administrator/event', defination: faCalendarDay },
-        { link: '/dashboard/administrator/table', defination: faWineBottle },
-        { link: '/dashboard/administrator/employee', defination: faUsers },
-        { link: '/dashboard/administrator/setting', defination: faGear }
+        { link: '/dashboard/administrator/event', name: 'Eventi', defination: faCalendarDay },
+        { link: '/dashboard/administrator/table', name: 'Tavoli', defination: faWineBottle },
+        { link: '/dashboard/administrator/employee', name: 'Dipendenti', defination: faUsers },
+        { link: '/dashboard/administrator/setting', name: 'Impostazioni', defination: faGear }
       ]
     }
   ];

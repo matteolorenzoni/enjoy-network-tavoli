@@ -17,11 +17,12 @@ export type Toast = {
 
 export type IconLink = {
   link: string;
+  name: string;
   defination: IconDefinition;
 };
 
 export type BottomNavigation = {
   role: RoleType;
-  label: string;
+  name: string;
   icons: IconLink[];
 };
