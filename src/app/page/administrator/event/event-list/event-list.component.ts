@@ -22,6 +22,6 @@ export class EventListComponent implements OnInit {
   }
 
   goToCreateEvent(): void {
-    this.router.navigate([`${this.router.url}/generator`]);
+    this.router.navigate(['create-item/event']);
   }
 }

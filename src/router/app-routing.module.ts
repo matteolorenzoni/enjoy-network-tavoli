@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { DashboardComponent } from 'src/app/layout/dashboard/dashboard.component';
 import { SettingComponent } from 'src/app/page/setting/setting.component';
+import { CreateItemComponent } from '../app/layout/create-item/create-item.component';
 import { EventGeneratorComponent } from '../app/page/administrator/event/event-generator/event-generator.component';
 import { EmployeeComponent } from '../app/page/administrator/employee/employee.component';
 import { TableComponent } from '../app/page/administrator/table/table.component';
@@ -11,7 +12,6 @@ import { PageNotFoundComponent } from '../app/page/page-not-found/page-not-found
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
-  { path: 'dashboard/administrator/event/generator', component: EventGeneratorComponent },
   {
     path: 'dashboard',
     component: DashboardComponent,
@@ -27,6 +27,14 @@ const routes: Routes = [
         ]
       },
       { path: '', redirectTo: 'administrator', pathMatch: 'full' }
+    ]
+  },
+  {
+    path: 'create-item',
+    component: CreateItemComponent,
+    children: [
+      { path: 'event', component: EventGeneratorComponent },
+      { path: '', redirectTo: 'event', pathMatch: 'full' }
     ]
   },
   { path: '', redirectTo: 'login', pathMatch: 'full' },

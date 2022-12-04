@@ -26,6 +26,7 @@ import { TableComponent } from './page/administrator/table/table.component';
 import { EnBottomNavigationComponent } from './components/en-bottom-navigation.component';
 import { SettingComponent } from './page/setting/setting.component';
 import { EventGeneratorComponent } from './page/administrator/event/event-generator/event-generator.component';
+import { CreateItemComponent } from './layout/create-item/create-item.component';
 
 @NgModule({
   declarations: [
@@ -43,7 +44,8 @@ import { EventGeneratorComponent } from './page/administrator/event/event-genera
     TableComponent,
     EnBottomNavigationComponent,
     SettingComponent,
-    EventGeneratorComponent
+    EventGeneratorComponent,
+    CreateItemComponent
   ],
   imports: [
     BrowserModule,
