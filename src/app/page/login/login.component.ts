@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { loginFormAnimation, loginFormAnimation2 } from 'src/app/animations/animations';
+import { EmployeeService } from '../../services/employee.service';
 
 @Component({
   selector: 'app-login',
@@ -8,17 +9,24 @@ import { loginFormAnimation, loginFormAnimation2 } from 'src/app/animations/anim
   styleUrls: ['./login.component.scss'],
   animations: [loginFormAnimation, loginFormAnimation2]
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit {
   /** Section to display */
   section = 0;
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, private employeeService: EmployeeService) {}
+
+  ngOnInit(): void {
+    sessionStorage.clear();
+  }
 
   incrementSection() {
     this.section += 1;
   }
 
   goToDashboard() {
-    this.router.navigate(['/dashboard/administrator/event']);
+    const employeeRole = this.employeeService.getEmployeeRole();
+    if (employeeRole) {
+      this.router.navigate([`/dashboard/${employeeRole}/`]);
+    }
   }
 }

@@ -50,6 +50,7 @@ export class UserService {
     this.router.navigate(['/login']);
     this.userBaseInfo = null;
     this.userAccessToken = null;
+    sessionStorage.clear();
     return signOut(this.auth);
   }
 }

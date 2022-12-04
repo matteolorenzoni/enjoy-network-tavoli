@@ -42,7 +42,7 @@ export class EmployeeService {
     return null;
   }
 
-  public getEmployeeRole(): RoleType {
+  public getEmployeeRole(): RoleType | null {
     return (sessionStorage.getItem(ROLE) as RoleType) || null;
   }
 }
