@@ -25,6 +25,7 @@ import { EmployeeComponent } from './page/administrator/employee/employee.compon
 import { TableComponent } from './page/administrator/table/table.component';
 import { EnBottomNavigationComponent } from './components/en-bottom-navigation.component';
 import { SettingComponent } from './page/setting/setting.component';
+import { EventGeneratorComponent } from './page/administrator/event/event-generator/event-generator.component';
 
 @NgModule({
   declarations: [
@@ -41,7 +42,8 @@ import { SettingComponent } from './page/setting/setting.component';
     EmployeeComponent,
     TableComponent,
     EnBottomNavigationComponent,
-    SettingComponent
+    SettingComponent,
+    EventGeneratorComponent
   ],
   imports: [
     BrowserModule,

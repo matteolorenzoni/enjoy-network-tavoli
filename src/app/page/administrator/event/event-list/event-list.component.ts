@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { floatingButtonAnimation } from 'src/app/animations/animations';
 
@@ -12,7 +13,7 @@ export class EventListComponent implements OnInit {
   /* Icons */
   plusIcon = faPlus;
 
-  constructor() {
+  constructor(private router: Router) {
     // do nothing
   }
 
@@ -21,6 +22,6 @@ export class EventListComponent implements OnInit {
   }
 
   goToCreateEvent(): void {
-    console.log('qui vado alla pagina di creazione evento');
+    this.router.navigate([`${this.router.url}/generator`]);
   }
 }

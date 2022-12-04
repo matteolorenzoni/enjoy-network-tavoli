@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { DashboardComponent } from 'src/app/layout/dashboard/dashboard.component';
 import { SettingComponent } from 'src/app/page/setting/setting.component';
+import { EventGeneratorComponent } from '../app/page/administrator/event/event-generator/event-generator.component';
 import { EmployeeComponent } from '../app/page/administrator/employee/employee.component';
 import { TableComponent } from '../app/page/administrator/table/table.component';
 import { EventListComponent } from '../app/page/administrator/event/event-list/event-list.component';
@@ -10,6 +11,7 @@ import { PageNotFoundComponent } from '../app/page/page-not-found/page-not-found
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
+  { path: 'dashboard/administrator/event/generator', component: EventGeneratorComponent },
   {
     path: 'dashboard',
     component: DashboardComponent,
