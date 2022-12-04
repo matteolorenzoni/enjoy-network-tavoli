@@ -14,7 +14,7 @@ import { IconLink } from '../models/type';
           *ngFor="let icon of navigationMenu"
           [routerLink]="icon.link"
           routerLinkActive="text-palette border-t border-current"
-          class="relative flex h-full basis-full cursor-pointer flex-col items-center justify-center gap-1 bg-gray-800 bg-opacity-10 text-white sm:bg-opacity-40">
+          class="flex h-full basis-full cursor-pointer flex-col items-center justify-center gap-1 bg-gray-800 bg-opacity-10  sm:bg-opacity-40">
           <a><fa-icon [icon]="icon.defination"></fa-icon></a>
           <span class="text-xs sm:text-sm">{{ icon.name }}</span>
         </li>
