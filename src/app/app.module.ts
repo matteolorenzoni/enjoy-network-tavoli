@@ -20,7 +20,7 @@ import { environment } from '../environments/environment';
 import { EnToastComponent } from './components/en-toast.component';
 import { HeroComponent } from './page/hero/hero.component';
 import { DashboardComponent } from './layout/dashboard/dashboard.component';
-import { EventComponent } from './page/administrator/event/event.component';
+import { EventListComponent } from './page/administrator/event/event-list/event-list.component';
 import { EmployeeComponent } from './page/administrator/employee/employee.component';
 import { TableComponent } from './page/administrator/table/table.component';
 import { EnBottomNavigationComponent } from './components/en-bottom-navigation.component';
@@ -37,7 +37,7 @@ import { SettingComponent } from './page/setting/setting.component';
     EnToastComponent,
     HeroComponent,
     DashboardComponent,
-    EventComponent,
+    EventListComponent,
     EmployeeComponent,
     TableComponent,
     EnBottomNavigationComponent,

@@ -4,11 +4,11 @@ import { floatingButtonAnimation } from 'src/app/animations/animations';
 
 @Component({
   selector: 'app-event',
-  templateUrl: './event.component.html',
-  styleUrls: ['./event.component.scss'],
+  templateUrl: './event-list.component.html',
+  styleUrls: ['./event-list.component.scss'],
   animations: [floatingButtonAnimation]
 })
-export class EventComponent implements OnInit {
+export class EventListComponent implements OnInit {
   /* Icons */
   plusIcon = faPlus;
 

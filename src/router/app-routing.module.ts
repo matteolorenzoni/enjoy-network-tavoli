@@ -4,7 +4,7 @@ import { DashboardComponent } from 'src/app/layout/dashboard/dashboard.component
 import { SettingComponent } from 'src/app/page/setting/setting.component';
 import { EmployeeComponent } from '../app/page/administrator/employee/employee.component';
 import { TableComponent } from '../app/page/administrator/table/table.component';
-import { EventComponent } from '../app/page/administrator/event/event.component';
+import { EventListComponent } from '../app/page/administrator/event/event-list/event-list.component';
 import { LoginComponent } from '../app/page/login/login.component';
 import { PageNotFoundComponent } from '../app/page/page-not-found/page-not-found.component';
 
@@ -17,7 +17,7 @@ const routes: Routes = [
       {
         path: 'administrator',
         children: [
-          { path: 'event', component: EventComponent, data: { animation: 'FirstPage' } },
+          { path: 'event', component: EventListComponent, data: { animation: 'FirstPage' } },
           { path: 'table', component: TableComponent, data: { animation: 'SecondPage' } },
           { path: 'employee', component: EmployeeComponent, data: { animation: 'ThirdPage' } },
           { path: 'setting', component: SettingComponent, data: { animation: 'FourthPage' } },
