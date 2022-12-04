@@ -1,11 +1,12 @@
 import { Component, Input } from '@angular/core';
+import { bottomNavigationAnimation } from '../animations/animations';
 import { PaletteType } from '../models/enum';
 import { IconLink } from '../models/type';
 
 @Component({
   selector: 'en-bottom-navigation[navigationMenu]',
   template: ` <div [ngClass]="['theme-' + palette]">
-    <nav class="fixed left-0 bottom-0 right-0 h-20 p-0 backdrop-blur-sm sm:h-24 sm:p-4">
+    <nav [@bottomNavigationAnimation] class="fixed left-0 bottom-0 right-0 h-20 p-0 backdrop-blur-sm sm:h-24 sm:p-4">
       <!-- <ul class="btm-nav btm-nav-md"> -->
       <ul
         class="m-auto flex h-full max-w-[48rem] flex-row items-center justify-center overflow-hidden rounded-lg bg-gray-800 bg-opacity-30">
@@ -26,7 +27,8 @@ import { IconLink } from '../models/type';
         display: block;
       }
     `
-  ]
+  ],
+  animations: [bottomNavigationAnimation]
 })
 export class EnBottomNavigationComponent {
   @Input() palette?: `${PaletteType}` = PaletteType.PRIMARY;

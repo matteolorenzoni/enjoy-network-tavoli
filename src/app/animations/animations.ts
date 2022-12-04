@@ -25,6 +25,20 @@ export const toastAnimation = trigger('toastAnimation', [
   ])
 ]);
 
+export const floatingButtonAnimation = trigger('floatingButtonAnimation', [
+  transition(':enter', [
+    style({ transform: 'translatex(150%)', opacity: 0 }),
+    animate('1000ms ease', style({ transform: 'translatex(0%)', opacity: 1 }))
+  ])
+]);
+
+export const bottomNavigationAnimation = trigger('bottomNavigationAnimation', [
+  transition(':enter', [
+    style({ transform: 'translateY(100%)', opacity: 0 }),
+    animate('1000ms ease', style({ transform: 'translateY(0%)', opacity: 1 }))
+  ])
+]);
+
 export const slideInAnimation = trigger('routeAnimations', [
   transition('FirstPage => SecondPage', [
     style({ position: 'relative' }),

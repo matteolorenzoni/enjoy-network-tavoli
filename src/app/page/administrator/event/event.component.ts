@@ -1,10 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
+import { floatingButtonAnimation } from 'src/app/animations/animations';
 
 @Component({
   selector: 'app-event',
   templateUrl: './event.component.html',
-  styleUrls: ['./event.component.scss']
+  styleUrls: ['./event.component.scss'],
+  animations: [floatingButtonAnimation]
 })
 export class EventComponent implements OnInit {
   /* Icons */
