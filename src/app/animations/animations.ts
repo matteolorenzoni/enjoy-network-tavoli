@@ -176,3 +176,7 @@ export const fadeInMain = trigger('fadeInMain', [
   transition(':enter', [style({ opacity: 0 }), animate('600ms 600ms ease-out', style({ opacity: 1 }))]),
   transition(':leave', [style({ opacity: 1 }), animate('600ms 600ms ease-out', style({ opacity: 0 }))])
 ]);
+
+export const fadeIn = trigger('fadeIn', [
+  transition(':enter', [style({ opacity: 0 }), animate('600ms ease-out', style({ opacity: 1 }))])
+]);

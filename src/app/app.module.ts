@@ -27,6 +27,7 @@ import { EnBottomNavigationComponent } from './components/en-bottom-navigation.c
 import { SettingComponent } from './page/setting/setting.component';
 import { EventGeneratorComponent } from './page/administrator/event/event-generator/event-generator.component';
 import { CreateItemComponent } from './layout/create-item/create-item.component';
+import { EnFileLoaderComponent } from './components/en-file-loader.component';
 
 @NgModule({
   declarations: [
@@ -45,7 +46,8 @@ import { CreateItemComponent } from './layout/create-item/create-item.component'
     EnBottomNavigationComponent,
     SettingComponent,
     EventGeneratorComponent,
-    CreateItemComponent
+    CreateItemComponent,
+    EnFileLoaderComponent
   ],
   imports: [
     BrowserModule,
