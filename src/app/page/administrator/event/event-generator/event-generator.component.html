@@ -103,11 +103,13 @@
       id="place_select"
       class="peer block w-full appearance-none border-0 border-b-2 border-white bg-transparent py-2.5 px-0 text-sm text-white focus:border-gray-200 focus:outline-none focus:ring-0"
       formControlName="place">
-      <option selected value="US" class="bg-black py-1 text-primary-60 hover:bg-primary-60 hover:text-black">
-        Baccara
+      <option
+        *ngFor="let item of places; let i = index"
+        [selected]="i === 0"
+        [value]="item"
+        class="bg-black py-1 text-primary-60 hover:bg-primary-60 hover:text-black">
+        {{ item }}
       </option>
-      <option value="CA" class="bg-black py-1 text-primary-60 hover:bg-primary-60 hover:text-black">Indie</option>
-      <option value="FR" class="bg-black py-1 text-primary-60 hover:bg-primary-60 hover:text-black">Cupole</option>
     </select>
   </div>
 

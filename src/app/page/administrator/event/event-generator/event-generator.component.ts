@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { fadeIn } from 'src/app/animations/animations';
+import { PlaceType } from '../../../../models/enum';
 
 @Component({
   selector: 'app-event-generator',
@@ -9,7 +10,10 @@ import { fadeIn } from 'src/app/animations/animations';
   animations: [fadeIn]
 })
 export class EventGeneratorComponent {
-  /* form */
+  /* Type */
+  places = Object.values(PlaceType);
+
+  /* Form */
   eventForm: FormGroup;
   imageSrc: string | ArrayBuffer | null = null;
   isLoading: boolean;
@@ -22,7 +26,7 @@ export class EventGeneratorComponent {
       timeStart: new FormControl('11:00', [Validators.required]),
       timeEnd: new FormControl('05:00', [Validators.required]),
       maxPerson: new FormControl(null, [Validators.required]),
-      place: new FormControl(null, [Validators.required]),
+      place: new FormControl(PlaceType.BACCARA, [Validators.required]),
       guest: new FormControl(null),
       description: new FormControl(null),
       messageText: new FormControl(null)

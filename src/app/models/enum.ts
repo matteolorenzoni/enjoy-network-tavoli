@@ -58,3 +58,9 @@ export enum RoleType {
   INSPECTOR = 'inspector',
   PR = 'pr'
 }
+
+export enum PlaceType {
+  BACCARA = 'Baccara',
+  INDIE = 'Indie',
+  CUPOLE = 'Cupole'
+}
