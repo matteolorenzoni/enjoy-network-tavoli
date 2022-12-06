@@ -26,3 +26,18 @@ export type BottomNavigation = {
   name: string;
   icons: IconLink[];
 };
+
+export type Event = {
+  imageUrl: string;
+  name: string;
+  date: Date;
+  timeStart: Date;
+  timeEnd: Date;
+  maxPerson: number;
+  place: string;
+  guest: string;
+  description: string;
+  messageText: string;
+  createdAt: Date;
+  modificatedAt: Date;
+};

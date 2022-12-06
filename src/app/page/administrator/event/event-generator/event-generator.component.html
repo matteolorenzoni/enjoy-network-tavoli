@@ -7,13 +7,12 @@
         (dragFileEvent)="loadPhoto($event)"></en-file-loader>
       <div *ngIf="imageSrc" [@fadeIn] class="flex flex-col justify-center gap-4">
         <img
-          #image
           class="ease h-40 w-40 rounded-full border object-cover transition duration-1000 hover:cursor-zoom-out hover:object-scale-down"
           [src]="imageSrc"
           alt="Immagine " />
         <button
           type="button"
-          class="inline-block text-xs font-bold uppercase leading-tight text-white transition duration-300 ease-in-out hover:text-red-600 focus:outline-none focus:ring-0"
+          class="inline-block text-xs font-bold uppercase leading-tight text-white transition duration-300 ease-in-out hover:text-primary-60 focus:outline-none focus:ring-0"
           (click)="removePhoto()">
           Rimuovi
         </button>
