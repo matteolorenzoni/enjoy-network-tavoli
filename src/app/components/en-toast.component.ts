@@ -15,7 +15,7 @@ import { ToastService } from '../services/toast.service';
         'bg-emerald-600': toast.type === ToastType.SUCCESS,
         'bg-red-600': toast.type === ToastType.ERROR
       }"
-      class="absolute bottom-0 z-10 mx-auto flex w-[80%] max-w-3xl items-center rounded-lg  py-3 px-6 text-base font-extrabold text-white"
+      class="absolute bottom-0 z-10 mx-auto flex w-[80%] max-w-3xl items-center rounded-lg py-3 px-6 font-roboto text-base font-medium text-white"
       role="alert">
       <svg
         aria-hidden="true"
@@ -40,6 +40,9 @@ import { ToastService } from '../services/toast.service';
   styles: [
     `
       :host {
+        position: fixed;
+        bottom: 0%;
+        width: 100%;
         display: flex;
         justify-content: center;
       }

@@ -60,7 +60,8 @@ module.exports = {
       }
     },
     fontFamily: {
-      gruppo: ['Gruppo']
+      gruppo: ['Gruppo'],
+      roboto: ['Roboto']
     }
   },
   plugins: [require('daisyui')]
