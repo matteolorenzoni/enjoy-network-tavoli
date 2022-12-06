@@ -18,7 +18,7 @@ export class EmployeeService {
 
   /* --------- SET -------- */
   public async setEmployee(uid: string): Promise<void> {
-    const docRef = doc(this.db, Table.EMPLOYEE, uid);
+    const docRef = doc(this.db, Table.EMPLOYEES, uid);
     const docSnap = await getDoc(docRef);
     if (docSnap.exists()) {
       const employee = docSnap.data() as Employee;
@@ -33,7 +33,7 @@ export class EmployeeService {
 
   /* --------- GET -------- */
   public async getEmployees(): Promise<Employee[] | null> {
-    const collectionRef = collection(this.db, Table.EMPLOYEE);
+    const collectionRef = collection(this.db, Table.EMPLOYEES);
     const querySnapshot = await getDocs(collectionRef);
     if (querySnapshot.size > 0) {
       return querySnapshot.docs.map((employeeDoc) => employeeDoc.data() as Employee);

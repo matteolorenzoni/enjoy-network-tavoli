@@ -1,7 +1,8 @@
 import { RoleType } from './enum';
 
 export enum Table {
-  EMPLOYEE = 'employees'
+  EMPLOYEES = 'employees',
+  EVENTS = 'events'
 }
 
 export type Employee = {
