@@ -4,7 +4,7 @@
       <en-file-loader *ngIf="!imageSrc" (loadFileEvent)="loadPhoto($event)"></en-file-loader>
       <div *ngIf="imageSrc" [@fadeIn] class="flex flex-col justify-center gap-4">
         <img
-          class="ease h-40 w-40 rounded-full border object-cover transition duration-1000 hover:cursor-zoom-out hover:object-scale-down"
+          class="h-40 w-40 rounded-full border object-cover transition duration-1000 ease-in hover:cursor-zoom-out hover:object-scale-down"
           [src]="imageSrc"
           alt="Immagine " />
         <button
