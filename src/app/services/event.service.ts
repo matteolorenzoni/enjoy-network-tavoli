@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
-import { addDoc, collection, getFirestore } from '@angular/fire/firestore';
+import { addDoc, collection, getDocs, getFirestore } from '@angular/fire/firestore';
 import { getDownloadURL, getStorage, ref, uploadBytesResumable, UploadTaskSnapshot } from '@angular/fire/storage';
 import { DatePipe } from '@angular/common';
 import { Table } from '../models/table';
-import { Event } from '../models/type';
+import { Event, FirebaseDate } from '../models/type';
+import { ToastService } from './toast.service';
 
 @Injectable({
   providedIn: 'root'
@@ -13,8 +14,9 @@ export class EventService {
   private db = getFirestore();
   private storage = getStorage();
 
-  constructor(private datePipe: DatePipe) {}
+  constructor(private toastService: ToastService, private datePipe: DatePipe) {}
 
+  /* ------------------------------------------- SET ------------------------------------------- */
   public async addEvent(photo: File, event: Event): Promise<void> {
     /* Event */
     const newEvent: Event = {
@@ -48,5 +50,25 @@ export class EventService {
 
     /* Add document */
     await addDoc(collection(this.db, Table.EVENTS), newEvent);
+  }
+
+  /* ------------------------------------------- GET ------------------------------------------- */
+  async getEvents(): Promise<Event[]> {
+    const collectionRef = collection(this.db, Table.EVENTS);
+    const querySnapshot = await getDocs(collectionRef);
+    if (querySnapshot.size > 0) {
+      return querySnapshot.docs.map((eventDoc) => {
+        const event = eventDoc.data() as Event;
+        const date = event.date as unknown as FirebaseDate;
+        const createdAt = event.createdAt as unknown as FirebaseDate;
+        const modificatedAt = event.modificatedAt as unknown as FirebaseDate;
+        event.date = new Date(date.seconds);
+        event.createdAt = new Date(createdAt.seconds);
+        event.modificatedAt = new Date(modificatedAt.seconds);
+        return event;
+      });
+    }
+    this.toastService.showError('Documento non trovato');
+    return [];
   }
 }
