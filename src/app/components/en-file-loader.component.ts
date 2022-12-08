@@ -26,14 +26,7 @@ import { fadeIn } from '../animations/animations';
       </p>
       <p class="text-xs text-gray-400">PNG, JPG or JPEG (MAX. 800x400px)</p>
     </div>
-    <input
-      id="dropzone-file"
-      type="file"
-      class="hidden"
-      accept="image/png, image/jpeg"
-      (change)="loadPhoto($event)"
-      (drag)="onDragOver($event)"
-      (drop)="dragPhoto($event)" />
+    <input id="dropzone-file" type="file" class="hidden" accept="image/png, image/jpeg" (change)="loadPhoto($event)" />
   </label>`,
   styles: [
     `
@@ -52,15 +45,5 @@ export class EnFileLoaderComponent {
 
   loadPhoto(e: Event) {
     this.loadFileEvent.emit(e);
-  }
-
-  onDragOver(e: Event) {
-    console.log(e);
-    e.preventDefault();
-    e.stopPropagation();
-  }
-
-  dragPhoto(e: Event) {
-    this.dragFileEvent.emit(e);
   }
 }

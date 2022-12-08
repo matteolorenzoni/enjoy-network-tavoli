@@ -71,13 +71,6 @@ export class EventGeneratorComponent {
     }
   }
 
-  // TODO: non funziona
-  public dragPhoto(e: Event) {
-    e.preventDefault();
-    e.stopPropagation();
-    this.loadPhoto(e);
-  }
-
   public removePhoto() {
     this.eventForm.patchValue({ imageUrl: null });
     this.imageSrc = null;
