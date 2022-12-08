@@ -1,9 +1,16 @@
 import { Injectable } from '@angular/core';
-import { addDoc, collection, getDocs, getFirestore } from '@angular/fire/firestore';
-import { getDownloadURL, getStorage, ref, uploadBytesResumable, UploadTaskSnapshot } from '@angular/fire/storage';
+import { addDoc, collection, doc, Firestore, getDoc, getDocs, getFirestore, setDoc } from '@angular/fire/firestore';
+import {
+  FirebaseStorage,
+  getDownloadURL,
+  getStorage,
+  ref,
+  uploadBytesResumable,
+  UploadTaskSnapshot
+} from '@angular/fire/storage';
 import { DatePipe } from '@angular/common';
 import { Table } from '../models/table';
-import { Event, FirebaseDate } from '../models/type';
+import { Event, EventDTO, FirebaseDate } from '../models/type';
 import { ToastService } from './toast.service';
 
 @Injectable({
@@ -11,15 +18,19 @@ import { ToastService } from './toast.service';
 })
 export class EventService {
   /* Firebase */
-  private db = getFirestore();
-  private storage = getStorage();
+  private db!: Firestore;
+  private storage!: FirebaseStorage;
 
-  constructor(private toastService: ToastService, private datePipe: DatePipe) {}
+  constructor(private toastService: ToastService, private datePipe: DatePipe) {
+    this.db = getFirestore();
+    this.storage = getStorage();
+  }
 
   /* ------------------------------------------- SET ------------------------------------------- */
-  public async addEvent(photo: File, event: Event): Promise<void> {
+  public async addOrUpdateEvent(photo: File, event: EventDTO, uid: string): Promise<void> {
+    console.log('addOrUpdateEvent', photo, event, uid);
     /* Event */
-    const newEvent: Event = {
+    const newEvent: EventDTO = {
       imageUrl: event.imageUrl,
       name: event.name?.trim().replace(/\s\s+/g, ' ') || '',
       date: new Date(event.date),
@@ -35,37 +46,62 @@ export class EventService {
     };
 
     /* Image */
-    const eventName = newEvent.name.toLowerCase().replace(/\s/g, '_');
-    const eventDate = this.datePipe.transform(newEvent.date, 'dd_MM_yyyy');
-    const imageType = photo.type.split('/')[1] || 'jpg';
-    const photoNameFormatted = `${eventName}_${eventDate}.${imageType}`;
-    const storageRef = ref(this.storage, `events/${photoNameFormatted}`);
+    if (photo) {
+      const eventName = newEvent.name.toLowerCase().replace(/\s/g, '_');
+      const eventDate = this.datePipe.transform(newEvent.date, 'dd_MM_yyyy');
+      const imageType = photo.type.split('/')[1] || 'jpg';
+      const photoNameFormatted = `${eventName}_${eventDate}.${imageType}`;
+      const storageRef = ref(this.storage, `events/${photoNameFormatted}`);
 
-    /* Upload */
-    const snapshot: UploadTaskSnapshot = await uploadBytesResumable(storageRef, photo);
+      /* Upload */
+      const snapshot: UploadTaskSnapshot = await uploadBytesResumable(storageRef, photo);
 
-    /* Get download URL */
-    const downloadURL: string = await getDownloadURL(snapshot.ref);
-    newEvent.imageUrl = downloadURL;
+      /* Get download URL */
+      const downloadURL: string = await getDownloadURL(snapshot.ref);
+      newEvent.imageUrl = downloadURL;
+    }
 
-    /* Add document */
-    await addDoc(collection(this.db, Table.EVENTS), newEvent);
+    if (!uid) {
+      /* Add document */
+      await addDoc(collection(this.db, Table.EVENTS), newEvent);
+    } else {
+      /* Update document */
+      await setDoc(doc(this.db, Table.EVENTS, uid), newEvent);
+    }
   }
 
   /* ------------------------------------------- GET ------------------------------------------- */
-  async getEvents(): Promise<Event[]> {
+  public async getEvent(uid: string): Promise<EventDTO | null> {
+    const docRef = doc(this.db, Table.EVENTS, uid);
+    const docSnap = await getDoc(docRef);
+    if (docSnap.exists()) {
+      const eventDTO = docSnap.data() as EventDTO;
+      const date = eventDTO.date as unknown as FirebaseDate;
+      const createdAt = eventDTO.createdAt as unknown as FirebaseDate;
+      const modificatedAt = eventDTO.modificatedAt as unknown as FirebaseDate;
+      eventDTO.date = new Date(date.seconds * 1000);
+      eventDTO.createdAt = new Date(createdAt.seconds * 1000);
+      eventDTO.modificatedAt = new Date(modificatedAt.seconds * 1000);
+      return eventDTO;
+    }
+    this.toastService.showError('Documento non trovato');
+    return null;
+  }
+
+  public async getEvents(): Promise<Event[]> {
     const collectionRef = collection(this.db, Table.EVENTS);
     const querySnapshot = await getDocs(collectionRef);
     if (querySnapshot.size > 0) {
       return querySnapshot.docs.map((eventDoc) => {
-        const event = eventDoc.data() as Event;
-        const date = event.date as unknown as FirebaseDate;
-        const createdAt = event.createdAt as unknown as FirebaseDate;
-        const modificatedAt = event.modificatedAt as unknown as FirebaseDate;
-        event.date = new Date(date.seconds);
-        event.createdAt = new Date(createdAt.seconds);
-        event.modificatedAt = new Date(modificatedAt.seconds);
-        return event;
+        const uid = eventDoc.id;
+        const eventDTO = eventDoc.data() as EventDTO;
+        const date = eventDTO.date as unknown as FirebaseDate;
+        const createdAt = eventDTO.createdAt as unknown as FirebaseDate;
+        const modificatedAt = eventDTO.modificatedAt as unknown as FirebaseDate;
+        eventDTO.date = new Date(date.seconds * 1000);
+        eventDTO.createdAt = new Date(createdAt.seconds * 1000);
+        eventDTO.modificatedAt = new Date(modificatedAt.seconds * 1000);
+        return { uid, eventDTO };
       });
     }
     this.toastService.showError('Documento non trovato');

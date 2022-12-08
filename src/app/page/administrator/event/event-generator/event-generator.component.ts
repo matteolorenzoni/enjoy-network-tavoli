@@ -1,10 +1,11 @@
 /* eslint-disable prefer-destructuring */
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { fadeIn } from 'src/app/animations/animations';
 import { EventService } from 'src/app/services/event.service';
 import { ToastService } from 'src/app/services/toast.service';
 import { Location } from '@angular/common';
+import { ActivatedRoute } from '@angular/router';
 import { PlaceType } from '../../../../models/enum';
 
 @Component({
@@ -13,9 +14,12 @@ import { PlaceType } from '../../../../models/enum';
   styleUrls: ['./event-generator.component.scss'],
   animations: [fadeIn]
 })
-export class EventGeneratorComponent {
+export class EventGeneratorComponent implements OnInit {
   /* Type */
   places = Object.values(PlaceType);
+
+  /* Event */
+  uid = '';
 
   /* Form */
   photoFile!: File;
@@ -23,7 +27,15 @@ export class EventGeneratorComponent {
   imageSrc: string | ArrayBuffer | null = null;
   isLoading: boolean;
 
-  constructor(private location: Location, private eventService: EventService, private toastService: ToastService) {
+  /* Label */
+  lblButton = 'Crea evento';
+
+  constructor(
+    private route: ActivatedRoute,
+    private location: Location,
+    private eventService: EventService,
+    private toastService: ToastService
+  ) {
     this.eventForm = new FormGroup({
       imageUrl: new FormControl(null, [Validators.required]),
       name: new FormControl(null, [Validators.required, Validators.pattern(/[\S]/)]),
@@ -39,10 +51,34 @@ export class EventGeneratorComponent {
     this.isLoading = false;
   }
 
+  ngOnInit(): void {
+    this.uid = this.route.snapshot.paramMap.get('uid') || '';
+    if (this.uid && this.uid !== '' && this.uid !== 'null') {
+      this.eventService.getEvent(this.uid).then((event) => {
+        if (event) {
+          this.eventForm.patchValue({
+            imageUrl: event.imageUrl,
+            name: event.name,
+            date: event.date.toJSON().split('T')[0],
+            timeStart: event.timeStart,
+            timeEnd: event.timeEnd,
+            maxPerson: event.maxPerson,
+            place: event.place,
+            guest: event.guest,
+            description: event.description,
+            messageText: event.messageText
+          });
+          this.imageSrc = event.imageUrl;
+          this.lblButton = 'Modifica evento';
+        }
+      });
+    }
+  }
+
   public onSubmit() {
     this.isLoading = true;
     this.eventService
-      .addEvent(this.photoFile, this.eventForm.value)
+      .addOrUpdateEvent(this.photoFile, this.eventForm.value, this.uid)
       .then(() => {
         this.imageSrc = null;
         this.eventForm.reset();

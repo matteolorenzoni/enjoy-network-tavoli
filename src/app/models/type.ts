@@ -27,7 +27,7 @@ export type BottomNavigation = {
   icons: IconLink[];
 };
 
-export type Event = {
+export type EventDTO = {
   imageUrl: string;
   name: string;
   date: Date;
@@ -40,6 +40,11 @@ export type Event = {
   messageText: string;
   createdAt: Date;
   modificatedAt: Date;
+};
+
+export type Event = {
+  uid: string;
+  eventDTO: EventDTO;
 };
 
 export type FirebaseDate = {

@@ -33,8 +33,8 @@ const routes: Routes = [
     path: 'create-item',
     component: CreateItemComponent,
     children: [
-      { path: 'event', component: EventGeneratorComponent },
-      { path: '', redirectTo: 'event', pathMatch: 'full' }
+      { path: 'event/:uid', component: EventGeneratorComponent },
+      { path: '', redirectTo: 'event/null', pathMatch: 'full' }
     ]
   },
   { path: '', redirectTo: 'login', pathMatch: 'full' },
