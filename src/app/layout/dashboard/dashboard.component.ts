@@ -20,10 +20,10 @@ export class DashboardComponent implements OnInit {
       role: RoleType.ADMINISTRATOR,
       name: 'Amministratore',
       icons: [
-        { link: '/dashboard/administrator/event', name: 'Eventi', defination: faCalendarDay },
-        { link: '/dashboard/administrator/table', name: 'Tavoli', defination: faWineBottle },
-        { link: '/dashboard/administrator/employee', name: 'Dipendenti', defination: faUsers },
-        { link: '/dashboard/administrator/setting', name: 'Impostazioni', defination: faGear }
+        { link: '/dashboard/administrator/event', name: 'Eventi', definition: faCalendarDay },
+        { link: '/dashboard/administrator/table', name: 'Tavoli', definition: faWineBottle },
+        { link: '/dashboard/administrator/employee', name: 'Dipendenti', definition: faUsers },
+        { link: '/dashboard/administrator/setting', name: 'Impostazioni', definition: faGear }
       ]
     }
   ];

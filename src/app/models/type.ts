@@ -18,7 +18,7 @@ export type Toast = {
 export type IconLink = {
   link: string;
   name: string;
-  defination: IconDefinition;
+  definition: IconDefinition;
 };
 
 export type BottomNavigation = {
@@ -40,4 +40,9 @@ export type Event = {
   messageText: string;
   createdAt: Date;
   modificatedAt: Date;
+};
+
+export type FirebaseDate = {
+  seconds: number;
+  nanoseconds: number;
 };

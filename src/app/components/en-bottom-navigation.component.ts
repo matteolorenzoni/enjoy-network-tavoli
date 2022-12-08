@@ -15,7 +15,7 @@ import { IconLink } from '../models/type';
           [routerLink]="icon.link"
           routerLinkActive="text-palette border-t border-current"
           class="flex h-full basis-full cursor-pointer flex-col items-center justify-center gap-1 bg-gray-800 bg-opacity-10  sm:bg-opacity-40">
-          <a><fa-icon [icon]="icon.defination"></fa-icon></a>
+          <a><fa-icon [icon]="icon.definition"></fa-icon></a>
           <span class="text-xs sm:text-sm">{{ icon.name }}</span>
         </li>
       </ul>
