@@ -29,6 +29,7 @@ import { SettingComponent } from './page/setting/setting.component';
 import { EventGeneratorComponent } from './page/administrator/event/event-generator/event-generator.component';
 import { CreateItemComponent } from './layout/create-item/create-item.component';
 import { EnFileLoaderComponent } from './components/en-file-loader.component';
+import { EnItemEventComponent } from './components/en-item-event.component';
 
 @NgModule({
   declarations: [
@@ -48,7 +49,8 @@ import { EnFileLoaderComponent } from './components/en-file-loader.component';
     SettingComponent,
     EventGeneratorComponent,
     CreateItemComponent,
-    EnFileLoaderComponent
+    EnFileLoaderComponent,
+    EnItemEventComponent
   ],
   imports: [
     BrowserModule,

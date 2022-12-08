@@ -180,3 +180,8 @@ export const fadeInMain = trigger('fadeInMain', [
 export const fadeIn = trigger('fadeIn', [
   transition(':enter', [style({ opacity: 0 }), animate('600ms ease-out', style({ opacity: 1 }))])
 ]);
+
+export const expandEventItem = trigger('expandEventItem', [
+  transition(':enter', [style({ height: 0 }), animate('600ms ease-out', style({ height: '*' }))]),
+  transition(':leave', [style({ height: '*' }), animate('600ms ease-out', style({ height: 0 }))])
+]);
