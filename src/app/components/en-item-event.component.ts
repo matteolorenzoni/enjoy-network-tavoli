@@ -73,7 +73,7 @@ import { expandEventItem } from '../animations/animations';
             [routerLink]="icon.link"
             class="flex grow flex-col items-center rounded-md bg-primary-65 p-1 text-white">
             <a><fa-icon [icon]="icon.definition"></fa-icon></a>
-            <span class="text-xs sm:text-sm">{{ icon.name }}</span>
+            <span class="text-xs xs:text-sm">{{ icon.name }}</span>
           </li>
         </ul>
         <button

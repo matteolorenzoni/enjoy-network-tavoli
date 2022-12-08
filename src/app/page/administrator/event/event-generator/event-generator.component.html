@@ -1,4 +1,4 @@
-<form class="flex flex-col gap-12 sm:gap-20" [formGroup]="eventForm" (ngSubmit)="onSubmit()">
+<form class="flex flex-col gap-12 xs:gap-20" [formGroup]="eventForm" (ngSubmit)="onSubmit()">
   <div class="relative z-0">
     <div class="flex w-full items-center justify-center">
       <en-file-loader *ngIf="!imageSrc" (loadFileEvent)="loadPhoto($event)"></en-file-loader>

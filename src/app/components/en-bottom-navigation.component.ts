@@ -6,7 +6,7 @@ import { IconLink } from '../models/type';
 @Component({
   selector: 'en-bottom-navigation[navigationMenu]',
   template: ` <div [ngClass]="['theme-' + palette]">
-    <nav [@bottomNavigationAnimation] class="fixed left-0 bottom-0 right-0 h-20 p-0 backdrop-blur-sm sm:h-24 sm:p-4">
+    <nav [@bottomNavigationAnimation] class="fixed left-0 bottom-0 right-0 h-20 p-0 backdrop-blur-sm xs:h-24 xs:p-4">
       <!-- <ul class="btm-nav btm-nav-md"> -->
       <ul
         class="m-auto flex h-full max-w-[48rem] flex-row items-center justify-center overflow-hidden rounded-lg bg-gray-800 bg-opacity-30">
@@ -14,9 +14,9 @@ import { IconLink } from '../models/type';
           *ngFor="let icon of navigationMenu"
           [routerLink]="icon.link"
           routerLinkActive="text-palette border-t border-current"
-          class="flex h-full basis-full cursor-pointer flex-col items-center justify-center gap-1 bg-gray-800 bg-opacity-10  sm:bg-opacity-40">
+          class="flex h-full basis-full cursor-pointer flex-col items-center justify-center gap-1 bg-gray-800 bg-opacity-10  xs:bg-opacity-40">
           <a><fa-icon [icon]="icon.definition"></fa-icon></a>
-          <span class="text-xs sm:text-sm">{{ icon.name }}</span>
+          <span class="text-xs xs:text-sm">{{ icon.name }}</span>
         </li>
       </ul>
     </nav>
