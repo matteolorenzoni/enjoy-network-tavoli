@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
-import { floatingButtonAnimation } from 'src/app/animations/animations';
+import { floatingButtonAnimation, staggeredFadeInIncrement } from 'src/app/animations/animations';
 import { EventService } from 'src/app/services/event.service';
 import { Event } from 'src/app/models/type';
 
@@ -9,7 +9,7 @@ import { Event } from 'src/app/models/type';
   selector: 'app-event',
   templateUrl: './event-list.component.html',
   styleUrls: ['./event-list.component.scss'],
-  animations: [floatingButtonAnimation]
+  animations: [floatingButtonAnimation, staggeredFadeInIncrement]
 })
 export class EventListComponent implements OnInit {
   /* Icons */

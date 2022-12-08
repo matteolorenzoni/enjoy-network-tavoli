@@ -1,4 +1,4 @@
-import { animate, state, style, transition, trigger, sequence, query, group } from '@angular/animations';
+import { animate, state, style, transition, trigger, sequence, query, group, stagger } from '@angular/animations';
 
 export const loginFormAnimation = trigger('loginFormAnimation', [
   state('bottom', style({ transform: 'translateY(0%)' })),
@@ -184,4 +184,27 @@ export const fadeIn = trigger('fadeIn', [
 export const expandEventItem = trigger('expandEventItem', [
   transition(':enter', [style({ height: 0 }), animate('600ms ease-out', style({ height: '*' }))]),
   transition(':leave', [style({ height: '*' }), animate('600ms ease-out', style({ height: 0 }))])
+]);
+
+export const staggeredFadeIn = trigger('staggeredFadeIn', [
+  transition(':enter', [
+    query('.staggered-fade-in', [
+      style({ opacity: 0, transform: 'translateY(20px)' }),
+      stagger(100, [animate('600ms ease-out', style({ opacity: 1, transform: 'translateY(0)' }))])
+    ])
+  ])
+]);
+
+// add stagger animation on incrmenet list
+export const staggeredFadeInIncrement = trigger('staggeredFadeInIncrement', [
+  transition(':increment', [
+    query(
+      ':enter',
+      [
+        style({ opacity: 0, transform: 'translateY(100px)' }),
+        stagger(200, [animate('800ms ease-out', style({ opacity: 1, transform: 'translateY(0)' }))])
+      ],
+      { optional: true }
+    )
+  ])
 ]);

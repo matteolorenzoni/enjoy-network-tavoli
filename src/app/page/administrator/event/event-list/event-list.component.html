@@ -1,6 +1,6 @@
 <div>
   <section>
-    <ul class="flex flex-col gap-4 xs:gap-6">
+    <ul [@staggeredFadeInIncrement]="events.length" class="flex flex-col gap-4 xs:gap-6">
       <en-item-event *ngFor="let event of events" [event]="event"></en-item-event>
     </ul>
   </section>
