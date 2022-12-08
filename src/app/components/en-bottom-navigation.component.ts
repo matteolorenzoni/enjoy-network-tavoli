@@ -6,7 +6,9 @@ import { IconLink } from '../models/type';
 @Component({
   selector: 'en-bottom-navigation[navigationMenu]',
   template: ` <div [ngClass]="['theme-' + palette]">
-    <nav [@bottomNavigationAnimation] class="fixed left-0 bottom-0 right-0 h-20 p-0 backdrop-blur-sm xs:h-24 xs:p-4">
+    <nav
+      [@bottomNavigationAnimation]
+      class="fixed left-0 bottom-0 right-0 z-20 h-20 p-0 backdrop-blur-sm xs:h-24 xs:p-4">
       <!-- <ul class="btm-nav btm-nav-md"> -->
       <ul
         class="m-auto flex h-full max-w-[48rem] flex-row items-center justify-center overflow-hidden rounded-lg bg-gray-800 bg-opacity-30">
