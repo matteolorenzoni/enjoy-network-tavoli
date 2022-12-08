@@ -15,7 +15,7 @@ import { ToastService } from '../services/toast.service';
         'bg-emerald-600': toast.type === ToastType.SUCCESS,
         'bg-red-600': toast.type === ToastType.ERROR
       }"
-      class="absolute bottom-0 z-10 mx-auto flex w-[80%] max-w-3xl items-center rounded-lg py-3 px-6 font-roboto text-base font-medium text-white"
+      class="absolute bottom-0 z-30 mx-auto flex w-[80%] max-w-3xl items-center rounded-lg py-3 px-6 font-roboto text-base font-medium text-white"
       role="alert">
       <svg
         aria-hidden="true"

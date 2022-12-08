@@ -1,5 +1,5 @@
 <form class="flex flex-col gap-12 xs:gap-20" [formGroup]="eventForm" (ngSubmit)="onSubmit()">
-  <div class="relative z-0">
+  <div class="relative">
     <div class="flex w-full items-center justify-center">
       <en-file-loader *ngIf="!imageSrc" (loadFileEvent)="loadPhoto($event)"></en-file-loader>
       <div *ngIf="imageSrc" [@fadeIn] class="flex flex-col justify-center gap-4">
@@ -17,7 +17,7 @@
     </div>
   </div>
 
-  <div class="relative z-0">
+  <div class="relative">
     <input
       type="text"
       id="name_input"
@@ -27,12 +27,12 @@
       placeholder=" " />
     <label
       for="name_input"
-      class="absolute top-3 -z-10 origin-[0] -translate-y-6 scale-75 transform text-sm font-bold text-white duration-300 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100 peer-focus:left-0 peer-focus:-translate-y-6 peer-focus:scale-75 peer-focus:text-primary-60">
+      class="absolute top-3 origin-[0] -translate-y-6 scale-75 transform text-sm font-bold text-white duration-300 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100 peer-focus:left-0 peer-focus:-translate-y-6 peer-focus:scale-75 peer-focus:text-primary-60">
       Nome
     </label>
   </div>
 
-  <div class="relative z-0">
+  <div class="relative">
     <input
       type="date"
       id="date_input"
@@ -42,12 +42,12 @@
       placeholder=" " />
     <label
       for="date_input"
-      class="absolute top-3 -z-10 origin-[0] -translate-y-6 scale-75 transform text-sm font-bold text-white duration-300 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100 peer-focus:left-0 peer-focus:-translate-y-6 peer-focus:scale-75 peer-focus:text-primary-60">
+      class="absolute top-3 origin-[0] -translate-y-6 scale-75 transform text-sm font-bold text-white duration-300 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100 peer-focus:left-0 peer-focus:-translate-y-6 peer-focus:scale-75 peer-focus:text-primary-60">
       Data
     </label>
   </div>
 
-  <div class="relative z-0 flex gap-6">
+  <div class="relative flex gap-6">
     <div class="w-1/2">
       <input
         type="time"
@@ -58,7 +58,7 @@
         placeholder=" " />
       <label
         for="name_input"
-        class="absolute top-3 -z-10 origin-[0] -translate-y-6 scale-75 transform text-sm font-bold text-white duration-300 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100 peer-focus:left-0 peer-focus:-translate-y-6 peer-focus:scale-75 peer-focus:text-primary-60">
+        class="absolute top-3 origin-[0] -translate-y-6 scale-75 transform text-sm font-bold text-white duration-300 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100 peer-focus:left-0 peer-focus:-translate-y-6 peer-focus:scale-75 peer-focus:text-primary-60">
         Inizio
       </label>
     </div>
@@ -72,13 +72,13 @@
         placeholder=" " />
       <label
         for="name_input"
-        class="absolute top-3 -z-10 origin-[0] -translate-y-6 scale-75 transform text-sm font-bold text-white duration-300 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100 peer-focus:left-0 peer-focus:-translate-y-6 peer-focus:scale-75 peer-focus:text-primary-60">
+        class="absolute top-3 origin-[0] -translate-y-6 scale-75 transform text-sm font-bold text-white duration-300 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100 peer-focus:left-0 peer-focus:-translate-y-6 peer-focus:scale-75 peer-focus:text-primary-60">
         Fine
       </label>
     </div>
   </div>
 
-  <div class="relative z-0">
+  <div class="relative">
     <input
       type="number"
       id="max_person_input"
@@ -88,12 +88,12 @@
       placeholder=" " />
     <label
       for="max_person_input"
-      class="absolute top-3 -z-10 origin-[0] -translate-y-6 scale-75 transform text-sm font-bold text-white duration-300 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100 peer-focus:left-0 peer-focus:-translate-y-6 peer-focus:scale-75 peer-focus:text-primary-60">
+      class="absolute top-3 origin-[0] -translate-y-6 scale-75 transform text-sm font-bold text-white duration-300 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100 peer-focus:left-0 peer-focus:-translate-y-6 peer-focus:scale-75 peer-focus:text-primary-60">
       Numero massimo di persone
     </label>
   </div>
 
-  <div class="relative z-0">
+  <div class="relative">
     <label for="countries_disabled" class="block text-sm font-bold text-white"> Luogo </label>
     <select
       id="place_select"
@@ -109,7 +109,7 @@
     </select>
   </div>
 
-  <div class="relative z-0">
+  <div class="relative">
     <input
       type="text"
       id="guest_input"
@@ -119,12 +119,12 @@
       placeholder=" " />
     <label
       for="guest_input"
-      class="absolute top-3 -z-10 origin-[0] -translate-y-6 scale-75 transform text-sm font-bold text-white duration-300 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100 peer-focus:left-0 peer-focus:-translate-y-6 peer-focus:scale-75 peer-focus:text-primary-60">
+      class="absolute top-3 origin-[0] -translate-y-6 scale-75 transform text-sm font-bold text-white duration-300 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100 peer-focus:left-0 peer-focus:-translate-y-6 peer-focus:scale-75 peer-focus:text-primary-60">
       Ospite
     </label>
   </div>
 
-  <div class="group relative z-0">
+  <div class="group relative">
     <label
       for="description_textarea"
       class="mb-2 block text-sm font-bold text-white group-focus-within:text-primary-60">
@@ -139,7 +139,7 @@
       formControlName="description"></textarea>
   </div>
 
-  <div class="group relative z-0">
+  <div class="group relative">
     <label for="message_textarea" class="mb-2 block text-sm font-bold text-white group-focus-within:text-primary-60">
       Testo messaggio
     </label>
@@ -153,7 +153,7 @@
   <div class="mx-auto w-52">
     <en-button
       buttonName="login-button"
-      buttonText="Crea evento"
+      [buttonText]="lblButton"
       buttonType="submit"
       [buttonIsDisabled]="!eventForm.valid"
       palette="primary"
