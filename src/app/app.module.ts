@@ -30,6 +30,7 @@ import { EventGeneratorComponent } from './page/administrator/event/event-genera
 import { CreateItemComponent } from './layout/create-item/create-item.component';
 import { EnFileLoaderComponent } from './components/en-file-loader.component';
 import { EnItemEventComponent } from './components/en-item-event.component';
+import { StatisticsComponent } from './page/statistics/statistics.component';
 
 @NgModule({
   declarations: [
@@ -50,7 +51,8 @@ import { EnItemEventComponent } from './components/en-item-event.component';
     EventGeneratorComponent,
     CreateItemComponent,
     EnFileLoaderComponent,
-    EnItemEventComponent
+    EnItemEventComponent,
+    StatisticsComponent
   ],
   imports: [
     BrowserModule,

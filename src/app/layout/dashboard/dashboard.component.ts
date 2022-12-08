@@ -1,6 +1,6 @@
 import { UserService } from 'src/app/services/user.service';
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { faCalendarDay, faGear, faUsers, faWineBottle } from '@fortawesome/free-solid-svg-icons';
+import { faCalendarDay, faChartPie, faGear, faUsers } from '@fortawesome/free-solid-svg-icons';
 import { BottomNavigation, IconLink } from 'src/app/models/type';
 import { RouterOutlet } from '@angular/router';
 import { slideInAnimation } from 'src/app/animations/animations';
@@ -21,8 +21,8 @@ export class DashboardComponent implements OnInit {
       name: 'Amministratore',
       icons: [
         { link: '/dashboard/administrator/event', name: 'Eventi', definition: faCalendarDay },
-        { link: '/dashboard/administrator/table', name: 'Tavoli', definition: faWineBottle },
         { link: '/dashboard/administrator/employee', name: 'Dipendenti', definition: faUsers },
+        { link: '/dashboard/administrator/statistics', name: 'Statistiche', definition: faChartPie },
         { link: '/dashboard/administrator/setting', name: 'Impostazioni', definition: faGear }
       ]
     }
