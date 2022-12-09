@@ -1,8 +1,6 @@
 <header></header>
 <main class="p-4 pb-24">
-  <div [@routeAnimations]="getRouteAnimationData(outlet)">
-    <router-outlet #outlet="outlet"></router-outlet>
-  </div>
+  <router-outlet></router-outlet>
 </main>
 <footer>
   <en-bottom-navigation palette="primary-inverse" [navigationMenu]="navigationMenu"></en-bottom-navigation>

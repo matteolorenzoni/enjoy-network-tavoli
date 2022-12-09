@@ -19,10 +19,10 @@ const routes: Routes = [
       {
         path: 'administrator',
         children: [
-          { path: 'event', component: EventListComponent, data: { animation: 'FirstPage' } },
-          { path: 'employee', component: EmployeeComponent, data: { animation: 'SecondPage' } },
-          { path: 'statistics', component: StatisticsComponent, data: { animation: 'ThirdPage' } },
-          { path: 'setting', component: SettingComponent, data: { animation: 'FourthPage' } },
+          { path: 'event', component: EventListComponent },
+          { path: 'employee', component: EmployeeComponent },
+          { path: 'statistics', component: StatisticsComponent },
+          { path: 'setting', component: SettingComponent },
           { path: '', redirectTo: 'event', pathMatch: 'full' }
         ]
       },

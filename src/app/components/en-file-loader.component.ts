@@ -1,10 +1,10 @@
 import { Component, Output, EventEmitter } from '@angular/core';
-import { fadeIn } from '../animations/animations';
+import { fadeInAnimation } from '../animations/animations';
 
 @Component({
   selector: 'en-file-loader[loadFileEvent]',
   template: ` <label
-    [@fadeIn]
+    [@fadeInAnimation]
     for="dropzone-file"
     class="hover:bg-bray-800 flex h-40 w-full cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-600 bg-gray-700 hover:border-gray-500 hover:bg-gray-600">
     <div class="flex flex-col items-center justify-center pt-5 pb-6">
@@ -37,7 +37,7 @@ import { fadeIn } from '../animations/animations';
       }
     `
   ],
-  animations: [fadeIn]
+  animations: [fadeInAnimation]
 })
 export class EnFileLoaderComponent {
   @Output() loadFileEvent = new EventEmitter<Event>();

@@ -2,16 +2,13 @@ import { UserService } from 'src/app/services/user.service';
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { faCalendarDay, faChartPie, faGear, faUsers } from '@fortawesome/free-solid-svg-icons';
 import { BottomNavigation, IconLink } from 'src/app/models/type';
-import { RouterOutlet } from '@angular/router';
-import { slideInAnimation } from 'src/app/animations/animations';
 import { RoleType } from '../../models/enum';
 import { EmployeeService } from '../../services/employee.service';
 
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
-  styleUrls: ['./dashboard.component.scss'],
-  animations: [slideInAnimation]
+  styleUrls: ['./dashboard.component.scss']
 })
 export class DashboardComponent implements OnInit {
   /* Navigation bottom */
@@ -46,9 +43,5 @@ export class DashboardComponent implements OnInit {
 
   ngAfterContentChecked() {
     this.cdref.detectChanges();
-  }
-
-  getRouteAnimationData(outlet: RouterOutlet) {
-    return outlet && outlet.activatedRouteData && outlet.activatedRouteData['animation'];
   }
 }

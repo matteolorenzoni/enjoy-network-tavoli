@@ -1,18 +1,19 @@
-import { animate, state, style, transition, trigger, sequence, query, group, stagger } from '@angular/animations';
+import { animate, state, style, transition, trigger, sequence, query, stagger } from '@angular/animations';
 
 /* ---------------------------- GENERAL ANIMATIONS ---------------------------- */
-export const fadeInOutAnimation = trigger('fadeInOutAnimation', [
-  transition(':enter', [style({ opacity: 0 }), animate('1000ms 1000ms ease', style({ opacity: 1 }))]),
-  transition(':leave', [style({ opacity: 1 }), animate('1000ms ease', style({ opacity: 0 }))])
+export const fadeInAnimation = trigger('fadeInAnimation', [
+  transition(':enter', [style({ opacity: 0 }), animate('1000ms ease-out', style({ opacity: 1 }))])
 ]);
 
 /* ---------------------------- SPECIFIC ANIMATIONS ---------------------------- */
+// Login
 export const loginFormAnimation = trigger('loginFormAnimation', [
   state('bottom', style({ transform: 'translateY(0%)' })),
   state('center', style({ transform: 'translateY(-60vh)' })),
   transition('bottom => center', [animate('1200ms cubic-bezier(.56,1.42,.89,1.02)')])
 ]);
 
+// Login
 export const loginFormAnimation2 = trigger('loginFormAnimation2', [
   transition('center => top', [
     sequence([
@@ -22,6 +23,7 @@ export const loginFormAnimation2 = trigger('loginFormAnimation2', [
   ])
 ]);
 
+// Toast
 export const toastAnimation = trigger('toastAnimation', [
   transition(':enter', [
     style({ opacity: 0, transform: 'translateY(0%)' }),
@@ -32,6 +34,7 @@ export const toastAnimation = trigger('toastAnimation', [
   ])
 ]);
 
+// Bottom navigation
 export const bottomNavigationAnimation = trigger('bottomNavigationAnimation', [
   transition(':enter', [
     style({ transform: 'translateY(100%)', opacity: 0 }),
@@ -43,121 +46,8 @@ export const bottomNavigationAnimation = trigger('bottomNavigationAnimation', [
   ])
 ]);
 
-export const slideInAnimation = trigger('routeAnimations', [
-  transition('FirstPage => SecondPage', [
-    style({ position: 'relative' }),
-    query(':enter, :leave', [style({ position: 'absolute', top: 0, left: 0, width: '100%' })]),
-    query(':enter', [style({ left: '100%' })]),
-    group([
-      query(':leave', [animate('200ms ease-out', style({ left: '-100%', opacity: 0 }))]),
-      query(':enter', [animate('300ms ease-out', style({ left: '0%' }))])
-    ])
-  ]),
-  transition('FirstPage => ThirdPage', [
-    style({ position: 'relative' }),
-    query(':enter, :leave', [style({ position: 'absolute', top: 0, left: 0, width: '100%' })]),
-    query(':enter', [style({ left: '100%' })]),
-    group([
-      query(':leave', [animate('200ms ease-out', style({ left: '-100%', opacity: 0 }))]),
-      query(':enter', [animate('300ms ease-out', style({ left: '0%' }))])
-    ])
-  ]),
-  transition('FirstPage => FourthPage', [
-    style({ position: 'relative' }),
-    query(':enter, :leave', [style({ position: 'absolute', top: 0, left: 0, width: '100%' })]),
-    query(':enter', [style({ left: '100%' })]),
-    group([
-      query(':leave', [animate('200ms ease-out', style({ left: '-100%', opacity: 0 }))]),
-      query(':enter', [animate('300ms ease-out', style({ left: '0%' }))])
-    ])
-  ]),
-
-  transition('SecondPage => FirstPage', [
-    style({ position: 'relative' }),
-    query(':enter, :leave', [style({ position: 'absolute', top: 0, left: 0, width: '100%' })]),
-    query(':enter', [style({ left: '-100%' })]),
-    group([
-      query(':leave', [animate('200ms ease-out', style({ left: '100%', opacity: 0 }))]),
-      query(':enter', [animate('300ms ease-out', style({ left: '0%' }))])
-    ])
-  ]),
-  transition('SecondPage => ThirdPage', [
-    style({ position: 'relative' }),
-    query(':enter, :leave', [style({ position: 'absolute', top: 0, left: 0, width: '100%' })]),
-    query(':enter', [style({ left: '100%' })]),
-    group([
-      query(':leave', [animate('200ms ease-out', style({ left: '-100%', opacity: 0 }))]),
-      query(':enter', [animate('300ms ease-out', style({ left: '0%' }))])
-    ])
-  ]),
-  transition('SecondPage => FourthPage', [
-    style({ position: 'relative' }),
-    query(':enter, :leave', [style({ position: 'absolute', top: 0, left: 0, width: '100%' })]),
-    query(':enter', [style({ left: '100%' })]),
-    group([
-      query(':leave', [animate('200ms ease-out', style({ left: '-100%', opacity: 0 }))]),
-      query(':enter', [animate('300ms ease-out', style({ left: '0%' }))])
-    ])
-  ]),
-
-  transition('ThirdPage => FirstPage', [
-    style({ position: 'relative' }),
-    query(':enter, :leave', [style({ position: 'absolute', top: 0, left: 0, width: '100%' })]),
-    query(':enter', [style({ left: '-100%' })]),
-    group([
-      query(':leave', [animate('200ms ease-out', style({ left: '100%', opacity: 0 }))]),
-      query(':enter', [animate('300ms ease-out', style({ left: '0%' }))])
-    ])
-  ]),
-  transition('ThirdPage => SecondPage', [
-    style({ position: 'relative' }),
-    query(':enter, :leave', [style({ position: 'absolute', top: 0, left: 0, width: '100%' })]),
-    query(':enter', [style({ left: '-100%' })]),
-    group([
-      query(':leave', [animate('200ms ease-out', style({ left: '100%', opacity: 0 }))]),
-      query(':enter', [animate('300ms ease-out', style({ left: '0%' }))])
-    ])
-  ]),
-  transition('ThirdPage => FourthPage', [
-    style({ position: 'relative' }),
-    query(':enter, :leave', [style({ position: 'absolute', top: 0, left: 0, width: '100%' })]),
-    query(':enter', [style({ left: '100%' })]),
-    group([
-      query(':leave', [animate('200ms ease-out', style({ left: '-100%', opacity: 0 }))]),
-      query(':enter', [animate('300ms ease-out', style({ left: '0%' }))])
-    ])
-  ]),
-
-  transition('FourthPage => FirstPage', [
-    style({ position: 'relative' }),
-    query(':enter, :leave', [style({ position: 'absolute', top: 0, left: 0, width: '100%' })]),
-    query(':enter', [style({ left: '-100%' })]),
-    group([
-      query(':leave', [animate('200ms ease-out', style({ left: '100%', opacity: 0 }))]),
-      query(':enter', [animate('300ms ease-out', style({ left: '0%' }))])
-    ])
-  ]),
-  transition('FourthPage => SecondPage', [
-    style({ position: 'relative' }),
-    query(':enter, :leave', [style({ position: 'absolute', top: 0, left: 0, width: '100%' })]),
-    query(':enter', [style({ left: '-100%' })]),
-    group([
-      query(':leave', [animate('200ms ease-out', style({ left: '100%', opacity: 0 }))]),
-      query(':enter', [animate('300ms ease-out', style({ left: '0%' }))])
-    ])
-  ]),
-  transition('FourthPage => ThirdPage', [
-    style({ position: 'relative' }),
-    query(':enter, :leave', [style({ position: 'absolute', top: 0, left: 0, width: '100%' })]),
-    query(':enter', [style({ left: '-100%' })]),
-    group([
-      query(':leave', [animate('200ms ease-out', style({ left: '100%', opacity: 0 }))]),
-      query(':enter', [animate('300ms ease-out', style({ left: '0%' }))])
-    ])
-  ])
-]);
-
-export const slidInHeader = trigger('slidInHeader', [
+// Create-item main
+export const slideInCreateItemHeader = trigger('slideInCreateItemHeader', [
   transition(':enter', [
     style({ transform: 'translateY(-100%)', opacity: 0 }),
     animate('600ms ease-out', style({ transform: 'translateY(0%)', opacity: 1 }))
@@ -168,30 +58,19 @@ export const slidInHeader = trigger('slidInHeader', [
   ])
 ]);
 
-export const fadeInMain = trigger('fadeInMain', [
+// Create-item main
+export const fadeInCreateItemAnimation = trigger('fadeInCreateItemAnimation', [
   transition(':enter', [style({ opacity: 0 }), animate('600ms 600ms ease-out', style({ opacity: 1 }))]),
   transition(':leave', [style({ opacity: 1 }), animate('600ms 600ms ease-out', style({ opacity: 0 }))])
 ]);
 
-export const fadeIn = trigger('fadeIn', [
-  transition(':enter', [style({ opacity: 0 }), animate('600ms ease-out', style({ opacity: 1 }))])
-]);
-
-export const expandEventItem = trigger('expandEventItem', [
+// Item event dettails
+export const expandEventItemDetailsAnimation = trigger('expandEventItemDetailsAnimation', [
   transition(':enter', [style({ height: 0 }), animate('600ms ease-out', style({ height: '*' }))]),
   transition(':leave', [style({ height: '*' }), animate('600ms ease-out', style({ height: 0 }))])
 ]);
 
-export const staggeredFadeIn = trigger('staggeredFadeIn', [
-  transition(':enter', [
-    query('.staggered-fade-in', [
-      style({ opacity: 0, transform: 'translateY(20px)' }),
-      stagger(100, [animate('600ms ease-out', style({ opacity: 1, transform: 'translateY(0)' }))])
-    ])
-  ])
-]);
-
-// add stagger animation on incrmenet list
+// Event item in the event-list
 export const staggeredFadeInIncrement = trigger('staggeredFadeInIncrement', [
   transition(':increment', [
     query(

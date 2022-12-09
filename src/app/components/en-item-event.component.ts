@@ -4,7 +4,7 @@ import { Component, Input, SimpleChanges, Output, EventEmitter } from '@angular/
 import { faPen, faUsers, faWineBottle } from '@fortawesome/free-solid-svg-icons';
 import { Event, EventDTO } from 'src/app/models/type';
 import { ToastService } from '../services/toast.service';
-import { expandEventItem } from '../animations/animations';
+import { expandEventItemDetailsAnimation } from '../animations/animations';
 
 @Component({
   selector: 'en-item-event[event][eventDeletedEvent]',
@@ -61,7 +61,10 @@ import { expandEventItem } from '../animations/animations';
             class="center relative h-full w-full object-cover" />
         </div>
       </ng-template>
-      <div [@expandEventItem] *ngIf="isOpen" class="mt-2 overflow-hidden rounded bg-white p-2 text-black ">
+      <div
+        [@expandEventItemDetailsAnimation]
+        *ngIf="isOpen"
+        class="mt-2 overflow-hidden rounded bg-white p-2 text-black ">
         <ul class="divide-y divide-primary-85">
           <li *ngFor="let info of eventInfo" class="flex px-2 py-1">
             <div
@@ -96,7 +99,7 @@ import { expandEventItem } from '../animations/animations';
       }
     `
   ],
-  animations: [expandEventItem]
+  animations: [expandEventItemDetailsAnimation]
 })
 export class EnItemEventComponent {
   @Input() event!: Event;

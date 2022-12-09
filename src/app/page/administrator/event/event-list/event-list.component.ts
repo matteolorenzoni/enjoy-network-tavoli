@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
-import { fadeInOutAnimation, staggeredFadeInIncrement } from 'src/app/animations/animations';
+import { fadeInAnimation, staggeredFadeInIncrement } from 'src/app/animations/animations';
 import { EventService } from 'src/app/services/event.service';
 import { Event } from 'src/app/models/type';
 import { ToastService } from 'src/app/services/toast.service';
@@ -10,7 +10,7 @@ import { ToastService } from 'src/app/services/toast.service';
   selector: 'app-event',
   templateUrl: './event-list.component.html',
   styleUrls: ['./event-list.component.scss'],
-  animations: [fadeInOutAnimation, staggeredFadeInIncrement]
+  animations: [fadeInAnimation, staggeredFadeInIncrement]
 })
 export class EventListComponent implements OnInit {
   /* Icons */

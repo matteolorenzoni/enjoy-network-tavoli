@@ -1,7 +1,7 @@
 /* eslint-disable prefer-destructuring */
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { fadeIn } from 'src/app/animations/animations';
+import { fadeInAnimation } from 'src/app/animations/animations';
 import { EventService } from 'src/app/services/event.service';
 import { ToastService } from 'src/app/services/toast.service';
 import { Location } from '@angular/common';
@@ -12,7 +12,7 @@ import { PlaceType } from '../../../../models/enum';
   selector: 'app-event-generator',
   templateUrl: './event-generator.component.html',
   styleUrls: ['./event-generator.component.scss'],
-  animations: [fadeIn]
+  animations: [fadeInAnimation]
 })
 export class EventGeneratorComponent implements OnInit {
   /* Type */
