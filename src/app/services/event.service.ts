@@ -1,5 +1,15 @@
 import { Injectable } from '@angular/core';
-import { addDoc, collection, doc, Firestore, getDoc, getDocs, getFirestore, setDoc } from '@angular/fire/firestore';
+import {
+  addDoc,
+  collection,
+  deleteDoc,
+  doc,
+  Firestore,
+  getDoc,
+  getDocs,
+  getFirestore,
+  setDoc
+} from '@angular/fire/firestore';
 import {
   FirebaseStorage,
   getDownloadURL,
@@ -28,7 +38,6 @@ export class EventService {
 
   /* ------------------------------------------- SET ------------------------------------------- */
   public async addOrUpdateEvent(photo: File, event: EventDTO, uid: string): Promise<void> {
-    console.log('addOrUpdateEvent', photo, event, uid);
     /* Event */
     const newEvent: EventDTO = {
       imageUrl: event.imageUrl,
@@ -106,5 +115,10 @@ export class EventService {
     }
     this.toastService.showError('Documento non trovato');
     return [];
+  }
+
+  /* ------------------------------------------- DELETE ------------------------------------------- */
+  public async deleteEvent(uid: string): Promise<void> {
+    await deleteDoc(doc(this.db, Table.EVENTS, uid));
   }
 }

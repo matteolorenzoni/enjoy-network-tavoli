@@ -1,11 +1,13 @@
+import { EventService } from 'src/app/services/event.service';
 import { DatePipe } from '@angular/common';
-import { Component, Input, SimpleChanges } from '@angular/core';
+import { Component, Input, SimpleChanges, Output, EventEmitter } from '@angular/core';
 import { faPen, faUsers, faWineBottle } from '@fortawesome/free-solid-svg-icons';
 import { Event, EventDTO } from 'src/app/models/type';
+import { ToastService } from '../services/toast.service';
 import { expandEventItem } from '../animations/animations';
 
 @Component({
-  selector: 'en-item-event[event]',
+  selector: 'en-item-event[event][eventDeletedEvent]',
   template: `
     <li>
       <ng-container *ngIf="!isOpen; else elseTemplate">
@@ -80,7 +82,8 @@ import { expandEventItem } from '../animations/animations';
         </ul>
         <button
           type="button"
-          class="mt-2 inline-block w-full rounded bg-red-600 px-6 py-2.5 text-xs font-extrabold uppercase leading-tight text-white shadow-md transition duration-150 ease-in-out hover:bg-red-700 hover:shadow-lg">
+          class="mt-2 inline-block w-full rounded bg-red-600 px-6 py-2.5 text-xs font-extrabold uppercase leading-tight text-white shadow-md transition duration-150 ease-in-out hover:bg-red-700 hover:shadow-lg"
+          (click)="deleteEvent()">
           ELIMINA
         </button>
       </div>
@@ -97,6 +100,7 @@ import { expandEventItem } from '../animations/animations';
 })
 export class EnItemEventComponent {
   @Input() event!: Event;
+  @Output() eventDeletedEvent: EventEmitter<any> = new EventEmitter();
 
   /* Props */
   isOpen = false;
@@ -109,7 +113,7 @@ export class EnItemEventComponent {
   /* Menu */
   itemNavigationMenu: any[] = [];
 
-  constructor(private datePipe: DatePipe) {}
+  constructor(private datePipe: DatePipe, private eventService: EventService, private toastService: ToastService) {}
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['event']) {
@@ -136,5 +140,18 @@ export class EnItemEventComponent {
 
   toggleOpen(): void {
     this.isOpen = !this.isOpen;
+  }
+
+  deleteEvent(): void {
+    this.eventService
+      .deleteEvent(this.uid)
+      .then(() => {
+        this.isOpen = false;
+        this.toastService.showSuccess('Evento eliminato');
+        this.eventDeletedEvent.emit();
+      })
+      .catch((error: Error) => {
+        this.toastService.showError(error.message);
+      });
   }
 }
