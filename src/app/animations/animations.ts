@@ -1,5 +1,12 @@
 import { animate, state, style, transition, trigger, sequence, query, group, stagger } from '@angular/animations';
 
+/* ---------------------------- GENERAL ANIMATIONS ---------------------------- */
+export const fadeInOutAnimation = trigger('fadeInOutAnimation', [
+  transition(':enter', [style({ opacity: 0 }), animate('1000ms 1000ms ease', style({ opacity: 1 }))]),
+  transition(':leave', [style({ opacity: 1 }), animate('1000ms ease', style({ opacity: 0 }))])
+]);
+
+/* ---------------------------- SPECIFIC ANIMATIONS ---------------------------- */
 export const loginFormAnimation = trigger('loginFormAnimation', [
   state('bottom', style({ transform: 'translateY(0%)' })),
   state('center', style({ transform: 'translateY(-60vh)' })),
@@ -22,17 +29,6 @@ export const toastAnimation = trigger('toastAnimation', [
       animate('1000ms ease', style({ opacity: 1, transform: 'translatey(-40%)' })),
       animate('1000ms 2000ms ease', style({ opacity: 0, transform: 'translatey(0%)' }))
     ])
-  ])
-]);
-
-export const floatingButtonAnimation = trigger('floatingButtonAnimation', [
-  transition(':enter', [
-    style({ transform: 'translatex(150%)', opacity: 0 }),
-    animate('1000ms ease', style({ transform: 'translatex(0%)', opacity: 1 }))
-  ]),
-  transition(':leave', [
-    style({ transform: 'translatex(0%)', opacity: 1 }),
-    animate('1000ms ease', style({ transform: 'translatex(150%)', opacity: 0 }))
   ])
 ]);
 
