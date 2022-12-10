@@ -64,7 +64,7 @@ import { expandEventItemDetailsAnimation } from '../animations/animations';
         </div>
       </ng-template>
       <div [@expandEventItemDetailsAnimation] *ngIf="isOpen" class="overflow-hidden bg-white p-2 text-black ">
-        <ul class="divide-y divide-primary-85">
+        <ul class="divide-y divide-gray-200">
           <li *ngFor="let info of eventInfo" class="flex items-center px-2 py-1">
             <div
               class="flex shrink-0 basis-32 items-center justify-start whitespace-normal break-all text-base font-semibold text-primary-50">
