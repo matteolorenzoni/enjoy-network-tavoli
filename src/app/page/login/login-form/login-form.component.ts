@@ -64,7 +64,7 @@ export class LoginFormComponent implements OnInit {
               const { displayName, email, photoURL, emailVerified, uid } = userCredential.user;
               this.userService.userBaseInfo = { displayName, email, photoURL, emailVerified, uid };
               this.userService.userAccessToken = idTokenResult;
-              this.employeeService.setEmployee(uid);
+              this.employeeService.setEmployeePropsInLocalStorage(uid);
 
               /* Go to dashboard */
               this.setSectionEvent.emit(true);
