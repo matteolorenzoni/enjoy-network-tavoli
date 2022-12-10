@@ -2,10 +2,11 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { DashboardComponent } from 'src/app/layout/dashboard/dashboard.component';
 import { SettingComponent } from 'src/app/page/setting/setting.component';
+import { EmployeeListComponent } from '../app/page/administrator/employee/employee-list/employee-list.component';
+import { EmployeeGeneratorComponent } from '../app/page/administrator/employee/employee-generator/employee-generator.component';
 import { StatisticsComponent } from '../app/page/statistics/statistics.component';
 import { CreateItemComponent } from '../app/layout/create-item/create-item.component';
 import { EventGeneratorComponent } from '../app/page/administrator/event/event-generator/event-generator.component';
-import { EmployeeComponent } from '../app/page/administrator/employee/employee.component';
 import { EventListComponent } from '../app/page/administrator/event/event-list/event-list.component';
 import { LoginComponent } from '../app/page/login/login.component';
 import { PageNotFoundComponent } from '../app/page/page-not-found/page-not-found.component';
@@ -20,7 +21,7 @@ const routes: Routes = [
         path: 'administrator',
         children: [
           { path: 'event', component: EventListComponent },
-          { path: 'employee', component: EmployeeComponent },
+          { path: 'employee', component: EmployeeListComponent },
           { path: 'statistics', component: StatisticsComponent },
           { path: 'setting', component: SettingComponent },
           { path: '', redirectTo: 'event', pathMatch: 'full' }
@@ -34,6 +35,7 @@ const routes: Routes = [
     component: CreateItemComponent,
     children: [
       { path: 'event/:uid', component: EventGeneratorComponent },
+      { path: 'employee/:uid', component: EmployeeGeneratorComponent },
       { path: '', redirectTo: 'event/null', pathMatch: 'full' }
     ]
   },

@@ -22,7 +22,6 @@ import { EnToastComponent } from './components/en-toast.component';
 import { HeroComponent } from './page/hero/hero.component';
 import { DashboardComponent } from './layout/dashboard/dashboard.component';
 import { EventListComponent } from './page/administrator/event/event-list/event-list.component';
-import { EmployeeComponent } from './page/administrator/employee/employee.component';
 import { TableComponent } from './page/administrator/table/table.component';
 import { EnBottomNavigationComponent } from './components/en-bottom-navigation.component';
 import { SettingComponent } from './page/setting/setting.component';
@@ -31,6 +30,8 @@ import { CreateItemComponent } from './layout/create-item/create-item.component'
 import { EnFileLoaderComponent } from './components/en-file-loader.component';
 import { EnItemEventComponent } from './components/en-item-event.component';
 import { StatisticsComponent } from './page/statistics/statistics.component';
+import { EmployeeListComponent } from './page/administrator/employee/employee-list/employee-list.component';
+import { EmployeeGeneratorComponent } from './page/administrator/employee/employee-generator/employee-generator.component';
 
 @NgModule({
   declarations: [
@@ -44,7 +45,6 @@ import { StatisticsComponent } from './page/statistics/statistics.component';
     HeroComponent,
     DashboardComponent,
     EventListComponent,
-    EmployeeComponent,
     TableComponent,
     EnBottomNavigationComponent,
     SettingComponent,
@@ -52,7 +52,9 @@ import { StatisticsComponent } from './page/statistics/statistics.component';
     CreateItemComponent,
     EnFileLoaderComponent,
     EnItemEventComponent,
-    StatisticsComponent
+    StatisticsComponent,
+    EmployeeListComponent,
+    EmployeeGeneratorComponent
   ],
   imports: [
     BrowserModule,
