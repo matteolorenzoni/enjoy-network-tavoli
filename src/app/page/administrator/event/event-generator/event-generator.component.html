@@ -22,7 +22,7 @@
       type="text"
       name="name_input"
       id="name_input"
-      class="peer block w-full appearance-none border-0 border-b-2 border-primary-100 bg-transparent py-2.5 px-0 text-base text-primary-100 focus:border-primary-60 focus:text-primary-60 focus:outline-none focus:ring-0"
+      class="peer block w-full appearance-none bg-transparent py-2.5 px-0 text-base text-primary-100 focus:text-primary-60 focus:outline-none focus:ring-0"
       formControlName="name"
       placeholder=" "
       required />
@@ -31,6 +31,7 @@
       class="absolute top-3 -z-10 origin-[0] -translate-y-6 scale-75 transform text-base text-primary-100 duration-300 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100 peer-focus:left-0 peer-focus:-translate-y-6 peer-focus:scale-75 peer-focus:font-medium peer-focus:text-primary-60">
       Nome
     </label>
+    <hr class="border-primary-100 peer-focus:border-primary-60" />
   </div>
 
   <div class="group relative z-0 w-full">
@@ -38,7 +39,7 @@
       type="date"
       id="date_input"
       name="date_input"
-      class="peer block w-full appearance-none border-0 border-b-2 border-primary-100 bg-transparent py-2.5 px-0 text-base text-primary-100 focus:border-primary-60 focus:text-primary-60 focus:outline-none focus:ring-0"
+      class="peer block w-full appearance-none bg-transparent py-2.5 px-0 text-base text-primary-100 focus:text-primary-60 focus:outline-none focus:ring-0"
       formControlName="date"
       placeholder=" "
       required />
@@ -47,15 +48,16 @@
       class="absolute top-3 -z-10 origin-[0] -translate-y-6 scale-75 transform text-base text-primary-100 duration-300 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100 peer-focus:left-0 peer-focus:-translate-y-6 peer-focus:scale-75 peer-focus:font-medium peer-focus:text-primary-60">
       Data
     </label>
+    <hr class="border-primary-100 peer-focus:border-primary-60" />
   </div>
 
-  <div class="group relative z-0 flex w-full gap-4">
-    <div class="w-1/2">
+  <div class="group z-0 flex w-full gap-8">
+    <div class="relative w-1/2">
       <input
         type="time"
         id="start_input"
         name="start_input"
-        class="peer block w-full appearance-none border-0 border-b-2 border-primary-100 bg-transparent py-2.5 px-0 text-base text-primary-100 focus:border-primary-60 focus:text-primary-60 focus:outline-none focus:ring-0"
+        class="peer block w-full appearance-none bg-transparent py-2.5 px-0 text-base text-primary-100 focus:text-primary-60 focus:outline-none focus:ring-0"
         formControlName="timeStart"
         placeholder=" "
         required />
@@ -64,13 +66,14 @@
         class="absolute top-3 -z-10 origin-[0] -translate-y-6 scale-75 transform text-base text-primary-100 duration-300 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100 peer-focus:left-0 peer-focus:-translate-y-6 peer-focus:scale-75 peer-focus:font-medium peer-focus:text-primary-60">
         Inizio
       </label>
+      <hr class="border-primary-100 peer-focus:border-primary-60" />
     </div>
-    <div class="w-1/2">
+    <div class="relative w-1/2">
       <input
         type="time"
         id="end_input"
         name="end_input"
-        class="peer block w-full appearance-none border-0 border-b-2 border-primary-100 bg-transparent py-2.5 px-0 text-base text-primary-100 focus:border-primary-60 focus:text-primary-60 focus:outline-none focus:ring-0"
+        class="peer block w-full appearance-none bg-transparent py-2.5 px-0 text-base text-primary-100 focus:text-primary-60 focus:outline-none focus:ring-0"
         formControlName="timeStart"
         placeholder=" "
         required />
@@ -79,6 +82,7 @@
         class="absolute top-3 -z-10 origin-[0] -translate-y-6 scale-75 transform text-base text-primary-100 duration-300 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100 peer-focus:left-0 peer-focus:-translate-y-6 peer-focus:scale-75 peer-focus:font-medium peer-focus:text-primary-60">
         Fine
       </label>
+      <hr class="border-primary-100 peer-focus:border-primary-60" />
     </div>
   </div>
 
@@ -88,7 +92,7 @@
       pattern="\d*"
       id="max_person_input"
       name="max_person_input"
-      class="peer block w-full appearance-none border-0 border-b-2 border-primary-100 bg-transparent py-2.5 px-0 text-base text-primary-100 focus:border-primary-60 focus:text-primary-60 focus:outline-none focus:ring-0"
+      class="peer block w-full appearance-none bg-transparent py-2.5 px-0 text-base text-primary-100 focus:text-primary-60 focus:outline-none focus:ring-0"
       formControlName="date"
       placeholder=" "
       required />
@@ -97,13 +101,14 @@
       class="absolute top-3 -z-10 origin-[0] -translate-y-6 scale-75 transform text-base text-primary-100 duration-300 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100 peer-focus:left-0 peer-focus:-translate-y-6 peer-focus:scale-75 peer-focus:font-medium peer-focus:text-primary-60">
       Numero massimo di persone
     </label>
+    <hr class="border-primary-100 peer-focus:border-primary-60" />
   </div>
 
   <div class="group relative z-0 w-full">
-    <label for="countries_disabled" class="block text-sm font-bold text-white"> Luogo </label>
+    <label for="place_select" class="block text-sm font-bold text-white group-active:text-primary-60"> Luogo </label>
     <select
       id="place_select"
-      class="peer block w-full appearance-none border-0 border-b-2 border-white bg-transparent py-2.5 px-0 text-sm text-white focus:border-gray-200 focus:outline-none focus:ring-0"
+      class="peer block w-full appearance-none bg-transparent py-2.5 px-0 text-sm text-white focus:border-gray-200 focus:text-primary-60 focus:outline-none focus:ring-0"
       formControlName="place">
       <option
         *ngFor="let item of places; let i = index"
@@ -113,6 +118,7 @@
         {{ item }}
       </option>
     </select>
+    <hr class="border-primary-100 peer-focus:border-primary-60" />
   </div>
 
   <div class="group relative z-0 w-full">
@@ -120,7 +126,7 @@
       type="text"
       id="guest_input"
       name="guest_input"
-      class="peer block w-full appearance-none border-0 border-b-2 border-primary-100 bg-transparent py-2.5 px-0 text-base text-primary-100 focus:border-primary-60 focus:text-primary-60 focus:outline-none focus:ring-0"
+      class="peer block w-full appearance-none bg-transparent py-2.5 px-0 text-base text-primary-100 focus:text-primary-60 focus:outline-none focus:ring-0"
       formControlName="date"
       placeholder=" " />
     <label
@@ -128,6 +134,7 @@
       class="absolute top-3 -z-10 origin-[0] -translate-y-6 scale-75 transform text-base text-primary-100 duration-300 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100 peer-focus:left-0 peer-focus:-translate-y-6 peer-focus:scale-75 peer-focus:font-medium peer-focus:text-primary-60">
       Ospite/i
     </label>
+    <hr class="border-primary-100 peer-focus:border-primary-60" />
   </div>
 
   <div class="group relative z-0 w-full">
