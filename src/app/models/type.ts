@@ -51,3 +51,6 @@ export type FirebaseDate = {
   seconds: number;
   nanoseconds: number;
 };
+
+// eslint-disable-next-line @typescript-eslint/ban-types
+export type Employee = {};
