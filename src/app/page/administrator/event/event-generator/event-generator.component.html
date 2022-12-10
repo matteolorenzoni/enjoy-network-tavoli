@@ -74,7 +74,7 @@
         id="end_input"
         name="end_input"
         class="peer block w-full appearance-none bg-transparent py-2.5 px-0 text-base text-primary-100 focus:text-primary-60 focus:outline-none focus:ring-0"
-        formControlName="timeStart"
+        formControlName="timeEnd"
         placeholder=" "
         required />
       <label
@@ -93,7 +93,7 @@
       id="max_person_input"
       name="max_person_input"
       class="peer block w-full appearance-none bg-transparent py-2.5 px-0 text-base text-primary-100 focus:text-primary-60 focus:outline-none focus:ring-0"
-      formControlName="date"
+      formControlName="maxPerson"
       placeholder=" "
       required />
     <label
@@ -127,7 +127,7 @@
       id="guest_input"
       name="guest_input"
       class="peer block w-full appearance-none bg-transparent py-2.5 px-0 text-base text-primary-100 focus:text-primary-60 focus:outline-none focus:ring-0"
-      formControlName="date"
+      formControlName="guest"
       [min]="currentDate | date: 'yyyy-MM-dd'"
       placeholder=" " />
     <label
