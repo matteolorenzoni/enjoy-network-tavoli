@@ -9,10 +9,10 @@ import { expandEventItemDetailsAnimation } from '../animations/animations';
 @Component({
   selector: 'en-item-event[event][eventDeletedEvent]',
   template: `
-    <li class="overflow-hidden rounded-lg font-roboto">
+    <li class="overflow-hidden rounded-lg outline outline-1 outline-gray-300">
       <ng-container *ngIf="!isOpen; else elseTemplate">
         <div
-          class="group relative h-12 overflow-hidden bg-gradient-to-r from-primary-65 to-primary-0 antialiased hover:cursor-pointer xs:h-16"
+          class="group relative h-12  bg-gradient-to-r from-primary-65 to-primary-0 antialiased hover:cursor-pointer xs:h-16"
           (click)="toggleOpen()">
           <p class="center absolute inset-0 z-10 hidden text-white group-hover:flex group-hover:backdrop-blur-[2px]">
             APRI
@@ -47,7 +47,7 @@ import { expandEventItemDetailsAnimation } from '../animations/animations';
               </p>
             </div>
             <div class="center absolute right-0 top-0 bottom-0 p-2 text-lg font-extrabold xs:text-2xl">
-              <p>{{ maxPersonFormatted }}</p>
+              <p class="text-gray-300">{{ maxPersonFormatted }}</p>
             </div>
           </div>
         </div>
