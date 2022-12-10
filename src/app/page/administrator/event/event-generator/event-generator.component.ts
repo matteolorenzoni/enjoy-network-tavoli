@@ -1,10 +1,10 @@
+import { DatePipe, Location } from '@angular/common';
 /* eslint-disable prefer-destructuring */
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { fadeInAnimation } from 'src/app/animations/animations';
 import { EventService } from 'src/app/services/event.service';
 import { ToastService } from 'src/app/services/toast.service';
-import { Location } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { PlaceType } from '../../../../models/enum';
 
@@ -25,6 +25,7 @@ export class EventGeneratorComponent implements OnInit {
   photoFile!: File;
   eventForm: FormGroup;
   imageSrc: string | ArrayBuffer | null = null;
+  currentDate = new Date();
   isLoading: boolean;
 
   /* Label */
@@ -34,7 +35,8 @@ export class EventGeneratorComponent implements OnInit {
     private route: ActivatedRoute,
     private location: Location,
     private eventService: EventService,
-    private toastService: ToastService
+    private toastService: ToastService,
+    private date: DatePipe
   ) {
     this.eventForm = new FormGroup({
       imageUrl: new FormControl(null, [Validators.required]),
