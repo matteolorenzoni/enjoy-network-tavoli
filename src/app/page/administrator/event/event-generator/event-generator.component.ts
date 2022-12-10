@@ -1,11 +1,12 @@
-import { DatePipe, Location } from '@angular/common';
 /* eslint-disable prefer-destructuring */
+import { DatePipe, Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { fadeInAnimation } from 'src/app/animations/animations';
 import { EventService } from 'src/app/services/event.service';
 import { ToastService } from 'src/app/services/toast.service';
 import { ActivatedRoute } from '@angular/router';
+import { EventDTO } from 'src/app/models/type';
 import { PlaceType } from '../../../../models/enum';
 
 @Component({
@@ -22,7 +23,7 @@ export class EventGeneratorComponent implements OnInit {
   uid = '';
 
   /* Form */
-  photoFile!: File;
+  photoFile: File | null = null;
   eventForm: FormGroup;
   imageSrc: string | ArrayBuffer | null = null;
   currentDate = new Date();
@@ -79,8 +80,24 @@ export class EventGeneratorComponent implements OnInit {
 
   public onSubmit() {
     this.isLoading = true;
+    /* Event */
+    const newEvent: EventDTO = {
+      imageUrl: this.eventForm.value.imageUrl,
+      name: this.eventForm.value.name?.trim().replace(/\s\s+/g, ' ') || '',
+      date: new Date(this.eventForm.value.date),
+      timeStart: this.eventForm.value.timeStart,
+      timeEnd: this.eventForm.value.timeEnd,
+      maxPerson: this.eventForm.value.maxPerson,
+      place: this.eventForm.value.place,
+      guest: this.eventForm.value.guest?.trim().replace(/\s\s+/g, ' ') || '',
+      description: this.eventForm.value.description?.trim().replace(/\s\s+/g, ' ') || '',
+      messageText: this.eventForm.value.messageText,
+      createdAt: new Date(),
+      modificatedAt: new Date()
+    };
+    const uidFormatted = this.uid === '' || this.uid === 'null' ? null : this.uid;
     this.eventService
-      .addOrUpdateEvent(this.photoFile, this.eventForm.value, this.uid)
+      .addOrUpdateEvent(this.photoFile, newEvent, uidFormatted)
       .then(() => {
         this.imageSrc = null;
         this.eventForm.reset();

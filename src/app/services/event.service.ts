@@ -37,22 +37,8 @@ export class EventService {
   }
 
   /* ------------------------------------------- SET ------------------------------------------- */
-  public async addOrUpdateEvent(photo: File, event: EventDTO, uid: string): Promise<void> {
-    /* Event */
-    const newEvent: EventDTO = {
-      imageUrl: event.imageUrl,
-      name: event.name?.trim().replace(/\s\s+/g, ' ') || '',
-      date: new Date(event.date),
-      timeStart: event.timeStart,
-      timeEnd: event.timeEnd,
-      maxPerson: event.maxPerson,
-      place: event.place,
-      guest: event.guest?.trim().replace(/\s\s+/g, ' ') || '',
-      description: event.description?.trim().replace(/\s\s+/g, ' ') || '',
-      messageText: event.messageText,
-      createdAt: new Date(),
-      modificatedAt: new Date()
-    };
+  public async addOrUpdateEvent(photo: File | null, event: EventDTO, uid: string | null): Promise<void> {
+    const newEvent = event;
 
     /* Image */
     if (photo) {
@@ -75,6 +61,7 @@ export class EventService {
       await addDoc(collection(this.db, Table.EVENTS), newEvent);
     } else {
       /* Update document */
+      newEvent.modificatedAt = new Date();
       await setDoc(doc(this.db, Table.EVENTS, uid), newEvent);
     }
   }
