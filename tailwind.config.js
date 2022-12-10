@@ -65,7 +65,9 @@ module.exports = {
     },
     fontFamily: {
       gruppo: ['Gruppo'],
-      roboto: ['Roboto']
+      roboto: ['Roboto'],
+      jost: ['Jost'],
+      montserrat: ['Montserrat']
     }
   },
   plugins: [require('daisyui')]
