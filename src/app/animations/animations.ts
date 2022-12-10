@@ -77,7 +77,7 @@ export const staggeredFadeInIncrement = trigger('staggeredFadeInIncrement', [
       ':enter',
       [
         style({ opacity: 0, transform: 'translateY(50px)' }),
-        stagger(200, [animate('800ms 300ms ease-out', style({ opacity: 1, transform: 'translateY(0)' }))])
+        stagger(100, [animate('600ms ease-out', style({ opacity: 1, transform: 'translateY(0)' }))])
       ],
       { optional: true }
     )
