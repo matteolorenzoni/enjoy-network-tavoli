@@ -2,9 +2,10 @@ import { EventService } from 'src/app/services/event.service';
 import { DatePipe } from '@angular/common';
 import { Component, Input, SimpleChanges, Output, EventEmitter } from '@angular/core';
 import { faPen, faUsers, faWineBottle } from '@fortawesome/free-solid-svg-icons';
-import { Event, EventDTO } from 'src/app/models/type';
+import { Event } from 'src/app/models/type';
 import { ToastService } from '../services/toast.service';
 import { expandEventItemDetailsAnimation } from '../animations/animations';
+import { EventDTO } from '../models/table';
 
 @Component({
   selector: 'en-item-event[event][eventDeletedEvent]',

@@ -1,6 +1,6 @@
 import { IconDefinition } from '@fortawesome/fontawesome-common-types';
 import { RoleType, ToastType } from './enum';
-import { EmployeeDTO } from './table';
+import { EmployeeDTO, EventDTO } from './table';
 
 export type UserBaseInfo = {
   displayName: string | null;
@@ -28,21 +28,6 @@ export type BottomNavigation = {
   icons: IconLink[];
 };
 
-export type EventDTO = {
-  imageUrl: string;
-  name: string;
-  date: Date;
-  timeStart: Date;
-  timeEnd: Date;
-  maxPerson: number;
-  place: string;
-  guest: string;
-  description: string;
-  messageText: string;
-  createdAt: Date;
-  modificatedAt: Date;
-};
-
 export type Event = {
   uid: string;
   eventDTO: EventDTO;
@@ -55,5 +40,5 @@ export type FirebaseDate = {
 
 export type Employee = {
   uid: string;
-  employee: EmployeeDTO;
+  employeeDTO: EmployeeDTO;
 };

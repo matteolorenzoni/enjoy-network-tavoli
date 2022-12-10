@@ -6,7 +6,8 @@ import { fadeInAnimation } from 'src/app/animations/animations';
 import { EventService } from 'src/app/services/event.service';
 import { ToastService } from 'src/app/services/toast.service';
 import { ActivatedRoute } from '@angular/router';
-import { EventDTO } from 'src/app/models/type';
+import {} from 'src/app/models/type';
+import { EventDTO } from 'src/app/models/table';
 import { PlaceType } from '../../../../models/enum';
 
 @Component({

@@ -5,6 +5,21 @@ export enum Table {
   EVENTS = 'events'
 }
 
+export type EventDTO = {
+  imageUrl: string;
+  name: string;
+  date: Date;
+  timeStart: Date;
+  timeEnd: Date;
+  maxPerson: number;
+  place: string;
+  guest: string;
+  description: string;
+  messageText: string;
+  createdAt: Date;
+  modificatedAt: Date;
+};
+
 export type EmployeeDTO = {
   name: string;
   lastName: string;

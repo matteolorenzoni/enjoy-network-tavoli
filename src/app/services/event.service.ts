@@ -19,8 +19,8 @@ import {
   UploadTaskSnapshot
 } from '@angular/fire/storage';
 import { DatePipe } from '@angular/common';
-import { Table } from '../models/table';
-import { Event, EventDTO, FirebaseDate } from '../models/type';
+import { EventDTO, Table } from '../models/table';
+import { Event, FirebaseDate } from '../models/type';
 import { ToastService } from './toast.service';
 
 @Injectable({
