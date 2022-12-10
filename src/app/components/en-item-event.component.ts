@@ -9,10 +9,10 @@ import { expandEventItemDetailsAnimation } from '../animations/animations';
 @Component({
   selector: 'en-item-event[event][eventDeletedEvent]',
   template: `
-    <li>
+    <li class="overflow-hidden rounded-lg font-roboto">
       <ng-container *ngIf="!isOpen; else elseTemplate">
         <div
-          class="group relative h-16 overflow-hidden rounded-lg bg-gradient-to-r from-primary-65 to-primary-0 hover:cursor-pointer xs:h-20"
+          class="group relative h-12 overflow-hidden bg-gradient-to-r from-primary-65 to-primary-0 antialiased hover:cursor-pointer xs:h-16"
           (click)="toggleOpen()">
           <p class="center absolute inset-0 z-10 hidden text-white group-hover:flex group-hover:backdrop-blur-[2px]">
             APRI
@@ -22,7 +22,7 @@ import { expandEventItemDetailsAnimation } from '../animations/animations';
             [alt]="dateFormatted + '_image'"
             class="
               absolute
-              -top-8
+              -top-10
               -left-8
               h-32
               w-32
@@ -35,25 +35,27 @@ import { expandEventItemDetailsAnimation } from '../animations/animations';
               group-hover:h-full
               group-hover:w-full
               group-hover:rounded-none
-              xs:-top-12
+              xs:-top-14
               xs:-left-10
               xs:h-48
               xs:w-48" />
           <div class="flex h-full w-full overflow-hidden pl-28 group-hover:hidden xs:pl-44">
             <div class="flex flex-col justify-center text-black">
-              <p class="truncate text-xl font-bold xs:text-3xl xs:font-extrabold">{{ eventDTO.name }}</p>
-              <p class="truncate text-lg font-medium xs:text-base xs:font-semibold">
+              <p class="truncate text-base font-semibold xs:text-lg">{{ eventDTO.name }}</p>
+              <p class="truncate text-xs font-normal xs:text-sm xs:font-light">
                 {{ dateFormatted }} ({{ eventDTO.place }})
               </p>
             </div>
-            <div class="center absolute right-0 top-0 bottom-0 p-2 text-xl font-black xs:text-3xl">
+            <div class="center absolute right-0 top-0 bottom-0 p-2 text-lg font-extrabold xs:text-2xl">
               <p>{{ maxPersonFormatted }}</p>
             </div>
           </div>
         </div>
       </ng-container>
       <ng-template #elseTemplate>
-        <div class="relative h-16 rounded-lg hover:cursor-pointer xs:h-20" (click)="toggleOpen()">
+        <div
+          class="relative h-12 bg-gradient-to-r from-primary-65 to-primary-0 hover:cursor-pointer xs:h-16"
+          (click)="toggleOpen()">
           <p class="center absolute inset-0 z-10 text-white backdrop-blur-[2px]">CHIUDI</p>
           <img
             [src]="eventDTO.imageUrl"
@@ -61,24 +63,21 @@ import { expandEventItemDetailsAnimation } from '../animations/animations';
             class="center relative h-full w-full object-cover" />
         </div>
       </ng-template>
-      <div
-        [@expandEventItemDetailsAnimation]
-        *ngIf="isOpen"
-        class="mt-2 overflow-hidden rounded bg-white p-2 text-black ">
+      <div [@expandEventItemDetailsAnimation] *ngIf="isOpen" class="overflow-hidden bg-white p-2 text-black ">
         <ul class="divide-y divide-primary-85">
-          <li *ngFor="let info of eventInfo" class="flex px-2 py-1">
+          <li *ngFor="let info of eventInfo" class="flex items-center px-2 py-1">
             <div
-              class="flex shrink-0 basis-32 items-center justify-start whitespace-normal break-all text-lg font-extrabold text-primary-50">
+              class="flex shrink-0 basis-32 items-center justify-start whitespace-normal break-all text-base font-semibold text-primary-50">
               {{ info.label }}
             </div>
-            <div class="font-bold">{{ info.value }}</div>
+            <div class="text-base font-normal">{{ info.value }}</div>
           </li>
         </ul>
         <ul class="mt-4 flex gap-4">
           <li
             *ngFor="let icon of itemNavigationMenu"
             [routerLink]="icon.link"
-            class="flex w-1/3 flex-col items-center rounded-md bg-primary-65 p-1 text-white hover:cursor-pointer hover:bg-paletteHover hover:text-paletteHover hover:shadow-lg">
+            class="flex w-1/3 flex-col items-center rounded bg-primary-65 p-1 text-white hover:cursor-pointer hover:bg-paletteHover hover:text-paletteHover hover:shadow-lg">
             <a><fa-icon [icon]="icon.definition"></fa-icon></a>
             <span class="text-xs xs:text-sm">{{ icon.name }}</span>
           </li>
@@ -128,7 +127,7 @@ export class EnItemEventComponent {
       this.eventInfo.push({ label: 'Data', value: this.dateFormatted });
       this.eventInfo.push({ label: 'Paganti', value: this.maxPersonFormatted });
       this.eventInfo.push({ label: 'Orario', value: `${this.eventDTO.timeStart} - ${this.eventDTO.timeEnd}` });
-      this.eventInfo.push({ label: 'Lougo', value: this.eventDTO.place });
+      this.eventInfo.push({ label: 'Luogo', value: this.eventDTO.place });
       this.eventInfo.push({ label: 'Ospite/i', value: this.eventDTO.guest });
       this.eventInfo.push({ label: 'Descrizione', value: this.eventDTO.description });
       this.eventInfo.push({ label: 'Messaggio', value: this.eventDTO.messageText });
