@@ -5,6 +5,7 @@ import { RoleType } from 'src/app/models/enum';
 import { EmployeeService } from 'src/app/services/employee.service';
 import { ToastService } from 'src/app/services/toast.service';
 import { Location } from '@angular/common';
+import { EmployeeDTO } from 'src/app/models/table';
 
 @Component({
   selector: 'app-employee-generator',
@@ -42,8 +43,8 @@ export class EmployeeGeneratorComponent implements OnInit {
     });
     this.employeeForm.controls['role'].valueChanges.subscribe((value) => {
       if (value !== RoleType.PR) {
-        this.employeeForm.controls['phone'].setValue(null);
-        this.employeeForm.controls['zone'].setValue(null);
+        this.employeeForm.controls['phone'].reset();
+        this.employeeForm.controls['zone'].reset();
         this.employeeForm.controls['phone'].disable();
         this.employeeForm.controls['zone'].disable();
       } else {
@@ -79,19 +80,30 @@ export class EmployeeGeneratorComponent implements OnInit {
 
   public onSubmit() {
     this.isLoading = true;
-    // this.eventService
-    //   .addOrUpdateEvent(this.photoFile, this.eventForm.value, this.uid)
-    //   .then(() => {
-    //     this.imageSrc = null;
-    //     this.eventForm.reset();
-    //     this.location.back();
-    //     this.toastService.showSuccess('Evento creato');
-    //   })
-    //   .catch((error: Error) => {
-    //     this.toastService.showError(error.message);
-    //   })
-    //   .finally(() => {
-    //     this.isLoading = false;
-    //   });
+    const { email } = this.employeeForm.value;
+    const employee: EmployeeDTO = {
+      name: this.employeeForm.value.name?.trim().replace(/\s\s+/g, ' ') || '',
+      lastName: this.employeeForm.value.lastName?.trim().replace(/\s\s+/g, ' ') || '',
+      role: this.employeeForm.value.role,
+      phone: this.employeeForm.value.phone,
+      zone: this.employeeForm.value.zone?.trim().replace(/\s\s+/g, ' ') || '',
+      active: true,
+      createdAt: this.employeeForm.value.createdAt || new Date(),
+      modificatedAt: this.employeeForm.value.createdAt || new Date()
+    };
+    const uidFormatted = this.uid === '' || this.uid === 'null' ? null : this.uid;
+    this.employeeService
+      .addOrUpdateEmployee(email, employee, uidFormatted)
+      .then(() => {
+        this.employeeForm.reset();
+        this.location.back();
+        this.toastService.showSuccess('Dipendente creato');
+      })
+      .catch((error: Error) => {
+        this.toastService.showError(error.message);
+      })
+      .finally(() => {
+        this.isLoading = false;
+      });
   }
 }

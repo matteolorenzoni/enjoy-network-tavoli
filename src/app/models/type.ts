@@ -1,5 +1,6 @@
 import { IconDefinition } from '@fortawesome/fontawesome-common-types';
 import { RoleType, ToastType } from './enum';
+import { EmployeeDTO } from './table';
 
 export type UserBaseInfo = {
   displayName: string | null;
@@ -52,5 +53,7 @@ export type FirebaseDate = {
   nanoseconds: number;
 };
 
-// eslint-disable-next-line @typescript-eslint/ban-types
-export type Employee = {};
+export type Employee = {
+  uid: string;
+  employee: EmployeeDTO;
+};

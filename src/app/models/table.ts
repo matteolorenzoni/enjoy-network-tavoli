@@ -5,10 +5,13 @@ export enum Table {
   EVENTS = 'events'
 }
 
-export type Employee = {
+export type EmployeeDTO = {
   name: string;
   lastName: string;
   role: RoleType;
-  active: boolean;
   phone: string;
+  zone: string;
+  active: boolean;
+  createdAt: Date;
+  modificatedAt: Date;
 };
