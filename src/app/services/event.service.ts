@@ -21,7 +21,7 @@ import {
 import { DatePipe } from '@angular/common';
 import { EventDTO, Table } from '../models/table';
 import { Event, FirebaseDate } from '../models/type';
-import { ToastService } from './toast.service';
+import { EventEmployService } from './event-employ.service';
 
 @Injectable({
   providedIn: 'root'
@@ -31,7 +31,7 @@ export class EventService {
   private db!: Firestore;
   private storage!: FirebaseStorage;
 
-  constructor(private toastService: ToastService, private datePipe: DatePipe) {
+  constructor(private datePipe: DatePipe, private eventEmployService: EventEmployService) {
     this.db = getFirestore();
     this.storage = getStorage();
   }
@@ -58,7 +58,9 @@ export class EventService {
 
     if (!uid) {
       /* Add document */
-      await addDoc(collection(this.db, Table.EVENTS), newEvent);
+      const docRef = await addDoc(collection(this.db, Table.EVENTS), newEvent);
+      /* Add event employee */
+      await this.eventEmployService.addEventEmployee(docRef.id);
     } else {
       /* Update document */
       newEvent.modificatedAt = new Date();
@@ -67,10 +69,11 @@ export class EventService {
   }
 
   /* ------------------------------------------- GET ------------------------------------------- */
-  public async getEvent(uid: string): Promise<EventDTO | null> {
-    const docRef = doc(this.db, Table.EVENTS, uid);
+  public async getEvent(eventUid: string): Promise<Event> {
+    const docRef = doc(this.db, Table.EVENTS, eventUid);
     const docSnap = await getDoc(docRef);
     if (docSnap.exists()) {
+      const uid = docSnap.id;
       const eventDTO = docSnap.data() as EventDTO;
       const date = eventDTO.date as unknown as FirebaseDate;
       const createdAt = eventDTO.createdAt as unknown as FirebaseDate;
@@ -78,10 +81,9 @@ export class EventService {
       eventDTO.date = new Date(date.seconds * 1000);
       eventDTO.createdAt = new Date(createdAt.seconds * 1000);
       eventDTO.modificatedAt = new Date(modificatedAt.seconds * 1000);
-      return eventDTO;
+      return { uid, eventDTO };
     }
-    this.toastService.showError('Documento non trovato');
-    return null;
+    throw new Error('Documento non trovato');
   }
 
   public async getEvents(): Promise<Event[]> {
@@ -100,12 +102,15 @@ export class EventService {
         return { uid, eventDTO };
       });
     }
-    this.toastService.showError('Documento non trovato');
     return [];
   }
 
   /* ------------------------------------------- DELETE ------------------------------------------- */
   public async deleteEvent(uid: string): Promise<void> {
+    /* Delete event employees */
+    this.eventEmployService.deleteEventEmployees(uid);
+
+    /* Delete event */
     await deleteDoc(doc(this.db, Table.EVENTS, uid));
   }
 }

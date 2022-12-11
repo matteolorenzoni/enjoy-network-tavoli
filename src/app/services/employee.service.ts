@@ -1,14 +1,14 @@
 import { UserCredential } from '@angular/fire/auth';
 import { Injectable } from '@angular/core';
 import { doc, getDoc, getDocs, getFirestore } from '@angular/fire/firestore';
-import { collection, deleteDoc, setDoc } from 'firebase/firestore';
+import { collection, deleteDoc, query, setDoc, where } from 'firebase/firestore';
 import { UserService } from './user.service';
 import { RoleType } from '../models/enum';
 import { EmployeeDTO, Table } from '../models/table';
-import { ToastService } from './toast.service';
 import { Employee, FirebaseDate } from '../models/type';
 
 const PASSWORD_DEFAULT = 'enjoynetwork';
+const ACTIVE = 'active';
 const ROLE = 'role';
 
 @Injectable({
@@ -18,21 +18,16 @@ export class EmployeeService {
   /** Database */
   private db = getFirestore();
 
-  constructor(private toastService: ToastService, private userService: UserService) {}
+  constructor(private userService: UserService) {}
 
   /* ------------------------------------------- SET ------------------------------------------- */
-  public async setEmployeePropsInLocalStorage(uid: string): Promise<void> {
-    const docRef = doc(this.db, Table.EMPLOYEES, uid);
-    const docSnap = await getDoc(docRef);
-    if (docSnap.exists()) {
-      const employee = docSnap.data() as EmployeeDTO;
-      sessionStorage.setItem('uid', uid);
-      Object.keys(employee).forEach((key) => {
-        sessionStorage.setItem(key, employee[key as keyof EmployeeDTO].toString());
-      });
-    } else {
-      this.toastService.showError('Documento non trovato');
-    }
+  public async setEmployeePropsInLocalStorage(employeeUid: string): Promise<void> {
+    const employee = await this.getEmployee(employeeUid);
+    const { uid, employeeDTO } = employee;
+    sessionStorage.setItem('uid', uid);
+    Object.keys(employeeDTO).forEach((key) => {
+      sessionStorage.setItem(key, employeeDTO[key as keyof EmployeeDTO].toString());
+    });
   }
 
   public async addOrUpdateEmployee(email: string, employee: EmployeeDTO, uid: string | null): Promise<void> {
@@ -53,19 +48,19 @@ export class EmployeeService {
   }
 
   /* ------------------------------------------- GET ------------------------------------------- */
-  public async getEmployee(uid: string): Promise<EmployeeDTO | null> {
-    const docRef = doc(this.db, Table.EMPLOYEES, uid);
+  public async getEmployee(employeeUid: string): Promise<Employee> {
+    const docRef = doc(this.db, Table.EMPLOYEES, employeeUid);
     const docSnap = await getDoc(docRef);
     if (docSnap.exists()) {
+      const uid = docSnap.id;
       const employeeDTO = docSnap.data() as EmployeeDTO;
       const createdAt = employeeDTO.createdAt as unknown as FirebaseDate;
       const modificatedAt = employeeDTO.modificatedAt as unknown as FirebaseDate;
       employeeDTO.createdAt = new Date(createdAt.seconds * 1000);
       employeeDTO.modificatedAt = new Date(modificatedAt.seconds * 1000);
-      return employeeDTO;
+      return { uid, employeeDTO };
     }
-    this.toastService.showError('Documento non trovato');
-    return null;
+    throw new Error('Documento non trovato');
   }
 
   public async getEmployees(): Promise<Employee[]> {
@@ -82,7 +77,19 @@ export class EmployeeService {
         return { uid, employeeDTO };
       });
     }
-    this.toastService.showError('Documento non trovato');
+    return [];
+  }
+
+  public async getEmployeesPrAndActive(): Promise<Employee[]> {
+    const q = query(collection(this.db, Table.EMPLOYEES), where(ACTIVE, '==', true), where(ROLE, '==', RoleType.PR));
+    const querySnapshot = await getDocs(q);
+    if (querySnapshot.size > 0) {
+      return querySnapshot.docs.map((employeeDoc) => {
+        const uid = employeeDoc.id;
+        const employeeDTO = employeeDoc.data() as EmployeeDTO;
+        return { uid, employeeDTO };
+      });
+    }
     return [];
   }
 
