@@ -58,24 +58,30 @@ export class EventGeneratorComponent implements OnInit {
   ngOnInit(): void {
     this.uid = this.route.snapshot.paramMap.get('uid') || '';
     if (this.uid && this.uid !== '' && this.uid !== 'null') {
-      this.eventService.getEvent(this.uid).then((event) => {
-        if (event) {
-          this.eventForm.patchValue({
-            imageUrl: event.imageUrl,
-            name: event.name,
-            date: event.date.toJSON().split('T')[0],
-            timeStart: event.timeStart,
-            timeEnd: event.timeEnd,
-            maxPerson: event.maxPerson,
-            place: event.place,
-            guest: event.guest,
-            description: event.description,
-            messageText: event.messageText
-          });
-          this.imageSrc = event.imageUrl;
-          this.lblButton = 'Modifica evento';
-        }
-      });
+      this.eventService
+        .getEvent(this.uid)
+        .then((event) => {
+          const { eventDTO } = event;
+          if (event) {
+            this.eventForm.patchValue({
+              imageUrl: eventDTO.imageUrl,
+              name: eventDTO.name,
+              date: eventDTO.date.toJSON().split('T')[0],
+              timeStart: eventDTO.timeStart,
+              timeEnd: eventDTO.timeEnd,
+              maxPerson: eventDTO.maxPerson,
+              place: eventDTO.place,
+              guest: eventDTO.guest,
+              description: eventDTO.description,
+              messageText: eventDTO.messageText
+            });
+            this.imageSrc = eventDTO.imageUrl;
+            this.lblButton = 'Modifica evento';
+          }
+        })
+        .catch((error: Error) => {
+          this.toastService.showError(error.message);
+        });
     }
   }
 

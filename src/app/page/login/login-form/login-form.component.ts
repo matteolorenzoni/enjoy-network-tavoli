@@ -60,15 +60,20 @@ export class LoginFormComponent implements OnInit {
         .then(async (userCredential: UserCredential) => {
           this.isLoading = false;
           if (userCredential !== null) {
-            userCredential.user.getIdTokenResult().then((idTokenResult) => {
-              const { displayName, email, photoURL, emailVerified, uid } = userCredential.user;
-              this.userService.userBaseInfo = { displayName, email, photoURL, emailVerified, uid };
-              this.userService.userAccessToken = idTokenResult;
-              this.employeeService.setEmployeePropsInLocalStorage(uid);
+            userCredential.user
+              .getIdTokenResult()
+              .then((idTokenResult) => {
+                const { displayName, email, photoURL, emailVerified, uid } = userCredential.user;
+                this.userService.userBaseInfo = { displayName, email, photoURL, emailVerified, uid };
+                this.userService.userAccessToken = idTokenResult;
+                this.employeeService.setEmployeePropsInLocalStorage(uid);
 
-              /* Go to dashboard */
-              this.setSectionEvent.emit(true);
-            });
+                /* Go to dashboard */
+                this.setSectionEvent.emit(true);
+              })
+              .catch((error: Error) => {
+                this.toastService.showError(error.message);
+              });
           }
         })
         .catch((error: Error) => {

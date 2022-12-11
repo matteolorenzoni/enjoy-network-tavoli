@@ -6,6 +6,7 @@ import { EmployeeService } from 'src/app/services/employee.service';
 import { ToastService } from 'src/app/services/toast.service';
 import { Location } from '@angular/common';
 import { EmployeeDTO } from 'src/app/models/table';
+import { Employee } from 'src/app/models/type';
 
 @Component({
   selector: 'app-employee-generator',
@@ -58,18 +59,24 @@ export class EmployeeGeneratorComponent implements OnInit {
     this.uid = this.route.snapshot.paramMap.get('uid') || '';
     if (this.uid && this.uid !== '' && this.uid !== 'null') {
       this.employeeForm.controls['email'].disable();
-      this.employeeService.getEmployee(this.uid).then((employeDTO) => {
-        if (employeDTO) {
-          this.employeeForm.patchValue({
-            name: employeDTO.name,
-            lastName: employeDTO.lastName,
-            role: employeDTO.role,
-            phone: employeDTO.phone,
-            zone: employeDTO.zone
-          });
-          this.lblButton = 'Modifica dipendente';
-        }
-      });
+      this.employeeService
+        .getEmployee(this.uid)
+        .then((employee: Employee) => {
+          const { employeeDTO } = employee;
+          if (employeeDTO) {
+            this.employeeForm.patchValue({
+              name: employeeDTO.name,
+              lastName: employeeDTO.lastName,
+              role: employeeDTO.role,
+              phone: employeeDTO.phone,
+              zone: employeeDTO.zone
+            });
+            this.lblButton = 'Modifica dipendente';
+          }
+        })
+        .catch((error: Error) => {
+          this.toastService.showError(error.message);
+        });
     }
   }
 
