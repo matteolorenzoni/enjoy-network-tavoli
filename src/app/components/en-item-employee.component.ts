@@ -15,11 +15,11 @@ import { ToastService } from '../services/toast.service';
       <ng-template #elseTemplate>
         <fa-icon [icon]="notActiveIcon" class="text-red-600"></fa-icon>
       </ng-template>
-      <div class="center mx-2 w-full shrink-0 basis-24 rounded bg-primary-60/70 text-white">
+      <div class="center mx-2 w-full shrink-0 basis-20 rounded bg-primary-60/70 text-white">
         {{ employeeDTO.role | uppercase | slice: 0:5 }}
       </div>
       <div class="shrink truncate text-white">{{ employeeDTO.name }} {{ employeeDTO.lastName }}</div>
-      <div class="ml-auto shrink-0">
+      <div class="ml-auto shrink-0 px-1">
         <fa-icon
           [icon]="modifyIcon"
           class="mr-1 text-gray-400  hover:cursor-pointer hover:text-gray-600 active:text-gray-800"
