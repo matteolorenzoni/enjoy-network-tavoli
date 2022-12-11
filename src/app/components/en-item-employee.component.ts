@@ -26,7 +26,8 @@ import { ToastService } from '../services/toast.service';
           [routerLink]="['/create-item/employee', uid]"></fa-icon>
         <fa-icon
           [icon]="deleteIcon"
-          class="ml-1 text-gray-500 hover:cursor-pointer hover:text-gray-600 active:text-gray-800"></fa-icon>
+          class="ml-1 text-gray-500 hover:cursor-pointer hover:text-gray-600 active:text-gray-800"
+          (click)="deleteEmployee()"></fa-icon>
       </div>
     </li>
   `,
@@ -58,18 +59,18 @@ export class EnItemEmployeeComponent {
     if (changes['employee']) {
       this.uid = this.employee.uid;
       this.employeeDTO = this.employee.employeeDTO;
-      // this.dateFormatted = this.datePipe.transform(this.eventDTO.date, 'dd/MM/yyyy') || '';
-      // this.maxPersonFormatted = `0/${this.eventDTO.maxPerson}`;
-      // this.eventInfo.push({ label: 'Nome', value: this.eventDTO.name });
-      // this.eventInfo.push({ label: 'Data', value: this.dateFormatted });
-      // this.eventInfo.push({ label: 'Paganti', value: this.maxPersonFormatted });
-      // this.eventInfo.push({ label: 'Orario', value: `${this.eventDTO.timeStart} - ${this.eventDTO.timeEnd}` });
-      // this.eventInfo.push({ label: 'Luogo', value: this.eventDTO.place });
-      // this.eventInfo.push({ label: 'Ospite/i', value: this.eventDTO.guest });
-      // this.eventInfo.push({ label: 'Descrizione', value: this.eventDTO.description });
-      // this.eventInfo.push({ label: 'Messaggio', value: this.eventDTO.messageText });
     }
   }
 
-  deleteEmployee(): void {}
+  deleteEmployee(): void {
+    this.employeeService
+      .deleteEmployee(this.uid)
+      .then(() => {
+        this.toastService.showSuccess('Dipendente eliminato');
+        this.employeeDeletedEvent.emit();
+      })
+      .catch((error: Error) => {
+        this.toastService.showError(error.message);
+      });
+  }
 }

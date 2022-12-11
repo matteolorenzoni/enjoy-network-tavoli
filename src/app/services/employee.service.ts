@@ -1,7 +1,7 @@
 import { UserCredential } from '@angular/fire/auth';
 import { Injectable } from '@angular/core';
 import { doc, getDoc, getDocs, getFirestore } from '@angular/fire/firestore';
-import { collection, setDoc } from 'firebase/firestore';
+import { collection, deleteDoc, setDoc } from 'firebase/firestore';
 import { UserService } from './user.service';
 import { RoleType } from '../models/enum';
 import { EmployeeDTO, Table } from '../models/table';
@@ -20,7 +20,7 @@ export class EmployeeService {
 
   constructor(private toastService: ToastService, private userService: UserService) {}
 
-  /* --------- SET -------- */
+  /* ------------------------------------------- SET ------------------------------------------- */
   public async setEmployeePropsInLocalStorage(uid: string): Promise<void> {
     const docRef = doc(this.db, Table.EMPLOYEES, uid);
     const docSnap = await getDoc(docRef);
@@ -52,7 +52,7 @@ export class EmployeeService {
     }
   }
 
-  /* --------- GET -------- */
+  /* ------------------------------------------- GET ------------------------------------------- */
   public async getEmployee(uid: string): Promise<EmployeeDTO | null> {
     const docRef = doc(this.db, Table.EMPLOYEES, uid);
     const docSnap = await getDoc(docRef);
@@ -88,5 +88,11 @@ export class EmployeeService {
 
   public getEmployeeRole(): RoleType | null {
     return (sessionStorage.getItem(ROLE) as RoleType) || null;
+  }
+
+  /* ------------------------------------------- DELETE ------------------------------------------- */
+  public async deleteEmployee(uid: string): Promise<void> {
+    await deleteDoc(doc(this.db, Table.EMPLOYEES, uid));
+    // TODO: eliminare anche l'User
   }
 }

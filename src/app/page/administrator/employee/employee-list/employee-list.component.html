@@ -10,7 +10,7 @@
       <app-en-item-employee
         *ngFor="let employee of employees"
         [employee]="employee"
-        (eventDeletedEvent)="getEmployees()"></app-en-item-employee>
+        (employeeDeletedEvent)="getEmployees()"></app-en-item-employee>
     </ul>
   </section>
   <div class="theme-primary fixed left-0 bottom-24 right-0 mx-auto flex h-12 max-w-[48rem] justify-end">
