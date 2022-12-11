@@ -8,7 +8,7 @@ import { ToastService } from '../services/toast.service';
 @Component({
   selector: 'app-en-item-employee[employee]',
   template: `
-    <li class="flex h-16 items-center rounded-sm">
+    <li class="flex h-14 items-center rounded-sm">
       <ng-container *ngIf="employeeDTO.active; else elseTemplate">
         <fa-icon [icon]="activeIcon" class="text-emerald-600"></fa-icon>
       </ng-container>

@@ -10,10 +10,10 @@ import { EventDTO } from '../models/table';
 @Component({
   selector: 'en-item-event[event][eventDeletedEvent]',
   template: `
-    <li class="overflow-hidden rounded-lg outline outline-1 outline-gray-300">
+    <li class="my-4 overflow-hidden rounded">
       <ng-container *ngIf="!isOpen; else elseTemplate">
         <div
-          class="group relative h-12  bg-gradient-to-r from-primary-65 to-primary-0 antialiased hover:cursor-pointer xs:h-16"
+          class="group relative h-12 overflow-hidden rounded bg-gradient-to-r from-primary-60 to-primary-10 antialiased hover:cursor-pointer xs:h-14"
           (click)="toggleOpen()">
           <p class="center absolute inset-0 z-10 hidden text-white group-hover:flex group-hover:backdrop-blur-[2px]">
             APRI
@@ -23,7 +23,7 @@ import { EventDTO } from '../models/table';
             [alt]="dateFormatted + '_image'"
             class="
               absolute
-              -top-10
+              -top-8
               -left-8
               h-32
               w-32
