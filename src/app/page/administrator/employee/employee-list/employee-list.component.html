@@ -6,7 +6,7 @@
       <fa-icon [icon]="filterIcon" class="mr-2"></fa-icon>
       FILTRI
     </button>
-    <ul [@staggeredFadeInIncrement]="employees.length" class="flex flex-col divide-y divide-gray-700">
+    <ul [@staggeredFadeInIncrement]="employees.length" class="flex flex-col divide-y divide-gray-700 px-2">
       <app-en-item-employee
         *ngFor="let employee of employees"
         [employee]="employee"

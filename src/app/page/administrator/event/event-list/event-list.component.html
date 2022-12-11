@@ -6,7 +6,7 @@
       <fa-icon [icon]="filterIcon" class="mr-2"></fa-icon>
       FILTRI
     </button>
-    <ul [@staggeredFadeInIncrement]="events.length" class="flex flex-col divide-y divide-gray-700">
+    <ul [@staggeredFadeInIncrement]="events.length" class="flex flex-col divide-y divide-gray-700 px-2">
       <en-item-event *ngFor="let event of events" [event]="event" (eventDeletedEvent)="getEvents()"></en-item-event>
     </ul>
   </section>
