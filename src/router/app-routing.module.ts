@@ -2,6 +2,8 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { DashboardComponent } from 'src/app/layout/dashboard/dashboard.component';
 import { SettingComponent } from 'src/app/page/setting/setting.component';
+import { EmployeeListComponent as EventEmployeeListComponent } from '../app/page/administrator/event/employee-list/employee-list.component';
+import { TableListComponent as EventTableListComponent } from '../app/page/administrator/event/table-list/table-list.component';
 import { EmployeeListComponent } from '../app/page/administrator/employee/employee-list/employee-list.component';
 import { EmployeeGeneratorComponent } from '../app/page/administrator/employee/employee-generator/employee-generator.component';
 import { StatisticsComponent } from '../app/page/statistics/statistics.component';
@@ -13,6 +15,15 @@ import { PageNotFoundComponent } from '../app/page/page-not-found/page-not-found
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
+  {
+    path: 'dashboard/administrator/event/:uid',
+    component: CreateItemComponent,
+    children: [
+      { path: 'table', component: EventTableListComponent },
+      { path: 'employee', component: EventEmployeeListComponent },
+      { path: '', redirectTo: 'table', pathMatch: 'full' }
+    ]
+  },
   {
     path: 'dashboard',
     component: DashboardComponent,
