@@ -13,9 +13,6 @@ export class CreateItemComponent implements OnInit {
   /* Icons */
   backIcon = faArrowLeft;
 
-  /* Route */
-  pageTitle = '';
-
   constructor(private location: Location) {}
 
   ngOnInit(): void {}
