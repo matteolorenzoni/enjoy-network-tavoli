@@ -6,6 +6,7 @@ import { UserService } from './user.service';
 import { RoleType } from '../models/enum';
 import { EmployeeDTO, Table } from '../models/table';
 import { ToastService } from './toast.service';
+import { Employee, FirebaseDate } from '../models/type';
 
 const PASSWORD_DEFAULT = 'enjoynetwork';
 const ROLE = 'role';
@@ -52,11 +53,34 @@ export class EmployeeService {
   }
 
   /* --------- GET -------- */
-  public async getEmployees(): Promise<EmployeeDTO[]> {
+  public async getEmployee(uid: string): Promise<EmployeeDTO | null> {
+    const docRef = doc(this.db, Table.EMPLOYEES, uid);
+    const docSnap = await getDoc(docRef);
+    if (docSnap.exists()) {
+      const employeeDTO = docSnap.data() as EmployeeDTO;
+      const createdAt = employeeDTO.createdAt as unknown as FirebaseDate;
+      const modificatedAt = employeeDTO.modificatedAt as unknown as FirebaseDate;
+      employeeDTO.createdAt = new Date(createdAt.seconds * 1000);
+      employeeDTO.modificatedAt = new Date(modificatedAt.seconds * 1000);
+      return employeeDTO;
+    }
+    this.toastService.showError('Documento non trovato');
+    return null;
+  }
+
+  public async getEmployees(): Promise<Employee[]> {
     const collectionRef = collection(this.db, Table.EMPLOYEES);
     const querySnapshot = await getDocs(collectionRef);
     if (querySnapshot.size > 0) {
-      return querySnapshot.docs.map((employeeDoc) => employeeDoc.data() as EmployeeDTO);
+      return querySnapshot.docs.map((employeeDoc) => {
+        const uid = employeeDoc.id;
+        const employeeDTO = employeeDoc.data() as EmployeeDTO;
+        const createdAt = employeeDTO.createdAt as unknown as FirebaseDate;
+        const modificatedAt = employeeDTO.modificatedAt as unknown as FirebaseDate;
+        employeeDTO.createdAt = new Date(createdAt.seconds * 1000);
+        employeeDTO.modificatedAt = new Date(modificatedAt.seconds * 1000);
+        return { uid, employeeDTO };
+      });
     }
     this.toastService.showError('Documento non trovato');
     return [];

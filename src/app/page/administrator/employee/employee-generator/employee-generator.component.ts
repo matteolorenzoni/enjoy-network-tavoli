@@ -36,7 +36,6 @@ export class EmployeeGeneratorComponent implements OnInit {
       name: new FormControl(null, [Validators.required, Validators.pattern(/[\S]/)]),
       lastName: new FormControl(null, [Validators.required, Validators.pattern(/[\S]/)]),
       email: new FormControl(null, [Validators.required, Validators.email]),
-      // password: new FormControl(null, [Validators.required, Validators.pattern(/[\S]/)]),
       role: new FormControl(RoleType.PR, [Validators.required, Validators.pattern(/[\S]/)]),
       phone: new FormControl(null, [Validators.required, Validators.pattern(/^[0-9]*$/)]),
       zone: new FormControl(null, [Validators.required, Validators.pattern(/[\S]/)])
@@ -57,24 +56,19 @@ export class EmployeeGeneratorComponent implements OnInit {
   ngOnInit(): void {
     this.uid = this.route.snapshot.paramMap.get('uid') || '';
     if (this.uid && this.uid !== '' && this.uid !== 'null') {
-      // this.eventService.getEvent(this.uid).then((event) => {
-      //   if (event) {
-      //     this.eventForm.patchValue({
-      //       imageUrl: event.imageUrl,
-      //       name: event.name,
-      //       date: event.date.toJSON().split('T')[0],
-      //       timeStart: event.timeStart,
-      //       timeEnd: event.timeEnd,
-      //       maxPerson: event.maxPerson,
-      //       place: event.place,
-      //       guest: event.guest,
-      //       description: event.description,
-      //       messageText: event.messageText
-      //     });
-      //     this.imageSrc = event.imageUrl;
-      //     this.lblButton = 'Modifica evento';
-      //   }
-      // });
+      this.employeeForm.controls['email'].disable();
+      this.employeeService.getEmployee(this.uid).then((employeDTO) => {
+        if (employeDTO) {
+          this.employeeForm.patchValue({
+            name: employeDTO.name,
+            lastName: employeDTO.lastName,
+            role: employeDTO.role,
+            phone: employeDTO.phone,
+            zone: employeDTO.zone
+          });
+          this.lblButton = 'Modifica dipendente';
+        }
+      });
     }
   }
 
