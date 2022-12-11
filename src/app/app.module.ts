@@ -32,6 +32,7 @@ import { EnItemEventComponent } from './components/en-item-event.component';
 import { StatisticsComponent } from './page/statistics/statistics.component';
 import { EmployeeListComponent } from './page/administrator/employee/employee-list/employee-list.component';
 import { EmployeeGeneratorComponent } from './page/administrator/employee/employee-generator/employee-generator.component';
+import { EnItemEmployeeComponent } from './components/en-item-employee.component';
 
 @NgModule({
   declarations: [
@@ -54,7 +55,8 @@ import { EmployeeGeneratorComponent } from './page/administrator/employee/employ
     EnItemEventComponent,
     StatisticsComponent,
     EmployeeListComponent,
-    EmployeeGeneratorComponent
+    EmployeeGeneratorComponent,
+    EnItemEmployeeComponent
   ],
   imports: [
     BrowserModule,

@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { faFilter, faPlus } from '@fortawesome/free-solid-svg-icons';
-import { fadeInAnimation } from 'src/app/animations/animations';
+import { fadeInAnimation, staggeredFadeInIncrement } from 'src/app/animations/animations';
 import { Employee } from 'src/app/models/type';
 import { ToastService } from 'src/app/services/toast.service';
 import { EmployeeService } from '../../../../services/employee.service';
@@ -10,7 +10,7 @@ import { EmployeeService } from '../../../../services/employee.service';
   selector: 'app-employee-list',
   templateUrl: './employee-list.component.html',
   styleUrls: ['./employee-list.component.scss'],
-  animations: [fadeInAnimation]
+  animations: [fadeInAnimation, staggeredFadeInIncrement]
 })
 export class EmployeeListComponent {
   /* Icons */
@@ -30,5 +30,14 @@ export class EmployeeListComponent {
     this.router.navigate(['create-item/employee/null']);
   }
 
-  getEmployees(): void {}
+  getEmployees(): void {
+    this.employeeService
+      .getEmployees()
+      .then((data) => {
+        this.employees = data;
+      })
+      .catch((error: Error) => {
+        this.toastService.showError(error.message);
+      });
+  }
 }
