@@ -39,7 +39,7 @@
       size="30"
       name="email_input"
       id="email_input"
-      class="peer block w-full appearance-none bg-transparent py-2.5 px-0 text-base text-primary-100 focus:text-primary-60 focus:outline-none focus:ring-0"
+      class="peer block w-full appearance-none py-2.5 px-0 text-base text-primary-100 focus:text-primary-60 focus:outline-none focus:ring-0 enabled:bg-transparent disabled:cursor-not-allowed"
       formControlName="email"
       placeholder=" "
       required />
@@ -118,6 +118,15 @@
       Zona
     </label>
     <hr class="border-primary-100 peer-focus:border-primary-60" />
+  </div>
+
+  <div class="group relative z-0 flex w-full">
+    <label class="relative inline-flex cursor-pointer items-center">
+      <input type="checkbox" formControlName="active" class="peer sr-only" />
+      <div
+        class="peer h-6 w-11 rounded-full bg-gray-200 after:absolute after:top-[2px] after:left-[2px] after:h-5 after:w-5 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:bg-primary-60 peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:outline-none peer-focus:ring-0"></div>
+      <span class="ml-4 text-base text-white">Attivo</span>
+    </label>
   </div>
 
   <div class="mx-auto w-52">

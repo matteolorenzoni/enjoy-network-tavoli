@@ -38,7 +38,8 @@ export class EmployeeGeneratorComponent implements OnInit {
       email: new FormControl(null, [Validators.required, Validators.email]),
       role: new FormControl(RoleType.PR, [Validators.required, Validators.pattern(/[\S]/)]),
       phone: new FormControl(null, [Validators.required, Validators.pattern(/^[0-9]*$/)]),
-      zone: new FormControl(null, [Validators.required, Validators.pattern(/[\S]/)])
+      zone: new FormControl(null, [Validators.required, Validators.pattern(/[\S]/)]),
+      active: new FormControl(true, [Validators.required])
     });
     this.employeeForm.controls['role'].valueChanges.subscribe((value) => {
       if (value !== RoleType.PR) {
@@ -81,7 +82,7 @@ export class EmployeeGeneratorComponent implements OnInit {
       role: this.employeeForm.value.role,
       phone: this.employeeForm.value.phone,
       zone: this.employeeForm.value.zone?.trim().replace(/\s\s+/g, ' ') || '',
-      active: true,
+      active: this.employeeForm.value.active,
       createdAt: this.employeeForm.value.createdAt || new Date(),
       modificatedAt: this.employeeForm.value.createdAt || new Date()
     };

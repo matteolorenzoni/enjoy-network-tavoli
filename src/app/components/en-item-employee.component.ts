@@ -22,11 +22,11 @@ import { ToastService } from '../services/toast.service';
       <div class="ml-auto shrink-0 px-1">
         <fa-icon
           [icon]="modifyIcon"
-          class="mr-1 text-gray-400  hover:cursor-pointer hover:text-gray-600 active:text-gray-800"
+          class="mr-1 text-gray-500  hover:cursor-pointer hover:text-gray-600 active:text-gray-800"
           [routerLink]="['/create-item/employee', uid]"></fa-icon>
         <fa-icon
           [icon]="deleteIcon"
-          class="ml-1 text-gray-400 hover:cursor-pointer hover:text-gray-600 active:text-gray-800"></fa-icon>
+          class="ml-1 text-gray-500 hover:cursor-pointer hover:text-gray-600 active:text-gray-800"></fa-icon>
       </div>
     </li>
   `,
