@@ -23,8 +23,8 @@ export class EventEmployService {
     prActive.forEach((employee) => {
       const obj: EventEmployeeDTO = {
         employeeUid: employee.uid,
-        employeeEventActive: true,
         eventUid,
+        eventActive: true,
         eventPersonMarked: 0,
         eventPersonAssigned: 0
       };
