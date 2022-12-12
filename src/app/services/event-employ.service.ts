@@ -25,7 +25,8 @@ export class EventEmployService {
         employeeUid: employee.uid,
         employeeEventActive: true,
         eventUid,
-        eventMaxPerson: 0
+        eventPersonMarked: 0,
+        eventPersonAssigned: 0
       };
       const docRef = doc(collection(this.db, Table.EVENT_EMPLOYEES));
       batch.set(docRef, obj);

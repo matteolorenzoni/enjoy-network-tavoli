@@ -36,5 +36,6 @@ export type EventEmployeeDTO = {
   employeeUid: string;
   employeeEventActive: boolean;
   eventUid: string;
-  eventMaxPerson: number;
+  eventPersonMarked: number;
+  eventPersonAssigned: number;
 };
