@@ -33,7 +33,10 @@ import { StatisticsComponent } from './page/statistics/statistics.component';
 import { EmployeeListComponent } from './page/administrator/employee/employee-list/employee-list.component';
 import { EmployeeGeneratorComponent } from './page/administrator/employee/employee-generator/employee-generator.component';
 import { EnItemEmployeeComponent } from './components/en-item-employee.component';
-import { TableListComponent } from './page/administrator/event/table-list/table-list.component';
+import { EnItemEventEmployeeComponent } from './components/en-item-event-employee.component';
+import { EnCountdownComponent } from './components/en-countdown.component';
+import { EmployeeListComponent as EventEmployeeListComponent } from './page/administrator/event/employee-list/employee-list.component';
+import { TableListComponent as EventTableListComponent } from './page/administrator/event/table-list/table-list.component';
 
 @NgModule({
   declarations: [
@@ -58,7 +61,10 @@ import { TableListComponent } from './page/administrator/event/table-list/table-
     EmployeeListComponent,
     EmployeeGeneratorComponent,
     EnItemEmployeeComponent,
-    TableListComponent
+    EventTableListComponent,
+    EventEmployeeListComponent,
+    EnItemEventEmployeeComponent,
+    EnCountdownComponent
   ],
   imports: [
     BrowserModule,
