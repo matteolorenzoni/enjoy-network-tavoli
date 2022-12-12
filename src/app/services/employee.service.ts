@@ -1,7 +1,7 @@
 import { UserCredential } from '@angular/fire/auth';
 import { Injectable } from '@angular/core';
 import { doc, getDoc, getDocs, getFirestore } from '@angular/fire/firestore';
-import { collection, deleteDoc, query, setDoc, where } from 'firebase/firestore';
+import { collection, deleteDoc, documentId, query, setDoc, where } from 'firebase/firestore';
 import { UserService } from './user.service';
 import { RoleType } from '../models/enum';
 import { EmployeeDTO, Table } from '../models/table';
@@ -82,6 +82,20 @@ export class EmployeeService {
 
   public async getEmployeesPrAndActive(): Promise<Employee[]> {
     const q = query(collection(this.db, Table.EMPLOYEES), where(ACTIVE, '==', true), where(ROLE, '==', RoleType.PR));
+    const querySnapshot = await getDocs(q);
+    if (querySnapshot.size > 0) {
+      return querySnapshot.docs.map((employeeDoc) => {
+        const uid = employeeDoc.id;
+        const employeeDTO = employeeDoc.data() as EmployeeDTO;
+        return { uid, employeeDTO };
+      });
+    }
+    return [];
+  }
+
+  public async getEmployeeByUidArray(uidArray: string[]): Promise<Employee[]> {
+    const collectionRef = collection(this.db, Table.EMPLOYEES);
+    const q = query(collectionRef, where(documentId(), 'in', uidArray));
     const querySnapshot = await getDocs(q);
     if (querySnapshot.size > 0) {
       return querySnapshot.docs.map((employeeDoc) => {
