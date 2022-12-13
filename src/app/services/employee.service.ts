@@ -93,7 +93,7 @@ export class EmployeeService {
     return [];
   }
 
-  public async getEmployeeByUidArray(uidArray: string[]): Promise<Employee[]> {
+  public async getEmployeeByMultipleUid(uidArray: string[]): Promise<Employee[]> {
     const collectionRef = collection(this.db, Table.EMPLOYEES);
     const q = query(collectionRef, where(documentId(), 'in', uidArray));
     const querySnapshot = await getDocs(q);
