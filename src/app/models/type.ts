@@ -34,16 +34,16 @@ export type FirebaseDate = {
 };
 
 export type Event = {
-  uid: string;
+  readonly uid: string;
   eventDTO: EventDTO;
 };
 
 export type Employee = {
-  uid: string;
+  readonly uid: string;
   employeeDTO: EmployeeDTO;
 };
 
 export type EventEmployee = {
-  uid: string;
+  readonly uid: string;
   eventEmployeeDTO: EventEmployeeDTO;
 };
