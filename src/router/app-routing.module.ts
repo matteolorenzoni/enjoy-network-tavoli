@@ -16,13 +16,12 @@ import { PageNotFoundComponent } from '../app/page/page-not-found/page-not-found
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
   {
-    path: 'dashboard/administrator/event/:uid',
-    component: CreateItemComponent,
-    children: [
-      { path: 'table', component: EventTableListComponent },
-      { path: 'employee', component: EventEmployeeListComponent },
-      { path: '', redirectTo: 'table', pathMatch: 'full' }
-    ]
+    path: 'dashboard/administrator/event/:uid/table',
+    component: EventTableListComponent
+  },
+  {
+    path: 'dashboard/administrator/event/:uid/employee',
+    component: EventEmployeeListComponent
   },
   {
     path: 'dashboard',
