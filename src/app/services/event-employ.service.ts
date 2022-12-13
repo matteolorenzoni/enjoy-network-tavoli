@@ -1,6 +1,6 @@
 import { EmployeeService } from 'src/app/services/employee.service';
 import { Injectable } from '@angular/core';
-import { getDocs, query, where } from '@angular/fire/firestore';
+import { getDocs, query, updateDoc, where } from '@angular/fire/firestore';
 import { collection, doc, getFirestore, writeBatch } from 'firebase/firestore';
 import { EventEmployeeDTO, Table } from '../models/table';
 import { Employee, EventEmployee } from '../models/type';
@@ -32,6 +32,25 @@ export class EventEmployService {
       batch.set(docRef, obj);
     });
     await batch.commit();
+  }
+
+  public async updateEventPersonAssigned(eventEmployeeUid: string, eventPersonAssigned: number): Promise<void> {
+    const docRef = doc(this.db, Table.EVENT_EMPLOYEES, eventEmployeeUid);
+    await updateDoc(docRef, { eventPersonAssigned });
+  }
+
+  public async updateEventActive(
+    eventEmployeeUid: string,
+    eventPersonMarked: number,
+    eventActive: boolean
+  ): Promise<void> {
+    const docRef = doc(this.db, Table.EVENT_EMPLOYEES, eventEmployeeUid);
+    if (eventActive) {
+      await updateDoc(docRef, { eventActive: true });
+    } else {
+      /** If the person is not active for the event, are removed as many as person assigned as possible  */
+      await updateDoc(docRef, { eventActive: false, eventPersonAssigned: eventPersonMarked });
+    }
   }
 
   /* ------------------------------------------- GET ------------------------------------------- */
