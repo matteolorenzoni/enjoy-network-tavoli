@@ -11,7 +11,7 @@ const EVENT_UID = 'eventUid';
 @Injectable({
   providedIn: 'root'
 })
-export class EventEmployService {
+export class EventEmployeeService {
   /** Database */
   private db = getFirestore();
 

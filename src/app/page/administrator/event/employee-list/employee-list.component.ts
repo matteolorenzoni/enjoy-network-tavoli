@@ -14,7 +14,7 @@ import {
   staggeredFadeInIncrement
 } from 'src/app/animations/animations';
 import { EmployeeDTO } from 'src/app/models/table';
-import { EventEmployService } from '../../../../services/event-employ.service';
+import { EventEmployeeService } from '../../../../services/event-employee.service';
 
 @Component({
   selector: 'app-employee-list',
@@ -42,7 +42,7 @@ export class EmployeeListComponent implements OnInit {
     private route: ActivatedRoute,
     private eventService: EventService,
     private employeeService: EmployeeService,
-    private eventEmployeeService: EventEmployService,
+    private eventEmployeeService: EventEmployeeService,
     private toastService: ToastService
   ) {}
 

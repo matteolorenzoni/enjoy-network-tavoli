@@ -5,7 +5,7 @@ import { FormControl } from '@angular/forms';
 import { faCircleMinus, faCirclePlus } from '@fortawesome/free-solid-svg-icons';
 import { debounceTime, Subscription } from 'rxjs';
 import { ToastService } from '../services/toast.service';
-import { EventEmployService } from '../services/event-employ.service';
+import { EventEmployeeService } from '../services/event-employee.service';
 import { EmployeeDTO } from '../models/table';
 
 @Component({
@@ -86,7 +86,7 @@ export class EnItemEventEmployeeComponent {
   subPersonAssigned!: Subscription;
   subIsActive!: Subscription;
 
-  constructor(private eventEmploy: EventEmployService, private toastService: ToastService) {}
+  constructor(private eventEmployee: EventEmployeeService, private toastService: ToastService) {}
 
   /* ----------------------------------------------------- lifecycle hooks ----------------------------------------------------- */
   ngOnInit(): void {
@@ -98,7 +98,7 @@ export class EnItemEventEmployeeComponent {
         const hipoteticalPersonAssigned = this.currentPersonAssigned + value - this.eventPersonAssigned;
         if (hipoteticalPersonAssigned <= this.maxPerson) {
           /* Update the value */
-          this.eventEmploy
+          this.eventEmployee
             .updateEventPersonAssigned(this.uid, value)
             .then(() => {
               this.refreshEvEmArrayEvent.emit();
@@ -117,7 +117,7 @@ export class EnItemEventEmployeeComponent {
 
     /* Form IsActive */
     this.subIsActive = this.formIsActive.valueChanges.subscribe((value) => {
-      this.eventEmploy
+      this.eventEmployee
         .updateEventActive(this.uid, this.eventPersonMarked, value)
         .then(() => {
           this.refreshEvEmArrayEvent.emit();

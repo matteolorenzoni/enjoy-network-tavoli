@@ -22,7 +22,7 @@ import { DatePipe } from '@angular/common';
 import { environment } from 'src/environments/environment';
 import { EventDTO, Table } from '../models/table';
 import { Event, FirebaseDate } from '../models/type';
-import { EventEmployService } from './event-employ.service';
+import { EventEmployeeService } from './event-employee.service';
 
 @Injectable({
   providedIn: 'root'
@@ -32,7 +32,7 @@ export class EventService {
   private db!: Firestore;
   private storage!: FirebaseStorage;
 
-  constructor(private datePipe: DatePipe, private eventEmployService: EventEmployService) {
+  constructor(private datePipe: DatePipe, private eventEmployeeService: EventEmployeeService) {
     this.db = getFirestore();
     this.storage = getStorage();
   }
@@ -63,7 +63,7 @@ export class EventService {
       /* Add document */
       const docRef = await addDoc(collection(this.db, Table.EVENTS), newEvent);
       /* Add event employee */
-      await this.eventEmployService.addEventEmployee(docRef.id);
+      await this.eventEmployeeService.addEventEmployee(docRef.id);
     } else {
       /* Update document */
       newEvent.modificatedAt = new Date();
@@ -114,7 +114,7 @@ export class EventService {
   /* ------------------------------------------- DELETE ------------------------------------------- */
   public async deleteEvent(uid: string): Promise<void> {
     /* Delete event employees */
-    this.eventEmployService.deleteEventEmployees(uid);
+    this.eventEmployeeService.deleteEventEmployees(uid);
 
     /* Delete event */
     await deleteDoc(doc(this.db, Table.EVENTS, uid));
