@@ -27,7 +27,7 @@ import { EmployeeDTO } from '../models/table';
         </button>
         <input
           type="number"
-          class="text-md md:text-basecursor-default flex w-full items-center bg-primary-65 text-center font-semibold text-black outline-none hover:bg-primary-60 focus:outline-none disabled:cursor-not-allowed disabled:bg-gray-200 "
+          class="flex w-full items-center rounded-none bg-primary-65 text-center font-semibold text-black outline-none hover:bg-primary-60 focus:outline-none disabled:cursor-not-allowed disabled:bg-gray-200 "
           [formControl]="formPersonAssigned" />
         <button
           data-action="increment"
