@@ -19,6 +19,7 @@ import {
   UploadTaskSnapshot
 } from '@angular/fire/storage';
 import { DatePipe } from '@angular/common';
+import { environment } from 'src/environments/environment';
 import { EventDTO, Table } from '../models/table';
 import { Event, FirebaseDate } from '../models/type';
 import { EventEmployService } from './event-employ.service';
@@ -50,10 +51,12 @@ export class EventService {
 
       /* Upload */
       const snapshot: UploadTaskSnapshot = await uploadBytesResumable(storageRef, photo);
+      if (!environment.production) console.log('Uploaded a blob or file!', snapshot);
 
       /* Get download URL */
       const downloadURL: string = await getDownloadURL(snapshot.ref);
       newEvent.imageUrl = downloadURL;
+      if (!environment.production) console.log('File available at', downloadURL);
     }
 
     if (!uid) {
@@ -66,12 +69,14 @@ export class EventService {
       newEvent.modificatedAt = new Date();
       await setDoc(doc(this.db, Table.EVENTS, uid), newEvent);
     }
+    if (!environment.production) console.log('Evento aggiornato', newEvent);
   }
 
   /* ------------------------------------------- GET ------------------------------------------- */
   public async getEvent(eventUid: string): Promise<Event> {
     const docRef = doc(this.db, Table.EVENTS, eventUid);
     const docSnap = await getDoc(docRef);
+    if (!environment.production) console.log('Evento trovato', docSnap.data());
     if (docSnap.exists()) {
       const uid = docSnap.id;
       const eventDTO = docSnap.data() as EventDTO;
@@ -89,6 +94,7 @@ export class EventService {
   public async getEvents(): Promise<Event[]> {
     const collectionRef = collection(this.db, Table.EVENTS);
     const querySnapshot = await getDocs(collectionRef);
+    if (!environment.production) console.log('Evento trovato', querySnapshot.docs);
     if (querySnapshot.size > 0) {
       return querySnapshot.docs.map((eventDoc) => {
         const uid = eventDoc.id;
@@ -112,5 +118,6 @@ export class EventService {
 
     /* Delete event */
     await deleteDoc(doc(this.db, Table.EVENTS, uid));
+    if (!environment.production) console.log('Evento eliminato', uid);
   }
 }

@@ -2,6 +2,7 @@ import { UserCredential } from '@angular/fire/auth';
 import { Injectable } from '@angular/core';
 import { doc, getDoc, getDocs, getFirestore } from '@angular/fire/firestore';
 import { collection, deleteDoc, documentId, query, setDoc, where } from 'firebase/firestore';
+import { environment } from '../../environments/environment';
 import { UserService } from './user.service';
 import { RoleType } from '../models/enum';
 import { EmployeeDTO, Table } from '../models/table';
@@ -21,19 +22,11 @@ export class EmployeeService {
   constructor(private userService: UserService) {}
 
   /* ------------------------------------------- SET ------------------------------------------- */
-  public async setEmployeePropsInLocalStorage(employeeUid: string): Promise<void> {
-    const employee = await this.getEmployee(employeeUid);
-    const { uid, employeeDTO } = employee;
-    sessionStorage.setItem('uid', uid);
-    Object.keys(employeeDTO).forEach((key) => {
-      sessionStorage.setItem(key, employeeDTO[key as keyof EmployeeDTO].toString());
-    });
-  }
-
   public async addOrUpdateEmployee(email: string, employee: EmployeeDTO, uid: string | null): Promise<void> {
     if (!uid) {
       /* Create new user */
       const userCredential: UserCredential = await this.userService.register(email, PASSWORD_DEFAULT);
+      if (!environment.production) console.log('addOrUpdateEmployee', userCredential);
       const userCredentialUid = userCredential.user?.uid;
       if (userCredentialUid) {
         /* Add document */
@@ -45,12 +38,14 @@ export class EmployeeService {
       newEmployee.modificatedAt = new Date();
       await setDoc(doc(this.db, Table.EMPLOYEES, uid), newEmployee);
     }
+    if (!environment.production) console.log('addOrUpdateEmployee', email, employee, uid);
   }
 
   /* ------------------------------------------- GET ------------------------------------------- */
   public async getEmployee(employeeUid: string): Promise<Employee> {
     const docRef = doc(this.db, Table.EMPLOYEES, employeeUid);
     const docSnap = await getDoc(docRef);
+    if (!environment.production) console.log('getEmployee', docSnap.data());
     if (docSnap.exists()) {
       const uid = docSnap.id;
       const employeeDTO = docSnap.data() as EmployeeDTO;
@@ -66,6 +61,7 @@ export class EmployeeService {
   public async getEmployees(): Promise<Employee[]> {
     const collectionRef = collection(this.db, Table.EMPLOYEES);
     const querySnapshot = await getDocs(collectionRef);
+    if (!environment.production) console.log('getEmployees', querySnapshot.docs);
     if (querySnapshot.size > 0) {
       return querySnapshot.docs.map((employeeDoc) => {
         const uid = employeeDoc.id;
@@ -83,6 +79,7 @@ export class EmployeeService {
   public async getEmployeesPrAndActive(): Promise<Employee[]> {
     const q = query(collection(this.db, Table.EMPLOYEES), where(ACTIVE, '==', true), where(ROLE, '==', RoleType.PR));
     const querySnapshot = await getDocs(q);
+    if (!environment.production) console.log('getEmployeesPrAndActive', querySnapshot.docs);
     if (querySnapshot.size > 0) {
       return querySnapshot.docs.map((employeeDoc) => {
         const uid = employeeDoc.id;
@@ -97,6 +94,7 @@ export class EmployeeService {
     const collectionRef = collection(this.db, Table.EMPLOYEES);
     const q = query(collectionRef, where(documentId(), 'in', uidArray));
     const querySnapshot = await getDocs(q);
+    if (!environment.production) console.log('getEmployeeByMultipleUid', querySnapshot.docs);
     if (querySnapshot.size > 0) {
       return querySnapshot.docs.map((employeeDoc) => {
         const uid = employeeDoc.id;
@@ -114,6 +112,17 @@ export class EmployeeService {
   /* ------------------------------------------- DELETE ------------------------------------------- */
   public async deleteEmployee(uid: string): Promise<void> {
     await deleteDoc(doc(this.db, Table.EMPLOYEES, uid));
+    if (!environment.production) console.log('deleteEmployee', uid);
     // TODO: eliminare anche l'User
+  }
+
+  /* ------------------------------------------- LOCAL STORAGE ------------------------------------------- */
+  public async setEmployeePropsInLocalStorage(employeeUid: string): Promise<void> {
+    const employee = await this.getEmployee(employeeUid);
+    const { uid, employeeDTO } = employee;
+    sessionStorage.setItem('uid', uid);
+    Object.keys(employeeDTO).forEach((key) => {
+      sessionStorage.setItem(key, employeeDTO[key as keyof EmployeeDTO].toString());
+    });
   }
 }
