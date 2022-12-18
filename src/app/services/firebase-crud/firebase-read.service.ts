@@ -10,9 +10,12 @@ import {
   QuerySnapshot,
   query,
   getFirestore,
-  QueryConstraint
+  QueryConstraint,
+  QueryDocumentSnapshot
 } from '@angular/fire/firestore';
+import { employeeConverter } from 'src/app/models/converter';
 import { Table } from 'src/app/models/table';
+import { Employee } from 'src/app/models/type';
 import { environment } from 'src/environments/environment';
 
 @Injectable({
@@ -61,35 +64,33 @@ export class FirebaseReadService {
   }
 
   /* ------------------------------------------- EMPLOYEE ------------------------------------------- */
-  public async getAllEmployee(): Promise<QuerySnapshot<DocumentData>> {
-    const collectionRef = collection(this.db, Table.EMPLOYEES);
+  public async getAllEmployee(): Promise<Employee[]> {
+    const employees: Employee[] = [];
+    const collectionRef = collection(this.db, Table.EMPLOYEES).withConverter(employeeConverter);
     const querySnapshot = await getDocs(collectionRef);
-    if (!environment.production) {
-      console.info(
-        'Got employees',
-        querySnapshot.docs.map((item) => item.data())
-      );
-    }
-    return querySnapshot;
+    querySnapshot.forEach((item: QueryDocumentSnapshot<Employee>) => {
+      employees.push(item.data());
+      if (!environment.production) console.info('Got employee', item.data());
+    });
+    return employees;
   }
 
-  public async getEmployeeByUid(uid: string): Promise<DocumentSnapshot<DocumentData>> {
-    const docRef = doc(this.db, Table.EMPLOYEES, uid);
+  public async getEmployeeByUid(uid: string): Promise<Employee> {
+    const docRef = doc(this.db, Table.EMPLOYEES, uid).withConverter(employeeConverter);
     const docSnap = await getDoc(docRef);
     if (!environment.production) console.info('Got employee', docSnap.data());
-    return docSnap;
+    return docSnap.data() as Employee;
   }
 
-  public async getEmployeesByMultipleConstraints(constraints: QueryConstraint[]): Promise<QuerySnapshot<DocumentData>> {
-    const collectionRef = collection(this.db, Table.EMPLOYEES);
+  public async getEmployeesByMultipleConstraints(constraints: QueryConstraint[]): Promise<Employee[]> {
+    const employees: Employee[] = [];
+    const collectionRef = collection(this.db, Table.EMPLOYEES).withConverter(employeeConverter);
     const q = query(collectionRef, ...constraints);
     const querySnapshot = await getDocs(q);
-    if (!environment.production) {
-      console.info(
-        'Got employees',
-        querySnapshot.docs.map((item) => item.data())
-      );
-    }
-    return querySnapshot;
+    querySnapshot.forEach((item: QueryDocumentSnapshot<Employee>) => {
+      employees.push(item.data());
+      if (!environment.production) console.info('Got employee', item.data());
+    });
+    return employees;
   }
 }

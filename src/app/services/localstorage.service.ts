@@ -16,8 +16,7 @@ export class LocalstorageService {
 
   /* ------------------------------------------- SET ------------------------------------------- */
   public async setEmployeePropsInLocalStorage(employeeUid: string): Promise<void> {
-    const docRef = await this.firebaseReadService.getEmployeeByUid(employeeUid);
-    const employee = this.transformService.qsToEmployee(docRef);
+    const employee = await this.firebaseReadService.getEmployeeByUid(employeeUid);
     const { uid, employeeDTO } = employee;
     sessionStorage.setItem('uid', uid);
     Object.keys(employeeDTO).forEach((key) => {

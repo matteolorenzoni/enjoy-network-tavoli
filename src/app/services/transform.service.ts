@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { DocumentData, DocumentSnapshot, QuerySnapshot, Timestamp } from '@angular/fire/firestore';
-import { EmployeeDTO, EventDTO, EventEmployeeDTO } from '../models/table';
-import { EventEmployee, Event, Employee } from '../models/type';
+import { EventDTO, EventEmployeeDTO } from '../models/table';
+import { EventEmployee, Event } from '../models/type';
 
 @Injectable({
   providedIn: 'root'
@@ -51,29 +51,4 @@ export class TransformService {
   }
 
   /* ------------------------------------------- EMPLOYEE ------------------------------------------- */
-  public qsToEmployee(docRef: DocumentSnapshot<DocumentData>): Employee {
-    if (docRef.exists()) {
-      const employee: Employee = {
-        uid: docRef.id,
-        employeeDTO: docRef.data() as EmployeeDTO
-      };
-      employee.employeeDTO.createdAt = new Date(
-        (employee.employeeDTO.createdAt as unknown as Timestamp).seconds * 1000
-      );
-      employee.employeeDTO.modificatedAt = new Date(
-        (employee.employeeDTO.modificatedAt as unknown as Timestamp).seconds * 1000
-      );
-      return employee;
-    }
-    throw new Error('Documento non trovato');
-  }
-
-  public qsToEmployees(querySnapshot: QuerySnapshot<DocumentData>): Employee[] {
-    const employees: Employee[] = [];
-    querySnapshot.forEach((employeeDoc) => {
-      const employee = this.qsToEmployee(employeeDoc);
-      employees.push(employee);
-    });
-    return employees;
-  }
 }

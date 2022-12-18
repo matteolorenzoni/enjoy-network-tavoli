@@ -1,3 +1,4 @@
+import { Employee } from 'src/app/models/type';
 import { Injectable } from '@angular/core';
 import { QueryConstraint, where } from '@angular/fire/firestore';
 import { DatePipe } from '@angular/common';
@@ -56,8 +57,8 @@ export class EventService {
       const prConstraint: QueryConstraint = where('role', '==', RoleType.PR);
       const activeConstraint: QueryConstraint = where('active', '==', true);
       const constricts: QueryConstraint[] = [prConstraint, activeConstraint];
-      const querySnapshot = await this.firebaseReadService.getEmployeesByMultipleConstraints(constricts);
-      await this.firebaseCreateService.addEventEmployeeByEventUid(docRef.id, querySnapshot);
+      const employees: Employee[] = await this.firebaseReadService.getEmployeesByMultipleConstraints(constricts);
+      await this.firebaseCreateService.addEventEmployeeByEventUid(docRef.id, employees);
     } else {
       /* Update document */
       const event: Event = { uid, eventDTO };

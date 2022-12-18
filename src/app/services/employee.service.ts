@@ -28,14 +28,14 @@ export class EmployeeService {
   /* ------------------------------------------- GET ------------------------------------------- */
   // OK
   public async getEmployee(employeeUid: string): Promise<Employee> {
-    const docSnap = await this.firebaseReadService.getEmployeeByUid(employeeUid);
-    return this.transformService.qsToEmployee(docSnap);
+    const employee: Employee = await this.firebaseReadService.getEmployeeByUid(employeeUid);
+    return employee;
   }
 
   // OK
   public async getAllEmployees(): Promise<Employee[]> {
-    const querySnapshot = await this.firebaseReadService.getAllEmployee();
-    return this.transformService.qsToEmployees(querySnapshot);
+    const employees: Employee[] = await this.firebaseReadService.getAllEmployee();
+    return employees;
   }
 
   public async getEmployeesByUids(uidArray: string[]): Promise<Employee[]> {
@@ -45,8 +45,8 @@ export class EmployeeService {
     // const secondOrder: QueryConstraint = orderBy('personAssigned');
     // const thirdOrder: QueryConstraint = orderBy('personMarked');
     const constricts: QueryConstraint[] = [idConstraint];
-    const querySnapshot = await this.firebaseReadService.getEmployeesByMultipleConstraints(constricts);
-    return this.transformService.qsToEmployees(querySnapshot);
+    const employees: Employee[] = await this.firebaseReadService.getEmployeesByMultipleConstraints(constricts);
+    return employees;
   }
 
   /* ------------------------------------------- ADD ------------------------------------------- */
