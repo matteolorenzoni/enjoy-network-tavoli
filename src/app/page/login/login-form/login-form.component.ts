@@ -1,3 +1,4 @@
+import { LocalstorageService } from 'src/app/services/localstorage.service';
 import { UserCredential } from '@angular/fire/auth';
 import { Component, EventEmitter, Output, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
@@ -5,7 +6,6 @@ import { faAt, faKey } from '@fortawesome/free-solid-svg-icons';
 import { UserService } from 'src/app/services/user.service';
 import { ToastService } from 'src/app/services/toast.service';
 import { translateFirebaseErrorMessage } from 'src/app/translate/translate';
-import { EmployeeService } from '../../../services/employee.service';
 import { FirebaseLoginErrorType, InputType } from '../../../models/enum';
 
 @Component({
@@ -30,7 +30,7 @@ export class LoginFormComponent implements OnInit {
   /* ---------------------------- constructor ---------------------------- */
   constructor(
     private userService: UserService,
-    private employeeService: EmployeeService,
+    private localstorageService: LocalstorageService,
     private toastService: ToastService
   ) {
     this.loginForm = new FormGroup({
@@ -63,10 +63,11 @@ export class LoginFormComponent implements OnInit {
             userCredential.user
               .getIdTokenResult()
               .then((idTokenResult) => {
+                // TODO: da capire se serve
                 const { displayName, email, photoURL, emailVerified, uid } = userCredential.user;
                 this.userService.userBaseInfo = { displayName, email, photoURL, emailVerified, uid };
                 this.userService.userAccessToken = idTokenResult;
-                this.employeeService.setEmployeePropsInLocalStorage(uid);
+                this.localstorageService.setEmployeePropsInLocalStorage(uid);
 
                 /* Go to dashboard */
                 this.setSectionEvent.emit(true);
