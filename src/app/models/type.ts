@@ -28,11 +28,6 @@ export type BottomNavigation = {
   icons: IconLink[];
 };
 
-export type FirebaseDate = {
-  seconds: number;
-  nanoseconds: number;
-};
-
 export type Event = {
   readonly uid: string;
   eventDTO: EventDTO;
@@ -47,3 +42,5 @@ export type EventEmployee = {
   readonly uid: string;
   eventEmployeeDTO: EventEmployeeDTO;
 };
+
+export type EvEm = EventEmployee & Pick<EmployeeDTO, 'name' | 'lastName' | 'zone'>;

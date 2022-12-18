@@ -1,12 +1,11 @@
-/* eslint-disable operator-linebreak */
-import { EventEmployee } from 'src/app/models/type';
+import { ActivatedRoute } from '@angular/router';
+import { EvEm } from 'src/app/models/type';
 import { Component, EventEmitter, Input, Output, SimpleChanges } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { faCircleMinus, faCirclePlus } from '@fortawesome/free-solid-svg-icons';
 import { debounceTime, Subscription } from 'rxjs';
 import { ToastService } from '../services/toast.service';
 import { EventEmployeeService } from '../services/event-employee.service';
-import { EmployeeDTO } from '../models/table';
 
 @Component({
   selector: 'en-item-event-employee[evEm][currentPersonAssigned][maxPerson]',
@@ -16,13 +15,13 @@ import { EmployeeDTO } from '../models/table';
     </div>
     <div class="center w-1/5 grow-1 text-sm sm:w-max">{{ employeeZone | uppercase }}</div>
     <div class="center w-3/5 grow-1 gap-1 sm:w-max">
-      <div class="center mr-1">{{ eventPersonMarked }}/{{ eventPersonAssigned }}</div>
+      <div class="center mr-1">{{ personMarked }}/{{ personAssigned }}</div>
       <div class="center relative flex h-6 w-24 flex-row rounded-lg bg-transparent">
         <button
           data-action="decrement"
           class="center h-full w-20 rounded-l bg-primary-60 text-black outline-none hover:bg-primary-50 active:bg-primary-40 enabled:cursor-pointer disabled:cursor-not-allowed disabled:bg-gray-200 "
           (click)="decreasPersonAssigned()"
-          [disabled]="!eventActive">
+          [disabled]="!active">
           <span class="">−</span>
         </button>
         <input
@@ -33,7 +32,7 @@ import { EmployeeDTO } from '../models/table';
           data-action="increment"
           class="center h-full w-20 cursor-pointer rounded-r bg-primary-60 text-black outline-none hover:bg-primary-50 active:bg-primary-40 active:text-white disabled:cursor-not-allowed disabled:bg-gray-200"
           (click)="incrementPersonAssigned()"
-          [disabled]="!eventActive">
+          [disabled]="!active">
           <span class="m">+</span>
         </button>
       </div>
@@ -59,7 +58,7 @@ import { EmployeeDTO } from '../models/table';
   ]
 })
 export class EnItemEventEmployeeComponent {
-  @Input() evEm!: EventEmployee | Pick<EmployeeDTO, 'name' | 'lastName' | 'zone'>;
+  @Input() evEm!: EvEm;
   @Input() currentPersonAssigned!: number;
   @Input() maxPerson!: number;
 
@@ -69,11 +68,14 @@ export class EnItemEventEmployeeComponent {
   incrementIcon = faCirclePlus;
   decrementIcon = faCircleMinus;
 
+  /* Event */
+  eventUid = '';
+
   /* evEm */
   uid = '';
-  eventPersonMarked = 0;
-  eventPersonAssigned = 0;
-  eventActive = true;
+  personMarked = 0;
+  personAssigned = 0;
+  active = true;
   employeeName = '';
   employeeLastName = '';
   employeeZone = '';
@@ -86,20 +88,30 @@ export class EnItemEventEmployeeComponent {
   subPersonAssigned!: Subscription;
   subIsActive!: Subscription;
 
-  constructor(private eventEmployee: EventEmployeeService, private toastService: ToastService) {}
+  constructor(
+    private route: ActivatedRoute,
+    private eventEmployee: EventEmployeeService,
+    private toastService: ToastService
+  ) {}
 
   /* ----------------------------------------------------- lifecycle hooks ----------------------------------------------------- */
   ngOnInit(): void {
+    this.eventUid = this.route.snapshot.paramMap.get('uid') || '';
+
+    if (!this.eventUid) {
+      throw new Error('Event uid is not defined');
+    }
+
     /* Form PersonAssigned */
     this.subPersonAssigned = this.formPersonAssigned.valueChanges.pipe(debounceTime(1200)).subscribe((value) => {
       /* Check if the value is different from the previous one */
-      if (this.eventPersonAssigned !== value) {
+      if (this.personAssigned !== value) {
         /* Check if the value is less than the max person */
-        const hipoteticalPersonAssigned = this.currentPersonAssigned + value - this.eventPersonAssigned;
+        const hipoteticalPersonAssigned = this.currentPersonAssigned + value - this.personAssigned;
         if (hipoteticalPersonAssigned <= this.maxPerson) {
           /* Update the value */
           this.eventEmployee
-            .updateEventPersonAssigned(this.uid, value)
+            .updateEventEmployeePersonAssigned(this.eventUid, this.uid, value)
             .then(() => {
               this.refreshEvEmArrayEvent.emit();
               this.toastService.showSuccess('Elemento modificato');
@@ -109,7 +121,7 @@ export class EnItemEventEmployeeComponent {
             });
         } else {
           /* Reset the value */
-          this.formPersonAssigned.setValue(this.eventPersonAssigned);
+          this.formPersonAssigned.setValue(this.personAssigned);
           this.toastService.showError('Non puoi assegnare più persone di quelle disponibili');
         }
       }
@@ -118,7 +130,7 @@ export class EnItemEventEmployeeComponent {
     /* Form IsActive */
     this.subIsActive = this.formIsActive.valueChanges.subscribe((value) => {
       this.eventEmployee
-        .updateEventActive(this.uid, this.eventPersonMarked, value)
+        .updateEventEmployeeActive(this.eventUid, this.uid, this.personMarked, value)
         .then(() => {
           this.refreshEvEmArrayEvent.emit();
           this.toastService.showSuccess('Elemento modificato');
@@ -131,25 +143,25 @@ export class EnItemEventEmployeeComponent {
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['evEm']) {
-      const { currentValue } = changes['evEm'];
+      const { currentValue }: { currentValue: EvEm } = changes['evEm'];
 
       /* evEm */
       this.uid = currentValue.uid;
       this.employeeName = currentValue.name;
       this.employeeLastName = currentValue.lastName;
       this.employeeZone = currentValue.zone;
-      this.eventPersonMarked = currentValue.eventEmployeeDTO.eventPersonMarked;
-      this.eventPersonAssigned = currentValue.eventEmployeeDTO.eventPersonAssigned;
-      this.eventActive = currentValue.eventEmployeeDTO.eventActive;
+      this.personMarked = currentValue.eventEmployeeDTO.personMarked;
+      this.personAssigned = currentValue.eventEmployeeDTO.personAssigned;
+      this.active = currentValue.eventEmployeeDTO.active;
 
       /* Form PersonAssigned */
-      this.formPersonAssigned.setValue(currentValue.eventEmployeeDTO.eventPersonAssigned);
-      if (!this.eventActive) {
+      this.formPersonAssigned.setValue(currentValue.eventEmployeeDTO.personAssigned);
+      if (!this.active) {
         this.formPersonAssigned.disable();
       }
 
       /* Form IsActive */
-      this.formIsActive.setValue(currentValue.eventEmployeeDTO.eventActive);
+      this.formIsActive.setValue(currentValue.eventEmployeeDTO.active);
     }
   }
 

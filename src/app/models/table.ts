@@ -17,8 +17,8 @@ export type EventDTO = {
   guest: string;
   description: string;
   messageText: string;
-  createdAt: Date;
-  modificatedAt: Date;
+  createdAt?: Date;
+  modificatedAt?: Date;
 };
 
 export type EmployeeDTO = {
@@ -28,14 +28,13 @@ export type EmployeeDTO = {
   phone: string;
   zone: string;
   active: boolean;
-  createdAt: Date;
-  modificatedAt: Date;
+  createdAt?: Date;
+  modificatedAt?: Date;
 };
 
 export type EventEmployeeDTO = {
   employeeUid: string;
-  eventUid: string;
-  eventActive: boolean;
-  eventPersonMarked: number;
-  eventPersonAssigned: number;
+  active: boolean;
+  personMarked: number;
+  personAssigned: number;
 };
