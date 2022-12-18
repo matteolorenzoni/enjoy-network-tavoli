@@ -147,7 +147,7 @@ export class EnItemEventComponent {
 
   deleteEvent(): void {
     this.eventService
-      .deleteEvent(this.uid)
+      .deleteEvent(this.event)
       .then(() => {
         this.isOpen = false;
         this.toastService.showSuccess('Evento eliminato');
