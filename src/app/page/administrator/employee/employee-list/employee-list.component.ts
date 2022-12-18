@@ -32,7 +32,7 @@ export class EmployeeListComponent {
 
   getEmployees(): void {
     this.employeeService
-      .getEmployees()
+      .getAllEmployees()
       .then((data) => {
         this.employees = data;
       })

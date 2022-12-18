@@ -6,7 +6,6 @@ import { fadeInAnimation } from 'src/app/animations/animations';
 import { EventService } from 'src/app/services/event.service';
 import { ToastService } from 'src/app/services/toast.service';
 import { ActivatedRoute } from '@angular/router';
-import {} from 'src/app/models/type';
 import { EventDTO } from 'src/app/models/table';
 import { PlaceType } from '../../../../models/enum';
 
@@ -98,13 +97,11 @@ export class EventGeneratorComponent implements OnInit {
       place: this.eventForm.value.place,
       guest: this.eventForm.value.guest?.trim().replace(/\s\s+/g, ' ') || '',
       description: this.eventForm.value.description?.trim().replace(/\s\s+/g, ' ') || '',
-      messageText: this.eventForm.value.messageText,
-      createdAt: new Date(),
-      modificatedAt: new Date()
+      messageText: this.eventForm.value.messageText
     };
     const uidFormatted = this.uid === '' || this.uid === 'null' ? null : this.uid;
     this.eventService
-      .addOrUpdateEvent(this.photoFile, newEvent, uidFormatted)
+      .addOrUpdateEvent(this.photoFile, uidFormatted, newEvent)
       .then(() => {
         this.imageSrc = null;
         this.eventForm.reset();

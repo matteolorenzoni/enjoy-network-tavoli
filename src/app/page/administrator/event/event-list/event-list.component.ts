@@ -32,7 +32,7 @@ export class EventListComponent implements OnInit {
 
   getEvents(): void {
     this.eventService
-      .getEvents()
+      .getAllEvents()
       .then((events) => {
         this.events = events;
       })

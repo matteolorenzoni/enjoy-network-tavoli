@@ -1,9 +1,7 @@
-/* eslint-disable operator-linebreak */
-/* eslint-disable implicit-arrow-linebreak */
 import { EventService } from 'src/app/services/event.service';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Employee, Event, EventEmployee } from 'src/app/models/type';
+import { Employee, EvEm, Event, EventEmployee } from 'src/app/models/type';
 import { ToastService } from 'src/app/services/toast.service';
 import { faArrowLeft, faFilter } from '@fortawesome/free-solid-svg-icons';
 import { Location } from '@angular/common';
@@ -13,7 +11,6 @@ import {
   slideInCreateItemHeader,
   staggeredFadeInIncrement
 } from 'src/app/animations/animations';
-import { EmployeeDTO } from 'src/app/models/table';
 import { EventEmployeeService } from '../../../../services/event-employee.service';
 
 @Component({
@@ -31,7 +28,7 @@ export class EmployeeListComponent implements OnInit {
   event!: Event;
   employeeArray: Employee[] = [];
   eventEmployeeArray: EventEmployee[] = [];
-  evEmArray: (EventEmployee | Pick<EmployeeDTO, 'name' | 'lastName' | 'zone'>)[] = [];
+  evEmArray: EvEm[] = [];
 
   personMarked = 0;
   personAssigned = 0;
@@ -60,9 +57,8 @@ export class EmployeeListComponent implements OnInit {
     this.eventService
       .getEvent(eventUid)
       .then((event) => {
-        const { uid, eventDTO } = event;
-        this.event = { uid, eventDTO };
-        this.maxPerson = eventDTO.maxPerson;
+        this.event = event;
+        this.maxPerson = this.event.eventDTO.maxPerson;
       })
       .catch((error: Error) => {
         this.toastService.showError(error.message);
@@ -71,14 +67,14 @@ export class EmployeeListComponent implements OnInit {
 
   getEventEmployee(eventUid: string): void {
     this.eventEmployeeService
-      .getEventEmployeesByEventUid(eventUid)
+      .getAllEventEmployees(eventUid)
       .then((eventEmployees) => {
         this.eventEmployeeArray = eventEmployees;
         this.personMarked = 0;
         this.personAssigned = 0;
         this.eventEmployeeArray.forEach((item) => {
-          this.personMarked += item.eventEmployeeDTO.eventPersonMarked;
-          this.personAssigned += item.eventEmployeeDTO.eventPersonAssigned;
+          this.personMarked += item.eventEmployeeDTO.personMarked;
+          this.personAssigned += item.eventEmployeeDTO.personAssigned;
         });
         this.getEmployee();
       })
@@ -90,27 +86,20 @@ export class EmployeeListComponent implements OnInit {
   getEmployee() {
     const employeeUids = this.eventEmployeeArray.map((item) => item.eventEmployeeDTO.employeeUid);
     this.employeeService
-      .getEmployeeByMultipleUid(employeeUids)
+      .getEmployeesByUids(employeeUids)
       .then((employees) => {
         this.employeeArray = employees;
-        this.evEmArray = this.employeeArray
-          .map((employee) => {
-            const eventEmployee =
-              this.eventEmployeeArray.find((item) => item.eventEmployeeDTO.employeeUid === employee.uid) ??
-              ({} as EventEmployee);
-            return {
-              ...eventEmployee,
-              name: employee.employeeDTO.name,
-              lastName: employee.employeeDTO.lastName,
-              zone: employee.employeeDTO.zone
-            };
-          })
-          .sort(
-            (a, b) =>
-              Number(b.eventEmployeeDTO.eventActive) - Number(a.eventEmployeeDTO?.eventActive) ||
-              b.eventEmployeeDTO.eventPersonAssigned - a.eventEmployeeDTO.eventPersonAssigned ||
-              b.eventEmployeeDTO.eventPersonMarked - a.eventEmployeeDTO.eventPersonMarked
+        this.evEmArray = this.employeeArray.map((employee) => {
+          const eventEmployee = this.eventEmployeeArray.find(
+            (item) => item.eventEmployeeDTO.employeeUid === employee.uid
           );
+          return {
+            ...(eventEmployee ?? ({} as EventEmployee)),
+            name: employee.employeeDTO.name,
+            lastName: employee.employeeDTO.lastName,
+            zone: employee.employeeDTO.zone
+          };
+        });
       })
       .catch((error: Error) => {
         this.toastService.showError(error.message);

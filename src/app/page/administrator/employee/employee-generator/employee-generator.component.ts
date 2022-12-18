@@ -89,17 +89,15 @@ export class EmployeeGeneratorComponent implements OnInit {
       role: this.employeeForm.value.role,
       phone: this.employeeForm.value.phone,
       zone: this.employeeForm.value.zone?.trim().replace(/\s\s+/g, ' ') || '',
-      active: this.employeeForm.value.active,
-      createdAt: this.employeeForm.value.createdAt || new Date(),
-      modificatedAt: this.employeeForm.value.createdAt || new Date()
+      active: this.employeeForm.value.active
     };
     const uidFormatted = this.uid === '' || this.uid === 'null' ? null : this.uid;
     this.employeeService
-      .addOrUpdateEmployee(email, employee, uidFormatted)
+      .addOrUpdateEmployee(uidFormatted, employee, email)
       .then(() => {
         this.employeeForm.reset();
         this.location.back();
-        this.toastService.showSuccess('Dipendente creato');
+        this.toastService.showSuccess(this.uid ? 'Dipendente aggiornato' : 'Dipendente creato');
       })
       .catch((error: Error) => {
         this.toastService.showError(error.message);
