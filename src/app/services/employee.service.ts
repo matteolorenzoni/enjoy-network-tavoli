@@ -1,128 +1,74 @@
 import { UserCredential } from '@angular/fire/auth';
 import { Injectable } from '@angular/core';
-import { doc, getDoc, getDocs, getFirestore } from '@angular/fire/firestore';
-import { collection, deleteDoc, documentId, query, setDoc, where } from 'firebase/firestore';
-import { environment } from '../../environments/environment';
+import { documentId, QueryConstraint, where } from 'firebase/firestore';
 import { UserService } from './user.service';
-import { RoleType } from '../models/enum';
-import { EmployeeDTO, Table } from '../models/table';
-import { Employee, FirebaseDate } from '../models/type';
+import { EmployeeDTO } from '../models/table';
+import { Employee } from '../models/type';
+import { FirebaseCreateService } from './firebase-crud/firebase-create.service';
+import { FirebaseDeleteService } from './firebase-crud/firebase-delete.service';
+import { FirebaseReadService } from './firebase-crud/firebase-read.service';
+import { FirebaseUpdateService } from './firebase-crud/firebase-update.service';
+import { TransformService } from './transform.service';
 
 const PASSWORD_DEFAULT = 'enjoynetwork';
-const ACTIVE = 'active';
-const ROLE = 'role';
 
 @Injectable({
   providedIn: 'root'
 })
 export class EmployeeService {
-  /** Database */
-  private db = getFirestore();
-
-  constructor(private userService: UserService) {}
-
-  /* ------------------------------------------- SET ------------------------------------------- */
-  public async addOrUpdateEmployee(email: string, employee: EmployeeDTO, uid: string | null): Promise<void> {
-    if (!uid) {
-      /* Create new user */
-      const userCredential: UserCredential = await this.userService.register(email, PASSWORD_DEFAULT);
-      if (!environment.production) console.log('addOrUpdateEmployee', userCredential);
-      const userCredentialUid = userCredential.user?.uid;
-      if (userCredentialUid) {
-        /* Add document */
-        await setDoc(doc(this.db, Table.EMPLOYEES, userCredentialUid), employee);
-      }
-    } else {
-      /* Update document */
-      const newEmployee: EmployeeDTO = employee;
-      newEmployee.modificatedAt = new Date();
-      await setDoc(doc(this.db, Table.EMPLOYEES, uid), newEmployee);
-    }
-    if (!environment.production) console.log('addOrUpdateEmployee', email, employee, uid);
-  }
+  constructor(
+    private userService: UserService,
+    private firebaseCreateService: FirebaseCreateService,
+    private firebaseReadService: FirebaseReadService,
+    private firebaseUpdateService: FirebaseUpdateService,
+    private firebaseDeleteService: FirebaseDeleteService,
+    private transformService: TransformService
+  ) {}
 
   /* ------------------------------------------- GET ------------------------------------------- */
+  // OK
   public async getEmployee(employeeUid: string): Promise<Employee> {
-    const docRef = doc(this.db, Table.EMPLOYEES, employeeUid);
-    const docSnap = await getDoc(docRef);
-    if (!environment.production) console.log('getEmployee', docSnap.data());
-    if (docSnap.exists()) {
-      const uid = docSnap.id;
-      const employeeDTO = docSnap.data() as EmployeeDTO;
-      const createdAt = employeeDTO.createdAt as unknown as FirebaseDate;
-      const modificatedAt = employeeDTO.modificatedAt as unknown as FirebaseDate;
-      employeeDTO.createdAt = new Date(createdAt.seconds * 1000);
-      employeeDTO.modificatedAt = new Date(modificatedAt.seconds * 1000);
-      return { uid, employeeDTO };
-    }
-    throw new Error('Documento non trovato');
+    const docSnap = await this.firebaseReadService.getEmployeeByUid(employeeUid);
+    return this.transformService.qsToEmployee(docSnap);
   }
 
-  public async getEmployees(): Promise<Employee[]> {
-    const collectionRef = collection(this.db, Table.EMPLOYEES);
-    const querySnapshot = await getDocs(collectionRef);
-    if (!environment.production) console.log('getEmployees', querySnapshot.docs);
-    if (querySnapshot.size > 0) {
-      return querySnapshot.docs.map((employeeDoc) => {
-        const uid = employeeDoc.id;
-        const employeeDTO = employeeDoc.data() as EmployeeDTO;
-        const createdAt = employeeDTO.createdAt as unknown as FirebaseDate;
-        const modificatedAt = employeeDTO.modificatedAt as unknown as FirebaseDate;
-        employeeDTO.createdAt = new Date(createdAt.seconds * 1000);
-        employeeDTO.modificatedAt = new Date(modificatedAt.seconds * 1000);
-        return { uid, employeeDTO };
-      });
-    }
-    return [];
+  // OK
+  public async getAllEmployees(): Promise<Employee[]> {
+    const querySnapshot = await this.firebaseReadService.getAllEmployee();
+    return this.transformService.qsToEmployees(querySnapshot);
   }
 
-  public async getEmployeesPrAndActive(): Promise<Employee[]> {
-    const q = query(collection(this.db, Table.EMPLOYEES), where(ACTIVE, '==', true), where(ROLE, '==', RoleType.PR));
-    const querySnapshot = await getDocs(q);
-    if (!environment.production) console.log('getEmployeesPrAndActive', querySnapshot.docs);
-    if (querySnapshot.size > 0) {
-      return querySnapshot.docs.map((employeeDoc) => {
-        const uid = employeeDoc.id;
-        const employeeDTO = employeeDoc.data() as EmployeeDTO;
-        return { uid, employeeDTO };
-      });
-    }
-    return [];
+  public async getEmployeesByUids(uidArray: string[]): Promise<Employee[]> {
+    const idConstraint: QueryConstraint = where(documentId(), 'in', uidArray);
+    // TODO: ordinamento
+    // const firstOrder: QueryConstraint = orderBy('active');
+    // const secondOrder: QueryConstraint = orderBy('personAssigned');
+    // const thirdOrder: QueryConstraint = orderBy('personMarked');
+    const constricts: QueryConstraint[] = [idConstraint];
+    const querySnapshot = await this.firebaseReadService.getEmployeesByMultipleConstraints(constricts);
+    return this.transformService.qsToEmployees(querySnapshot);
   }
 
-  public async getEmployeeByMultipleUid(uidArray: string[]): Promise<Employee[]> {
-    const collectionRef = collection(this.db, Table.EMPLOYEES);
-    const q = query(collectionRef, where(documentId(), 'in', uidArray));
-    const querySnapshot = await getDocs(q);
-    if (!environment.production) console.log('getEmployeeByMultipleUid', querySnapshot.docs);
-    if (querySnapshot.size > 0) {
-      return querySnapshot.docs.map((employeeDoc) => {
-        const uid = employeeDoc.id;
-        const employeeDTO = employeeDoc.data() as EmployeeDTO;
-        return { uid, employeeDTO };
-      });
-    }
-    return [];
-  }
+  /* ------------------------------------------- ADD ------------------------------------------- */
+  // OK
+  public async addOrUpdateEmployee(uid: string | null, employeeDTO: EmployeeDTO, email: string): Promise<void> {
+    if (!uid) {
+      /* Add new user */
+      const userCredential: UserCredential = await this.userService.register(email, PASSWORD_DEFAULT);
 
-  public getEmployeeRole(): RoleType | null {
-    return (sessionStorage.getItem(ROLE) as RoleType) || null;
+      /* Add new employee */
+      const employee: Employee = { uid: userCredential.user.uid, employeeDTO };
+      await this.firebaseCreateService.addEmployee(employee);
+    } else {
+      /* Update document */
+      const employee: Employee = { uid, employeeDTO };
+      await this.firebaseUpdateService.updateEmployee(employee);
+    }
   }
 
   /* ------------------------------------------- DELETE ------------------------------------------- */
   public async deleteEmployee(uid: string): Promise<void> {
-    await deleteDoc(doc(this.db, Table.EMPLOYEES, uid));
-    if (!environment.production) console.log('deleteEmployee', uid);
+    await this.firebaseDeleteService.deleteEmployeeByUid(uid);
     // TODO: eliminare anche l'User
-  }
-
-  /* ------------------------------------------- LOCAL STORAGE ------------------------------------------- */
-  public async setEmployeePropsInLocalStorage(employeeUid: string): Promise<void> {
-    const employee = await this.getEmployee(employeeUid);
-    const { uid, employeeDTO } = employee;
-    sessionStorage.setItem('uid', uid);
-    Object.keys(employeeDTO).forEach((key) => {
-      sessionStorage.setItem(key, employeeDTO[key as keyof EmployeeDTO].toString());
-    });
   }
 }

@@ -1,123 +1,87 @@
 import { Injectable } from '@angular/core';
-import {
-  addDoc,
-  collection,
-  deleteDoc,
-  doc,
-  Firestore,
-  getDoc,
-  getDocs,
-  getFirestore,
-  setDoc
-} from '@angular/fire/firestore';
-import {
-  FirebaseStorage,
-  getDownloadURL,
-  getStorage,
-  ref,
-  uploadBytesResumable,
-  UploadTaskSnapshot
-} from '@angular/fire/storage';
+import { QueryConstraint, where } from '@angular/fire/firestore';
 import { DatePipe } from '@angular/common';
-import { environment } from 'src/environments/environment';
-import { EventDTO, Table } from '../models/table';
-import { Event, FirebaseDate } from '../models/type';
-import { EventEmployeeService } from './event-employee.service';
+import { EventDTO } from '../models/table';
+import { Event } from '../models/type';
+import { FirebaseCreateService } from './firebase-crud/firebase-create.service';
+import { FirebaseUpdateService } from './firebase-crud/firebase-update.service';
+import { FirebaseReadService } from './firebase-crud/firebase-read.service';
+import { FirebaseDeleteService } from './firebase-crud/firebase-delete.service';
+import { TransformService } from './transform.service';
+import { RoleType } from '../models/enum';
 
 @Injectable({
   providedIn: 'root'
 })
 export class EventService {
-  /* Firebase */
-  private db!: Firestore;
-  private storage!: FirebaseStorage;
+  constructor(
+    private firebaseCreateService: FirebaseCreateService,
+    private firebaseReadService: FirebaseReadService,
+    private firebaseUpdateService: FirebaseUpdateService,
+    private firebaseDeleteService: FirebaseDeleteService,
+    private transformService: TransformService,
+    private datePipe: DatePipe
+  ) {}
 
-  constructor(private datePipe: DatePipe, private eventEmployeeService: EventEmployeeService) {
-    this.db = getFirestore();
-    this.storage = getStorage();
+  /* ------------------------------------------- GET ------------------------------------------- */
+  // OK
+  public async getEvent(eventUid: string): Promise<Event> {
+    const docSnap = await this.firebaseReadService.getEventByUid(eventUid);
+    return this.transformService.qsToEvent(docSnap);
   }
 
-  /* ------------------------------------------- SET ------------------------------------------- */
-  public async addOrUpdateEvent(photo: File | null, event: EventDTO, uid: string | null): Promise<void> {
-    const newEvent = event;
+  // OK
+  public async getAllEvents(): Promise<Event[]> {
+    const querySnapshot = await this.firebaseReadService.getAllEvents();
+    return this.transformService.qsToEvents(querySnapshot);
+  }
 
-    /* Image */
+  /* ------------------------------------------- ADD ------------------------------------------- */
+  public async addOrUpdateEvent(photo: File | null, uid: string | null, eventDTO: EventDTO): Promise<void> {
+    let { imageUrl } = eventDTO;
+
     if (photo) {
-      const eventName = newEvent.name.toLowerCase().replace(/\s/g, '_');
-      const eventDate = this.datePipe.transform(newEvent.date, 'dd_MM_yyyy');
-      const imageType = photo.type.split('/')[1] || 'jpg';
-      const photoNameFormatted = `${eventName}_${eventDate}.${imageType}`;
-      const storageRef = ref(this.storage, `events/${photoNameFormatted}`);
-
-      /* Upload */
-      const snapshot: UploadTaskSnapshot = await uploadBytesResumable(storageRef, photo);
-      if (!environment.production) console.log('Uploaded a blob or file!', snapshot);
-
-      /* Get download URL */
-      const downloadURL: string = await getDownloadURL(snapshot.ref);
-      newEvent.imageUrl = downloadURL;
-      if (!environment.production) console.log('File available at', downloadURL);
+      /* Add new image */
+      const photoUrl = await this.firebaseCreateService.addPhotoToEvent(eventDTO, photo);
+      imageUrl = photoUrl;
     }
 
     if (!uid) {
-      /* Add document */
-      const docRef = await addDoc(collection(this.db, Table.EVENTS), newEvent);
-      /* Add event employee */
-      await this.eventEmployeeService.addEventEmployee(docRef.id);
+      /* Add new event */
+      const event: Event = { uid: '', eventDTO };
+      event.eventDTO.imageUrl = imageUrl;
+      const docRef = await this.firebaseCreateService.addEvent(event);
+
+      /* Add new event employee */
+      const prConstraint: QueryConstraint = where('role', '==', RoleType.PR);
+      const activeConstraint: QueryConstraint = where('active', '==', true);
+      const constricts: QueryConstraint[] = [prConstraint, activeConstraint];
+      const querySnapshot = await this.firebaseReadService.getEmployeesByMultipleConstraints(constricts);
+      await this.firebaseCreateService.addEventEmployeeByEventUid(docRef.id, querySnapshot);
     } else {
       /* Update document */
-      newEvent.modificatedAt = new Date();
-      await setDoc(doc(this.db, Table.EVENTS, uid), newEvent);
+      const event: Event = { uid, eventDTO };
+      event.eventDTO.imageUrl = imageUrl;
+      await this.firebaseUpdateService.updateEvent(event);
     }
-    if (!environment.production) console.log('Evento aggiornato', newEvent);
-  }
-
-  /* ------------------------------------------- GET ------------------------------------------- */
-  public async getEvent(eventUid: string): Promise<Event> {
-    const docRef = doc(this.db, Table.EVENTS, eventUid);
-    const docSnap = await getDoc(docRef);
-    if (!environment.production) console.log('Evento trovato', docSnap.data());
-    if (docSnap.exists()) {
-      const uid = docSnap.id;
-      const eventDTO = docSnap.data() as EventDTO;
-      const date = eventDTO.date as unknown as FirebaseDate;
-      const createdAt = eventDTO.createdAt as unknown as FirebaseDate;
-      const modificatedAt = eventDTO.modificatedAt as unknown as FirebaseDate;
-      eventDTO.date = new Date(date.seconds * 1000);
-      eventDTO.createdAt = new Date(createdAt.seconds * 1000);
-      eventDTO.modificatedAt = new Date(modificatedAt.seconds * 1000);
-      return { uid, eventDTO };
-    }
-    throw new Error('Documento non trovato');
-  }
-
-  public async getEvents(): Promise<Event[]> {
-    const collectionRef = collection(this.db, Table.EVENTS);
-    const querySnapshot = await getDocs(collectionRef);
-    if (!environment.production) console.log('Evento trovato', querySnapshot.docs);
-    if (querySnapshot.size > 0) {
-      return querySnapshot.docs.map((eventDoc) => {
-        const uid = eventDoc.id;
-        const eventDTO = eventDoc.data() as EventDTO;
-        const date = eventDTO.date as unknown as FirebaseDate;
-        const createdAt = eventDTO.createdAt as unknown as FirebaseDate;
-        const modificatedAt = eventDTO.modificatedAt as unknown as FirebaseDate;
-        eventDTO.date = new Date(date.seconds * 1000);
-        eventDTO.createdAt = new Date(createdAt.seconds * 1000);
-        eventDTO.modificatedAt = new Date(modificatedAt.seconds * 1000);
-        return { uid, eventDTO };
-      });
-    }
-    return [];
   }
 
   /* ------------------------------------------- DELETE ------------------------------------------- */
-  public async deleteEvent(uid: string): Promise<void> {
+  public async deleteEvent(event: Event): Promise<void> {
     /* Delete event employees */
-    this.eventEmployeeService.deleteEventEmployees(uid);
+    const querySnapshot = await this.firebaseReadService.getAllEventEmployees(event.uid);
+    await this.firebaseDeleteService.deleteEventEmployeeByUid(event.uid, querySnapshot);
+
+    /* Delete image */
+    const photoUrl = event.eventDTO.imageUrl;
+    try {
+      const photoName = photoUrl.split('%2F')[1].split('?')[0];
+      await this.firebaseDeleteService.deletePhoto(photoName);
+    } catch (error) {
+      console.error('No photo');
+    }
 
     /* Delete event */
-    await deleteDoc(doc(this.db, Table.EVENTS, uid));
-    if (!environment.production) console.log('Evento eliminato', uid);
+    await this.firebaseDeleteService.deleteEventByUid(event.uid);
   }
 }
