@@ -1,6 +1,7 @@
 <header [@slideInCreateItemHeader] class="theme-primary h-14 p-0 xs:h-16 xs:p-2">
   <nav class="flex h-full w-full items-center rounded-b bg-palette p-4 xs:rounded-xl">
     <fa-icon
+      role="button"
       [icon]="backIcon"
       class="center cursor-pointer text-2xl text-palette hover:text-paletteHover"
       (click)="goBack()"></fa-icon>
@@ -8,20 +9,27 @@
 </header>
 <main [@fadeInCreateItemAnimation] class="mx-auto max-w-3xl p-6">
   <section>
-    <button
-      type="button"
-      class="mb-6 w-full rounded-lg border border-gray-200 bg-white py-2.5 px-5 text-sm font-medium text-gray-900 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white dark:focus:ring-gray-700">
-      <fa-icon [icon]="filterIcon" class="mr-2"></fa-icon>
-      FILTRI
-    </button>
+    <div class="mb-6 flex gap-2">
+      <button
+        type="button"
+        class="w-4/5 rounded-lg border border-gray-600 bg-gray-800 py-2.5 px-5 text-sm font-medium text-gray-400 hover:bg-gray-700 hover:text-white focus:z-10 focus:outline-none focus:ring-4 focus:ring-gray-700">
+        <fa-icon [icon]="filterIcon" class="mr-2"></fa-icon>
+        FILTRI
+      </button>
+      <button
+        class="w-1/5 rounded-lg border border-primary-50 bg-primary-60 py-2.5 px-5 text-sm font-medium text-black hover:bg-primary-50 hover:text-white focus:z-10 focus:outline-none focus:ring-4 focus:ring-primary-30"
+        (click)="goToSelector()">
+        <fa-icon [icon]="addIcon"></fa-icon>
+      </button>
+    </div>
     <div>{{ personMarked }}/{{ personAssigned }}/{{ maxPerson }}</div>
+    <ul [@staggeredFadeInIncrement]="evEmArray.length" class="flex flex-col divide-y divide-gray-700 px-2">
+      <en-item-event-employee
+        *ngFor="let evEm of evEmArray"
+        [evEm]="evEm"
+        [currentPersonAssigned]="personAssigned"
+        [maxPerson]="maxPerson"
+        (refreshEvEmArrayEvent)="getData()"></en-item-event-employee>
+    </ul>
   </section>
-  <ul [@staggeredFadeInIncrement]="evEmArray.length" class="flex flex-col divide-y divide-gray-700 px-2">
-    <en-item-event-employee
-      *ngFor="let evEm of evEmArray"
-      [evEm]="evEm"
-      [currentPersonAssigned]="personAssigned"
-      [maxPerson]="maxPerson"
-      (refreshEvEmArrayEvent)="getData()"></en-item-event-employee>
-  </ul>
 </main>

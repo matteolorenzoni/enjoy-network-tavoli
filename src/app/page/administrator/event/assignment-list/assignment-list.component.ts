@@ -1,9 +1,9 @@
 import { EventService } from 'src/app/services/event.service';
 import { Component } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Employee, EvEm, Event, Assignment } from 'src/app/models/type';
 import { ToastService } from 'src/app/services/toast.service';
-import { faArrowLeft, faFilter } from '@fortawesome/free-solid-svg-icons';
+import { faAdd, faArrowLeft, faFilter } from '@fortawesome/free-solid-svg-icons';
 import { Location } from '@angular/common';
 import { EmployeeService } from 'src/app/services/employee.service';
 import {
@@ -23,6 +23,7 @@ export class AssignmentListComponent {
   /* Icons */
   backIcon = faArrowLeft;
   filterIcon = faFilter;
+  addIcon = faAdd;
 
   uid = '';
   event!: Event;
@@ -35,6 +36,7 @@ export class AssignmentListComponent {
   maxPerson = 0;
 
   constructor(
+    private router: Router,
     private location: Location,
     private route: ActivatedRoute,
     private eventService: EventService,
@@ -50,7 +52,6 @@ export class AssignmentListComponent {
 
   getData(): void {
     this.getEvent(this.uid);
-    this.getAssignments(this.uid);
   }
 
   getEvent(eventUid: string): void {
@@ -59,24 +60,6 @@ export class AssignmentListComponent {
       .then((event) => {
         this.event = event;
         this.maxPerson = this.event.eventDTO.maxPerson;
-      })
-      .catch((error: Error) => {
-        this.toastService.showError(error.message);
-      });
-  }
-
-  getAssignments(eventUid: string): void {
-    this.assignmentService
-      .getAllAssignments(eventUid)
-      .then((assignments) => {
-        this.assignments = assignments;
-        this.personMarked = 0;
-        this.personAssigned = 0;
-        this.assignments.forEach((item) => {
-          this.personMarked += item.assignmentDTO.personMarked;
-          this.personAssigned += item.assignmentDTO.personAssigned;
-        });
-        this.getEmployee();
       })
       .catch((error: Error) => {
         this.toastService.showError(error.message);
@@ -106,5 +89,9 @@ export class AssignmentListComponent {
 
   goBack(): void {
     this.location.back();
+  }
+
+  goToSelector(): void {
+    this.router.navigate(['../assignment-total'], { relativeTo: this.route });
   }
 }
