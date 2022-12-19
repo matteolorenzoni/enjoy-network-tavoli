@@ -1,0 +1,27 @@
+<header [@slideInCreateItemHeader] class="theme-primary h-14 p-0 xs:h-16 xs:p-2">
+  <nav class="flex h-full w-full items-center rounded-b bg-palette p-4 xs:rounded-xl">
+    <fa-icon
+      role="button"
+      [icon]="backIcon"
+      class="center cursor-pointer text-2xl text-palette hover:text-paletteHover"
+      (click)="goBack()"></fa-icon>
+  </nav>
+</header>
+<main [@fadeInCreateItemAnimation] class="mx-auto max-w-3xl p-6">
+  <section>
+    <button
+      type="button"
+      class="mb-4 w-full rounded-lg border border-gray-600 bg-gray-800 py-2.5 px-5 text-sm font-medium text-gray-400 hover:bg-gray-700 hover:text-white focus:z-10 focus:outline-none focus:ring-4 focus:ring-gray-700">
+      <fa-icon [icon]="filterIcon" class="mr-2"></fa-icon>
+      FILTRI
+    </button>
+    <button
+      type="button"
+      class="mb-6 w-full rounded-lg border border-gray-600 bg-gray-800 py-2.5 px-5 text-sm font-medium text-gray-400 hover:bg-gray-700 hover:text-white focus:z-10 focus:outline-none focus:ring-4 focus:ring-gray-700">
+      SALVA
+    </button>
+    <ul [@staggeredFadeInIncrement]="activePrs.length" class="flex flex-col divide-y divide-gray-700 px-2">
+      <en-item-event-employee *ngFor="let pr of activePrs" [employee]="pr"></en-item-event-employee>
+    </ul>
+  </section>
+</main>

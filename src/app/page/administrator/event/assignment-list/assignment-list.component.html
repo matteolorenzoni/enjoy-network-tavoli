@@ -24,12 +24,12 @@
     </div>
     <div>{{ personMarked }}/{{ personAssigned }}/{{ maxPerson }}</div>
     <ul [@staggeredFadeInIncrement]="evEmArray.length" class="flex flex-col divide-y divide-gray-700 px-2">
-      <en-item-event-employee
+      <en-item-assignment
         *ngFor="let evEm of evEmArray"
         [evEm]="evEm"
         [currentPersonAssigned]="personAssigned"
         [maxPerson]="maxPerson"
-        (refreshEvEmArrayEvent)="getData()"></en-item-event-employee>
+        (refreshEvEmArrayEvent)="getData()"></en-item-assignment>
     </ul>
   </section>
 </main>

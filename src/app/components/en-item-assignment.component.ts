@@ -8,7 +8,7 @@ import { ToastService } from '../services/toast.service';
 import { AssignmentService } from '../services/assignment.service';
 
 @Component({
-  selector: 'en-item-event-employee[evEm][currentPersonAssigned][maxPerson]',
+  selector: 'en-item-assignment[evEm][currentPersonAssigned][maxPerson]',
   template: ` <li class="my-2 flex h-16 flex-wrap items-center sm:h-12 sm:flex-nowrap">
     <div class="w-full grow-1 truncate text-center sm:w-max sm:basis-44 sm:text-left">
       {{ employeeName }} {{ employeeLastName }}
