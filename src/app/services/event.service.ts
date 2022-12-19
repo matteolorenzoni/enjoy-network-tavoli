@@ -27,14 +27,14 @@ export class EventService {
   /* ------------------------------------------- GET ------------------------------------------- */
   // OK
   public async getEvent(eventUid: string): Promise<Event> {
-    const docSnap = await this.firebaseReadService.getEventByUid(eventUid);
-    return this.transformService.qsToEvent(docSnap);
+    const event = await this.firebaseReadService.getEventByUid(eventUid);
+    return event;
   }
 
   // OK
   public async getAllEvents(): Promise<Event[]> {
-    const querySnapshot = await this.firebaseReadService.getAllEvents();
-    return this.transformService.qsToEvents(querySnapshot);
+    const events = await this.firebaseReadService.getAllEvents();
+    return events;
   }
 
   /* ------------------------------------------- ADD ------------------------------------------- */

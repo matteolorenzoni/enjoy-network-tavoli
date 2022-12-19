@@ -4,7 +4,6 @@ import {
   doc,
   getDoc,
   DocumentData,
-  DocumentSnapshot,
   collection,
   getDocs,
   QuerySnapshot,
@@ -13,9 +12,9 @@ import {
   QueryConstraint,
   QueryDocumentSnapshot
 } from '@angular/fire/firestore';
-import { employeeConverter } from 'src/app/models/converter';
+import { employeeConverter, eventConverter } from 'src/app/models/converter';
 import { Table } from 'src/app/models/table';
-import { Employee } from 'src/app/models/type';
+import { Employee, Event } from 'src/app/models/type';
 import { environment } from 'src/environments/environment';
 
 @Injectable({
@@ -30,24 +29,23 @@ export class FirebaseReadService {
   }
 
   /* ------------------------------------------- EVENT ------------------------------------------- */
-  public async getAllEvents(): Promise<QuerySnapshot<DocumentData>> {
-    const collectionRef = collection(this.db, Table.EVENTS);
+  public async getAllEvents(): Promise<Event[]> {
+    const events: Event[] = [];
+    const collectionRef = collection(this.db, Table.EVENTS).withConverter(eventConverter);
     const querySnapshot = await getDocs(collectionRef);
-    if (!environment.production) {
-      console.info(
-        'Got events',
-        querySnapshot.docs.map((item) => item.data())
-      );
-    }
-    return querySnapshot;
+    querySnapshot.forEach((eventDoc) => {
+      events.push(eventDoc.data());
+      if (!environment.production) console.info('Got event', eventDoc.data());
+    });
+    return events;
   }
 
-  public async getEventByUid(uid: string): Promise<DocumentSnapshot<DocumentData>> {
-    const collectionRef = collection(this.db, Table.EVENTS);
+  public async getEventByUid(uid: string): Promise<Event> {
+    const collectionRef = collection(this.db, Table.EVENTS).withConverter(eventConverter);
     const docRef = doc(collectionRef, uid);
     const docSnap = await getDoc(docRef);
     if (!environment.production) console.info('Got event', docSnap.data());
-    return docSnap;
+    return docSnap.data() as Event;
   }
 
   /* ------------------------------------------- EVENT EMPLOYEE ------------------------------------------- */

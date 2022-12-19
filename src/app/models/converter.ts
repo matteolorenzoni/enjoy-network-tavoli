@@ -1,4 +1,4 @@
-import { EmployeeDTO } from 'src/app/models/table';
+import { EmployeeDTO, EventDTO } from 'src/app/models/table';
 import {
   DocumentData,
   FirestoreDataConverter,
@@ -6,7 +6,7 @@ import {
   SnapshotOptions,
   WithFieldValue
 } from '@angular/fire/firestore';
-import { Employee } from './type';
+import { Employee, Event } from './type';
 
 export const employeeConverter: FirestoreDataConverter<Employee> = {
   toFirestore(employee: Employee): WithFieldValue<DocumentData> {
@@ -39,5 +39,47 @@ export const employeeConverter: FirestoreDataConverter<Employee> = {
       }
     };
     return employee;
+  }
+};
+
+export const eventConverter: FirestoreDataConverter<Event> = {
+  toFirestore(event: Event): WithFieldValue<DocumentData> {
+    const { eventDTO } = event;
+    const data: EventDTO = {
+      imageUrl: eventDTO.imageUrl,
+      name: eventDTO.name,
+      date: eventDTO.date,
+      timeStart: eventDTO.timeStart,
+      timeEnd: eventDTO.timeEnd,
+      maxPerson: eventDTO.maxPerson,
+      place: eventDTO.place,
+      guest: eventDTO.guest,
+      description: eventDTO.description,
+      messageText: eventDTO.messageText,
+      createdAt: eventDTO.createdAt ? eventDTO.createdAt : new Date(),
+      modificatedAt: new Date()
+    };
+    return data;
+  },
+  fromFirestore(snapshot: QueryDocumentSnapshot, options: SnapshotOptions): Event {
+    const data: EventDTO = snapshot.data(options) as EventDTO;
+    const event: Event = {
+      uid: snapshot.id,
+      eventDTO: {
+        imageUrl: data.imageUrl,
+        name: data.name,
+        date: new Date((data.date as unknown as number) * 1000),
+        timeStart: data.timeStart,
+        timeEnd: data.timeEnd,
+        maxPerson: data.maxPerson,
+        place: data.place,
+        guest: data.guest,
+        description: data.description,
+        messageText: data.messageText,
+        createdAt: new Date((data.createdAt as unknown as number) * 1000),
+        modificatedAt: new Date((data.modificatedAt as unknown as number) * 1000)
+      }
+    };
+    return event;
   }
 };
