@@ -1,6 +1,6 @@
 import { IconDefinition } from '@fortawesome/fontawesome-common-types';
 import { RoleType, ToastType } from './enum';
-import { EmployeeDTO, EventDTO, EventEmployeeDTO } from './table';
+import { AssignmentDTO, EmployeeDTO, EventDTO } from './table';
 
 export type UserBaseInfo = {
   displayName: string | null;
@@ -38,9 +38,9 @@ export type Employee = {
   employeeDTO: EmployeeDTO;
 };
 
-export type EventEmployee = {
+export type Assignment = {
   readonly uid: string;
-  eventEmployeeDTO: EventEmployeeDTO;
+  assignmentDTO: AssignmentDTO;
 };
 
-export type EvEm = EventEmployee & Pick<EmployeeDTO, 'name' | 'lastName' | 'zone'>;
+export type EvEm = Assignment & Pick<EmployeeDTO, 'name' | 'lastName' | 'zone'>;

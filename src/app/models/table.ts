@@ -3,7 +3,7 @@ import { RoleType } from './enum';
 export enum Table {
   EMPLOYEES = 'employees',
   EVENTS = 'events',
-  EVENT_EMPLOYEES = 'event-employees'
+  ASSIGNMENTS = 'assignments'
 }
 
 export type EventDTO = {
@@ -32,7 +32,8 @@ export type EmployeeDTO = {
   modificatedAt?: Date;
 };
 
-export type EventEmployeeDTO = {
+export type AssignmentDTO = {
+  eventUid: string;
   employeeUid: string;
   active: boolean;
   personMarked: number;

@@ -1,7 +1,7 @@
 import { EventService } from 'src/app/services/event.service';
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Employee, EvEm, Event, EventEmployee } from 'src/app/models/type';
+import { Employee, EvEm, Event, Assignment } from 'src/app/models/type';
 import { ToastService } from 'src/app/services/toast.service';
 import { faArrowLeft, faFilter } from '@fortawesome/free-solid-svg-icons';
 import { Location } from '@angular/common';
@@ -11,15 +11,15 @@ import {
   slideInCreateItemHeader,
   staggeredFadeInIncrement
 } from 'src/app/animations/animations';
-import { EventEmployeeService } from '../../../../services/event-employee.service';
+import { AssignmentService } from 'src/app/services/assignment.service';
 
 @Component({
-  selector: 'app-employee-list',
-  templateUrl: './employee-list.component.html',
-  styleUrls: ['./employee-list.component.scss'],
+  selector: 'app-assignment-list',
+  templateUrl: './assignment-list.component.html',
+  styleUrls: ['./assignment-list.component.scss'],
   animations: [slideInCreateItemHeader, fadeInCreateItemAnimation, staggeredFadeInIncrement]
 })
-export class EmployeeListComponent implements OnInit {
+export class AssignmentListComponent {
   /* Icons */
   backIcon = faArrowLeft;
   filterIcon = faFilter;
@@ -27,7 +27,7 @@ export class EmployeeListComponent implements OnInit {
   uid = '';
   event!: Event;
   employeeArray: Employee[] = [];
-  eventEmployeeArray: EventEmployee[] = [];
+  assignments: Assignment[] = [];
   evEmArray: EvEm[] = [];
 
   personMarked = 0;
@@ -39,7 +39,7 @@ export class EmployeeListComponent implements OnInit {
     private route: ActivatedRoute,
     private eventService: EventService,
     private employeeService: EmployeeService,
-    private eventEmployeeService: EventEmployeeService,
+    private assignmentService: AssignmentService,
     private toastService: ToastService
   ) {}
 
@@ -50,7 +50,7 @@ export class EmployeeListComponent implements OnInit {
 
   getData(): void {
     this.getEvent(this.uid);
-    this.getEventEmployee(this.uid);
+    this.getAssignments(this.uid);
   }
 
   getEvent(eventUid: string): void {
@@ -65,16 +65,16 @@ export class EmployeeListComponent implements OnInit {
       });
   }
 
-  getEventEmployee(eventUid: string): void {
-    this.eventEmployeeService
-      .getAllEventEmployees(eventUid)
-      .then((eventEmployees) => {
-        this.eventEmployeeArray = eventEmployees;
+  getAssignments(eventUid: string): void {
+    this.assignmentService
+      .getAllAssignments(eventUid)
+      .then((assignments) => {
+        this.assignments = assignments;
         this.personMarked = 0;
         this.personAssigned = 0;
-        this.eventEmployeeArray.forEach((item) => {
-          this.personMarked += item.eventEmployeeDTO.personMarked;
-          this.personAssigned += item.eventEmployeeDTO.personAssigned;
+        this.assignments.forEach((item) => {
+          this.personMarked += item.assignmentDTO.personMarked;
+          this.personAssigned += item.assignmentDTO.personAssigned;
         });
         this.getEmployee();
       })
@@ -84,17 +84,15 @@ export class EmployeeListComponent implements OnInit {
   }
 
   getEmployee() {
-    const employeeUids = this.eventEmployeeArray.map((item) => item.eventEmployeeDTO.employeeUid);
+    const employeeUids = this.assignments.map((item) => item.assignmentDTO.employeeUid);
     this.employeeService
       .getEmployeesByUids(employeeUids)
       .then((employees) => {
         this.employeeArray = employees;
         this.evEmArray = this.employeeArray.map((employee) => {
-          const eventEmployee = this.eventEmployeeArray.find(
-            (item) => item.eventEmployeeDTO.employeeUid === employee.uid
-          );
+          const assignment = this.assignments.find((item) => item.assignmentDTO.employeeUid === employee.uid);
           return {
-            ...(eventEmployee ?? ({} as EventEmployee)),
+            ...(assignment ?? ({} as Assignment)),
             name: employee.employeeDTO.name,
             lastName: employee.employeeDTO.lastName,
             zone: employee.employeeDTO.zone

@@ -5,7 +5,7 @@ import { FormControl } from '@angular/forms';
 import { faCircleMinus, faCirclePlus } from '@fortawesome/free-solid-svg-icons';
 import { debounceTime, Subscription } from 'rxjs';
 import { ToastService } from '../services/toast.service';
-import { EventEmployeeService } from '../services/event-employee.service';
+import { AssignmentService } from '../services/assignment.service';
 
 @Component({
   selector: 'en-item-event-employee[evEm][currentPersonAssigned][maxPerson]',
@@ -57,7 +57,7 @@ import { EventEmployeeService } from '../services/event-employee.service';
     `
   ]
 })
-export class EnItemEventEmployeeComponent {
+export class EnItemAssignmentComponent {
   @Input() evEm!: EvEm;
   @Input() currentPersonAssigned!: number;
   @Input() maxPerson!: number;
@@ -90,7 +90,7 @@ export class EnItemEventEmployeeComponent {
 
   constructor(
     private route: ActivatedRoute,
-    private eventEmployee: EventEmployeeService,
+    private assignmentService: AssignmentService,
     private toastService: ToastService
   ) {}
 
@@ -110,8 +110,8 @@ export class EnItemEventEmployeeComponent {
         const hipoteticalPersonAssigned = this.currentPersonAssigned + value - this.personAssigned;
         if (hipoteticalPersonAssigned <= this.maxPerson) {
           /* Update the value */
-          this.eventEmployee
-            .updateEventEmployeePersonAssigned(this.eventUid, this.uid, value)
+          this.assignmentService
+            .updateAssignmentPersonAssigned(this.eventUid, this.uid, value)
             .then(() => {
               this.refreshEvEmArrayEvent.emit();
               this.toastService.showSuccess('Elemento modificato');
@@ -129,8 +129,8 @@ export class EnItemEventEmployeeComponent {
 
     /* Form IsActive */
     this.subIsActive = this.formIsActive.valueChanges.subscribe((value) => {
-      this.eventEmployee
-        .updateEventEmployeeActive(this.eventUid, this.uid, this.personMarked, value)
+      this.assignmentService
+        .updateAssignmentActive(this.eventUid, this.uid, this.personMarked, value)
         .then(() => {
           this.refreshEvEmArrayEvent.emit();
           this.toastService.showSuccess('Elemento modificato');
@@ -150,18 +150,18 @@ export class EnItemEventEmployeeComponent {
       this.employeeName = currentValue.name;
       this.employeeLastName = currentValue.lastName;
       this.employeeZone = currentValue.zone;
-      this.personMarked = currentValue.eventEmployeeDTO.personMarked;
-      this.personAssigned = currentValue.eventEmployeeDTO.personAssigned;
-      this.active = currentValue.eventEmployeeDTO.active;
+      this.personMarked = currentValue.assignmentDTO.personMarked;
+      this.personAssigned = currentValue.assignmentDTO.personAssigned;
+      this.active = currentValue.assignmentDTO.active;
 
       /* Form PersonAssigned */
-      this.formPersonAssigned.setValue(currentValue.eventEmployeeDTO.personAssigned);
+      this.formPersonAssigned.setValue(currentValue.assignmentDTO.personAssigned);
       if (!this.active) {
         this.formPersonAssigned.disable();
       }
 
       /* Form IsActive */
-      this.formIsActive.setValue(currentValue.eventEmployeeDTO.active);
+      this.formIsActive.setValue(currentValue.assignmentDTO.active);
     }
   }
 
