@@ -58,7 +58,7 @@ export class EventService {
       const activeConstraint: QueryConstraint = where('active', '==', true);
       const constricts: QueryConstraint[] = [prConstraint, activeConstraint];
       const employees: Employee[] = await this.firebaseReadService.getEmployeesByMultipleConstraints(constricts);
-      await this.firebaseCreateService.addEventEmployeeByEventUid(docRef.id, employees);
+      await this.firebaseCreateService.addAssignmentByEventUid(docRef.id, employees);
     } else {
       /* Update document */
       const event: Event = { uid, eventDTO };
@@ -70,8 +70,8 @@ export class EventService {
   /* ------------------------------------------- DELETE ------------------------------------------- */
   public async deleteEvent(event: Event): Promise<void> {
     /* Delete event employees */
-    const querySnapshot = await this.firebaseReadService.getAllEventEmployees(event.uid);
-    await this.firebaseDeleteService.deleteEventEmployeeByUid(event.uid, querySnapshot);
+    const querySnapshot = await this.firebaseReadService.getAllAssignments(event.uid);
+    await this.firebaseDeleteService.deleteAssignmentByUid(event.uid, querySnapshot);
 
     /* Delete image */
     const photoUrl = event.eventDTO.imageUrl;

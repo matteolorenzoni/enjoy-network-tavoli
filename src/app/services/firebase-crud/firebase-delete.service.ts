@@ -42,13 +42,13 @@ export class FirebaseDeleteService {
   }
 
   /* ------------------------------------------- EVENT EMPLOYEE ------------------------------------------- */
-  public async deleteEventEmployeeByUid(eventUid: string, querySnapshot: QuerySnapshot<DocumentData>): Promise<void> {
+  public async deleteAssignmentByUid(eventUid: string, querySnapshot: QuerySnapshot<DocumentData>): Promise<void> {
     const batch = writeBatch(this.db);
-    const collectionRef = collection(this.db, `${Table.EVENT_EMPLOYEES}/${eventUid}/${Table.EMPLOYEES}`);
+    const collectionRef = collection(this.db, `${Table.ASSIGNMENTS}/${eventUid}/${Table.EMPLOYEES}`);
     querySnapshot.forEach((item: QueryDocumentSnapshot<DocumentData>) => {
       const docRef = doc(collectionRef, item.id);
       batch.delete(docRef);
-      if (!environment.production) console.info('EventEmployee eliminato:', item.id);
+      if (!environment.production) console.info('Assignment eliminato:', item.id);
     });
     await batch.commit();
   }

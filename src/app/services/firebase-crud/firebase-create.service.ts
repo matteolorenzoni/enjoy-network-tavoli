@@ -18,7 +18,7 @@ import {
   uploadBytesResumable,
   UploadTaskSnapshot
 } from '@angular/fire/storage';
-import { EventDTO, EventEmployeeDTO, Table } from 'src/app/models/table';
+import { EventDTO, Table, AssignmentDTO } from 'src/app/models/table';
 import { environment } from 'src/environments/environment';
 import { Employee, Event } from 'src/app/models/type';
 
@@ -67,11 +67,12 @@ export class FirebaseCreateService {
   }
 
   /* ------------------------------------------- EVENT EMPLOYEE ------------------------------------------- */
-  public async addEventEmployeeByEventUid(eventUid: string, employees: Employee[]): Promise<void> {
+  public async addAssignmentByEventUid(eventUid: string, employees: Employee[]): Promise<void> {
     const batch = writeBatch(this.db);
-    const collectionRef = collection(this.db, `${Table.EVENT_EMPLOYEES}/${eventUid}/${Table.EMPLOYEES}`);
+    const collectionRef = collection(this.db, `${Table.ASSIGNMENTS}/${eventUid}/${Table.EMPLOYEES}`);
     employees.forEach((employee) => {
-      const obj: EventEmployeeDTO = {
+      const obj: AssignmentDTO = {
+        eventUid,
         employeeUid: employee.uid,
         active: true,
         personMarked: 0,

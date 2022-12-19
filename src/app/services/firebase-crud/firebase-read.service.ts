@@ -48,16 +48,10 @@ export class FirebaseReadService {
     return docSnap.data() as Event;
   }
 
-  /* ------------------------------------------- EVENT EMPLOYEE ------------------------------------------- */
-  public async getAllEventEmployees(eventUid: string): Promise<QuerySnapshot<DocumentData>> {
-    const collectionRef = collection(this.db, `${Table.EVENT_EMPLOYEES}/${eventUid}/${Table.EMPLOYEES}`);
+  /* ------------------------------------------- ASSIGNMENT ------------------------------------------- */
+  public async getAllAssignments(eventUid: string): Promise<QuerySnapshot<DocumentData>> {
+    const collectionRef = collection(this.db, `${Table.ASSIGNMENTS}/${eventUid}/${Table.EMPLOYEES}`);
     const querySnapshot = await getDocs(collectionRef);
-    if (!environment.production) {
-      console.info(
-        'Got event employees',
-        querySnapshot.docs.map((item) => item.data())
-      );
-    }
     return querySnapshot;
   }
 

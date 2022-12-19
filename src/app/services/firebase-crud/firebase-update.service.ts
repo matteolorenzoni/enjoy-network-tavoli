@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Firestore, doc, updateDoc, getFirestore, collection } from '@angular/fire/firestore';
-import { Table } from 'src/app/models/table';
+import { AssignmentDTO, Table } from 'src/app/models/table';
 import { Employee, Event } from 'src/app/models/type';
 import { environment } from 'src/environments/environment';
-import { EventEmployeeDTO } from '../../models/table';
 
 @Injectable({
   providedIn: 'root'
@@ -27,15 +26,15 @@ export class FirebaseUpdateService {
   }
 
   /* ------------------------------------------- EVENT EMPLOYEE ------------------------------------------- */
-  public async updateEventEmployeeProps(
+  public async updateAssignmentProps(
     eventUid: string,
-    eventEmployeeUid: string,
-    propsToUpdate: { [key in keyof Partial<EventEmployeeDTO>]: any }
+    assignmentUid: string,
+    propsToUpdate: { [key in keyof Partial<AssignmentDTO>]: any }
   ): Promise<void> {
-    const collectionRef = collection(this.db, `${Table.EVENT_EMPLOYEES}/${eventUid}/${Table.EMPLOYEES}`);
-    const docRef = doc(collectionRef, eventEmployeeUid);
+    const collectionRef = collection(this.db, `${Table.ASSIGNMENTS}/${eventUid}/${Table.EMPLOYEES}`);
+    const docRef = doc(collectionRef, assignmentUid);
     await updateDoc(docRef, propsToUpdate);
-    if (!environment.production) console.info('Updated event employee', eventEmployeeUid);
+    if (!environment.production) console.info('Updated event employee', assignmentUid);
   }
 
   /* ------------------------------------------- EMPLOYEE ------------------------------------------- */

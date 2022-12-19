@@ -1,22 +1,22 @@
 import { Injectable } from '@angular/core';
 import { DocumentData, QuerySnapshot } from '@angular/fire/firestore';
-import { EventEmployeeDTO } from '../models/table';
-import { EventEmployee } from '../models/type';
+import { AssignmentDTO } from '../models/table';
+import { Assignment } from '../models/type';
 
 @Injectable({
   providedIn: 'root'
 })
 export class TransformService {
   /* ------------------------------------------- EVENT EMPLOYEE ------------------------------------------- */
-  public qsToEventEmployees(querySnapshot: QuerySnapshot<DocumentData>): EventEmployee[] {
-    const eventEmployees: EventEmployee[] = [];
+  public qsToAssignments(querySnapshot: QuerySnapshot<DocumentData>): Assignment[] {
+    const assignments: Assignment[] = [];
     querySnapshot.forEach((eventDoc) => {
-      const eventEmployee: EventEmployee = {
+      const assignment: Assignment = {
         uid: eventDoc.id,
-        eventEmployeeDTO: eventDoc.data() as EventEmployeeDTO
+        assignmentDTO: eventDoc.data() as AssignmentDTO
       };
-      eventEmployees.push(eventEmployee);
+      assignments.push(assignment);
     });
-    return eventEmployees;
+    return assignments;
   }
 }
