@@ -8,7 +8,7 @@ import { FirebaseCreateService } from './firebase-crud/firebase-create.service';
 import { FirebaseDeleteService } from './firebase-crud/firebase-delete.service';
 import { FirebaseReadService } from './firebase-crud/firebase-read.service';
 import { FirebaseUpdateService } from './firebase-crud/firebase-update.service';
-import { TransformService } from './transform.service';
+import { RoleType } from '../models/enum';
 
 const PASSWORD_DEFAULT = 'enjoynetwork';
 
@@ -21,24 +21,31 @@ export class EmployeeService {
     private firebaseCreateService: FirebaseCreateService,
     private firebaseReadService: FirebaseReadService,
     private firebaseUpdateService: FirebaseUpdateService,
-    private firebaseDeleteService: FirebaseDeleteService,
-    private transformService: TransformService
+    private firebaseDeleteService: FirebaseDeleteService
   ) {}
 
   /* ------------------------------------------- GET ------------------------------------------- */
-  // OK
   public async getEmployee(employeeUid: string): Promise<Employee> {
     const employee: Employee = await this.firebaseReadService.getEmployeeByUid(employeeUid);
     return employee;
   }
 
-  // OK
   public async getAllEmployees(): Promise<Employee[]> {
-    const employees: Employee[] = await this.firebaseReadService.getAllEmployee();
+    const employees: Employee[] = await this.firebaseReadService.getAllEmployees();
+    return employees;
+  }
+
+  public async getEmployeesPrAndActive(): Promise<Employee[]> {
+    const activeConstraint: QueryConstraint = where('active', '==', true);
+    const prConstraint: QueryConstraint = where('role', '==', RoleType.PR);
+    const constricts: QueryConstraint[] = [activeConstraint, prConstraint];
+    const employees: Employee[] = await this.firebaseReadService.getEmployeesByMultipleConstraints(constricts);
     return employees;
   }
 
   public async getEmployeesByUids(uidArray: string[]): Promise<Employee[]> {
+    if (!uidArray || uidArray.length === 0) return [];
+
     const idConstraint: QueryConstraint = where(documentId(), 'in', uidArray);
     // TODO: ordinamento
     // const firstOrder: QueryConstraint = orderBy('active');
@@ -50,7 +57,6 @@ export class EmployeeService {
   }
 
   /* ------------------------------------------- ADD ------------------------------------------- */
-  // OK
   public async addOrUpdateEmployee(uid: string | null, employeeDTO: EmployeeDTO, email: string): Promise<void> {
     if (!uid) {
       /* Add new user */

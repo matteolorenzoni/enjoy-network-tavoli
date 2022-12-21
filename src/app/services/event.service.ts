@@ -1,15 +1,11 @@
-import { Employee } from 'src/app/models/type';
 import { Injectable } from '@angular/core';
 import { QueryConstraint, where } from '@angular/fire/firestore';
-import { DatePipe } from '@angular/common';
 import { EventDTO } from '../models/table';
-import { Event } from '../models/type';
+import { Assignment, Event } from '../models/type';
 import { FirebaseCreateService } from './firebase-crud/firebase-create.service';
 import { FirebaseUpdateService } from './firebase-crud/firebase-update.service';
 import { FirebaseReadService } from './firebase-crud/firebase-read.service';
 import { FirebaseDeleteService } from './firebase-crud/firebase-delete.service';
-import { TransformService } from './transform.service';
-import { RoleType } from '../models/enum';
 
 @Injectable({
   providedIn: 'root'
@@ -19,19 +15,15 @@ export class EventService {
     private firebaseCreateService: FirebaseCreateService,
     private firebaseReadService: FirebaseReadService,
     private firebaseUpdateService: FirebaseUpdateService,
-    private firebaseDeleteService: FirebaseDeleteService,
-    private transformService: TransformService,
-    private datePipe: DatePipe
+    private firebaseDeleteService: FirebaseDeleteService
   ) {}
 
   /* ------------------------------------------- GET ------------------------------------------- */
-  // OK
   public async getEvent(eventUid: string): Promise<Event> {
     const event = await this.firebaseReadService.getEventByUid(eventUid);
     return event;
   }
 
-  // OK
   public async getAllEvents(): Promise<Event[]> {
     const events = await this.firebaseReadService.getAllEvents();
     return events;
@@ -51,14 +43,7 @@ export class EventService {
       /* Add new event */
       const event: Event = { uid: '', eventDTO };
       event.eventDTO.imageUrl = imageUrl;
-      const docRef = await this.firebaseCreateService.addEvent(event);
-
-      /* Add new event employee */
-      const prConstraint: QueryConstraint = where('role', '==', RoleType.PR);
-      const activeConstraint: QueryConstraint = where('active', '==', true);
-      const constricts: QueryConstraint[] = [prConstraint, activeConstraint];
-      const employees: Employee[] = await this.firebaseReadService.getEmployeesByMultipleConstraints(constricts);
-      await this.firebaseCreateService.addAssignmentByEventUid(docRef.id, employees);
+      await this.firebaseCreateService.addEvent(event);
     } else {
       /* Update document */
       const event: Event = { uid, eventDTO };
@@ -69,9 +54,11 @@ export class EventService {
 
   /* ------------------------------------------- DELETE ------------------------------------------- */
   public async deleteEvent(event: Event): Promise<void> {
-    /* Delete event employees */
-    const querySnapshot = await this.firebaseReadService.getAllAssignments(event.uid);
-    await this.firebaseDeleteService.deleteAssignmentByUid(event.uid, querySnapshot);
+    /* Delete assigments */
+    const eventUidConstraint: QueryConstraint = where('eventUid', '==', event.uid);
+    const constraints: QueryConstraint[] = [eventUidConstraint];
+    const assignments: Assignment[] = await this.firebaseReadService.getAssignmentsByMultipleConstraints(constraints);
+    await this.firebaseDeleteService.deleteAssignments(assignments);
 
     /* Delete image */
     const photoUrl = event.eventDTO.imageUrl;

@@ -95,12 +95,10 @@ export class PrActiveComponent implements OnInit {
     this.assignmentService
       .addAssignment(this.eventUid, employeeAddedUids)
       .then(() => {
-        this.assignmentService
-          .deleteAssignmentByEventUidAndEmployeeUids(this.eventUid, removedEmployeeUids)
-          .then(() => {
-            this.toastService.showSuccess('Lista aggiornata');
-            this.goBack();
-          });
+        this.assignmentService.deleteAssignmentRemovedFromList(this.eventUid, removedEmployeeUids).then(() => {
+          this.toastService.showSuccess('Lista aggiornata');
+          this.goBack();
+        });
       })
       .catch((error) => {
         this.toastService.showError(error.message);

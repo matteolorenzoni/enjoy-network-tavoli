@@ -96,7 +96,7 @@ export class EnItemAssignmentComponent {
           if (hipoteticalPersonAssigned <= this.maxPerson) {
             /* Update the value */
             this.assignmentService
-              .updateAssignmentPersonAssigned(this.assUid, newPersonAssigned)
+              .updateAssignmentPersonAssignedProp(this.assUid, newPersonAssigned)
               .then(() => {
                 this.refreshAssignmentAndEmployeeArrayEvent.emit();
                 this.toastService.showSuccess('Elemento modificato');
@@ -115,7 +115,7 @@ export class EnItemAssignmentComponent {
     /* Form IsActive */
     this.subIsActive = this.formIsActive.valueChanges.subscribe((value) => {
       this.assignmentService
-        .updateAssignmentActive(this.assUid, this.assPersonMarked, value)
+        .updateAssignmentActiveProp(this.assUid, this.assPersonMarked, value)
         .then(() => {
           this.refreshAssignmentAndEmployeeArrayEvent.emit();
           this.toastService.showSuccess('Elemento modificato');
