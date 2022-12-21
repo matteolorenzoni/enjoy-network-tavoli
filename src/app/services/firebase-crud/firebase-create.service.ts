@@ -6,8 +6,8 @@ import {
   Firestore,
   addDoc,
   getFirestore,
-  writeBatch,
   collection,
+  writeBatch,
   doc
 } from '@angular/fire/firestore';
 import {
@@ -18,9 +18,9 @@ import {
   uploadBytesResumable,
   UploadTaskSnapshot
 } from '@angular/fire/storage';
-import { EventDTO, Table, AssignmentDTO } from 'src/app/models/table';
+import { EventDTO, Table } from 'src/app/models/table';
 import { environment } from 'src/environments/environment';
-import { Employee, Event } from 'src/app/models/type';
+import { Assignment, Employee, Event } from 'src/app/models/type';
 
 @Injectable({
   providedIn: 'root'
@@ -66,21 +66,14 @@ export class FirebaseCreateService {
     return downloadURL;
   }
 
-  /* ------------------------------------------- EVENT EMPLOYEE ------------------------------------------- */
-  public async addAssignmentByEventUid(eventUid: string, employees: Employee[]): Promise<void> {
+  /* ------------------------------------------- ASSIGNEMNET ------------------------------------------- */
+  public async addAssignments(assignments: Assignment[]): Promise<void> {
     const batch = writeBatch(this.db);
-    const collectionRef = collection(this.db, `${Table.ASSIGNMENTS}/${eventUid}/${Table.EMPLOYEES}`);
-    employees.forEach((employee) => {
-      const obj: AssignmentDTO = {
-        eventUid,
-        employeeUid: employee.uid,
-        active: true,
-        personMarked: 0,
-        personAssigned: 0
-      };
+    const collectionRef = collection(this.db, Table.ASSIGNMENTS);
+    assignments.forEach((assignment: Assignment) => {
       const docRef = doc(collectionRef);
-      batch.set(docRef, obj);
-      if (!environment.production) console.info('Added event employee', obj);
+      batch.set(docRef, assignment.assignmentDTO);
+      if (!environment.production) console.info('Added assignment', assignment.assignmentDTO);
     });
     await batch.commit();
   }

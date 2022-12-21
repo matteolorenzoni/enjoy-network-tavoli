@@ -3,6 +3,7 @@ import { Firestore, doc, updateDoc, getFirestore, collection } from '@angular/fi
 import { AssignmentDTO, Table } from 'src/app/models/table';
 import { Employee, Event } from 'src/app/models/type';
 import { environment } from 'src/environments/environment';
+import { Assignment } from '../../models/type';
 
 @Injectable({
   providedIn: 'root'
@@ -22,28 +23,28 @@ export class FirebaseUpdateService {
     const collectionRef = collection(this.db, Table.EVENTS);
     const docRef = doc(collectionRef, uid);
     await updateDoc(docRef, eventDTO);
-    if (!environment.production) console.info('Updated event', eventDTO);
+    if (!environment.production) console.info('Updated event', event);
   }
 
-  /* ------------------------------------------- EVENT EMPLOYEE ------------------------------------------- */
+  /* ------------------------------------------- ASSIGNEMNT ------------------------------------------- */
   public async updateAssignmentProps(
-    eventUid: string,
-    assignmentUid: string,
+    assignment: Assignment,
     propsToUpdate: { [key in keyof Partial<AssignmentDTO>]: any }
   ): Promise<void> {
-    const collectionRef = collection(this.db, `${Table.ASSIGNMENTS}/${eventUid}/${Table.EMPLOYEES}`);
-    const docRef = doc(collectionRef, assignmentUid);
-    await updateDoc(docRef, propsToUpdate);
-    if (!environment.production) console.info('Updated event employee', assignmentUid);
+    const { uid } = assignment;
+    const collectionRef = collection(this.db, Table.ASSIGNMENTS);
+    const docRef = doc(collectionRef, uid);
+    await updateDoc(docRef, { ...propsToUpdate, modificatedAt: new Date() });
+    if (!environment.production) console.info('Updated assignment', assignment);
   }
 
   /* ------------------------------------------- EMPLOYEE ------------------------------------------- */
-  // CHECK
   public async updateEmployee(employee: Employee): Promise<void> {
     const { uid, employeeDTO } = employee;
     employeeDTO.modificatedAt = new Date();
-    const docRef = doc(this.db, Table.EMPLOYEES, uid);
+    const collectionRef = collection(this.db, Table.EMPLOYEES);
+    const docRef = doc(collectionRef, uid);
     await updateDoc(docRef, employeeDTO);
-    if (!environment.production) console.info('Updated employee', employeeDTO);
+    if (!environment.production) console.info('Updated employee', employee);
   }
 }

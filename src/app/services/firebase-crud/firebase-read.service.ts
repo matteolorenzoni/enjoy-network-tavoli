@@ -3,18 +3,16 @@ import {
   Firestore,
   doc,
   getDoc,
-  DocumentData,
   collection,
   getDocs,
-  QuerySnapshot,
   query,
   getFirestore,
   QueryConstraint,
   QueryDocumentSnapshot
 } from '@angular/fire/firestore';
-import { employeeConverter, eventConverter } from 'src/app/models/converter';
+import { assignmentConverter, employeeConverter, eventConverter } from 'src/app/models/converter';
 import { Table } from 'src/app/models/table';
-import { Employee, Event } from 'src/app/models/type';
+import { Assignment, Employee, Event } from 'src/app/models/type';
 import { environment } from 'src/environments/environment';
 
 @Injectable({
@@ -49,14 +47,28 @@ export class FirebaseReadService {
   }
 
   /* ------------------------------------------- ASSIGNMENT ------------------------------------------- */
-  public async getAllAssignments(eventUid: string): Promise<QuerySnapshot<DocumentData>> {
-    const collectionRef = collection(this.db, `${Table.ASSIGNMENTS}/${eventUid}/${Table.EMPLOYEES}`);
-    const querySnapshot = await getDocs(collectionRef);
-    return querySnapshot;
+  public async getAssignmentByUid(assignmentUid: string): Promise<Assignment> {
+    const collectionRef = collection(this.db, Table.ASSIGNMENTS).withConverter(assignmentConverter);
+    const docRef = doc(collectionRef, assignmentUid);
+    const docSnap = await getDoc(docRef);
+    if (!environment.production) console.info('Got assignment', docSnap.data());
+    return docSnap.data() as Assignment;
+  }
+
+  public async getAssignmentsByMultipleConstraints(constraints: QueryConstraint[]): Promise<Assignment[]> {
+    const assignments: Assignment[] = [];
+    const collectionRef = collection(this.db, Table.ASSIGNMENTS).withConverter(assignmentConverter);
+    const q = query(collectionRef, ...constraints);
+    const querySnapshot = await getDocs(q);
+    querySnapshot.forEach((item: QueryDocumentSnapshot<Assignment>) => {
+      assignments.push(item.data());
+      if (!environment.production) console.info('Got assignment', item.data());
+    });
+    return assignments;
   }
 
   /* ------------------------------------------- EMPLOYEE ------------------------------------------- */
-  public async getAllEmployee(): Promise<Employee[]> {
+  public async getAllEmployees(): Promise<Employee[]> {
     const employees: Employee[] = [];
     const collectionRef = collection(this.db, Table.EMPLOYEES).withConverter(employeeConverter);
     const querySnapshot = await getDocs(collectionRef);
