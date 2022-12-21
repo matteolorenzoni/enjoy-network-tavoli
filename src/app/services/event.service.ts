@@ -6,6 +6,7 @@ import { FirebaseCreateService } from './firebase/firebase-crud/firebase-create.
 import { FirebaseUpdateService } from './firebase/firebase-crud/firebase-update.service';
 import { FirebaseReadService } from './firebase/firebase-crud/firebase-read.service';
 import { FirebaseDeleteService } from './firebase/firebase-crud/firebase-delete.service';
+import { FirebaseStorageService } from './firebase/firebase-storage.service';
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +16,8 @@ export class EventService {
     private firebaseCreateService: FirebaseCreateService,
     private firebaseReadService: FirebaseReadService,
     private firebaseUpdateService: FirebaseUpdateService,
-    private firebaseDeleteService: FirebaseDeleteService
+    private firebaseDeleteService: FirebaseDeleteService,
+    private firebaseStorage: FirebaseStorageService
   ) {}
 
   /* ------------------------------------------- GET ------------------------------------------- */
@@ -35,7 +37,7 @@ export class EventService {
 
     if (photo) {
       /* Add new image */
-      const photoUrl = await this.firebaseCreateService.addPhotoToEvent(eventDTO, photo);
+      const photoUrl = await this.firebaseStorage.addPhotoToEvent(eventDTO, photo);
       imageUrl = photoUrl;
     }
 
@@ -64,7 +66,7 @@ export class EventService {
     const photoUrl = event.eventDTO.imageUrl;
     try {
       const photoName = photoUrl.split('%2F')[1].split('?')[0];
-      await this.firebaseDeleteService.deletePhoto(photoName);
+      await this.firebaseStorage.deletePhoto(photoName);
     } catch (error) {
       console.error('No photo');
     }

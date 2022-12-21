@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { Firestore, doc, deleteDoc, getFirestore, collection, writeBatch } from '@angular/fire/firestore';
-import { deleteObject, FirebaseStorage, getStorage, ref } from '@angular/fire/storage';
 import { Table } from 'src/app/models/table';
 import { environment } from 'src/environments/environment';
 import { Assignment } from '../../../models/type';
@@ -11,11 +10,9 @@ import { Assignment } from '../../../models/type';
 export class FirebaseDeleteService {
   /* Firebase */
   private db!: Firestore;
-  private storage!: FirebaseStorage;
 
   constructor() {
     this.db = getFirestore();
-    this.storage = getStorage();
   }
 
   /* ------------------------------------------- EVENT ------------------------------------------- */
@@ -24,12 +21,6 @@ export class FirebaseDeleteService {
     const docRef = doc(collectionRef, eventUid);
     await deleteDoc(docRef);
     if (!environment.production) console.info('Evento eliminato:', eventUid);
-  }
-
-  public async deletePhoto(imageUrl: string): Promise<void> {
-    const storageRef = ref(this.storage, `events/${imageUrl}`);
-    await deleteObject(storageRef);
-    if (!environment.production) console.info('Foto eliminata:', imageUrl);
   }
 
   /* ------------------------------------------- ASSIGNMENT ------------------------------------------- */

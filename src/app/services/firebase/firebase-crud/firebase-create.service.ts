@@ -1,4 +1,3 @@
-import { DatePipe } from '@angular/common';
 import { Injectable } from '@angular/core';
 import {
   DocumentData,
@@ -10,15 +9,7 @@ import {
   writeBatch,
   doc
 } from '@angular/fire/firestore';
-import {
-  FirebaseStorage,
-  getDownloadURL,
-  getStorage,
-  ref,
-  uploadBytesResumable,
-  UploadTaskSnapshot
-} from '@angular/fire/storage';
-import { EventDTO, Table } from 'src/app/models/table';
+import { Table } from 'src/app/models/table';
 import { environment } from 'src/environments/environment';
 import { Assignment, Employee, Event } from 'src/app/models/type';
 
@@ -28,11 +19,9 @@ import { Assignment, Employee, Event } from 'src/app/models/type';
 export class FirebaseCreateService {
   /* Firebase */
   private db!: Firestore;
-  private storage!: FirebaseStorage;
 
-  constructor(private datePipe: DatePipe) {
+  constructor() {
     this.db = getFirestore();
-    this.storage = getStorage();
   }
 
   /* ------------------------------------------- EVENT ------------------------------------------- */
@@ -44,26 +33,6 @@ export class FirebaseCreateService {
     const docRef = await addDoc(collectionRef, eventDTO);
     if (!environment.production) console.info('Added event', eventDTO);
     return docRef;
-  }
-
-  public async addPhotoToEvent(event: EventDTO, photo: File): Promise<string> {
-    const newEvent = event;
-
-    const eventName = newEvent.name.toLowerCase().replace(/\s/g, '_');
-    const eventDate = this.datePipe.transform(newEvent.date, 'dd_MM_yyyy');
-    const imageType = photo.type.split('/')[1] || 'jpg';
-    const photoNameFormatted = `${eventName}_${eventDate}.${imageType}`;
-    const storageRef = ref(this.storage, `events/${photoNameFormatted}`);
-
-    /* Upload */
-    const snapshot: UploadTaskSnapshot = await uploadBytesResumable(storageRef, photo);
-    if (!environment.production) console.info('Uploaded a blob or file!', snapshot);
-
-    /* Get download URL */
-    const downloadURL: string = await getDownloadURL(snapshot.ref);
-    if (!environment.production) console.info('File available at', downloadURL);
-
-    return downloadURL;
   }
 
   /* ------------------------------------------- ASSIGNEMNET ------------------------------------------- */
