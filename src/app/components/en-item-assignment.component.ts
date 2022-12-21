@@ -1,5 +1,3 @@
-import { ActivatedRoute } from '@angular/router';
-import { EvEm } from 'src/app/models/type';
 import { Component, EventEmitter, Input, Output, SimpleChanges } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { faCircleMinus, faCirclePlus } from '@fortawesome/free-solid-svg-icons';
@@ -8,20 +6,21 @@ import { ToastService } from '../services/toast.service';
 import { AssignmentService } from '../services/assignment.service';
 
 @Component({
-  selector: 'en-item-assignment[evEm][currentPersonAssigned][maxPerson]',
+  selector:
+    'en-item-assignment[assUid][assActive][assPersonAssigned][assPersonMarked][empName][empLastName][empZone][currentPersonAssigned][maxPerson]',
   template: ` <li class="my-2 flex h-16 flex-wrap items-center sm:h-12 sm:flex-nowrap">
     <div class="w-full grow-1 truncate text-center sm:w-max sm:basis-44 sm:text-left">
-      {{ employeeName }} {{ employeeLastName }}
+      {{ empName }} {{ empLastName }}
     </div>
-    <div class="center w-1/5 grow-1 text-sm sm:w-max">{{ employeeZone | uppercase }}</div>
+    <div class="center w-1/5 grow-1 text-sm sm:w-max">{{ empZone | uppercase }}</div>
     <div class="center w-3/5 grow-1 gap-1 sm:w-max">
-      <div class="center mr-1">{{ personMarked }}/{{ personAssigned }}</div>
+      <div class="center mr-1">{{ assPersonMarked }}/{{ assPersonAssigned }}</div>
       <div class="center relative flex h-6 w-24 flex-row rounded-lg bg-transparent">
         <button
           data-action="decrement"
           class="center h-full w-20 rounded-l bg-primary-60 text-black outline-none hover:bg-primary-50 active:bg-primary-40 enabled:cursor-pointer disabled:cursor-not-allowed disabled:bg-gray-200 "
           (click)="decreasPersonAssigned()"
-          [disabled]="!active">
+          [disabled]="!assActive">
           <span class="">−</span>
         </button>
         <input
@@ -32,7 +31,7 @@ import { AssignmentService } from '../services/assignment.service';
           data-action="increment"
           class="center h-full w-20 cursor-pointer rounded-r bg-primary-60 text-black outline-none hover:bg-primary-50 active:bg-primary-40 active:text-white disabled:cursor-not-allowed disabled:bg-gray-200"
           (click)="incrementPersonAssigned()"
-          [disabled]="!active">
+          [disabled]="!assActive">
           <span class="m">+</span>
         </button>
       </div>
@@ -58,27 +57,21 @@ import { AssignmentService } from '../services/assignment.service';
   ]
 })
 export class EnItemAssignmentComponent {
-  @Input() evEm!: EvEm;
+  @Input() assUid!: string;
+  @Input() assActive!: boolean;
+  @Input() assPersonAssigned!: number;
+  @Input() assPersonMarked!: number;
+  @Input() empName!: string;
+  @Input() empLastName!: string;
+  @Input() empZone!: string;
   @Input() currentPersonAssigned!: number;
   @Input() maxPerson!: number;
 
-  @Output() refreshEvEmArrayEvent = new EventEmitter();
+  @Output() refreshAssignmentAndEmployeeArrayEvent = new EventEmitter();
 
   /* Icons */
   incrementIcon = faCirclePlus;
   decrementIcon = faCircleMinus;
-
-  /* Event */
-  eventUid = '';
-
-  /* evEm */
-  uid = '';
-  personMarked = 0;
-  personAssigned = 0;
-  active = true;
-  employeeName = '';
-  employeeLastName = '';
-  employeeZone = '';
 
   /* Form */
   formPersonAssigned = new FormControl<number>(0, { nonNullable: true });
@@ -88,51 +81,43 @@ export class EnItemAssignmentComponent {
   subPersonAssigned!: Subscription;
   subIsActive!: Subscription;
 
-  constructor(
-    private route: ActivatedRoute,
-    private assignmentService: AssignmentService,
-    private toastService: ToastService
-  ) {}
+  constructor(private assignmentService: AssignmentService, private toastService: ToastService) {}
 
   /* ----------------------------------------------------- lifecycle hooks ----------------------------------------------------- */
   ngOnInit(): void {
-    this.eventUid = this.route.snapshot.paramMap.get('uid') || '';
-
-    if (!this.eventUid) {
-      throw new Error('Event uid is not defined');
-    }
-
     /* Form PersonAssigned */
-    this.subPersonAssigned = this.formPersonAssigned.valueChanges.pipe(debounceTime(1200)).subscribe((value) => {
-      /* Check if the value is different from the previous one */
-      if (this.personAssigned !== value) {
-        /* Check if the value is less than the max person */
-        const hipoteticalPersonAssigned = this.currentPersonAssigned + value - this.personAssigned;
-        if (hipoteticalPersonAssigned <= this.maxPerson) {
-          /* Update the value */
-          this.assignmentService
-            .updateAssignmentPersonAssigned(this.eventUid, this.uid, value)
-            .then(() => {
-              this.refreshEvEmArrayEvent.emit();
-              this.toastService.showSuccess('Elemento modificato');
-            })
-            .catch((err: Error) => {
-              this.toastService.showError(err.message);
-            });
-        } else {
-          /* Reset the value */
-          this.formPersonAssigned.setValue(this.personAssigned);
-          this.toastService.showError('Non puoi assegnare più persone di quelle disponibili');
+    this.subPersonAssigned = this.formPersonAssigned.valueChanges
+      .pipe(debounceTime(1200))
+      .subscribe((newPersonAssigned) => {
+        /* Check if the value is different from the previous one */
+        if (this.assPersonAssigned !== newPersonAssigned) {
+          /* Check if the value is less than the max person */
+          const hipoteticalPersonAssigned = this.currentPersonAssigned + newPersonAssigned - this.assPersonAssigned;
+          if (hipoteticalPersonAssigned <= this.maxPerson) {
+            /* Update the value */
+            this.assignmentService
+              .updateAssignmentPersonAssigned(this.assUid, newPersonAssigned)
+              .then(() => {
+                this.refreshAssignmentAndEmployeeArrayEvent.emit();
+                this.toastService.showSuccess('Elemento modificato');
+              })
+              .catch((err: Error) => {
+                this.toastService.showError(err.message);
+              });
+          } else {
+            /* Reset the value */
+            this.formPersonAssigned.setValue(this.assPersonAssigned);
+            this.toastService.showError('Non puoi assegnare più persone di quelle disponibili');
+          }
         }
-      }
-    });
+      });
 
     /* Form IsActive */
     this.subIsActive = this.formIsActive.valueChanges.subscribe((value) => {
       this.assignmentService
-        .updateAssignmentActive(this.eventUid, this.uid, this.personMarked, value)
+        .updateAssignmentActive(this.assUid, this.assPersonMarked, value)
         .then(() => {
-          this.refreshEvEmArrayEvent.emit();
+          this.refreshAssignmentAndEmployeeArrayEvent.emit();
           this.toastService.showSuccess('Elemento modificato');
         })
         .catch((err: Error) => {
@@ -142,26 +127,15 @@ export class EnItemAssignmentComponent {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['evEm']) {
-      const { currentValue }: { currentValue: EvEm } = changes['evEm'];
-
-      /* evEm */
-      this.uid = currentValue.uid;
-      this.employeeName = currentValue.name;
-      this.employeeLastName = currentValue.lastName;
-      this.employeeZone = currentValue.zone;
-      this.personMarked = currentValue.assignmentDTO.personMarked;
-      this.personAssigned = currentValue.assignmentDTO.personAssigned;
-      this.active = currentValue.assignmentDTO.active;
-
+    if (changes['assUid']) {
       /* Form PersonAssigned */
-      this.formPersonAssigned.setValue(currentValue.assignmentDTO.personAssigned);
-      if (!this.active) {
+      this.formPersonAssigned.setValue(this.assPersonAssigned);
+      if (!this.assActive) {
         this.formPersonAssigned.disable();
       }
 
       /* Form IsActive */
-      this.formIsActive.setValue(currentValue.assignmentDTO.active);
+      this.formIsActive.setValue(this.assActive);
     }
   }
 
