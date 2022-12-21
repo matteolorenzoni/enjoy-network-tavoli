@@ -43,4 +43,4 @@ export type Assignment = {
   assignmentDTO: AssignmentDTO;
 };
 
-export type EvEm = Assignment & Pick<EmployeeDTO, 'name' | 'lastName' | 'zone'>;
+export type AssignmentAndEmployee = Assignment & Pick<EmployeeDTO, 'name' | 'lastName' | 'zone'>;

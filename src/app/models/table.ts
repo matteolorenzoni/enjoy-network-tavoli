@@ -38,4 +38,6 @@ export type AssignmentDTO = {
   active: boolean;
   personMarked: number;
   personAssigned: number;
+  createdAt?: Date;
+  modificatedAt?: Date;
 };
