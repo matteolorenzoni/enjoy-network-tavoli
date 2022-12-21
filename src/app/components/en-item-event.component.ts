@@ -10,10 +10,10 @@ import { EventDTO } from '../models/table';
 @Component({
   selector: 'en-item-event[event][eventDeletedEvent]',
   template: `
-    <li class="my-4 overflow-hidden rounded">
+    <li class="my-2 overflow-hidden rounded">
       <ng-container *ngIf="!isOpen; else elseTemplate">
         <div
-          class="group relative h-12 overflow-hidden rounded bg-gradient-to-r from-primary-60 to-primary-10 antialiased hover:cursor-pointer xs:h-14"
+          class="group relative h-12 overflow-hidden bg-gradient-to-r from-primary-60/30 to-primary-60/0 antialiased hover:cursor-pointer xs:h-16"
           (click)="toggleOpen()">
           <p class="center absolute inset-0 z-10 hidden text-white group-hover:flex group-hover:backdrop-blur-[2px]">
             APRI
@@ -41,7 +41,7 @@ import { EventDTO } from '../models/table';
               xs:h-48
               xs:w-48" />
           <div class="flex h-full w-full overflow-hidden pl-28 group-hover:hidden xs:pl-44">
-            <div class="flex flex-col justify-center text-black">
+            <div class="flex flex-col justify-center text-white">
               <p class="truncate text-base font-semibold xs:text-lg">{{ eventDTO.name }}</p>
               <p class="truncate text-xs font-normal xs:text-sm xs:font-light">
                 {{ dateFormatted }} ({{ eventDTO.place }})
@@ -135,7 +135,7 @@ export class EnItemEventComponent {
 
       this.itemNavigationMenu = [
         { link: [this.uid, 'table'], name: 'Tavoli', definition: faWineBottle },
-        { link: [this.uid, 'employee'], name: 'Dipendenti', definition: faUsers },
+        { link: [this.uid, 'assignments'], name: 'Dipendenti', definition: faUsers },
         { link: ['/create-item/event/', this.uid], name: 'Modifica', definition: faPen }
       ];
     }
