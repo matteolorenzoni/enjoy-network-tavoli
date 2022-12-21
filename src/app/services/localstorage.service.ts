@@ -2,13 +2,12 @@ import { Injectable } from '@angular/core';
 import { FirebaseReadService } from './firebase-crud/firebase-read.service';
 import { RoleType } from '../models/enum';
 import { EmployeeDTO } from '../models/table';
-import { TransformService } from './transform.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class LocalstorageService {
-  constructor(private firebaseReadService: FirebaseReadService, private transformService: TransformService) {}
+  constructor(private firebaseReadService: FirebaseReadService) {}
   /* ------------------------------------------- GET ------------------------------------------- */
   public getEmployeeRole(): RoleType | null {
     return (sessionStorage.getItem('role') as RoleType) || null;
