@@ -21,9 +21,6 @@ import { EnBottomNavigationComponent } from './components/en-bottom-navigation.c
 import { EnCountdownComponent } from './components/en-countdown.component';
 import { EnFieldComponent } from './components/en-field.component';
 import { EnFileLoaderComponent } from './components/en-file-loader.component';
-import { EnItemEmployeeComponent } from './components/en-item-employee.component';
-import { EnItemAssignmentComponent } from './components/en-item-event-employee.component';
-import { EnItemEventComponent } from './components/en-item-event.component';
 import { EnToastComponent } from './components/en-toast.component';
 import { CreateItemComponent } from './layout/create-item/create-item.component';
 import { DashboardComponent } from './layout/dashboard/dashboard.component';
@@ -37,6 +34,11 @@ import { StatisticsComponent } from './page/statistics/statistics.component';
 import { TableListComponent } from './page/administrator/event/table-list/table-list.component';
 import { AssignmentListComponent } from './page/administrator/event/assignment-list/assignment-list.component';
 import { EmployeeListComponent } from './page/administrator/employee/employee-list/employee-list.component';
+import { EnItemEmployeeComponent } from './components/en-item-employee.component';
+import { EnItemAssignmentComponent } from './components/en-item-assignment.component';
+import { EnItemEventComponent } from './components/en-item-event.component';
+import { EnItemPrActiveComponent } from './components/en-item-pr-active.component';
+import { PrActiveComponent } from './page/administrator/event/pr-active/pr-active.component';
 
 @NgModule({
   declarations: [
@@ -64,7 +66,9 @@ import { EmployeeListComponent } from './page/administrator/employee/employee-li
     EnItemAssignmentComponent,
     TableListComponent,
     EnCountdownComponent,
-    EmployeeListComponent
+    EmployeeListComponent,
+    EnItemPrActiveComponent,
+    PrActiveComponent
   ],
   imports: [
     BrowserModule,

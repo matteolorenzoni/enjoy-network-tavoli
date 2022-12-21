@@ -17,11 +17,17 @@
     </button>
     <button
       type="button"
-      class="mb-6 w-full rounded-lg border border-gray-600 bg-gray-800 py-2.5 px-5 text-sm font-medium text-gray-400 hover:bg-gray-700 hover:text-white focus:z-10 focus:outline-none focus:ring-4 focus:ring-gray-700">
+      class="mb-6 w-full rounded-lg border border-primary-60 bg-transparent py-2.5 px-5 text-sm font-medium text-primary-60 hover:bg-primary-60 hover:text-black focus:z-10 focus:outline-none focus:ring-4 focus:ring-primary-50"
+      (click)="onSave()">
       SALVA
     </button>
     <ul [@staggeredFadeInIncrement]="activePrs.length" class="flex flex-col divide-y divide-gray-700 px-2">
-      <en-item-event-employee *ngFor="let pr of activePrs" [employee]="pr"></en-item-event-employee>
+      <en-item-pr-active
+        *ngFor="let employee of activePrs"
+        [employee]="employee"
+        [isChecked]="isChecked(employee)"
+        [isDisabled]="isDisabled(employee)"
+        (changeCheckEvent)="handleAssignmentChange($event)"></en-item-pr-active>
     </ul>
   </section>
 </main>

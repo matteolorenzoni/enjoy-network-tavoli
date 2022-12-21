@@ -12,6 +12,7 @@ import { LoginComponent } from 'src/app/page/login/login.component';
 import { PageNotFoundComponent } from 'src/app/page/page-not-found/page-not-found.component';
 import { SettingComponent } from 'src/app/page/setting/setting.component';
 import { StatisticsComponent } from 'src/app/page/statistics/statistics.component';
+import { PrActiveComponent } from '../app/page/administrator/event/pr-active/pr-active.component';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -20,8 +21,12 @@ const routes: Routes = [
     component: TableListComponent
   },
   {
-    path: 'dashboard/administrator/event/:uid/employee',
+    path: 'dashboard/administrator/event/:uid/assignments',
     component: AssignmentListComponent
+  },
+  {
+    path: 'dashboard/administrator/event/:uid/pr-active',
+    component: PrActiveComponent
   },
   {
     path: 'dashboard',
