@@ -1,9 +1,9 @@
 import { EventService } from 'src/app/services/event.service';
 import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Employee, EvEm, Event, Assignment } from 'src/app/models/type';
+import { Assignment, AssignmentAndEmployee } from 'src/app/models/type';
 import { ToastService } from 'src/app/services/toast.service';
-import { faAdd, faArrowLeft, faFilter } from '@fortawesome/free-solid-svg-icons';
+import { faArrowLeft, faFilter, faList } from '@fortawesome/free-solid-svg-icons';
 import { Location } from '@angular/common';
 import { EmployeeService } from 'src/app/services/employee.service';
 import {
@@ -23,13 +23,10 @@ export class AssignmentListComponent {
   /* Icons */
   backIcon = faArrowLeft;
   filterIcon = faFilter;
-  addIcon = faAdd;
+  listIcon = faList;
 
-  uid = '';
-  event!: Event;
-  employeeArray: Employee[] = [];
-  assignments: Assignment[] = [];
-  evEmArray: EvEm[] = [];
+  eventUid = '';
+  assignmentsAndEmployeeArray: AssignmentAndEmployee[] = [];
 
   personMarked = 0;
   personAssigned = 0;
@@ -46,40 +43,60 @@ export class AssignmentListComponent {
   ) {}
 
   ngOnInit(): void {
-    this.uid = this.route.snapshot.paramMap.get('uid') ?? '';
+    this.eventUid = this.route.snapshot.paramMap.get('uid') || '';
+
+    if (!this.eventUid) {
+      throw new Error('Event uid is not defined');
+    }
+
     this.getData();
   }
 
   getData(): void {
-    this.getEvent(this.uid);
+    this.getEvent(this.eventUid);
+    this.getAssignments(this.eventUid);
   }
 
   getEvent(eventUid: string): void {
     this.eventService
       .getEvent(eventUid)
       .then((event) => {
-        this.event = event;
-        this.maxPerson = this.event.eventDTO.maxPerson;
+        this.maxPerson = event.eventDTO.maxPerson;
       })
       .catch((error: Error) => {
         this.toastService.showError(error.message);
       });
   }
 
-  getEmployee() {
-    const employeeUids = this.assignments.map((item) => item.assignmentDTO.employeeUid);
+  getAssignments(eventUid: string): void {
+    this.assignmentService
+      .getAssignmentsByEventUid(eventUid)
+      .then((assignments) => {
+        this.personAssigned = assignments.reduce((acc, item) => acc + item.assignmentDTO.personAssigned, 0);
+        this.personMarked = assignments.reduce((acc, item) => acc + item.assignmentDTO.personMarked, 0);
+        this.getEmployee(assignments);
+      })
+      .catch((error: Error) => {
+        this.toastService.showError(error.message);
+      });
+  }
+
+  getEmployee(assignments: Assignment[]): void {
+    const employeeUids = assignments.map((item) => item.assignmentDTO.employeeUid);
     this.employeeService
       .getEmployeesByUids(employeeUids)
       .then((employees) => {
-        this.employeeArray = employees;
-        this.evEmArray = this.employeeArray.map((employee) => {
-          const assignment = this.assignments.find((item) => item.assignmentDTO.employeeUid === employee.uid);
-          return {
-            ...(assignment ?? ({} as Assignment)),
-            name: employee.employeeDTO.name,
-            lastName: employee.employeeDTO.lastName,
-            zone: employee.employeeDTO.zone
-          };
+        this.assignmentsAndEmployeeArray = [];
+        employees.forEach((employee) => {
+          const assignment = assignments.find((item) => item.assignmentDTO.employeeUid === employee.uid);
+          if (assignment) {
+            this.assignmentsAndEmployeeArray.push({
+              ...assignment,
+              name: employee.employeeDTO.name,
+              lastName: employee.employeeDTO.lastName,
+              zone: employee.employeeDTO.zone
+            } as AssignmentAndEmployee);
+          }
         });
       })
       .catch((error: Error) => {
@@ -92,6 +109,6 @@ export class AssignmentListComponent {
   }
 
   goToSelector(): void {
-    this.router.navigate(['../assignment-total'], { relativeTo: this.route });
+    this.router.navigate(['../pr-active'], { relativeTo: this.route });
   }
 }

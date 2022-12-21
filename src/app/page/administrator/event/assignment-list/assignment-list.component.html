@@ -19,17 +19,25 @@
       <button
         class="w-1/5 rounded-lg border border-primary-50 bg-primary-60 py-2.5 px-5 text-sm font-medium text-black hover:bg-primary-50 hover:text-white focus:z-10 focus:outline-none focus:ring-4 focus:ring-primary-30"
         (click)="goToSelector()">
-        <fa-icon [icon]="addIcon"></fa-icon>
+        <fa-icon [icon]="listIcon"></fa-icon>
       </button>
     </div>
     <div>{{ personMarked }}/{{ personAssigned }}/{{ maxPerson }}</div>
-    <ul [@staggeredFadeInIncrement]="evEmArray.length" class="flex flex-col divide-y divide-gray-700 px-2">
+    <ul
+      [@staggeredFadeInIncrement]="assignmentsAndEmployeeArray.length"
+      class="flex flex-col divide-y divide-gray-700 px-2">
       <en-item-assignment
-        *ngFor="let evEm of evEmArray"
-        [evEm]="evEm"
+        *ngFor="let item of assignmentsAndEmployeeArray"
+        [assUid]="item.uid"
+        [assActive]="item.assignmentDTO.active"
+        [assPersonAssigned]="item.assignmentDTO.personAssigned"
+        [assPersonMarked]="item.assignmentDTO.personMarked"
+        [empName]="item.name"
+        [empLastName]="item.lastName"
+        [empZone]="item.zone"
         [currentPersonAssigned]="personAssigned"
         [maxPerson]="maxPerson"
-        (refreshEvEmArrayEvent)="getData()"></en-item-assignment>
+        (refreshAssignmentAndEmployeeArrayEvent)="getData()"></en-item-assignment>
     </ul>
   </section>
 </main>
