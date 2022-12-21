@@ -2,10 +2,10 @@ import { Injectable } from '@angular/core';
 import { QueryConstraint, where } from '@angular/fire/firestore';
 import { EventDTO } from '../models/table';
 import { Assignment, Event } from '../models/type';
-import { FirebaseCreateService } from './firebase-crud/firebase-create.service';
-import { FirebaseUpdateService } from './firebase-crud/firebase-update.service';
-import { FirebaseReadService } from './firebase-crud/firebase-read.service';
-import { FirebaseDeleteService } from './firebase-crud/firebase-delete.service';
+import { FirebaseCreateService } from './firebase/firebase-crud/firebase-create.service';
+import { FirebaseUpdateService } from './firebase/firebase-crud/firebase-update.service';
+import { FirebaseReadService } from './firebase/firebase-crud/firebase-read.service';
+import { FirebaseDeleteService } from './firebase/firebase-crud/firebase-delete.service';
 
 @Injectable({
   providedIn: 'root'

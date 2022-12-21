@@ -3,7 +3,7 @@ import { Firestore, doc, updateDoc, getFirestore, collection } from '@angular/fi
 import { AssignmentDTO, Table } from 'src/app/models/table';
 import { Employee, Event } from 'src/app/models/type';
 import { environment } from 'src/environments/environment';
-import { Assignment } from '../../models/type';
+import { Assignment } from '../../../models/type';
 
 @Injectable({
   providedIn: 'root'

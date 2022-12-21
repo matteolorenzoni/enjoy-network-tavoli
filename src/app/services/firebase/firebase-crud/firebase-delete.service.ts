@@ -3,7 +3,7 @@ import { Firestore, doc, deleteDoc, getFirestore, collection, writeBatch } from 
 import { deleteObject, FirebaseStorage, getStorage, ref } from '@angular/fire/storage';
 import { Table } from 'src/app/models/table';
 import { environment } from 'src/environments/environment';
-import { Assignment } from '../../models/type';
+import { Assignment } from '../../../models/type';
 
 @Injectable({
   providedIn: 'root'

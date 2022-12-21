@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { FirebaseReadService } from './firebase-crud/firebase-read.service';
+import { FirebaseReadService } from './firebase/firebase-crud/firebase-read.service';
 import { RoleType } from '../models/enum';
 import { EmployeeDTO } from '../models/table';
 

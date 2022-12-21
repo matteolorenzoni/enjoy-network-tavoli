@@ -4,10 +4,10 @@ import { documentId, QueryConstraint, where } from 'firebase/firestore';
 import { UserService } from './user.service';
 import { EmployeeDTO } from '../models/table';
 import { Employee } from '../models/type';
-import { FirebaseCreateService } from './firebase-crud/firebase-create.service';
-import { FirebaseDeleteService } from './firebase-crud/firebase-delete.service';
-import { FirebaseReadService } from './firebase-crud/firebase-read.service';
-import { FirebaseUpdateService } from './firebase-crud/firebase-update.service';
+import { FirebaseCreateService } from './firebase/firebase-crud/firebase-create.service';
+import { FirebaseDeleteService } from './firebase/firebase-crud/firebase-delete.service';
+import { FirebaseReadService } from './firebase/firebase-crud/firebase-read.service';
+import { FirebaseUpdateService } from './firebase/firebase-crud/firebase-update.service';
 import { RoleType } from '../models/enum';
 
 const PASSWORD_DEFAULT = 'enjoynetwork';
