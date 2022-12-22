@@ -36,8 +36,8 @@ export class EventListComponent implements OnInit {
       .then((events) => {
         this.events = events;
       })
-      .catch((error: Error) => {
-        this.toastService.showError(error.message);
+      .catch((err: Error) => {
+        this.toastService.showError(err);
       });
   }
 }

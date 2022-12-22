@@ -54,8 +54,8 @@ export class PrActiveComponent implements OnInit {
         this.assignments = assignments;
         this.assignmentEmployeeUids = assignments.map((assignment) => assignment.assignmentDTO.employeeUid);
       })
-      .catch((error) => {
-        this.toastService.showError(error.message);
+      .catch((err: Error) => {
+        this.toastService.showError(err);
       });
 
     this.employeeService
@@ -63,8 +63,8 @@ export class PrActiveComponent implements OnInit {
       .then((employees) => {
         this.activePrs = employees;
       })
-      .catch((error) => {
-        this.toastService.showError(error.message);
+      .catch((err: Error) => {
+        this.toastService.showError(err);
       });
   }
 
@@ -100,8 +100,8 @@ export class PrActiveComponent implements OnInit {
           this.goBack();
         });
       })
-      .catch((error) => {
-        this.toastService.showError(error.message);
+      .catch((err: Error) => {
+        this.toastService.showError(err);
       });
   }
 

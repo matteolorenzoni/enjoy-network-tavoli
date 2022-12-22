@@ -72,15 +72,15 @@ export class LoginFormComponent implements OnInit {
                 /* Go to dashboard */
                 this.setSectionEvent.emit(true);
               })
-              .catch((error: Error) => {
-                this.toastService.showError(error.message);
+              .catch((err: Error) => {
+                this.toastService.showError(err);
               });
           }
         })
-        .catch((error: Error) => {
+        .catch((err: Error) => {
           this.isLoading = false;
-          const errorMessageTranslated = translateFirebaseErrorMessage(error.message as FirebaseLoginErrorType);
-          this.toastService.showError(errorMessageTranslated);
+          const errorMessageTranslated = translateFirebaseErrorMessage(err.message as FirebaseLoginErrorType);
+          this.toastService.showErrorMessage(errorMessageTranslated);
         });
     }
   }

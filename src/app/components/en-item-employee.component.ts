@@ -69,8 +69,8 @@ export class EnItemEmployeeComponent {
         this.toastService.showSuccess('Dipendente eliminato');
         this.employeeDeletedEvent.emit();
       })
-      .catch((error: Error) => {
-        this.toastService.showError(error.message);
+      .catch((err: Error) => {
+        this.toastService.showError(err);
       });
   }
 }

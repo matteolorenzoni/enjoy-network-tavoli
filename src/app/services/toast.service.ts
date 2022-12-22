@@ -21,7 +21,13 @@ export class ToastService {
     this.show(ToastType.SUCCESS, message);
   }
 
-  public showError(message: string): void {
+  public showError(err: Error): void {
+    console.error(err);
+    this.show(ToastType.ERROR, err.message);
+  }
+
+  public showErrorMessage(message: string): void {
+    console.error(message);
     this.show(ToastType.ERROR, message);
   }
 

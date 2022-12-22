@@ -74,8 +74,8 @@ export class EmployeeGeneratorComponent implements OnInit {
             this.lblButton = 'Modifica dipendente';
           }
         })
-        .catch((error: Error) => {
-          this.toastService.showError(error.message);
+        .catch((err: Error) => {
+          this.toastService.showError(err);
         });
     }
   }
@@ -99,8 +99,8 @@ export class EmployeeGeneratorComponent implements OnInit {
         this.location.back();
         this.toastService.showSuccess(this.uid ? 'Dipendente aggiornato' : 'Dipendente creato');
       })
-      .catch((error: Error) => {
-        this.toastService.showError(error.message);
+      .catch((err: Error) => {
+        this.toastService.showError(err);
       })
       .finally(() => {
         this.isLoading = false;

@@ -102,12 +102,12 @@ export class EnItemAssignmentComponent {
                 this.toastService.showSuccess('Elemento modificato');
               })
               .catch((err: Error) => {
-                this.toastService.showError(err.message);
+                this.toastService.showError(err);
               });
           } else {
             /* Reset the value */
             this.formPersonAssigned.setValue(this.assPersonAssigned);
-            this.toastService.showError('Non puoi assegnare più persone di quelle disponibili');
+            this.toastService.showErrorMessage('Non puoi assegnare più persone di quelle disponibili');
           }
         }
       });
@@ -121,7 +121,7 @@ export class EnItemAssignmentComponent {
           this.toastService.showSuccess('Elemento modificato');
         })
         .catch((err: Error) => {
-          this.toastService.showError(err.message);
+          this.toastService.showError(err);
         });
     });
   }

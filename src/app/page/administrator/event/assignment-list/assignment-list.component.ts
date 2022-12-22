@@ -63,8 +63,8 @@ export class AssignmentListComponent {
       .then((event) => {
         this.maxPerson = event.eventDTO.maxPerson;
       })
-      .catch((error: Error) => {
-        this.toastService.showError(error.message);
+      .catch((err: Error) => {
+        this.toastService.showError(err);
       });
   }
 
@@ -76,8 +76,8 @@ export class AssignmentListComponent {
         this.personMarked = assignments.reduce((acc, item) => acc + item.assignmentDTO.personMarked, 0);
         this.getEmployee(assignments);
       })
-      .catch((error: Error) => {
-        this.toastService.showError(error.message);
+      .catch((err: Error) => {
+        this.toastService.showError(err);
       });
   }
 
@@ -99,8 +99,8 @@ export class AssignmentListComponent {
           }
         });
       })
-      .catch((error: Error) => {
-        this.toastService.showError(error.message);
+      .catch((err: Error) => {
+        this.toastService.showError(err);
       });
   }
 

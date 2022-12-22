@@ -153,8 +153,8 @@ export class EnItemEventComponent {
         this.toastService.showSuccess('Evento eliminato');
         this.eventDeletedEvent.emit();
       })
-      .catch((error: Error) => {
-        this.toastService.showError(error.message);
+      .catch((err: Error) => {
+        this.toastService.showError(err);
       });
   }
 }

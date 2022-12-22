@@ -78,8 +78,8 @@ export class EventGeneratorComponent implements OnInit {
             this.lblButton = 'Modifica evento';
           }
         })
-        .catch((error: Error) => {
-          this.toastService.showError(error.message);
+        .catch((err: Error) => {
+          this.toastService.showError(err);
         });
     }
   }
@@ -108,8 +108,8 @@ export class EventGeneratorComponent implements OnInit {
         this.location.back();
         this.toastService.showSuccess('Evento creato');
       })
-      .catch((error: Error) => {
-        this.toastService.showError(error.message);
+      .catch((err: Error) => {
+        this.toastService.showError(err);
       })
       .finally(() => {
         this.isLoading = false;

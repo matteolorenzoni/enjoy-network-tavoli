@@ -36,8 +36,8 @@ export class EmployeeListComponent {
       .then((data) => {
         this.employees = data;
       })
-      .catch((error: Error) => {
-        this.toastService.showError(error.message);
+      .catch((err: Error) => {
+        this.toastService.showError(err);
       });
   }
 }
