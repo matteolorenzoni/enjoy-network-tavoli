@@ -18,11 +18,11 @@ export class EmployeeGeneratorComponent implements OnInit {
   roles = Object.values(RoleType);
 
   /* Employee */
-  uid = '';
+  employeeUid = '';
 
   /* Form */
   employeeForm: FormGroup;
-  isLoading: boolean;
+  isLoading = false;
 
   /* Label */
   lblButton = 'Crea dipendente';
@@ -53,14 +53,19 @@ export class EmployeeGeneratorComponent implements OnInit {
         this.employeeForm.controls['zone'].enable();
       }
     });
-    this.isLoading = false;
   }
+
   ngOnInit(): void {
-    this.uid = this.route.snapshot.paramMap.get('uid') || '';
-    if (this.uid && this.uid !== '' && this.uid !== 'null') {
+    this.employeeUid = this.route.snapshot.paramMap.get('uid') ?? '';
+
+    if (!this.employeeUid) {
+      throw new Error('Employee uid is not defined');
+    }
+
+    if (this.employeeUid !== 'null') {
       this.employeeForm.controls['email'].disable();
       this.employeeService
-        .getEmployee(this.uid)
+        .getEmployee(this.employeeUid)
         .then((employee: Employee) => {
           const { employeeDTO } = employee;
           if (employeeDTO) {
@@ -91,13 +96,13 @@ export class EmployeeGeneratorComponent implements OnInit {
       zone: this.employeeForm.value.zone?.trim().replace(/\s\s+/g, ' ') || '',
       active: this.employeeForm.value.active
     };
-    const uidFormatted = this.uid === '' || this.uid === 'null' ? null : this.uid;
+    const uidFormatted = this.employeeUid === '' || this.employeeUid === 'null' ? null : this.employeeUid;
     this.employeeService
       .addOrUpdateEmployee(uidFormatted, employee, email)
       .then(() => {
         this.employeeForm.reset();
         this.location.back();
-        this.toastService.showSuccess(this.uid ? 'Dipendente aggiornato' : 'Dipendente creato');
+        this.toastService.showSuccess(this.employeeUid ? 'Dipendente aggiornato' : 'Dipendente creato');
       })
       .catch((err: Error) => {
         this.toastService.showError(err);

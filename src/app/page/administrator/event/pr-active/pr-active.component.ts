@@ -42,7 +42,7 @@ export class PrActiveComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.eventUid = this.route.snapshot.paramMap.get('uid') || '';
+    this.eventUid = this.route.snapshot.paramMap.get('uid') ?? '';
 
     if (!this.eventUid) {
       throw new Error('Event uid is not defined');

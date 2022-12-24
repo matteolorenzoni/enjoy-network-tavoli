@@ -17,16 +17,23 @@ import { PrActiveComponent } from '../app/page/administrator/event/pr-active/pr-
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
   {
-    path: 'dashboard/administrator/event/:uid/table',
-    component: TableListComponent
-  },
-  {
-    path: 'dashboard/administrator/event/:uid/assignments',
-    component: AssignmentListComponent
-  },
-  {
-    path: 'dashboard/administrator/event/:uid/pr-active',
-    component: PrActiveComponent
+    path: 'dashboard',
+    component: CreateItemComponent,
+    children: [
+      {
+        path: 'administrator',
+        children: [
+          {
+            path: 'event/:uid',
+            children: [
+              { path: 'table', component: TableListComponent },
+              { path: 'assignments', component: AssignmentListComponent },
+              { path: 'pr-active', component: PrActiveComponent }
+            ]
+          }
+        ]
+      }
+    ]
   },
   {
     path: 'dashboard',

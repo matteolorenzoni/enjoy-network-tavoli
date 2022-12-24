@@ -20,7 +20,7 @@ export class EventGeneratorComponent implements OnInit {
   places = Object.values(PlaceType);
 
   /* Event */
-  uid = '';
+  eventUid = '';
 
   /* Form */
   photoFile: File | null = null;
@@ -55,10 +55,15 @@ export class EventGeneratorComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.uid = this.route.snapshot.paramMap.get('uid') || '';
-    if (this.uid && this.uid !== '' && this.uid !== 'null') {
+    this.eventUid = this.route.snapshot.paramMap.get('uid') ?? '';
+
+    if (!this.eventUid) {
+      throw new Error('Employee uid is not defined');
+    }
+
+    if (this.eventUid !== 'null') {
       this.eventService
-        .getEvent(this.uid)
+        .getEvent(this.eventUid)
         .then((event) => {
           const { eventDTO } = event;
           if (event) {
@@ -99,7 +104,8 @@ export class EventGeneratorComponent implements OnInit {
       description: this.eventForm.value.description?.trim().replace(/\s\s+/g, ' ') || '',
       messageText: this.eventForm.value.messageText
     };
-    const uidFormatted = this.uid === '' || this.uid === 'null' ? null : this.uid;
+    // TODO: da rimuovere
+    const uidFormatted = this.eventUid === '' || this.eventUid === 'null' ? null : this.eventUid;
     this.eventService
       .addOrUpdateEvent(this.photoFile, uidFormatted, newEvent)
       .then(() => {
