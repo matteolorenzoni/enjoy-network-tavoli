@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { FirebaseReadService } from './firebase/firebase-crud/firebase-read.service';
 import { RoleType } from '../models/enum';
-import { EmployeeDTO } from '../models/table';
 
 @Injectable({
   providedIn: 'root'
@@ -18,8 +17,8 @@ export class LocalstorageService {
     const employee = await this.firebaseReadService.getEmployeeByUid(employeeUid);
     const { uid, employeeDTO } = employee;
     sessionStorage.setItem('uid', uid);
-    Object.keys(employeeDTO).forEach((key) => {
-      sessionStorage.setItem(key, JSON.stringify(employeeDTO[key as keyof EmployeeDTO]));
+    Object.entries(employeeDTO).forEach(([key, value]) => {
+      sessionStorage.setItem(key, typeof value === 'string' ? value : JSON.stringify(value));
     });
   }
 }
