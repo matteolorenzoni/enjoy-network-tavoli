@@ -23,9 +23,7 @@
       </button>
     </div>
     <div>{{ personMarked }}/{{ personAssigned }}/{{ maxPerson }}</div>
-    <ul
-      [@staggeredFadeInIncrement]="assignmentsAndEmployeeArray.length"
-      class="flex flex-col divide-y divide-gray-700 px-2">
+    <ul [@staggeredFadeInIncrement]="assignmentsAndEmployeeArray.length" class="flex flex-col divide-y divide-gray-700">
       <en-item-assignment
         *ngFor="let item of assignmentsAndEmployeeArray"
         [assUid]="item.uid"
