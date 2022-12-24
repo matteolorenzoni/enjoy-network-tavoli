@@ -57,9 +57,13 @@ export class AssignmentService {
   public async updateAssignmentActiveProp(assignmentUid: string, personMarked: number, active: boolean): Promise<void> {
     const assignment: Assignment = await this.firebaseReadService.getAssignmentByUid(assignmentUid);
     if (assignment) {
-      /** If the person is not active for the event, are removed as many as person assigned as possible  */
-      const propsToUpdate = active ? { active } : { personAssigned: personMarked, active };
-      await this.firebaseUpdateService.updateAssignmentProps(assignment, propsToUpdate);
+      if (personMarked === 0) {
+        this.firebaseDeleteService.deleteAssignments([assignment]);
+      } else {
+        /** If the person is not active for the event, are removed as many as person assigned as possible  */
+        const propsToUpdate = active ? { active: true } : { personAssigned: personMarked, active: false };
+        await this.firebaseUpdateService.updateAssignmentProps(assignment, propsToUpdate);
+      }
     }
   }
 

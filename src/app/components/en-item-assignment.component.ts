@@ -116,7 +116,7 @@ export class EnItemAssignmentComponent {
         .updateAssignmentActiveProp(this.assUid, this.assPersonMarked, value)
         .then(() => {
           this.refreshAssignmentAndEmployeeArrayEvent.emit();
-          this.toastService.showSuccess('Elemento modificato');
+          this.toastService.showSuccess(this.assPersonMarked ? 'Elemento modificato' : 'Elemento eliminato');
         })
         .catch((err: Error) => {
           this.toastService.showError(err);
