@@ -7,7 +7,7 @@
       (click)="goBack()"></fa-icon>
   </nav>
 </header>
-<main [@fadeInCreateItemAnimation] class="mx-auto max-w-3xl p-6">
+<main [@fadeInCreateItemAnimation] class="mx-auto max-w-3xl p-4">
   <section>
     <button
       type="button"
@@ -21,7 +21,7 @@
       (click)="onSave()">
       SALVA
     </button>
-    <ul [@staggeredFadeInIncrement]="activePrs.length" class="flex flex-col divide-y divide-gray-700 px-2">
+    <ul [@staggeredFadeInIncrement]="activePrs.length" class="flex flex-col divide-y divide-gray-700">
       <en-item-pr-active
         *ngFor="let employee of activePrs"
         [employee]="employee"

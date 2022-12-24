@@ -4,18 +4,18 @@ import { Employee } from '../models/type';
 @Component({
   selector: 'en-item-pr-active[employee][isChecked][isDisabled][changeCheckEvent]',
   template: `
-    <li class="flex h-14 items-center">
+    <li class="flex h-14 items-center gap-4">
       <input
         id="orange-checkbox"
         type="checkbox"
-        class="text-balck mr-4 h-4 w-4 rounded border-primary-50 bg-primary-50 accent-primary-50 ring-offset-primary-40 hover:cursor-pointer focus:ring-2 focus:ring-orange-600 disabled:cursor-not-allowed xs:mr-8"
+        class="text-balck h-4 w-4 rounded border-primary-50 bg-primary-50 accent-primary-50 ring-offset-primary-40 hover:cursor-pointer focus:ring-2 focus:ring-orange-600 disabled:cursor-not-allowed xs:mr-8"
         [checked]="isChecked"
         [disabled]="isDisabled"
         (change)="onChangeCheck($event)" />
-      <div class="mr-4 basis-44 truncate xs:mr-8 xs:basis-48">
+      <div class="shrink-0 basis-40 truncate xs:basis-48">
         {{ employee.employeeDTO.name }} {{ employee.employeeDTO.lastName }}
       </div>
-      <div class="truncate">{{ employee.employeeDTO.zone }}</div>
+      <div class="grow truncate">{{ employee.employeeDTO.zone }}</div>
     </li>
   `,
   styles: [
