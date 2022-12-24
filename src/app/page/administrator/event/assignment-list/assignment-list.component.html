@@ -22,7 +22,7 @@
         <fa-icon [icon]="listIcon"></fa-icon>
       </button>
     </div>
-    <div class="py-4 text-center text-4xl">{{ personMarked }}/{{ personAssigned }}/{{ maxPerson }}</div>
+    <div class="py-4 text-center text-3xl">{{ personMarked }}/{{ personAssigned }}/{{ maxPerson }}</div>
     <ul [@staggeredFadeInIncrement]="assignmentsAndEmployeeArray.length" class="flex flex-col divide-y divide-gray-700">
       <en-item-assignment
         *ngFor="let item of assignmentsAndEmployeeArray"
