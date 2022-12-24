@@ -8,12 +8,10 @@ import { AssignmentService } from '../services/assignment.service';
 @Component({
   selector:
     'en-item-assignment[assUid][assActive][assPersonAssigned][assPersonMarked][empName][empLastName][empZone][currentPersonAssigned][maxPerson]',
-  template: ` <li class="my-2 flex h-16 flex-wrap items-center sm:h-12 sm:flex-nowrap">
-    <div class="w-full grow-1 truncate text-center sm:w-max sm:basis-44 sm:text-left">
-      {{ empName }} {{ empLastName }}
-    </div>
-    <div class="center w-1/5 grow-1 text-sm sm:w-max">{{ empZone | uppercase }}</div>
-    <div class="center w-3/5 grow-1 gap-1 sm:w-max">
+  template: ` <li class="my-2 flex h-12 flex-nowrap items-center">
+    <div class="grow-2 basis-40 truncate sm:w-max">{{ empName }} {{ empLastName }}</div>
+    <div class="hidden grow basis-20 text-sm sm:flex sm:basis-24">{{ empZone | uppercase }}</div>
+    <div class="flex basis-36 justify-end gap-1 ">
       <div class="center mr-1">{{ assPersonMarked }}/{{ assPersonAssigned }}</div>
       <div class="center relative flex h-6 w-24 flex-row rounded-lg bg-transparent">
         <button
@@ -36,7 +34,7 @@ import { AssignmentService } from '../services/assignment.service';
         </button>
       </div>
     </div>
-    <label class="relative inline-flex w-1/5 cursor-pointer items-center sm:w-max">
+    <label class="relative ml-2 inline-flex cursor-pointer items-center">
       <input type="checkbox" [formControl]="formIsActive" class="peer sr-only" />
       <div
         class="peer h-6 w-11 rounded-full bg-gray-200 after:absolute after:top-[2px] after:left-[2px] after:h-5 after:w-5 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:bg-primary-60 peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:outline-none peer-focus:ring-0"></div>
