@@ -2,8 +2,8 @@ import { UserCredential } from '@angular/fire/auth';
 import { Injectable } from '@angular/core';
 import { documentId, QueryConstraint, where } from 'firebase/firestore';
 import { UserService } from './user.service';
-import { EmployeeDTO } from '../models/table';
-import { Employee } from '../models/type';
+import { AssignmentDTO, EmployeeDTO } from '../models/table';
+import { Assignment, Employee } from '../models/type';
 import { FirebaseCreateService } from './firebase/firebase-crud/firebase-create.service';
 import { FirebaseDeleteService } from './firebase/firebase-crud/firebase-delete.service';
 import { FirebaseReadService } from './firebase/firebase-crud/firebase-read.service';
@@ -74,7 +74,25 @@ export class EmployeeService {
 
   /* ------------------------------------------- DELETE ------------------------------------------- */
   public async deleteEmployee(uid: string): Promise<void> {
+    /* Delete all assigments without person marked and remove person assigned */
+    const employeeUidConstraint: QueryConstraint = where('employeeUid', '==', uid);
+    const constraints: QueryConstraint[] = [employeeUidConstraint];
+    const assignments: Assignment[] = await this.firebaseReadService.getAssignmentsByMultipleConstraints(constraints);
+    const assignmentsToDelete: Assignment[] = assignments.filter((item) => item.assignmentDTO.personMarked === 0);
+    await this.firebaseDeleteService.deleteAssignments(assignmentsToDelete);
+    const assignmentsToMinimize: Assignment[] = assignments.filter((item) => item.assignmentDTO.personMarked > 0);
+    assignmentsToMinimize.forEach(async (assignment) => {
+      const propsToUpdate: Partial<AssignmentDTO> = {
+        personAssigned: assignment.assignmentDTO.personMarked,
+        active: false
+      };
+      await this.firebaseUpdateService.updateAssignmentProps(assignment, propsToUpdate);
+    });
+
+    /* Delete employee */
     await this.firebaseDeleteService.deleteEmployeeByUid(uid);
+
+    /* Delete user */
     // TODO: eliminare anche l'User
   }
 }
