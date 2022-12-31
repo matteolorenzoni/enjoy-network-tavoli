@@ -3,7 +3,8 @@ import { RoleType } from './enum';
 export enum Table {
   EMPLOYEES = 'employees',
   EVENTS = 'events',
-  ASSIGNMENTS = 'assignments'
+  ASSIGNMENTS = 'assignments',
+  TABLE = 'tables'
 }
 
 export type EventDTO = {
@@ -38,6 +39,15 @@ export type AssignmentDTO = {
   active: boolean;
   personMarked: number;
   personAssigned: number;
+  createdAt?: Date;
+  modificatedAt?: Date;
+};
+
+export type TableDTO = {
+  eventUid: string;
+  name: string;
+  hour: Date;
+  drink: string;
   createdAt?: Date;
   modificatedAt?: Date;
 };
