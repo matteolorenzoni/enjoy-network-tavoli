@@ -5,7 +5,7 @@ import { RoleType } from '../models/enum';
 @Injectable({
   providedIn: 'root'
 })
-export class LocalstorageService {
+export class SessionStorageService {
   constructor(private firebaseReadService: FirebaseReadService) {}
   /* ------------------------------------------- GET ------------------------------------------- */
   public getEmployeeRole(): RoleType | null {

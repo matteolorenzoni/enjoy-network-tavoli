@@ -3,7 +3,6 @@ import {
   Auth,
   authState,
   createUserWithEmailAndPassword,
-  IdTokenResult,
   signInWithEmailAndPassword,
   signOut,
   User,
@@ -11,7 +10,6 @@ import {
 } from '@angular/fire/auth';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
-import { UserBaseInfo } from '../models/type';
 
 @Injectable({
   providedIn: 'root'
@@ -24,12 +22,6 @@ export class UserService {
    * To delete them, use the signOut method.
    */
   userData$: Observable<User | null>;
-
-  /** Basic infos */
-  userBaseInfo: UserBaseInfo | null = null;
-
-  /** User acess token */
-  userAccessToken: IdTokenResult | null = null;
 
   constructor(private auth: Auth, private router: Router) {
     this.userData$ = authState(this.auth);
@@ -48,8 +40,6 @@ export class UserService {
 
   public logout(): Promise<void> {
     this.router.navigate(['/login']);
-    this.userBaseInfo = null;
-    this.userAccessToken = null;
     sessionStorage.clear();
     return signOut(this.auth);
   }

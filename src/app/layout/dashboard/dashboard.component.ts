@@ -2,7 +2,7 @@ import { UserService } from 'src/app/services/user.service';
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { faCalendarDay, faChartPie, faGear, faUsers } from '@fortawesome/free-solid-svg-icons';
 import { BottomNavigation, IconLink } from 'src/app/models/type';
-import { LocalstorageService } from '../../services/localstorage.service';
+import { SessionStorageService } from '../../services/sessionstorage.service';
 import { RoleType } from '../../models/enum';
 
 @Component({
@@ -27,13 +27,13 @@ export class DashboardComponent implements OnInit {
   navigationMenu: IconLink[] = [];
 
   constructor(
-    public localstorageService: LocalstorageService,
+    public sessionStorageService: SessionStorageService,
     private userService: UserService,
     private cdref: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
-    const employeeRole = this.localstorageService.getEmployeeRole();
+    const employeeRole = this.sessionStorageService.getEmployeeRole();
     if (employeeRole) {
       this.navigationMenu = this.navigationMenuSettings.find((item) => item.role === employeeRole)?.icons || [];
     } else {

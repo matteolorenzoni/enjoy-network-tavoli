@@ -1,4 +1,4 @@
-import { LocalstorageService } from 'src/app/services/localstorage.service';
+import { SessionStorageService } from 'src/app/services/sessionstorage.service';
 import { UserCredential } from '@angular/fire/auth';
 import { Component, EventEmitter, Output, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
@@ -30,7 +30,7 @@ export class LoginFormComponent implements OnInit {
   /* ---------------------------- constructor ---------------------------- */
   constructor(
     private userService: UserService,
-    private localstorageService: LocalstorageService,
+    private sessionStorageService: SessionStorageService,
     private toastService: ToastService
   ) {
     this.loginForm = new FormGroup({
@@ -60,21 +60,11 @@ export class LoginFormComponent implements OnInit {
         .then(async (userCredential: UserCredential) => {
           this.isLoading = false;
           if (userCredential !== null) {
-            userCredential.user
-              .getIdTokenResult()
-              .then((idTokenResult) => {
-                // TODO: da capire se serve
-                const { displayName, email, photoURL, emailVerified, uid } = userCredential.user;
-                this.userService.userBaseInfo = { displayName, email, photoURL, emailVerified, uid };
-                this.userService.userAccessToken = idTokenResult;
-                this.localstorageService.setEmployeePropsInLocalStorage(uid);
+            const { uid } = userCredential.user;
+            this.sessionStorageService.setEmployeePropsInLocalStorage(uid);
 
-                /* Go to dashboard */
-                this.setSectionEvent.emit(true);
-              })
-              .catch((err: Error) => {
-                this.toastService.showError(err);
-              });
+            /* Go to dashboard */
+            this.setSectionEvent.emit(true);
           }
         })
         .catch((err: Error) => {
