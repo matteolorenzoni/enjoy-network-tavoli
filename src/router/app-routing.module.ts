@@ -10,12 +10,38 @@ import { EventListComponent } from 'src/app/page/administrator/event/event-list/
 import { TableListComponent } from 'src/app/page/administrator/event/table-list/table-list.component';
 import { LoginComponent } from 'src/app/page/login/login.component';
 import { PageNotFoundComponent } from 'src/app/page/page-not-found/page-not-found.component';
+import { EventActiveComponent } from 'src/app/page/pr/event-active/event-active.component';
 import { SettingComponent } from 'src/app/page/setting/setting.component';
 import { StatisticsComponent } from 'src/app/page/statistics/statistics.component';
 import { PrActiveComponent } from '../app/page/administrator/event/pr-active/pr-active.component';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
+  {
+    path: 'dashboard',
+    component: DashboardComponent,
+    children: [
+      {
+        path: 'administrator',
+        children: [
+          { path: 'event', component: EventListComponent },
+          { path: 'employee', component: EmployeeListComponent },
+          { path: 'statistics', component: StatisticsComponent },
+          { path: 'setting', component: SettingComponent },
+          { path: '', redirectTo: 'event', pathMatch: 'full' }
+        ]
+      },
+      {
+        path: 'pr',
+        children: [
+          { path: 'event', component: EventActiveComponent },
+          { path: 'setting', component: SettingComponent },
+          { path: '', redirectTo: 'event', pathMatch: 'full' }
+        ]
+      },
+      { path: '', redirectTo: 'administrator', pathMatch: 'full' }
+    ]
+  },
   {
     path: 'dashboard',
     component: CreateItemComponent,
@@ -33,23 +59,6 @@ const routes: Routes = [
           }
         ]
       }
-    ]
-  },
-  {
-    path: 'dashboard',
-    component: DashboardComponent,
-    children: [
-      {
-        path: 'administrator',
-        children: [
-          { path: 'event', component: EventListComponent },
-          { path: 'employee', component: EmployeeListComponent },
-          { path: 'statistics', component: StatisticsComponent },
-          { path: 'setting', component: SettingComponent },
-          { path: '', redirectTo: 'event', pathMatch: 'full' }
-        ]
-      },
-      { path: '', redirectTo: 'administrator', pathMatch: 'full' }
     ]
   },
   {

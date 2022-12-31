@@ -15,12 +15,20 @@ export class DashboardComponent implements OnInit {
   navigationMenuSettings: BottomNavigation[] = [
     {
       role: RoleType.ADMINISTRATOR,
-      name: 'Amministratore',
+      name: 'administrator',
       icons: [
         { link: '/dashboard/administrator/event', name: 'Eventi', definition: faCalendarDay },
         { link: '/dashboard/administrator/employee', name: 'Dipendenti', definition: faUsers },
         { link: '/dashboard/administrator/statistics', name: 'Statistiche', definition: faChartPie },
         { link: '/dashboard/administrator/setting', name: 'Impostazioni', definition: faGear }
+      ]
+    },
+    {
+      role: RoleType.PR,
+      name: 'pr',
+      icons: [
+        { link: '/dashboard/pr/event', name: 'Eventi', definition: faCalendarDay },
+        { link: '/dashboard/pr/setting', name: 'Impostazioni', definition: faGear }
       ]
     }
   ];
@@ -34,11 +42,14 @@ export class DashboardComponent implements OnInit {
 
   ngOnInit(): void {
     const employeeRole = this.sessionStorageService.getEmployeeRole();
-    if (employeeRole) {
-      this.navigationMenu = this.navigationMenuSettings.find((item) => item.role === employeeRole)?.icons || [];
-    } else {
+
+    if (!employeeRole) {
       this.userService.logout();
     }
+
+    const nav = this.navigationMenuSettings.find((item) => item.role === employeeRole);
+    if (nav) this.navigationMenu = nav.icons;
+    else this.userService.logout();
   }
 
   ngAfterContentChecked() {
