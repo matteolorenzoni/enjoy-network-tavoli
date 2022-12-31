@@ -61,7 +61,7 @@ export class LoginFormComponent implements OnInit {
           this.isLoading = false;
           if (userCredential !== null) {
             const { uid } = userCredential.user;
-            this.sessionStorageService.setEmployeePropsInLocalStorage(uid);
+            this.sessionStorageService.setEmployeePropsInSessionStorage(uid);
 
             /* Go to dashboard */
             this.setSectionEvent.emit(true);

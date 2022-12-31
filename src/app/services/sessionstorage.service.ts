@@ -13,7 +13,7 @@ export class SessionStorageService {
   }
 
   /* ------------------------------------------- SET ------------------------------------------- */
-  public async setEmployeePropsInLocalStorage(employeeUid: string): Promise<void> {
+  public async setEmployeePropsInSessionStorage(employeeUid: string): Promise<void> {
     const employee = await this.firebaseReadService.getEmployeeByUid(employeeUid);
     const { uid, employeeDTO } = employee;
     sessionStorage.setItem('uid', uid);
