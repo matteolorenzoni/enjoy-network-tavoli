@@ -39,6 +39,8 @@ import { EnItemAssignmentComponent } from './components/en-item-assignment.compo
 import { EnItemEventComponent } from './components/en-item-event.component';
 import { EnItemPrActiveComponent } from './components/en-item-pr-active.component';
 import { PrActiveComponent } from './page/administrator/event/pr-active/pr-active.component';
+import { EventActiveComponent } from './page/pr/event-active/event-active.component';
+import { EnItemEventAvaibleComponent } from './components/en-item-event-avaible.component';
 
 @NgModule({
   declarations: [
@@ -68,7 +70,9 @@ import { PrActiveComponent } from './page/administrator/event/pr-active/pr-activ
     EnCountdownComponent,
     EmployeeListComponent,
     EnItemPrActiveComponent,
-    PrActiveComponent
+    PrActiveComponent,
+    EventActiveComponent,
+    EnItemEventAvaibleComponent
   ],
   imports: [
     BrowserModule,
