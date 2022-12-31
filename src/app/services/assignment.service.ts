@@ -36,9 +36,7 @@ export class AssignmentService {
           employeeUid,
           active: true,
           personMarked: 0,
-          personAssigned: 0,
-          createdAt: new Date(),
-          modificatedAt: new Date()
+          personAssigned: 0
         }
       } as Assignment);
     });

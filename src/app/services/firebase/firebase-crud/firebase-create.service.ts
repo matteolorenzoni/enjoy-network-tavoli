@@ -7,7 +7,8 @@ import {
   getFirestore,
   collection,
   writeBatch,
-  doc
+  doc,
+  setDoc
 } from '@angular/fire/firestore';
 import { Table } from 'src/app/models/table';
 import { environment } from 'src/environments/environment';
@@ -40,6 +41,9 @@ export class FirebaseCreateService {
     const batch = writeBatch(this.db);
     const collectionRef = collection(this.db, Table.ASSIGNMENTS);
     assignments.forEach((assignment: Assignment) => {
+      const { assignmentDTO } = assignment;
+      assignmentDTO.createdAt = new Date();
+      assignmentDTO.modificatedAt = new Date();
       const docRef = doc(collectionRef);
       batch.set(docRef, assignment.assignmentDTO);
       if (!environment.production) console.info('Added assignment', assignment.assignmentDTO);
@@ -48,13 +52,13 @@ export class FirebaseCreateService {
   }
 
   /* ------------------------------------------- EMPLOYEE ------------------------------------------- */
-  public async addEmployee(employee: Employee): Promise<DocumentReference<DocumentData>> {
-    const { employeeDTO } = employee;
+  public async addEmployee(employee: Employee): Promise<void> {
+    const { uid, employeeDTO } = employee;
     employeeDTO.createdAt = new Date();
     employeeDTO.modificatedAt = new Date();
     const collectionRef = collection(this.db, Table.EMPLOYEES);
-    const docRef = await addDoc(collectionRef, employeeDTO);
+    const docRef = doc(collectionRef, uid);
+    await setDoc(docRef, employeeDTO);
     if (!environment.production) console.info('Added employee', employeeDTO);
-    return docRef;
   }
 }
