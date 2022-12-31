@@ -58,6 +58,10 @@ const routes: Routes = [
             ]
           }
         ]
+      },
+      {
+        path: 'pr',
+        children: [{ path: 'event/:uid', component: TableListComponent }]
       }
     ]
   },
@@ -67,7 +71,8 @@ const routes: Routes = [
     children: [
       { path: 'event/:uid', component: EventGeneratorComponent },
       { path: 'employee/:uid', component: EmployeeGeneratorComponent },
-      { path: '', redirectTo: 'event/null', pathMatch: 'full' }
+      { path: 'table/:uid', component: SettingComponent },
+      { path: '', component: PageNotFoundComponent }
     ]
   },
   { path: '', redirectTo: 'login', pathMatch: 'full' },
