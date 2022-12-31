@@ -31,6 +31,14 @@ export class EventService {
     return events;
   }
 
+  public async getEventsByAssignments(assignments: Assignment[]): Promise<Event[]> {
+    const assignmentsUids = assignments.map((assignment) => assignment.uid);
+    const employeeUidsConstraint: QueryConstraint = where('employeeUid', 'in', assignmentsUids);
+    const constraints: QueryConstraint[] = [employeeUidsConstraint];
+    const eventsByAssignments = await this.firebaseReadService.getEventsByMultipleConstraints(constraints);
+    return eventsByAssignments;
+  }
+
   /* ------------------------------------------- ADD ------------------------------------------- */
   public async addOrUpdateEvent(photo: File | null, uid: string | null, eventDTO: EventDTO): Promise<void> {
     let { imageUrl } = eventDTO;

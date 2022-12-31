@@ -8,6 +8,10 @@ import { RoleType } from '../models/enum';
 export class SessionStorageService {
   constructor(private firebaseReadService: FirebaseReadService) {}
   /* ------------------------------------------- GET ------------------------------------------- */
+  public getEmployeeUid(): string | null {
+    return sessionStorage.getItem('uid') || null;
+  }
+
   public getEmployeeRole(): RoleType | null {
     return (sessionStorage.getItem('role') as RoleType) || null;
   }

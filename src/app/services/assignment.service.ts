@@ -25,6 +25,13 @@ export class AssignmentService {
     return assignments;
   }
 
+  public async getAssignmentsByEmployeeUid(employeeUid: string): Promise<Assignment[]> {
+    const idConstraint: QueryConstraint = where('employeeUid', '==', employeeUid);
+    const constraints: QueryConstraint[] = [idConstraint];
+    const assignments: Assignment[] = await this.firebaseReadService.getAssignmentsByMultipleConstraints(constraints);
+    return assignments;
+  }
+
   /* ------------------------------------------- ADD ------------------------------------------- */
   public async addAssignment(eventUid: string, employeeUids: string[]): Promise<void> {
     const assignments: Assignment[] = [];
@@ -70,8 +77,8 @@ export class AssignmentService {
     if (!employeeUids || employeeUids.length === 0) return;
 
     const eventUidConstraint: QueryConstraint = where('eventUid', '==', eventUid);
-    const employeeUidsConstraint: QueryConstraint = where('employeeUid', 'in', employeeUids);
-    const constraints: QueryConstraint[] = [eventUidConstraint, employeeUidsConstraint];
+    const employeeUidConstraint: QueryConstraint = where('employeeUid', 'in', employeeUids);
+    const constraints: QueryConstraint[] = [eventUidConstraint, employeeUidConstraint];
     const assignments: Assignment[] = await this.firebaseReadService.getAssignmentsByMultipleConstraints(constraints);
     await this.firebaseDeleteService.deleteAssignments(assignments);
   }

@@ -46,6 +46,18 @@ export class FirebaseReadService {
     return docSnap.data() as Event;
   }
 
+  public async getEventsByMultipleConstraints(constraints: QueryConstraint[]): Promise<Event[]> {
+    const events: Event[] = [];
+    const collectionRef = collection(this.db, Table.EVENTS).withConverter(eventConverter);
+    const q = query(collectionRef, ...constraints);
+    const querySnapshot = await getDocs(q);
+    querySnapshot.forEach((eventDoc) => {
+      events.push(eventDoc.data());
+      if (!environment.production) console.info('Got event', eventDoc.data());
+    });
+    return events;
+  }
+
   /* ------------------------------------------- ASSIGNMENT ------------------------------------------- */
   public async getAssignmentByUid(assignmentUid: string): Promise<Assignment> {
     const collectionRef = collection(this.db, Table.ASSIGNMENTS).withConverter(assignmentConverter);
