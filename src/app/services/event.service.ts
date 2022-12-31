@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { QueryConstraint, where } from '@angular/fire/firestore';
+import { documentId, QueryConstraint, where } from '@angular/fire/firestore';
 import { EventDTO } from '../models/table';
 import { Assignment, Event } from '../models/type';
 import { FirebaseCreateService } from './firebase/firebase-crud/firebase-create.service';
@@ -32,9 +32,9 @@ export class EventService {
   }
 
   public async getEventsByAssignments(assignments: Assignment[]): Promise<Event[]> {
-    const assignmentsUids = assignments.map((assignment) => assignment.uid);
-    const employeeUidsConstraint: QueryConstraint = where('employeeUid', 'in', assignmentsUids);
-    const constraints: QueryConstraint[] = [employeeUidsConstraint];
+    const eventUids = assignments.map((assignment) => assignment.assignmentDTO.eventUid);
+    const eventUidConstraint: QueryConstraint = where(documentId(), 'in', eventUids);
+    const constraints: QueryConstraint[] = [eventUidConstraint];
     const eventsByAssignments = await this.firebaseReadService.getEventsByMultipleConstraints(constraints);
     return eventsByAssignments;
   }
