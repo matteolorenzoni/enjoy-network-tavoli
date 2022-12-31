@@ -16,7 +16,7 @@ import { Event } from 'src/app/models/type';
         </div>
       </div>
       <div class="hidden h-full group-hover:flex">
-        <p class="m-auto text-sm text-black">SELEZIONA</p>
+        <p class="m-auto text-sm tracking-widest text-black">TAVOLI</p>
       </div>
     </li>
   `,
