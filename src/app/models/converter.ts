@@ -4,6 +4,7 @@ import {
   FirestoreDataConverter,
   QueryDocumentSnapshot,
   SnapshotOptions,
+  Timestamp,
   WithFieldValue
 } from '@angular/fire/firestore';
 import { Assignment, Employee, Event } from './type';
@@ -34,8 +35,8 @@ export const employeeConverter: FirestoreDataConverter<Employee> = {
         phone: data.phone,
         zone: data.zone,
         active: data.active,
-        createdAt: new Date((data.createdAt as unknown as number) * 1000),
-        modificatedAt: new Date((data.modificatedAt as unknown as number) * 1000)
+        createdAt: new Date((data.createdAt as unknown as Timestamp).seconds * 1000),
+        modificatedAt: new Date((data.modificatedAt as unknown as Timestamp).seconds * 1000)
       }
     };
     return employee;
@@ -68,7 +69,7 @@ export const eventConverter: FirestoreDataConverter<Event> = {
       eventDTO: {
         imageUrl: data.imageUrl,
         name: data.name,
-        date: new Date((data.date as unknown as number) * 1000),
+        date: new Date((data.date as unknown as Timestamp).seconds * 1000),
         timeStart: data.timeStart,
         timeEnd: data.timeEnd,
         maxPerson: data.maxPerson,
@@ -76,8 +77,8 @@ export const eventConverter: FirestoreDataConverter<Event> = {
         guest: data.guest,
         description: data.description,
         messageText: data.messageText,
-        createdAt: new Date((data.createdAt as unknown as number) * 1000),
-        modificatedAt: new Date((data.modificatedAt as unknown as number) * 1000)
+        createdAt: new Date((data.createdAt as unknown as Timestamp).seconds * 1000),
+        modificatedAt: new Date((data.modificatedAt as unknown as Timestamp).seconds * 1000)
       }
     };
     return event;
@@ -108,8 +109,8 @@ export const assignmentConverter: FirestoreDataConverter<Assignment> = {
         active: data.active,
         personMarked: data.personMarked,
         personAssigned: data.personAssigned,
-        createdAt: new Date((data.createdAt as unknown as number) * 1000),
-        modificatedAt: new Date((data.modificatedAt as unknown as number) * 1000)
+        createdAt: new Date((data.createdAt as unknown as Timestamp).seconds * 1000),
+        modificatedAt: new Date((data.modificatedAt as unknown as Timestamp).seconds * 1000)
       }
     };
     return assignment;
