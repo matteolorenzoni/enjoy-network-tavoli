@@ -11,7 +11,7 @@ import {
   QueryDocumentSnapshot
 } from '@angular/fire/firestore';
 import { assignmentConverter, employeeConverter, eventConverter } from 'src/app/models/converter';
-import { Table } from 'src/app/models/table';
+import { Collection } from 'src/app/models/collection';
 import { Assignment, Employee, Event } from 'src/app/models/type';
 import { environment } from 'src/environments/environment';
 
@@ -29,7 +29,7 @@ export class FirebaseReadService {
   /* ------------------------------------------- EVENT ------------------------------------------- */
   public async getAllEvents(): Promise<Event[]> {
     const events: Event[] = [];
-    const collectionRef = collection(this.db, Table.EVENTS).withConverter(eventConverter);
+    const collectionRef = collection(this.db, Collection.EVENTS).withConverter(eventConverter);
     const querySnapshot = await getDocs(collectionRef);
     querySnapshot.forEach((eventDoc) => {
       events.push(eventDoc.data());
@@ -39,7 +39,7 @@ export class FirebaseReadService {
   }
 
   public async getEventByUid(uid: string): Promise<Event> {
-    const collectionRef = collection(this.db, Table.EVENTS).withConverter(eventConverter);
+    const collectionRef = collection(this.db, Collection.EVENTS).withConverter(eventConverter);
     const docRef = doc(collectionRef, uid);
     const docSnap = await getDoc(docRef);
     if (!environment.production) console.info('Got event', docSnap.data());
@@ -48,7 +48,7 @@ export class FirebaseReadService {
 
   public async getEventsByMultipleConstraints(constraints: QueryConstraint[]): Promise<Event[]> {
     const events: Event[] = [];
-    const collectionRef = collection(this.db, Table.EVENTS).withConverter(eventConverter);
+    const collectionRef = collection(this.db, Collection.EVENTS).withConverter(eventConverter);
     const q = query(collectionRef, ...constraints);
     const querySnapshot = await getDocs(q);
     querySnapshot.forEach((eventDoc) => {
@@ -60,7 +60,7 @@ export class FirebaseReadService {
 
   /* ------------------------------------------- ASSIGNMENT ------------------------------------------- */
   public async getAssignmentByUid(assignmentUid: string): Promise<Assignment> {
-    const collectionRef = collection(this.db, Table.ASSIGNMENTS).withConverter(assignmentConverter);
+    const collectionRef = collection(this.db, Collection.ASSIGNMENTS).withConverter(assignmentConverter);
     const docRef = doc(collectionRef, assignmentUid);
     const docSnap = await getDoc(docRef);
     if (!environment.production) console.info('Got assignment', docSnap.data());
@@ -69,7 +69,7 @@ export class FirebaseReadService {
 
   public async getAssignmentsByMultipleConstraints(constraints: QueryConstraint[]): Promise<Assignment[]> {
     const assignments: Assignment[] = [];
-    const collectionRef = collection(this.db, Table.ASSIGNMENTS).withConverter(assignmentConverter);
+    const collectionRef = collection(this.db, Collection.ASSIGNMENTS).withConverter(assignmentConverter);
     const q = query(collectionRef, ...constraints);
     const querySnapshot = await getDocs(q);
     querySnapshot.forEach((item: QueryDocumentSnapshot<Assignment>) => {
@@ -82,7 +82,7 @@ export class FirebaseReadService {
   /* ------------------------------------------- EMPLOYEE ------------------------------------------- */
   public async getAllEmployees(): Promise<Employee[]> {
     const employees: Employee[] = [];
-    const collectionRef = collection(this.db, Table.EMPLOYEES).withConverter(employeeConverter);
+    const collectionRef = collection(this.db, Collection.EMPLOYEES).withConverter(employeeConverter);
     const querySnapshot = await getDocs(collectionRef);
     querySnapshot.forEach((item: QueryDocumentSnapshot<Employee>) => {
       employees.push(item.data());
@@ -92,7 +92,8 @@ export class FirebaseReadService {
   }
 
   public async getEmployeeByUid(uid: string): Promise<Employee> {
-    const docRef = doc(this.db, Table.EMPLOYEES, uid).withConverter(employeeConverter);
+    const collectionRef = collection(this.db, Collection.EMPLOYEES).withConverter(employeeConverter);
+    const docRef = doc(collectionRef, uid);
     const docSnap = await getDoc(docRef);
     if (!environment.production) console.info('Got employee', docSnap.data());
     return docSnap.data() as Employee;
@@ -100,7 +101,7 @@ export class FirebaseReadService {
 
   public async getEmployeesByMultipleConstraints(constraints: QueryConstraint[]): Promise<Employee[]> {
     const employees: Employee[] = [];
-    const collectionRef = collection(this.db, Table.EMPLOYEES).withConverter(employeeConverter);
+    const collectionRef = collection(this.db, Collection.EMPLOYEES).withConverter(employeeConverter);
     const q = query(collectionRef, ...constraints);
     const querySnapshot = await getDocs(q);
     querySnapshot.forEach((item: QueryDocumentSnapshot<Employee>) => {

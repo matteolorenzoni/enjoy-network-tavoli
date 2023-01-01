@@ -9,7 +9,7 @@ import {
   uploadBytesResumable,
   UploadTaskSnapshot
 } from '@angular/fire/storage';
-import { EventDTO, Table } from 'src/app/models/collection';
+import { EventDTO, Collection } from 'src/app/models/collection';
 import { environment } from 'src/environments/environment';
 
 @Injectable({
@@ -30,7 +30,7 @@ export class FirebaseStorageService {
     const eventDate = this.datePipe.transform(newEvent.date, 'dd_MM_yyyy');
     const imageType = photo.type.split('/')[1] || 'jpg';
     const photoNameFormatted = `${eventName}_${eventDate}.${imageType}`;
-    const storageRef = ref(this.storage, `${Table.EVENTS}/${photoNameFormatted}`);
+    const storageRef = ref(this.storage, `${Collection.EVENTS}/${photoNameFormatted}`);
 
     /* Upload */
     const snapshot: UploadTaskSnapshot = await uploadBytesResumable(storageRef, photo);
@@ -44,7 +44,7 @@ export class FirebaseStorageService {
   }
 
   public async deletePhoto(imageUrl: string): Promise<void> {
-    const storageRef = ref(this.storage, `${Table.EVENTS}/${imageUrl}`);
+    const storageRef = ref(this.storage, `${Collection.EVENTS}/${imageUrl}`);
     await deleteObject(storageRef);
     if (!environment.production) console.info('Foto eliminata:', imageUrl);
   }

@@ -10,7 +10,7 @@ import {
   doc,
   setDoc
 } from '@angular/fire/firestore';
-import { Table } from 'src/app/models/collection';
+import { Collection } from 'src/app/models/collection';
 import { environment } from 'src/environments/environment';
 import { Assignment, Employee, Event } from 'src/app/models/type';
 
@@ -30,7 +30,7 @@ export class FirebaseCreateService {
     const { eventDTO } = event;
     eventDTO.createdAt = new Date();
     eventDTO.modificatedAt = new Date();
-    const collectionRef = collection(this.db, Table.EVENTS);
+    const collectionRef = collection(this.db, Collection.EVENTS);
     const docRef = await addDoc(collectionRef, eventDTO);
     if (!environment.production) console.info('Added event', eventDTO);
     return docRef;
@@ -39,7 +39,7 @@ export class FirebaseCreateService {
   /* ------------------------------------------- ASSIGNEMNET ------------------------------------------- */
   public async addAssignments(assignments: Assignment[]): Promise<void> {
     const batch = writeBatch(this.db);
-    const collectionRef = collection(this.db, Table.ASSIGNMENTS);
+    const collectionRef = collection(this.db, Collection.ASSIGNMENTS);
     assignments.forEach((assignment: Assignment) => {
       const { assignmentDTO } = assignment;
       assignmentDTO.createdAt = new Date();
@@ -56,7 +56,7 @@ export class FirebaseCreateService {
     const { uid, employeeDTO } = employee;
     employeeDTO.createdAt = new Date();
     employeeDTO.modificatedAt = new Date();
-    const collectionRef = collection(this.db, Table.EMPLOYEES);
+    const collectionRef = collection(this.db, Collection.EMPLOYEES);
     const docRef = doc(collectionRef, uid);
     await setDoc(docRef, employeeDTO);
     if (!environment.production) console.info('Added employee', employeeDTO);

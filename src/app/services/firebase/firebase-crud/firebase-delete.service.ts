@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Firestore, doc, deleteDoc, getFirestore, collection, writeBatch } from '@angular/fire/firestore';
-import { Table } from 'src/app/models/collection';
+import { Collection } from 'src/app/models/collection';
 import { environment } from 'src/environments/environment';
 import { Assignment } from '../../../models/type';
 
@@ -17,7 +17,7 @@ export class FirebaseDeleteService {
 
   /* ------------------------------------------- EVENT ------------------------------------------- */
   public async deleteEventByUid(eventUid: string): Promise<void> {
-    const collectionRef = collection(this.db, Table.EVENTS);
+    const collectionRef = collection(this.db, Collection.EVENTS);
     const docRef = doc(collectionRef, eventUid);
     await deleteDoc(docRef);
     if (!environment.production) console.info('Evento eliminato:', eventUid);
@@ -26,7 +26,7 @@ export class FirebaseDeleteService {
   /* ------------------------------------------- ASSIGNMENT ------------------------------------------- */
   public async deleteAssignments(assignments: Assignment[]): Promise<void> {
     const batch = writeBatch(this.db);
-    const collectionRef = collection(this.db, Table.ASSIGNMENTS);
+    const collectionRef = collection(this.db, Collection.ASSIGNMENTS);
     assignments.forEach((assignment: Assignment) => {
       const docRef = doc(collectionRef, assignment.uid);
       batch.delete(docRef);
@@ -37,7 +37,7 @@ export class FirebaseDeleteService {
 
   /* ------------------------------------------- EMPLOYEE ------------------------------------------- */
   public async deleteEmployeeByUid(employeeUid: string): Promise<void> {
-    const collectionRef = collection(this.db, Table.EMPLOYEES);
+    const collectionRef = collection(this.db, Collection.EMPLOYEES);
     const docRef = doc(collectionRef, employeeUid);
     await deleteDoc(docRef);
     if (!environment.production) console.info('Employee eliminato:', employeeUid);

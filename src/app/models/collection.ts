@@ -1,10 +1,10 @@
 import { RoleType } from './enum';
 
-export enum Table {
+export enum Collection {
   EMPLOYEES = 'employees',
   EVENTS = 'events',
   ASSIGNMENTS = 'assignments',
-  TABLE = 'tables'
+  TABLES = 'tables'
 }
 
 export type EventDTO = {
