@@ -45,7 +45,9 @@ export type AssignmentDTO = {
 
 export type TableDTO = {
   eventUid: string;
+  employeeUid: string;
   name: string;
+  price: number;
   hour: Date;
   drink: string;
   createdAt?: Date;
