@@ -1,4 +1,4 @@
-import { AssignmentDTO, EmployeeDTO, EventDTO } from 'src/app/models/collection';
+import { AssignmentDTO, EmployeeDTO, EventDTO, TableDTO } from 'src/app/models/collection';
 import {
   DocumentData,
   FirestoreDataConverter,
@@ -7,7 +7,7 @@ import {
   Timestamp,
   WithFieldValue
 } from '@angular/fire/firestore';
-import { Assignment, Employee, Event } from './type';
+import { Assignment, Employee, Event, Table } from './type';
 
 export const employeeConverter: FirestoreDataConverter<Employee> = {
   toFirestore(employee: Employee): WithFieldValue<DocumentData> {
@@ -114,5 +114,39 @@ export const assignmentConverter: FirestoreDataConverter<Assignment> = {
       }
     };
     return assignment;
+  }
+};
+
+export const tableConverter: FirestoreDataConverter<Table> = {
+  toFirestore(table: Table): WithFieldValue<DocumentData> {
+    const { tableDTO } = table;
+    const data: TableDTO = {
+      eventUid: tableDTO.eventUid,
+      employeeUid: tableDTO.employeeUid,
+      name: tableDTO.name,
+      price: tableDTO.price,
+      hour: tableDTO.hour,
+      drink: tableDTO.drink,
+      createdAt: tableDTO.createdAt ? tableDTO.createdAt : new Date(),
+      modificatedAt: new Date()
+    };
+    return data;
+  },
+  fromFirestore(snapshot: QueryDocumentSnapshot, options: SnapshotOptions): Table {
+    const data: TableDTO = snapshot.data(options) as TableDTO;
+    const table: Table = {
+      uid: snapshot.id,
+      tableDTO: {
+        eventUid: data.eventUid,
+        employeeUid: data.employeeUid,
+        name: data.name,
+        price: data.price,
+        hour: data.hour,
+        drink: data.drink,
+        createdAt: new Date((data.createdAt as unknown as Timestamp).seconds * 1000),
+        modificatedAt: new Date((data.modificatedAt as unknown as Timestamp).seconds * 1000)
+      }
+    };
+    return table;
   }
 };
