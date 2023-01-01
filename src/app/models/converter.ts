@@ -1,4 +1,4 @@
-import { AssignmentDTO, EmployeeDTO, EventDTO } from 'src/app/models/table';
+import { AssignmentDTO, EmployeeDTO, EventDTO } from 'src/app/models/collection';
 import {
   DocumentData,
   FirestoreDataConverter,

@@ -10,7 +10,7 @@ import {
   doc,
   setDoc
 } from '@angular/fire/firestore';
-import { Table } from 'src/app/models/table';
+import { Table } from 'src/app/models/collection';
 import { environment } from 'src/environments/environment';
 import { Assignment, Employee, Event } from 'src/app/models/type';
 

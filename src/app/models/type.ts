@@ -1,6 +1,6 @@
 import { IconDefinition } from '@fortawesome/fontawesome-common-types';
 import { RoleType, ToastType } from './enum';
-import { AssignmentDTO, EmployeeDTO, EventDTO, TableDTO } from './table';
+import { AssignmentDTO, EmployeeDTO, EventDTO, TableDTO } from './collection';
 
 export type UserBaseInfo = {
   displayName: string | null;

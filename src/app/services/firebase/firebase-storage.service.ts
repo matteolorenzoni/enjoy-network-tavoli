@@ -9,7 +9,7 @@ import {
   uploadBytesResumable,
   UploadTaskSnapshot
 } from '@angular/fire/storage';
-import { EventDTO, Table } from 'src/app/models/table';
+import { EventDTO, Table } from 'src/app/models/collection';
 import { environment } from 'src/environments/environment';
 
 @Injectable({

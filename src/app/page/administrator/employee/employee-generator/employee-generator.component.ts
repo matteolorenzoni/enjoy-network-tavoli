@@ -5,7 +5,7 @@ import { RoleType } from 'src/app/models/enum';
 import { EmployeeService } from 'src/app/services/employee.service';
 import { ToastService } from 'src/app/services/toast.service';
 import { Location } from '@angular/common';
-import { EmployeeDTO } from 'src/app/models/table';
+import { EmployeeDTO } from 'src/app/models/collection';
 import { Employee } from 'src/app/models/type';
 
 @Component({

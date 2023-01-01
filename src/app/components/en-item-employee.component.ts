@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, Output, SimpleChanges } from '@angular/core';
 import { faCircleCheck, faCircleXmark, faPen, faTrash } from '@fortawesome/free-solid-svg-icons';
-import { EmployeeDTO } from '../models/table';
+import { EmployeeDTO } from '../models/collection';
 import { Employee } from '../models/type';
 import { EmployeeService } from '../services/employee.service';
 import { ToastService } from '../services/toast.service';

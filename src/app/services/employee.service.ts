@@ -2,7 +2,7 @@ import { UserCredential } from '@angular/fire/auth';
 import { Injectable } from '@angular/core';
 import { documentId, QueryConstraint, where } from 'firebase/firestore';
 import { UserService } from './user.service';
-import { AssignmentDTO, EmployeeDTO } from '../models/table';
+import { AssignmentDTO, EmployeeDTO } from '../models/collection';
 import { Assignment, Employee } from '../models/type';
 import { FirebaseCreateService } from './firebase/firebase-crud/firebase-create.service';
 import { FirebaseDeleteService } from './firebase/firebase-crud/firebase-delete.service';

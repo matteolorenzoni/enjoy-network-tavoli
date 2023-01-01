@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { documentId, QueryConstraint, where } from '@angular/fire/firestore';
-import { EventDTO } from '../models/table';
+import { EventDTO } from '../models/collection';
 import { Assignment, Event } from '../models/type';
 import { FirebaseCreateService } from './firebase/firebase-crud/firebase-create.service';
 import { FirebaseUpdateService } from './firebase/firebase-crud/firebase-update.service';

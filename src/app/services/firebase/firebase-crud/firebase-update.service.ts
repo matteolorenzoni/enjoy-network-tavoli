@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Firestore, doc, updateDoc, getFirestore, collection } from '@angular/fire/firestore';
-import { AssignmentDTO, Table } from 'src/app/models/table';
+import { AssignmentDTO, Table } from 'src/app/models/collection';
 import { Employee, Event } from 'src/app/models/type';
 import { environment } from 'src/environments/environment';
 import { Assignment } from '../../../models/type';
