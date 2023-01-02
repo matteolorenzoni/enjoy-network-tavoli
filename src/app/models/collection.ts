@@ -50,8 +50,8 @@ export type TableDTO = {
   price: number;
   hour: Date;
   drink: string;
-  personMarked: number;
-  personAssigned: number;
+  personMarked?: number;
+  personAssigned?: number;
   createdAt?: Date;
   modificatedAt?: Date;
 };
