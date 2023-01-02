@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { faUserPlus, faPen, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { Table } from '../models/type';
 
@@ -49,10 +49,10 @@ export class EnItemTableComponent {
   updateIcon = faPen;
   deleteIcon = faTrash;
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, private route: ActivatedRoute) {}
 
   goToClient(): void {
-    console.log('goToClient');
+    this.router.navigate(['./table'], { relativeTo: this.route });
   }
 
   updateTable(): void {
