@@ -4,7 +4,9 @@ export enum Collection {
   EMPLOYEES = 'employees',
   EVENTS = 'events',
   ASSIGNMENTS = 'assignments',
-  TABLES = 'tables'
+  TABLES = 'tables',
+  PARTICIPATIONS = 'participations',
+  CLIENTS = 'clients'
 }
 
 export type EventDTO = {
@@ -56,14 +58,20 @@ export type TableDTO = {
   modificatedAt?: Date;
 };
 
-export type ClientDTO = {
+export type ParticipationDTO = {
   tableUid: string;
-  name: string;
-  lastName: string;
-  phone: string;
+  clientUid: string;
   valid: boolean;
   payed: boolean;
   scanned: boolean;
+  createdAt?: Date;
+  modificatedAt?: Date;
+};
+
+export type ClientDTO = {
+  name: string;
+  lastName: string;
+  phone: string;
   createdAt?: Date;
   modificatedAt?: Date;
 };
