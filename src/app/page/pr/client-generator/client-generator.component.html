@@ -1,1 +1,66 @@
-<p>client-generator works!</p>
+<form class="flex flex-col gap-12 xs:gap-16" [formGroup]="clientForm" (ngSubmit)="onSubmit()">
+  <div class="group relative z-0 w-full">
+    <input
+      type="text"
+      name="name_input"
+      id="name_input"
+      class="peer block w-full appearance-none bg-transparent py-2.5 px-0 text-base text-primary-100 focus:text-primary-60 focus:outline-none focus:ring-0"
+      formControlName="name"
+      autocomplete="off"
+      placeholder=" "
+      required />
+    <label
+      for="name_input"
+      class="absolute top-3 -z-10 origin-[0] -translate-y-6 scale-75 transform text-base text-primary-100 duration-300 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100 peer-focus:left-0 peer-focus:-translate-y-6 peer-focus:scale-75 peer-focus:font-medium peer-focus:text-primary-60">
+      Nome
+    </label>
+    <hr class="border-primary-100 peer-focus:border-primary-60" />
+  </div>
+
+  <div class="group relative z-0 w-full">
+    <input
+      type="text"
+      name="last_name_input"
+      id="last_name_input"
+      class="peer block w-full appearance-none bg-transparent py-2.5 px-0 text-base text-primary-100 focus:text-primary-60 focus:outline-none focus:ring-0"
+      formControlName="lastName"
+      autocomplete="off"
+      placeholder=" "
+      required />
+    <label
+      for="last_name_input"
+      class="absolute top-3 -z-10 origin-[0] -translate-y-6 scale-75 transform text-base text-primary-100 duration-300 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100 peer-focus:left-0 peer-focus:-translate-y-6 peer-focus:scale-75 peer-focus:font-medium peer-focus:text-primary-60">
+      Cognome
+    </label>
+    <hr class="border-primary-100 peer-focus:border-primary-60" />
+  </div>
+
+  <div class="group relative z-0 w-full">
+    <input
+      type="tel"
+      pattern="[0-9]{10}"
+      name="tel_input"
+      id="tel_input"
+      class="peer block w-full appearance-none py-2.5 px-0 text-base text-primary-100 focus:text-primary-60 focus:outline-none focus:ring-0 enabled:bg-transparent disabled:cursor-not-allowed"
+      formControlName="phone"
+      autocomplete="off"
+      placeholder=" "
+      required />
+    <label
+      for="tel_input"
+      class="absolute top-3 -z-10 origin-[0] -translate-y-6 scale-75 transform text-base text-primary-100 duration-300 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100 peer-focus:left-0 peer-focus:-translate-y-6 peer-focus:scale-75 peer-focus:font-medium peer-focus:text-primary-60">
+      Numero di telefono
+    </label>
+    <hr class="border-primary-100 peer-focus:border-primary-60" />
+  </div>
+
+  <div class="mx-auto w-52">
+    <en-button
+      buttonName="login-button"
+      [buttonText]="lblButton"
+      buttonType="submit"
+      [buttonIsDisabled]="!clientForm.valid"
+      palette="primary"
+      [isLoading]="isLoading"></en-button>
+  </div>
+</form>
