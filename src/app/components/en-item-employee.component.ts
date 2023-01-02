@@ -6,7 +6,7 @@ import { EmployeeService } from '../services/employee.service';
 import { ToastService } from '../services/toast.service';
 
 @Component({
-  selector: 'app-en-item-employee[employee]',
+  selector: 'en-item-employee[employee]',
   template: `
     <li class="flex h-14 items-center gap-2">
       <ng-container *ngIf="employeeDTO.active; else elseTemplate">
