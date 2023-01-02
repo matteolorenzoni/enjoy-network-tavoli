@@ -87,7 +87,7 @@ export class ClientGeneratorComponent implements OnInit {
 
     /* Add or update the table */
     this.clientService
-      .addOrUpdateClient(uidFormatted, newClient)
+      .addOrUpdateClient(uidFormatted, newClient, this.tableUid)
       .then(() => {
         this.clientForm.reset();
         this.location.back();

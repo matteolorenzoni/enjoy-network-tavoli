@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
+import { DocumentData, DocumentReference } from '@angular/fire/firestore';
 import { ClientDTO } from '../models/collection';
-import { Client } from '../models/type';
+import { Client, Participation } from '../models/type';
 import { FirebaseCreateService } from './firebase/firebase-crud/firebase-create.service';
 import { FirebaseDeleteService } from './firebase/firebase-crud/firebase-delete.service';
 import { FirebaseReadService } from './firebase/firebase-crud/firebase-read.service';
@@ -29,11 +30,25 @@ export class ClientService {
   }
 
   /* ------------------------------------------- CREATE ------------------------------------------- */
-  public async addOrUpdateClient(uid: string | null, clientDTO: ClientDTO): Promise<void> {
+  public async addOrUpdateClient(uid: string | null, clientDTO: ClientDTO, tableUid: string): Promise<void> {
     if (!uid) {
-      /* Add new table */
+      /* Add new client */
       const client: Client = { uid: '', clientDTO };
-      await this.firebaseCreateService.addClient(client);
+      const docRef: DocumentReference<DocumentData> = await this.firebaseCreateService.addClient(client);
+      const clientUid: string = docRef.id;
+
+      /* Add new participation */
+      const participation: Participation = {
+        uid: '',
+        participationDTO: {
+          tableUid,
+          clientUid,
+          active: true,
+          payed: false,
+          scanned: false
+        }
+      };
+      await this.firebaseCreateService.addParticipation(participation);
     } else {
       /* Update document */
       const client: Client = { uid, clientDTO };
