@@ -42,6 +42,7 @@ import { PrActiveComponent } from './page/administrator/event/pr-active/pr-activ
 import { EventActiveComponent } from './page/pr/event-active/event-active.component';
 import { EnItemEventAvaibleComponent } from './components/en-item-event-avaible.component';
 import { TableGeneratorComponent } from './page/pr/table-generator/table-generator.component';
+import { EnItemTableComponent } from './components/en-item-table.component';
 
 @NgModule({
   declarations: [
@@ -74,7 +75,8 @@ import { TableGeneratorComponent } from './page/pr/table-generator/table-generat
     PrActiveComponent,
     EventActiveComponent,
     EnItemEventAvaibleComponent,
-    TableGeneratorComponent
+    TableGeneratorComponent,
+    EnItemTableComponent
   ],
   imports: [
     BrowserModule,
