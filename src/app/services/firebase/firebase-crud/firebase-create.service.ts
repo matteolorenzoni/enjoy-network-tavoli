@@ -13,6 +13,7 @@ import {
 import { Collection } from 'src/app/models/collection';
 import { environment } from 'src/environments/environment';
 import { Assignment, Client, Employee, Event, Table } from 'src/app/models/type';
+import { Participation } from '../../../models/type';
 
 @Injectable({
   providedIn: 'root'
@@ -72,6 +73,17 @@ export class FirebaseCreateService {
     const collectionRef = collection(this.db, Collection.TABLES);
     const docRef = await addDoc(collectionRef, tableDTO);
     if (!environment.production) console.info('Added table', tableDTO);
+    return docRef;
+  }
+
+  /* ------------------------------------------- PARTICIPATION ------------------------------------------- */
+  public async addParticipation(participation: Participation): Promise<DocumentReference<DocumentData>> {
+    const { participationDTO } = participation;
+    participationDTO.createdAt = new Date();
+    participationDTO.modificatedAt = new Date();
+    const collectionRef = collection(this.db, Collection.PARTICIPATIONS);
+    const docRef = await addDoc(collectionRef, participationDTO);
+    if (!environment.production) console.info('Added partecipation', participationDTO);
     return docRef;
   }
 
