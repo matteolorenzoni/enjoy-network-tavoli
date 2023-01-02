@@ -2,15 +2,15 @@ import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { faFilter, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { fadeInAnimation, staggeredFadeInIncrement } from 'src/app/animations/animations';
-import { Client } from 'src/app/models/type';
+import { PartecipationAndClient } from '../../../models/type';
 
 @Component({
-  selector: 'app-client-list',
-  templateUrl: './client-list.component.html',
-  styleUrls: ['./client-list.component.scss'],
+  selector: 'app-participation-list',
+  templateUrl: './participation-list.component.html',
+  styleUrls: ['./participation-list.component.scss'],
   animations: [staggeredFadeInIncrement, fadeInAnimation]
 })
-export class ClientListComponent implements OnInit {
+export class ParticipationListComponent implements OnInit {
   /* Icons */
   filterIcon = faFilter;
   plusIcon = faPlus;
@@ -19,7 +19,7 @@ export class ClientListComponent implements OnInit {
   tableUid: string | null = null;
 
   /* Client */
-  clients: Client[] = [];
+  partitipationsAndClientArray: PartecipationAndClient[] = [];
 
   constructor(private router: Router, private route: ActivatedRoute) {}
 

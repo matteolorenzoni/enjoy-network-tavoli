@@ -14,8 +14,8 @@ import { EventActiveComponent } from 'src/app/page/pr/event-active/event-active.
 import { TableGeneratorComponent } from 'src/app/page/pr/table-generator/table-generator.component';
 import { SettingComponent } from 'src/app/page/setting/setting.component';
 import { StatisticsComponent } from 'src/app/page/statistics/statistics.component';
+import { ParticipationListComponent } from 'src/app/page/pr/participation-list/participation-list.component';
 import { ClientGeneratorComponent } from '../app/page/pr/client-generator/client-generator.component';
-import { ClientListComponent } from '../app/page/pr/client-list/client-list.component';
 import { PrActiveComponent } from '../app/page/administrator/event/pr-active/pr-active.component';
 
 const routes: Routes = [
@@ -65,7 +65,7 @@ const routes: Routes = [
       {
         path: 'pr',
         children: [
-          { path: 'event/:eventUid/table/:tableUid', component: ClientListComponent },
+          { path: 'event/:eventUid/table/:tableUid', component: ParticipationListComponent },
           { path: 'event/:uid', component: TableListComponent }
         ]
       }

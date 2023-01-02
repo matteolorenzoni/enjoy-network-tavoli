@@ -59,3 +59,5 @@ export type Client = {
 };
 
 export type AssignmentAndEmployee = Assignment & Pick<EmployeeDTO, 'name' | 'lastName' | 'zone'>;
+
+export type PartecipationAndClient = Participation & Pick<ClientDTO, 'name' | 'lastName' | 'phone'>;
