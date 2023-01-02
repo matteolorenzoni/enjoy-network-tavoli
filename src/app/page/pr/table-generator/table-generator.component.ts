@@ -56,13 +56,13 @@ export class TableGeneratorComponent implements OnInit {
 
     if (this.tableUid !== 'null') {
       this.tableService
-        .getTable(this.eventUid)
+        .getTable(this.tableUid)
         .then((table) => {
           const { tableDTO } = table;
           this.eventForm.patchValue({
             name: tableDTO.name,
             price: tableDTO.price,
-            hour: tableDTO.hour,
+            hour: tableDTO.hour.toISOString().slice(0, 16),
             drink: tableDTO.drink
           });
           this.lblButton = 'Modifica tavolo';
