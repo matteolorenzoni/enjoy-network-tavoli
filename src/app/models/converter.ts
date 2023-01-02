@@ -58,7 +58,7 @@ export const eventConverter: FirestoreDataConverter<Event> = {
       description: eventDTO.description,
       messageText: eventDTO.messageText,
       createdAt: eventDTO.createdAt ? eventDTO.createdAt : new Date(),
-      modificatedAt: new Date()
+      modificatedAt: eventDTO.modificatedAt ? eventDTO.modificatedAt : new Date()
     };
     return data;
   },
@@ -95,7 +95,7 @@ export const assignmentConverter: FirestoreDataConverter<Assignment> = {
       personMarked: assignmentDTO.personMarked,
       personAssigned: assignmentDTO.personAssigned,
       createdAt: assignmentDTO.createdAt ? assignmentDTO.createdAt : new Date(),
-      modificatedAt: new Date()
+      modificatedAt: assignmentDTO.modificatedAt ? assignmentDTO.modificatedAt : new Date()
     };
     return data;
   },
@@ -127,10 +127,10 @@ export const tableConverter: FirestoreDataConverter<Table> = {
       price: tableDTO.price,
       hour: tableDTO.hour,
       drink: tableDTO.drink,
-      personMarked: tableDTO.personMarked,
-      personAssigned: tableDTO.personAssigned,
+      personMarked: tableDTO.personMarked ? tableDTO.personMarked : 0,
+      personAssigned: tableDTO.personAssigned ? tableDTO.personAssigned : 0,
       createdAt: tableDTO.createdAt ? tableDTO.createdAt : new Date(),
-      modificatedAt: new Date()
+      modificatedAt: tableDTO.modificatedAt ? tableDTO.modificatedAt : new Date()
     };
     return data;
   },
@@ -143,7 +143,7 @@ export const tableConverter: FirestoreDataConverter<Table> = {
         employeeUid: data.employeeUid,
         name: data.name,
         price: data.price,
-        hour: data.hour,
+        hour: new Date((data.hour as unknown as Timestamp).seconds * 1000),
         drink: data.drink,
         personMarked: data.personMarked,
         personAssigned: data.personAssigned,
