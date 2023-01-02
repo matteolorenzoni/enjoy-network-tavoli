@@ -58,6 +58,10 @@ export type Client = {
   clientDTO: ClientDTO;
 };
 
+// TODO: da modificare
 export type AssignmentAndEmployee = Assignment & Pick<EmployeeDTO, 'name' | 'lastName' | 'zone'>;
 
-export type PartecipationAndClient = Participation & Pick<ClientDTO, 'name' | 'lastName' | 'phone'>;
+export type PartecipationAndClient = {
+  participation: Participation;
+  client: Client;
+};
