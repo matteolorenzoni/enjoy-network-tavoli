@@ -37,7 +37,6 @@ export class EnCountdownComponent implements OnChanges {
   @Input() date!: Date | null;
 
   /* Values */
-  currentDay = new Date();
   days = 0;
   hours = 0;
   minutes = 0;
@@ -48,7 +47,7 @@ export class EnCountdownComponent implements OnChanges {
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['date']) {
       const currentValue = changes['date'].currentValue as Date;
-      const diff = currentValue.getTime() - this.currentDay.getTime();
+      const diff = new Date(currentValue).getTime() - new Date().getTime();
       const days = diff / (1000 * 60 * 60 * 24);
       const hours = diff / (1000 * 60 * 60);
       const minutes = diff / (1000 * 60);
