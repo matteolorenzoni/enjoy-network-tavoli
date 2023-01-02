@@ -11,9 +11,15 @@ import {
   QueryDocumentSnapshot
 } from '@angular/fire/firestore';
 import { Read } from 'src/app/interface/read';
-import { assignmentConverter, employeeConverter, eventConverter, tableConverter } from 'src/app/models/converter';
+import {
+  assignmentConverter,
+  clientConverter,
+  employeeConverter,
+  eventConverter,
+  tableConverter
+} from 'src/app/models/converter';
 import { Collection } from 'src/app/models/collection';
-import { Assignment, Employee, Event, Table } from 'src/app/models/type';
+import { Assignment, Client, Employee, Event, Table } from 'src/app/models/type';
 import { environment } from 'src/environments/environment';
 
 @Injectable({
@@ -131,5 +137,25 @@ export class FirebaseReadService implements Read {
       if (!environment.production) console.info('Got table', item.data());
     });
     return tables;
+  }
+
+  /* ------------------------------------------- CLIENT ------------------------------------------- */
+  public async getAllClients(): Promise<Client[]> {
+    const clients: Client[] = [];
+    const collectionRef = collection(this.db, Collection.CLIENTS).withConverter(clientConverter);
+    const querySnapshot = await getDocs(collectionRef);
+    querySnapshot.forEach((item: QueryDocumentSnapshot<Client>) => {
+      clients.push(item.data());
+      if (!environment.production) console.info('Got client', item.data());
+    });
+    return clients;
+  }
+
+  public async getClientByUid(clientUid: string): Promise<Client> {
+    const collectionRef = collection(this.db, Collection.CLIENTS).withConverter(clientConverter);
+    const docRef = doc(collectionRef, clientUid);
+    const docSnap = await getDoc(docRef);
+    if (!environment.production) console.info('Got client', docSnap.data());
+    return docSnap.data() as Client;
   }
 }

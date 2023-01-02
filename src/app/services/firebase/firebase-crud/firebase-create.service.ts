@@ -12,7 +12,7 @@ import {
 } from '@angular/fire/firestore';
 import { Collection } from 'src/app/models/collection';
 import { environment } from 'src/environments/environment';
-import { Assignment, Employee, Event, Table } from 'src/app/models/type';
+import { Assignment, Client, Employee, Event, Table } from 'src/app/models/type';
 
 @Injectable({
   providedIn: 'root'
@@ -72,6 +72,17 @@ export class FirebaseCreateService {
     const collectionRef = collection(this.db, Collection.TABLES);
     const docRef = await addDoc(collectionRef, tableDTO);
     if (!environment.production) console.info('Added table', tableDTO);
+    return docRef;
+  }
+
+  /* ------------------------------------------- CLIENT ------------------------------------------- */
+  public async addClient(client: Client): Promise<DocumentReference<DocumentData>> {
+    const { clientDTO } = client;
+    clientDTO.createdAt = new Date();
+    clientDTO.modificatedAt = new Date();
+    const collectionRef = collection(this.db, Collection.CLIENTS);
+    const docRef = await addDoc(collectionRef, clientDTO);
+    if (!environment.production) console.info('Added client', clientDTO);
     return docRef;
   }
 }

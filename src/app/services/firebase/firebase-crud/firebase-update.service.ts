@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Firestore, doc, updateDoc, getFirestore, collection } from '@angular/fire/firestore';
 import { AssignmentDTO, Collection } from 'src/app/models/collection';
-import { Employee, Event, Table } from 'src/app/models/type';
+import { Client, Employee, Event, Table } from 'src/app/models/type';
 import { environment } from 'src/environments/environment';
 import { Assignment } from '../../../models/type';
 
@@ -56,5 +56,15 @@ export class FirebaseUpdateService {
     const docRef = doc(collectionRef, uid);
     await updateDoc(docRef, tableDTO);
     if (!environment.production) console.info('Updated table', table);
+  }
+
+  /* ------------------------------------------- CLIENT  ------------------------------------------- */
+  public async updateClient(client: Client): Promise<void> {
+    const { uid, clientDTO } = client;
+    clientDTO.modificatedAt = new Date();
+    const collectionRef = collection(this.db, Collection.CLIENTS);
+    const docRef = doc(collectionRef, uid);
+    await updateDoc(docRef, clientDTO);
+    if (!environment.production) console.info('Updated client', client);
   }
 }

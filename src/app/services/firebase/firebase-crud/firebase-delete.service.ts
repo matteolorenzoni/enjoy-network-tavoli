@@ -50,4 +50,12 @@ export class FirebaseDeleteService {
     await deleteDoc(docRef);
     if (!environment.production) console.info('Tavolo eliminato:', tableUid);
   }
+
+  /* ------------------------------------------- CLIENT ------------------------------------------- */
+  public async deleteClientByUid(clientUid: string): Promise<void> {
+    const collectionRef = collection(this.db, Collection.CLIENTS);
+    const docRef = doc(collectionRef, clientUid);
+    await deleteDoc(docRef);
+    if (!environment.production) console.info('Cliente eliminato:', clientUid);
+  }
 }
