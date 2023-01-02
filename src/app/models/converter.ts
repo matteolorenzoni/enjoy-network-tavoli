@@ -1,4 +1,4 @@
-import { AssignmentDTO, ClientDTO, EmployeeDTO, EventDTO, TableDTO } from 'src/app/models/collection';
+import { AssignmentDTO, ClientDTO, EmployeeDTO, EventDTO, ParticipationDTO, TableDTO } from 'src/app/models/collection';
 import {
   DocumentData,
   FirestoreDataConverter,
@@ -7,7 +7,7 @@ import {
   Timestamp,
   WithFieldValue
 } from '@angular/fire/firestore';
-import { Assignment, Client, Employee, Event, Table } from './type';
+import { Assignment, Client, Employee, Event, Participation, Table } from './type';
 
 export const employeeConverter: FirestoreDataConverter<Employee> = {
   toFirestore(employee: Employee): WithFieldValue<DocumentData> {
@@ -180,5 +180,37 @@ export const clientConverter: FirestoreDataConverter<Client> = {
       }
     };
     return client;
+  }
+};
+
+export const participationConverter: FirestoreDataConverter<Participation> = {
+  toFirestore(participation: Participation): WithFieldValue<DocumentData> {
+    const { participationDTO } = participation;
+    const data: ParticipationDTO = {
+      tableUid: participationDTO.tableUid,
+      clientUid: participationDTO.clientUid,
+      active: participationDTO.active,
+      payed: participationDTO.payed,
+      scanned: participationDTO.scanned,
+      createdAt: participationDTO.createdAt ? participationDTO.createdAt : new Date(),
+      modificatedAt: participationDTO.modificatedAt ? participationDTO.modificatedAt : new Date()
+    };
+    return data;
+  },
+  fromFirestore(snapshot: QueryDocumentSnapshot, options: SnapshotOptions): Participation {
+    const data: ParticipationDTO = snapshot.data(options) as ParticipationDTO;
+    const participation: Participation = {
+      uid: snapshot.id,
+      participationDTO: {
+        tableUid: data.tableUid,
+        clientUid: data.clientUid,
+        active: data.active,
+        payed: data.payed,
+        scanned: data.scanned,
+        createdAt: new Date((data.createdAt as unknown as Timestamp).seconds * 1000),
+        modificatedAt: new Date((data.modificatedAt as unknown as Timestamp).seconds * 1000)
+      }
+    };
+    return participation;
   }
 };
