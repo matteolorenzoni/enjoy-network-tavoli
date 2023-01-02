@@ -1,4 +1,4 @@
-<form class="flex flex-col gap-12 xs:gap-16" [formGroup]="eventForm" (ngSubmit)="onSubmit()">
+<form class="flex flex-col gap-12 xs:gap-16" [formGroup]="tableForm" (ngSubmit)="onSubmit()">
   <!-- Name -->
   <div class="group relative z-0 w-full">
     <input
@@ -72,7 +72,7 @@
       buttonName="login-button"
       [buttonText]="lblButton"
       buttonType="submit"
-      [buttonIsDisabled]="!eventForm.valid"
+      [buttonIsDisabled]="!tableForm.valid"
       palette="primary"
       [isLoading]="isLoading"></en-button>
   </div>

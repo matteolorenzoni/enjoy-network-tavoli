@@ -23,7 +23,7 @@ export class TableGeneratorComponent implements OnInit {
   tableUid: string | null = '';
 
   /* Form */
-  eventForm: FormGroup;
+  tableForm: FormGroup;
   isLoading: boolean;
 
   /* Label */
@@ -36,7 +36,7 @@ export class TableGeneratorComponent implements OnInit {
     private sessionStorage: SessionStorageService,
     private toastService: ToastService
   ) {
-    this.eventForm = new FormGroup({
+    this.tableForm = new FormGroup({
       name: new FormControl(null, [Validators.required, Validators.pattern(/[\S]/)]),
       price: new FormControl(null, [Validators.required, Validators.pattern(/^[0-9]*$/)]),
       hour: new FormControl(new Date(), [Validators.required]),
@@ -59,7 +59,7 @@ export class TableGeneratorComponent implements OnInit {
         .getTable(this.tableUid)
         .then((table) => {
           const { tableDTO } = table;
-          this.eventForm.patchValue({
+          this.tableForm.patchValue({
             name: tableDTO.name,
             price: tableDTO.price,
             hour: tableDTO.hour.toISOString().slice(0, 16),
@@ -85,10 +85,10 @@ export class TableGeneratorComponent implements OnInit {
     const newTable: TableDTO = {
       eventUid: this.eventUid,
       employeeUid: this.employeeUid,
-      name: this.eventForm.value.name?.trim().replace(/\s\s+/g, ' ') || '',
-      price: this.eventForm.value.price,
-      hour: new Date(this.eventForm.value.hour),
-      drink: this.eventForm.value.drink
+      name: this.tableForm.value.name?.trim().replace(/\s\s+/g, ' ') || '',
+      price: this.tableForm.value.price,
+      hour: new Date(this.tableForm.value.hour),
+      drink: this.tableForm.value.drink
     };
 
     /* If the table uid is null, it means that we are creating a new table */
@@ -98,7 +98,7 @@ export class TableGeneratorComponent implements OnInit {
     this.tableService
       .addOrUpdateTable(uidFormatted, newTable)
       .then(() => {
-        this.eventForm.reset();
+        this.tableForm.reset();
         this.location.back();
         this.toastService.showSuccess('Tavolo creato');
       })
