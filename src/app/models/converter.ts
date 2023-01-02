@@ -127,6 +127,8 @@ export const tableConverter: FirestoreDataConverter<Table> = {
       price: tableDTO.price,
       hour: tableDTO.hour,
       drink: tableDTO.drink,
+      personMarked: tableDTO.personMarked,
+      personAssigned: tableDTO.personAssigned,
       createdAt: tableDTO.createdAt ? tableDTO.createdAt : new Date(),
       modificatedAt: new Date()
     };
@@ -143,6 +145,8 @@ export const tableConverter: FirestoreDataConverter<Table> = {
         price: data.price,
         hour: data.hour,
         drink: data.drink,
+        personMarked: data.personMarked,
+        personAssigned: data.personAssigned,
         createdAt: new Date((data.createdAt as unknown as Timestamp).seconds * 1000),
         modificatedAt: new Date((data.modificatedAt as unknown as Timestamp).seconds * 1000)
       }
