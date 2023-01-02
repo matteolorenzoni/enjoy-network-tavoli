@@ -55,3 +55,15 @@ export type TableDTO = {
   createdAt?: Date;
   modificatedAt?: Date;
 };
+
+export type ClientDTO = {
+  tableUid: string;
+  name: string;
+  lastName: string;
+  phone: string;
+  valid: boolean;
+  payed: boolean;
+  scanned: boolean;
+  createdAt?: Date;
+  modificatedAt?: Date;
+};
