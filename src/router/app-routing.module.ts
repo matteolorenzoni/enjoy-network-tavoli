@@ -11,6 +11,7 @@ import { TableListComponent } from 'src/app/page/administrator/event/table-list/
 import { LoginComponent } from 'src/app/page/login/login.component';
 import { PageNotFoundComponent } from 'src/app/page/page-not-found/page-not-found.component';
 import { EventActiveComponent } from 'src/app/page/pr/event-active/event-active.component';
+import { TableGeneratorComponent } from 'src/app/page/pr/table-generator/table-generator.component';
 import { SettingComponent } from 'src/app/page/setting/setting.component';
 import { StatisticsComponent } from 'src/app/page/statistics/statistics.component';
 import { PrActiveComponent } from '../app/page/administrator/event/pr-active/pr-active.component';
@@ -71,7 +72,7 @@ const routes: Routes = [
     children: [
       { path: 'event/:uid', component: EventGeneratorComponent },
       { path: 'employee/:uid', component: EmployeeGeneratorComponent },
-      { path: 'table/:uid', component: SettingComponent },
+      { path: ':eventUid/table/:uid', component: TableGeneratorComponent },
       { path: '', component: PageNotFoundComponent }
     ]
   },

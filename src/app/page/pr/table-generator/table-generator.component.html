@@ -1,0 +1,79 @@
+<form class="flex flex-col gap-12 xs:gap-16" [formGroup]="eventForm" (ngSubmit)="onSubmit()">
+  <!-- Name -->
+  <div class="group relative z-0 w-full">
+    <input
+      type="text"
+      name="name_input"
+      id="name_input"
+      class="peer block w-full appearance-none bg-transparent py-2.5 px-0 text-base text-primary-100 focus:text-primary-60 focus:outline-none focus:ring-0"
+      formControlName="name"
+      autocomplete="off"
+      placeholder=" "
+      required />
+    <label
+      for="name_input"
+      class="absolute top-3 -z-10 origin-[0] -translate-y-6 scale-75 transform text-base text-primary-100 duration-300 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100 peer-focus:left-0 peer-focus:-translate-y-6 peer-focus:scale-75 peer-focus:font-medium peer-focus:text-primary-60">
+      Nome
+    </label>
+    <hr class="border-primary-100 peer-focus:border-primary-60" />
+  </div>
+
+  <!-- Price -->
+  <div class="group relative z-0 w-full">
+    <input
+      type="number"
+      pattern="\d*"
+      id="max_person_input"
+      name="max_person_input"
+      class="peer block w-full appearance-none bg-transparent py-2.5 px-0 text-base text-primary-100 focus:text-primary-60 focus:outline-none focus:ring-0"
+      formControlName="price"
+      placeholder=" "
+      required />
+    <label
+      for="max_person_input"
+      class="absolute top-3 -z-10 origin-[0] -translate-y-6 scale-75 transform text-base text-primary-100 duration-300 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100 peer-focus:left-0 peer-focus:-translate-y-6 peer-focus:scale-75 peer-focus:font-medium peer-focus:text-primary-60">
+      Prezzo
+    </label>
+    <hr class="border-primary-100 peer-focus:border-primary-60" />
+  </div>
+
+  <!-- Hour -->
+  <div class="group relative z-0 w-full">
+    <input
+      type="datetime-local"
+      id="guest_input"
+      name="guest_input"
+      class="peer block w-full appearance-none bg-transparent py-2.5 px-0 text-base text-primary-100 focus:text-primary-60 focus:outline-none focus:ring-0"
+      formControlName="hour"
+      placeholder=" " />
+    <label
+      for="guest_input"
+      class="absolute top-3 -z-10 origin-[0] -translate-y-6 scale-75 transform text-base text-primary-100 duration-300 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100 peer-focus:left-0 peer-focus:-translate-y-6 peer-focus:scale-75 peer-focus:font-medium peer-focus:text-primary-60">
+      Ora richiesta
+    </label>
+    <hr class="border-primary-100 peer-focus:border-primary-60" />
+  </div>
+
+  <!-- Drink  -->
+  <div class="group relative z-0 w-full">
+    <label for="message_textarea" class="mb-2 block text-sm font-bold text-white group-focus-within:text-primary-60">
+      Bottiglie richieste
+    </label>
+    <textarea
+      id="message_textarea"
+      name="message_textarea"
+      class="block w-full resize-none rounded-lg border-2 bg-transparent p-2.5 text-sm text-white focus:border-primary-60 focus:text-primary-60 focus:outline-none"
+      rows="5"
+      formControlName="drink"></textarea>
+  </div>
+
+  <div class="mx-auto w-52">
+    <en-button
+      buttonName="login-button"
+      [buttonText]="lblButton"
+      buttonType="submit"
+      [buttonIsDisabled]="!eventForm.valid"
+      palette="primary"
+      [isLoading]="isLoading"></en-button>
+  </div>
+</form>
