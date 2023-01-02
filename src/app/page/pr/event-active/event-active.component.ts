@@ -26,17 +26,18 @@ export class EventActiveComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    const uid = this.sessionStorageService.getEmployeeUid();
+    const employeeUid = this.sessionStorageService.getEmployeeUid();
 
-    if (!uid) {
-      this.userService.logout();
+    if (!employeeUid) {
+      throw new Error('Errore: parametri non validi');
     }
 
     this.assignmentService
-      .getAssignmentsByEmployeeUid(uid ?? '')
+      .getAssignmentsByEmployeeUid(employeeUid)
       .then((assignments) => {
+        const eventUids = assignments.map((assignment) => assignment.assignmentDTO.eventUid);
         this.eventService
-          .getEventsByAssignments(assignments)
+          .getEventsByUids(eventUids)
           .then((events) => {
             this.eventsAvabile = events;
           })

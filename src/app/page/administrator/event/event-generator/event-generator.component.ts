@@ -112,7 +112,7 @@ export class EventGeneratorComponent implements OnInit {
         this.imageSrc = null;
         this.eventForm.reset();
         this.location.back();
-        this.toastService.showSuccess('Evento creato');
+        this.toastService.showSuccess(uidFormatted ? 'Evento modificato' : 'Evento creato');
       })
       .catch((err: Error) => {
         this.toastService.showError(err);

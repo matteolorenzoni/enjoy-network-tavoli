@@ -31,8 +31,9 @@ export class EventService {
     return events;
   }
 
-  public async getEventsByAssignments(assignments: Assignment[]): Promise<Event[]> {
-    const eventUids = assignments.map((assignment) => assignment.assignmentDTO.eventUid);
+  public async getEventsByUids(eventUids: string[]): Promise<Event[]> {
+    if (!eventUids || eventUids.length === 0) return [];
+
     const eventUidConstraint: QueryConstraint = where(documentId(), 'in', eventUids);
     const constraints: QueryConstraint[] = [eventUidConstraint];
     const eventsByAssignments = await this.firebaseReadService.getEventsByMultipleConstraints(constraints);

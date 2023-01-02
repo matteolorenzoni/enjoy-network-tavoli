@@ -43,10 +43,10 @@ export class EmployeeService {
     return employees;
   }
 
-  public async getEmployeesByUids(uidArray: string[]): Promise<Employee[]> {
-    if (!uidArray || uidArray.length === 0) return [];
+  public async getEmployeesByUids(employeeUids: string[]): Promise<Employee[]> {
+    if (!employeeUids || employeeUids.length === 0) return [];
 
-    const idConstraint: QueryConstraint = where(documentId(), 'in', uidArray);
+    const idConstraint: QueryConstraint = where(documentId(), 'in', employeeUids);
     // TODO: ordinamento
     // const firstOrder: QueryConstraint = orderBy('active');
     // const secondOrder: QueryConstraint = orderBy('personAssigned');
