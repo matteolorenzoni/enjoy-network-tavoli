@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { DocumentData, DocumentReference } from '@angular/fire/firestore';
+import { DocumentData, documentId, DocumentReference, QueryConstraint, where } from '@angular/fire/firestore';
 import { ClientDTO } from '../models/collection';
 import { Client, Participation } from '../models/type';
 import { FirebaseCreateService } from './firebase/firebase-crud/firebase-create.service';
@@ -27,6 +27,15 @@ export class ClientService {
   public async getClient(clientUid: string): Promise<Client> {
     const client: Client = await this.firebaseReadService.getClientByUid(clientUid);
     return client;
+  }
+
+  public async getClientsByUids(clientUids: string[]): Promise<Client[]> {
+    if (!clientUids || clientUids.length === 0) return [];
+
+    const idConstraint: QueryConstraint = where(documentId(), 'in', clientUids);
+    const constricts: QueryConstraint[] = [idConstraint];
+    const clients: Client[] = await this.firebaseReadService.getClientsByMultipleConstraints(constricts);
+    return clients;
   }
 
   /* ------------------------------------------- CREATE ------------------------------------------- */
