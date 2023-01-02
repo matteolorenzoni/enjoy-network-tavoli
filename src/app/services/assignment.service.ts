@@ -32,6 +32,14 @@ export class AssignmentService {
     return assignments;
   }
 
+  public async getAssignmentsByEventUidAndEmployeeUid(eventUid: string, employeeUid: string): Promise<Assignment[]> {
+    const eventUidConstraint: QueryConstraint = where('eventUid', '==', eventUid);
+    const employeeUidConstraint: QueryConstraint = where('employeeUid', '==', employeeUid);
+    const constraints: QueryConstraint[] = [eventUidConstraint, employeeUidConstraint];
+    const assignments: Assignment[] = await this.firebaseReadService.getAssignmentsByMultipleConstraints(constraints);
+    return assignments;
+  }
+
   /* ------------------------------------------- ADD ------------------------------------------- */
   public async addAssignment(eventUid: string, employeeUids: string[]): Promise<void> {
     const assignments: Assignment[] = [];
