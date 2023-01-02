@@ -5,7 +5,9 @@ import { Component, OnInit } from '@angular/core';
 import { faFilter, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { fadeInAnimation, staggeredFadeInIncrement } from 'src/app/animations/animations';
 import { Table } from 'src/app/models/type';
+import { AssignmentService } from 'src/app/services/assignment.service';
 import { TableService } from '../../../../services/table.service';
+import { EventService } from '../../../../services/event.service';
 
 @Component({
   selector: 'app-table-list',
@@ -23,6 +25,10 @@ export class TableListComponent implements OnInit {
 
   /* Event */
   eventUid: string | null = '';
+  eventDate: Date | null = null;
+  eventPersonMarked = 0;
+  eventPersonAssigned = 0;
+  eventMaxPersonAssigned = 0;
 
   /* Table */
   tables: Table[] = [];
@@ -30,6 +36,8 @@ export class TableListComponent implements OnInit {
   constructor(
     private router: Router,
     private route: ActivatedRoute,
+    private eventService: EventService,
+    private assignmentService: AssignmentService,
     private tableService: TableService,
     private toastService: ToastService,
     private sessionStorage: SessionStorageService
@@ -39,15 +47,54 @@ export class TableListComponent implements OnInit {
     this.eventUid = this.route.snapshot.paramMap.get('uid');
     this.employeeUid = this.sessionStorage.getEmployeeUid();
 
+    /* Check if the parameters are valid */
     if (!this.eventUid || !this.employeeUid) {
-      throw new Error('Event uid is not defined');
+      throw new Error('Errore: parametri non validi');
     }
 
+    this.getEventDate(this.eventUid);
+    this.getEventMaxPersonAssigned(this.eventUid, this.employeeUid);
+    this.getTables(this.eventUid, this.employeeUid);
+  }
+
+  getEventDate(eventUid: string): void {
+    this.eventService
+      .getEvent(eventUid)
+      .then((event) => {
+        this.eventDate = event.eventDTO.date;
+      })
+      .catch((error: Error) => {
+        this.toastService.showError(error);
+      });
+  }
+
+  getEventMaxPersonAssigned(eventUid: string, employeeUid: string): void {
+    this.assignmentService
+      .getAssignmentsByEventUidAndEmployeeUid(eventUid, employeeUid)
+      .then((assignments) => {
+        /* Get the first assignment */
+        this.eventMaxPersonAssigned = assignments.length > 0 ? assignments[0].assignmentDTO.personAssigned : 0;
+      })
+      .catch((error: Error) => {
+        this.toastService.showError(error);
+      });
+  }
+
+  getTables(eventUid: string, employeeUid: string): void {
     this.tableService
-      .getTableByEventUidAndEmployeeUid(this.eventUid, this.employeeUid)
+      .getTableByEventUidAndEmployeeUid(eventUid, employeeUid)
       .then((tables: Table[]) => {
-        console.log(tables);
         this.tables = tables;
+
+        /* Calculate the number of people assigned and marked */
+        this.eventPersonMarked = tables.reduce(
+          (acc, table) => acc + (table.tableDTO.personMarked ? table.tableDTO.personMarked : 0),
+          0
+        );
+        this.eventPersonAssigned = tables.reduce(
+          (acc, table) => acc + (table.tableDTO.personAssigned ? table.tableDTO.personAssigned : 0),
+          0
+        );
       })
       .catch((error: Error) => {
         this.toastService.showError(error);
@@ -56,5 +103,22 @@ export class TableListComponent implements OnInit {
 
   goToCreateTable(): void {
     this.router.navigate([`create-item/${this.eventUid}/table/null`]);
+  }
+
+  onDeleteTableEvent(tableUid: string): void {
+    this.tableService
+      .deleteTable(tableUid)
+      .then(() => {
+        /* Check if the parameters are valid */
+        if (!this.eventUid || !this.employeeUid) {
+          throw new Error('Errore: parametri non validi');
+        }
+
+        this.getTables(this.eventUid, this.employeeUid);
+        this.toastService.showSuccess('Tavolo eliminato con successo');
+      })
+      .catch((error: Error) => {
+        this.toastService.showError(error);
+      });
   }
 }

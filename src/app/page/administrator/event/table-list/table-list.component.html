@@ -5,7 +5,17 @@
     <fa-icon [icon]="filterIcon" class="mr-2"></fa-icon>
     FILTRI
   </button>
-  <ul [@staggeredFadeInIncrement]="tables.length" class="flex flex-col divide-y divide-gray-700"></ul>
+  <en-countdown [date]="eventDate"></en-countdown>
+  <div class="m-4 flex">
+    <p class="m-auto text-xl">{{ eventPersonMarked }}/{{ eventPersonAssigned }}/{{ eventMaxPersonAssigned }}</p>
+  </div>
+  <ul [@staggeredFadeInIncrement]="tables.length" class="flex flex-col divide-y divide-gray-700">
+    <en-item-table
+      *ngFor="let table of tables"
+      [eventUid]="eventUid"
+      [table]="table"
+      (deleteTableEvent)="onDeleteTableEvent($event)"></en-item-table>
+  </ul>
   <div class="theme-primary fixed left-0 bottom-4 right-0 mx-auto flex h-12 max-w-[48rem] justify-end">
     <div [@fadeInAnimation] class="mr-4">
       <button
