@@ -59,9 +59,9 @@ export class ParticipationListComponent implements OnInit {
   }
 
   getClientsFromParticipants(participations: Participation[]): void {
-    const employeeUids = participations.map((item) => item.participationDTO.clientUid);
+    const participationsUids = participations.map((item) => item.participationDTO.clientUid);
     this.clientService
-      .getClientsByUids(employeeUids)
+      .getClientsByUids(participationsUids)
       .then((clients) => {
         this.participationsAndClientArray = [];
         clients.forEach((client) => {
