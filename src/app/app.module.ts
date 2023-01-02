@@ -44,6 +44,7 @@ import { EnItemEventAvaibleComponent } from './components/en-item-event-avaible.
 import { TableGeneratorComponent } from './page/pr/table-generator/table-generator.component';
 import { EnItemTableComponent } from './components/en-item-table.component';
 import { ClientListComponent } from './page/pr/client-list/client-list.component';
+import { ClientGeneratorComponent } from './page/pr/client-generator/client-generator.component';
 
 @NgModule({
   declarations: [
@@ -78,7 +79,8 @@ import { ClientListComponent } from './page/pr/client-list/client-list.component
     EnItemEventAvaibleComponent,
     TableGeneratorComponent,
     EnItemTableComponent,
-    ClientListComponent
+    ClientListComponent,
+    ClientGeneratorComponent
   ],
   imports: [
     BrowserModule,
