@@ -10,15 +10,16 @@ import {
   QueryConstraint,
   QueryDocumentSnapshot
 } from '@angular/fire/firestore';
-import { assignmentConverter, employeeConverter, eventConverter } from 'src/app/models/converter';
+import { Read } from 'src/app/interface/read';
+import { assignmentConverter, employeeConverter, eventConverter, tableConverter } from 'src/app/models/converter';
 import { Collection } from 'src/app/models/collection';
-import { Assignment, Employee, Event } from 'src/app/models/type';
+import { Assignment, Employee, Event, Table } from 'src/app/models/type';
 import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
-export class FirebaseReadService {
+export class FirebaseReadService implements Read {
   /* Firebase */
   private db!: Firestore;
 
@@ -38,9 +39,9 @@ export class FirebaseReadService {
     return events;
   }
 
-  public async getEventByUid(uid: string): Promise<Event> {
+  public async getEventByUid(eventUid: string): Promise<Event> {
     const collectionRef = collection(this.db, Collection.EVENTS).withConverter(eventConverter);
-    const docRef = doc(collectionRef, uid);
+    const docRef = doc(collectionRef, eventUid);
     const docSnap = await getDoc(docRef);
     if (!environment.production) console.info('Got event', docSnap.data());
     return docSnap.data() as Event;
@@ -91,9 +92,9 @@ export class FirebaseReadService {
     return employees;
   }
 
-  public async getEmployeeByUid(uid: string): Promise<Employee> {
+  public async getEmployeeByUid(employeeUid: string): Promise<Employee> {
     const collectionRef = collection(this.db, Collection.EMPLOYEES).withConverter(employeeConverter);
-    const docRef = doc(collectionRef, uid);
+    const docRef = doc(collectionRef, employeeUid);
     const docSnap = await getDoc(docRef);
     if (!environment.production) console.info('Got employee', docSnap.data());
     return docSnap.data() as Employee;
@@ -109,5 +110,26 @@ export class FirebaseReadService {
       if (!environment.production) console.info('Got employee', item.data());
     });
     return employees;
+  }
+
+  /* ------------------------------------------- TABLE ------------------------------------------- */
+  public async getTableByUid(tableUid: string): Promise<Table> {
+    const collectionRef = collection(this.db, Collection.TABLES).withConverter(tableConverter);
+    const docRef = doc(collectionRef, tableUid);
+    const docSnap = await getDoc(docRef);
+    if (!environment.production) console.info('Got table', docSnap.data());
+    return docSnap.data() as Table;
+  }
+
+  public async getTablesByMultipleConstraints(constraints: QueryConstraint[]): Promise<Table[]> {
+    const tables: Table[] = [];
+    const collectionRef = collection(this.db, Collection.TABLES).withConverter(tableConverter);
+    const q = query(collectionRef, ...constraints);
+    const querySnapshot = await getDocs(q);
+    querySnapshot.forEach((item: QueryDocumentSnapshot<Table>) => {
+      tables.push(item.data());
+      if (!environment.production) console.info('Got table', item.data());
+    });
+    return tables;
   }
 }
