@@ -21,10 +21,10 @@ export class TableListComponent implements OnInit {
   plusIcon = faPlus;
 
   /* Employee */
-  employeeUid: string | null = '';
+  employeeUid: string | null = null;
 
   /* Event */
-  eventUid: string | null = '';
+  eventUid: string | null = null;
   eventDate: Date | null = null;
   eventPersonMarked = 0;
   eventPersonAssigned = 0;

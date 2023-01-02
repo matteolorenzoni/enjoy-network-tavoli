@@ -39,7 +39,6 @@ export class EventActiveComponent implements OnInit {
           .getEventsByAssignments(assignments)
           .then((events) => {
             this.eventsAvabile = events;
-            console.log(this.eventsAvabile);
           })
           .catch((error) => {
             this.toastService.showError(error);

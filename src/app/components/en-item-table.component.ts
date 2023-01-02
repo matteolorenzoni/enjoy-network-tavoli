@@ -52,7 +52,7 @@ export class EnItemTableComponent {
   constructor(private router: Router, private route: ActivatedRoute) {}
 
   goToClient(): void {
-    this.router.navigate(['./table'], { relativeTo: this.route });
+    this.router.navigate([`./table/${this.table.uid}`], { relativeTo: this.route });
   }
 
   updateTable(): void {
