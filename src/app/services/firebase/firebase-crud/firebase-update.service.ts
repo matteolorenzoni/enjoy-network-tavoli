@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Firestore, doc, updateDoc, getFirestore, collection } from '@angular/fire/firestore';
-import { AssignmentDTO, Collection } from 'src/app/models/collection';
-import { Client, Employee, Event, Table } from 'src/app/models/type';
+import { AssignmentDTO, Collection, ParticipationDTO } from 'src/app/models/collection';
+import { Client, Employee, Event, Participation, Table } from 'src/app/models/type';
 import { environment } from 'src/environments/environment';
 import { Assignment } from '../../../models/type';
 
@@ -56,6 +56,28 @@ export class FirebaseUpdateService {
     const docRef = doc(collectionRef, uid);
     await updateDoc(docRef, tableDTO);
     if (!environment.production) console.info('Updated table', table);
+  }
+
+  public async updateTableProps(
+    tableUid: string,
+    propsToUpdate: { [key in keyof Partial<Table>]: any }
+  ): Promise<void> {
+    const collectionRef = collection(this.db, Collection.TABLES);
+    const docRef = doc(collectionRef, tableUid);
+    await updateDoc(docRef, { ...propsToUpdate, modificatedAt: new Date() });
+    if (!environment.production) console.info('Updated table', tableUid);
+  }
+
+  /* ------------------------------------------- PARTICIPATION ------------------------------------------- */
+  public async updateParticipationProps(
+    participation: Participation,
+    propsToUpdate: { [key in keyof Partial<ParticipationDTO>]: any }
+  ): Promise<void> {
+    const { uid } = participation;
+    const collectionRef = collection(this.db, Collection.PARTICIPATIONS);
+    const docRef = doc(collectionRef, uid);
+    await updateDoc(docRef, { ...propsToUpdate, modificatedAt: new Date() });
+    if (!environment.production) console.info('Updated participation', participation);
   }
 
   /* ------------------------------------------- CLIENT  ------------------------------------------- */

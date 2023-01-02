@@ -16,10 +16,11 @@ import {
   clientConverter,
   employeeConverter,
   eventConverter,
+  participationConverter,
   tableConverter
 } from 'src/app/models/converter';
 import { Collection } from 'src/app/models/collection';
-import { Assignment, Client, Employee, Event, Table } from 'src/app/models/type';
+import { Assignment, Client, Employee, Event, Participation, Table } from 'src/app/models/type';
 import { environment } from 'src/environments/environment';
 
 @Injectable({
@@ -139,6 +140,27 @@ export class FirebaseReadService implements Read {
     return tables;
   }
 
+  /* ------------------------------------------- PARTICIPATION ------------------------------------------- */
+  public async getParticipationByUid(participationUid: string): Promise<Participation> {
+    const collectionRef = collection(this.db, Collection.PARTICIPATIONS).withConverter(participationConverter);
+    const docRef = doc(collectionRef, participationUid);
+    const docSnap = await getDoc(docRef);
+    if (!environment.production) console.info('Got participation', docSnap.data());
+    return docSnap.data() as Participation;
+  }
+
+  public async getParticipationsByMultipleConstraints(constraints: QueryConstraint[]): Promise<Participation[]> {
+    const participations: Participation[] = [];
+    const collectionRef = collection(this.db, Collection.PARTICIPATIONS).withConverter(participationConverter);
+    const q = query(collectionRef, ...constraints);
+    const querySnapshot = await getDocs(q);
+    querySnapshot.forEach((item: QueryDocumentSnapshot<Participation>) => {
+      participations.push(item.data());
+      if (!environment.production) console.info('Got participation', item.data());
+    });
+    return participations;
+  }
+
   /* ------------------------------------------- CLIENT ------------------------------------------- */
   public async getAllClients(): Promise<Client[]> {
     const clients: Client[] = [];
@@ -157,5 +179,17 @@ export class FirebaseReadService implements Read {
     const docSnap = await getDoc(docRef);
     if (!environment.production) console.info('Got client', docSnap.data());
     return docSnap.data() as Client;
+  }
+
+  public async getClientsByMultipleConstraints(constraints: QueryConstraint[]): Promise<Client[]> {
+    const clients: Client[] = [];
+    const collectionRef = collection(this.db, Collection.CLIENTS).withConverter(clientConverter);
+    const q = query(collectionRef, ...constraints);
+    const querySnapshot = await getDocs(q);
+    querySnapshot.forEach((item: QueryDocumentSnapshot<Client>) => {
+      clients.push(item.data());
+      if (!environment.production) console.info('Got client', item.data());
+    });
+    return clients;
   }
 }
