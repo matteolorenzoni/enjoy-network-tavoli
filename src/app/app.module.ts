@@ -43,6 +43,7 @@ import { EventActiveComponent } from './page/pr/event-active/event-active.compon
 import { EnItemEventAvaibleComponent } from './components/en-item-event-avaible.component';
 import { TableGeneratorComponent } from './page/pr/table-generator/table-generator.component';
 import { EnItemTableComponent } from './components/en-item-table.component';
+import { ClientListComponent } from './page/pr/client-list/client-list.component';
 
 @NgModule({
   declarations: [
@@ -76,7 +77,8 @@ import { EnItemTableComponent } from './components/en-item-table.component';
     EventActiveComponent,
     EnItemEventAvaibleComponent,
     TableGeneratorComponent,
-    EnItemTableComponent
+    EnItemTableComponent,
+    ClientListComponent
   ],
   imports: [
     BrowserModule,

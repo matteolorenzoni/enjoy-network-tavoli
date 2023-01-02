@@ -1,0 +1,19 @@
+<section>
+  <button
+    type="button"
+    class="mb-4 w-full rounded-lg border border-gray-600 bg-gray-800 py-2.5 px-5 text-sm font-medium text-gray-400 hover:bg-gray-700 hover:text-white focus:z-10 focus:outline-none focus:ring-4 focus:ring-gray-700">
+    <fa-icon [icon]="filterIcon" class="mr-2"></fa-icon>
+    FILTRI
+  </button>
+  <ul [@staggeredFadeInIncrement]="clients.length" class="flex flex-col divide-y divide-gray-700"></ul>
+  <div class="theme-primary fixed left-0 bottom-4 right-0 mx-auto flex h-12 max-w-[48rem] justify-end">
+    <div [@fadeInAnimation] class="mr-4">
+      <button
+        type="button"
+        class="h-12 w-12 rounded-full bg-palette text-palette shadow-md transition duration-150 ease-in-out hover:bg-paletteHover hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:bg-paletteActive active:shadow-lg"
+        (click)="goToCreateClient()">
+        <fa-icon [icon]="plusIcon"></fa-icon>
+      </button>
+    </div>
+  </div>
+</section>
