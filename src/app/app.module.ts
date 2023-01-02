@@ -45,6 +45,7 @@ import { TableGeneratorComponent } from './page/pr/table-generator/table-generat
 import { EnItemTableComponent } from './components/en-item-table.component';
 import { ClientGeneratorComponent } from './page/pr/client-generator/client-generator.component';
 import { ParticipationListComponent } from './page/pr/participation-list/participation-list.component';
+import { EnItemParticipationComponent } from './components/en-item-participation.component';
 
 @NgModule({
   declarations: [
@@ -80,7 +81,8 @@ import { ParticipationListComponent } from './page/pr/participation-list/partici
     TableGeneratorComponent,
     EnItemTableComponent,
     ClientGeneratorComponent,
-    ParticipationListComponent
+    ParticipationListComponent,
+    EnItemParticipationComponent
   ],
   imports: [
     BrowserModule,
