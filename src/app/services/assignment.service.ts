@@ -93,7 +93,7 @@ export class AssignmentService {
     );
     if (assignment) {
       if (personMarked === 0) {
-        this.firebaseDeleteService.deleteAssignments([assignment]);
+        this.firebaseDeleteService.deleteDocumentByUid(Collection.ASSIGNMENTS, assignmentUid);
       } else {
         /** If the person is not active for the event, are removed as many as person assigned as possible  */
         const propsToUpdate = active ? { active: true } : { personAssigned: personMarked, active: false };
@@ -114,6 +114,7 @@ export class AssignmentService {
       constraints,
       assignmentConverter
     );
-    await this.firebaseDeleteService.deleteAssignments(assignments);
+    const assignmentsUids: string[] = assignments.map((assignment) => assignment.uid);
+    await this.firebaseDeleteService.deleteDocumentsByUids(Collection.ASSIGNMENTS, assignmentsUids);
   }
 }

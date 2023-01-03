@@ -76,6 +76,6 @@ export class ClientService {
 
   /* ------------------------------------------- DELETE ------------------------------------------- */
   public async deleteClient(clientUid: string): Promise<void> {
-    await this.firebaseDeleteService.deleteClientByUid(clientUid);
+    await this.firebaseDeleteService.deleteDocumentByUid(Collection.CLIENTS, clientUid);
   }
 }

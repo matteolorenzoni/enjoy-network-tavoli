@@ -63,6 +63,6 @@ export class TableService {
 
   /* ------------------------------------------- DELETE ------------------------------------------- */
   public async deleteTable(uid: string): Promise<void> {
-    await this.firebaseDeleteService.deleteTableByUid(uid);
+    await this.firebaseDeleteService.deleteDocumentByUid(Collection.TABLES, uid);
   }
 }

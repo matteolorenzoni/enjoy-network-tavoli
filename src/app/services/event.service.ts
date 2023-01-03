@@ -78,7 +78,8 @@ export class EventService {
       constraints,
       assignmentConverter
     );
-    await this.firebaseDeleteService.deleteAssignments(assignments);
+    const assignmentUids = assignments.map((assignment) => assignment.uid);
+    await this.firebaseDeleteService.deleteDocumentsByUids(Collection.ASSIGNMENTS, assignmentUids);
 
     /* Delete image */
     const photoUrl = event.eventDTO.imageUrl;
@@ -90,6 +91,6 @@ export class EventService {
     }
 
     /* Delete event */
-    await this.firebaseDeleteService.deleteEventByUid(event.uid);
+    await this.firebaseDeleteService.deleteDocumentByUid(Collection.EVENTS, event.uid);
   }
 }

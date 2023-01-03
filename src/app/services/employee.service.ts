@@ -99,7 +99,8 @@ export class EmployeeService {
       assignmentConverter
     );
     const assignmentsToDelete: Assignment[] = assignments.filter((item) => item.assignmentDTO.personMarked === 0);
-    await this.firebaseDeleteService.deleteAssignments(assignmentsToDelete);
+    const assignmentsToDeleteUids: string[] = assignmentsToDelete.map((item) => item.uid);
+    await this.firebaseDeleteService.deleteDocumentsByUids(Collection.ASSIGNMENTS, assignmentsToDeleteUids);
     const assignmentsToMinimize: Assignment[] = assignments.filter((item) => item.assignmentDTO.personMarked > 0);
     assignmentsToMinimize.forEach(async (assignment) => {
       const propsToUpdate: Partial<AssignmentDTO> = {
@@ -110,7 +111,7 @@ export class EmployeeService {
     });
 
     /* Delete employee */
-    await this.firebaseDeleteService.deleteEmployeeByUid(uid);
+    await this.firebaseDeleteService.deleteDocumentByUid(Collection.EMPLOYEES, uid);
 
     /* Delete user */
     // TODO: eliminare anche l'User
