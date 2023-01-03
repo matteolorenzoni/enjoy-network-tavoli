@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { documentId, QueryConstraint, where } from '@angular/fire/firestore';
-import { EventDTO } from '../models/collection';
+import { assignmentConverter, eventConverter } from '../models/converter';
+import { Collection, EventDTO } from '../models/collection';
 import { Assignment, Event } from '../models/type';
 import { FirebaseCreateService } from './firebase/firebase-crud/firebase-create.service';
 import { FirebaseUpdateService } from './firebase/firebase-crud/firebase-update.service';
@@ -22,12 +23,12 @@ export class EventService {
 
   /* ------------------------------------------- GET ------------------------------------------- */
   public async getEvent(eventUid: string): Promise<Event> {
-    const event = await this.firebaseReadService.getEventByUid(eventUid);
+    const event = await this.firebaseReadService.getDocumentByUid(Collection.EVENTS, eventUid, eventConverter);
     return event;
   }
 
   public async getAllEvents(): Promise<Event[]> {
-    const events = await this.firebaseReadService.getAllEvents();
+    const events = await this.firebaseReadService.getAllDocuments(Collection.EVENTS, eventConverter);
     return events;
   }
 
@@ -36,7 +37,11 @@ export class EventService {
 
     const eventUidConstraint: QueryConstraint = where(documentId(), 'in', eventUids);
     const constraints: QueryConstraint[] = [eventUidConstraint];
-    const eventsByAssignments = await this.firebaseReadService.getEventsByMultipleConstraints(constraints);
+    const eventsByAssignments = await this.firebaseReadService.getDocumentsByMultipleConstraints(
+      Collection.EVENTS,
+      constraints,
+      eventConverter
+    );
     return eventsByAssignments;
   }
 
@@ -68,7 +73,11 @@ export class EventService {
     /* Delete assigments */
     const eventUidConstraint: QueryConstraint = where('eventUid', '==', event.uid);
     const constraints: QueryConstraint[] = [eventUidConstraint];
-    const assignments: Assignment[] = await this.firebaseReadService.getAssignmentsByMultipleConstraints(constraints);
+    const assignments: Assignment[] = await this.firebaseReadService.getDocumentsByMultipleConstraints(
+      Collection.ASSIGNMENTS,
+      constraints,
+      assignmentConverter
+    );
     await this.firebaseDeleteService.deleteAssignments(assignments);
 
     /* Delete image */

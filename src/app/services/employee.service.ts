@@ -2,13 +2,14 @@ import { UserCredential } from '@angular/fire/auth';
 import { Injectable } from '@angular/core';
 import { documentId, QueryConstraint, where } from 'firebase/firestore';
 import { UserService } from './user.service';
-import { AssignmentDTO, EmployeeDTO } from '../models/collection';
+import { AssignmentDTO, Collection, EmployeeDTO } from '../models/collection';
 import { Assignment, Employee } from '../models/type';
 import { FirebaseCreateService } from './firebase/firebase-crud/firebase-create.service';
 import { FirebaseDeleteService } from './firebase/firebase-crud/firebase-delete.service';
 import { FirebaseReadService } from './firebase/firebase-crud/firebase-read.service';
 import { FirebaseUpdateService } from './firebase/firebase-crud/firebase-update.service';
 import { RoleType } from '../models/enum';
+import { assignmentConverter, employeeConverter } from '../models/converter';
 
 const PASSWORD_DEFAULT = 'enjoynetwork';
 
@@ -26,12 +27,19 @@ export class EmployeeService {
 
   /* ------------------------------------------- GET ------------------------------------------- */
   public async getEmployee(employeeUid: string): Promise<Employee> {
-    const employee: Employee = await this.firebaseReadService.getEmployeeByUid(employeeUid);
+    const employee: Employee = await this.firebaseReadService.getDocumentByUid(
+      Collection.EMPLOYEES,
+      employeeUid,
+      employeeConverter
+    );
     return employee;
   }
 
   public async getAllEmployees(): Promise<Employee[]> {
-    const employees: Employee[] = await this.firebaseReadService.getAllEmployees();
+    const employees: Employee[] = await this.firebaseReadService.getAllDocuments(
+      Collection.EMPLOYEES,
+      employeeConverter
+    );
     return employees;
   }
 
@@ -39,7 +47,11 @@ export class EmployeeService {
     const activeConstraint: QueryConstraint = where('active', '==', true);
     const prConstraint: QueryConstraint = where('role', '==', RoleType.PR);
     const constricts: QueryConstraint[] = [activeConstraint, prConstraint];
-    const employees: Employee[] = await this.firebaseReadService.getEmployeesByMultipleConstraints(constricts);
+    const employees: Employee[] = await this.firebaseReadService.getDocumentsByMultipleConstraints(
+      Collection.EMPLOYEES,
+      constricts,
+      employeeConverter
+    );
     return employees;
   }
 
@@ -52,7 +64,11 @@ export class EmployeeService {
     // const secondOrder: QueryConstraint = orderBy('personAssigned');
     // const thirdOrder: QueryConstraint = orderBy('personMarked');
     const constricts: QueryConstraint[] = [idConstraint];
-    const employees: Employee[] = await this.firebaseReadService.getEmployeesByMultipleConstraints(constricts);
+    const employees: Employee[] = await this.firebaseReadService.getDocumentsByMultipleConstraints(
+      Collection.EMPLOYEES,
+      constricts,
+      employeeConverter
+    );
     return employees;
   }
 
@@ -77,7 +93,11 @@ export class EmployeeService {
     /* Delete all assigments without person marked and remove person assigned */
     const employeeUidConstraint: QueryConstraint = where('employeeUid', '==', uid);
     const constraints: QueryConstraint[] = [employeeUidConstraint];
-    const assignments: Assignment[] = await this.firebaseReadService.getAssignmentsByMultipleConstraints(constraints);
+    const assignments: Assignment[] = await this.firebaseReadService.getDocumentsByMultipleConstraints(
+      Collection.ASSIGNMENTS,
+      constraints,
+      assignmentConverter
+    );
     const assignmentsToDelete: Assignment[] = assignments.filter((item) => item.assignmentDTO.personMarked === 0);
     await this.firebaseDeleteService.deleteAssignments(assignmentsToDelete);
     const assignmentsToMinimize: Assignment[] = assignments.filter((item) => item.assignmentDTO.personMarked > 0);

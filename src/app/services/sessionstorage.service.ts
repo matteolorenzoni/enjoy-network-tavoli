@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { FirebaseReadService } from './firebase/firebase-crud/firebase-read.service';
 import { RoleType } from '../models/enum';
+import { Collection } from '../models/collection';
+import { employeeConverter } from '../models/converter';
 
 @Injectable({
   providedIn: 'root'
@@ -18,7 +20,11 @@ export class SessionStorageService {
 
   /* ------------------------------------------- SET ------------------------------------------- */
   public async setEmployeePropsInSessionStorage(employeeUid: string): Promise<void> {
-    const employee = await this.firebaseReadService.getEmployeeByUid(employeeUid);
+    const employee = await this.firebaseReadService.getDocumentByUid(
+      Collection.EMPLOYEES,
+      employeeUid,
+      employeeConverter
+    );
     const { uid, employeeDTO } = employee;
     sessionStorage.setItem('uid', uid);
     Object.entries(employeeDTO).forEach(([key, value]) => {

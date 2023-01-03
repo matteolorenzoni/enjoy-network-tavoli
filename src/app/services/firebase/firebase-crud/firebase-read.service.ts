@@ -8,25 +8,15 @@ import {
   query,
   getFirestore,
   QueryConstraint,
-  QueryDocumentSnapshot
+  QueryDocumentSnapshot,
+  FirestoreDataConverter
 } from '@angular/fire/firestore';
-import { Read } from 'src/app/interface/read';
-import {
-  assignmentConverter,
-  clientConverter,
-  employeeConverter,
-  eventConverter,
-  participationConverter,
-  tableConverter
-} from 'src/app/models/converter';
-import { Collection } from 'src/app/models/collection';
-import { Assignment, Client, Employee, Event, Participation, Table } from 'src/app/models/type';
 import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
-export class FirebaseReadService implements Read {
+export class FirebaseReadService {
   /* Firebase */
   private db!: Firestore;
 
@@ -34,162 +24,50 @@ export class FirebaseReadService implements Read {
     this.db = getFirestore();
   }
 
-  /* ------------------------------------------- EVENT ------------------------------------------- */
-  public async getAllEvents(): Promise<Event[]> {
-    const events: Event[] = [];
-    const collectionRef = collection(this.db, Collection.EVENTS).withConverter(eventConverter);
+  /* Get a single document by its uid */
+  public async getDocumentByUid<T>(
+    collectionName: string,
+    documentUid: string,
+    converter: FirestoreDataConverter<T>
+  ): Promise<T> {
+    const collectionRef = collection(this.db, collectionName).withConverter(converter);
+    const docRef = doc(collectionRef, documentUid);
+    const docSnap = await getDoc(docRef);
+
+    /* If the document does not exist, throw an error */
+    if (!docSnap.exists()) throw new Error('No such document!');
+
+    /* Return the document */
+    if (!environment.production) console.info('Got document', docSnap.data());
+    return docSnap.data() as T;
+  }
+
+  /* Get all documents in a collection */
+  public async getAllDocuments<T>(collectionName: string, converter: FirestoreDataConverter<T>): Promise<T[]> {
+    const documents: T[] = [];
+    const collectionRef = collection(this.db, collectionName).withConverter(converter);
     const querySnapshot = await getDocs(collectionRef);
-    querySnapshot.forEach((eventDoc) => {
-      events.push(eventDoc.data());
-      if (!environment.production) console.info('Got event', eventDoc.data());
+    querySnapshot.forEach((item: QueryDocumentSnapshot<T>) => {
+      documents.push(item.data());
+      if (!environment.production) console.info('Got document', item.data());
     });
-    return events;
+    return documents;
   }
 
-  public async getEventByUid(eventUid: string): Promise<Event> {
-    const collectionRef = collection(this.db, Collection.EVENTS).withConverter(eventConverter);
-    const docRef = doc(collectionRef, eventUid);
-    const docSnap = await getDoc(docRef);
-    if (!environment.production) console.info('Got event', docSnap.data());
-    return docSnap.data() as Event;
-  }
-
-  public async getEventsByMultipleConstraints(constraints: QueryConstraint[]): Promise<Event[]> {
-    const events: Event[] = [];
-    const collectionRef = collection(this.db, Collection.EVENTS).withConverter(eventConverter);
+  /* Get all documents in a collection that match the constraints */
+  public async getDocumentsByMultipleConstraints<T>(
+    collectionName: string,
+    constraints: QueryConstraint[],
+    converter: FirestoreDataConverter<T>
+  ): Promise<T[]> {
+    const documents: T[] = [];
+    const collectionRef = collection(this.db, collectionName).withConverter(converter);
     const q = query(collectionRef, ...constraints);
     const querySnapshot = await getDocs(q);
-    querySnapshot.forEach((eventDoc) => {
-      events.push(eventDoc.data());
-      if (!environment.production) console.info('Got event', eventDoc.data());
+    querySnapshot.forEach((item: QueryDocumentSnapshot<T>) => {
+      documents.push(item.data());
+      if (!environment.production) console.info('Got document', item.data());
     });
-    return events;
-  }
-
-  /* ------------------------------------------- ASSIGNMENT ------------------------------------------- */
-  public async getAssignmentByUid(assignmentUid: string): Promise<Assignment> {
-    const collectionRef = collection(this.db, Collection.ASSIGNMENTS).withConverter(assignmentConverter);
-    const docRef = doc(collectionRef, assignmentUid);
-    const docSnap = await getDoc(docRef);
-    if (!environment.production) console.info('Got assignment', docSnap.data());
-    return docSnap.data() as Assignment;
-  }
-
-  public async getAssignmentsByMultipleConstraints(constraints: QueryConstraint[]): Promise<Assignment[]> {
-    const assignments: Assignment[] = [];
-    const collectionRef = collection(this.db, Collection.ASSIGNMENTS).withConverter(assignmentConverter);
-    const q = query(collectionRef, ...constraints);
-    const querySnapshot = await getDocs(q);
-    querySnapshot.forEach((item: QueryDocumentSnapshot<Assignment>) => {
-      assignments.push(item.data());
-      if (!environment.production) console.info('Got assignment', item.data());
-    });
-    return assignments;
-  }
-
-  /* ------------------------------------------- EMPLOYEE ------------------------------------------- */
-  public async getAllEmployees(): Promise<Employee[]> {
-    const employees: Employee[] = [];
-    const collectionRef = collection(this.db, Collection.EMPLOYEES).withConverter(employeeConverter);
-    const querySnapshot = await getDocs(collectionRef);
-    querySnapshot.forEach((item: QueryDocumentSnapshot<Employee>) => {
-      employees.push(item.data());
-      if (!environment.production) console.info('Got employee', item.data());
-    });
-    return employees;
-  }
-
-  public async getEmployeeByUid(employeeUid: string): Promise<Employee> {
-    const collectionRef = collection(this.db, Collection.EMPLOYEES).withConverter(employeeConverter);
-    const docRef = doc(collectionRef, employeeUid);
-    const docSnap = await getDoc(docRef);
-    if (!environment.production) console.info('Got employee', docSnap.data());
-    return docSnap.data() as Employee;
-  }
-
-  public async getEmployeesByMultipleConstraints(constraints: QueryConstraint[]): Promise<Employee[]> {
-    const employees: Employee[] = [];
-    const collectionRef = collection(this.db, Collection.EMPLOYEES).withConverter(employeeConverter);
-    const q = query(collectionRef, ...constraints);
-    const querySnapshot = await getDocs(q);
-    querySnapshot.forEach((item: QueryDocumentSnapshot<Employee>) => {
-      employees.push(item.data());
-      if (!environment.production) console.info('Got employee', item.data());
-    });
-    return employees;
-  }
-
-  /* ------------------------------------------- TABLE ------------------------------------------- */
-  public async getTableByUid(tableUid: string): Promise<Table> {
-    const collectionRef = collection(this.db, Collection.TABLES).withConverter(tableConverter);
-    const docRef = doc(collectionRef, tableUid);
-    const docSnap = await getDoc(docRef);
-    if (!environment.production) console.info('Got table', docSnap.data());
-    return docSnap.data() as Table;
-  }
-
-  public async getTablesByMultipleConstraints(constraints: QueryConstraint[]): Promise<Table[]> {
-    const tables: Table[] = [];
-    const collectionRef = collection(this.db, Collection.TABLES).withConverter(tableConverter);
-    const q = query(collectionRef, ...constraints);
-    const querySnapshot = await getDocs(q);
-    querySnapshot.forEach((item: QueryDocumentSnapshot<Table>) => {
-      tables.push(item.data());
-      if (!environment.production) console.info('Got table', item.data());
-    });
-    return tables;
-  }
-
-  /* ------------------------------------------- PARTICIPATION ------------------------------------------- */
-  public async getParticipationByUid(participationUid: string): Promise<Participation> {
-    const collectionRef = collection(this.db, Collection.PARTICIPATIONS).withConverter(participationConverter);
-    const docRef = doc(collectionRef, participationUid);
-    const docSnap = await getDoc(docRef);
-    if (!environment.production) console.info('Got participation', docSnap.data());
-    return docSnap.data() as Participation;
-  }
-
-  public async getParticipationsByMultipleConstraints(constraints: QueryConstraint[]): Promise<Participation[]> {
-    const participations: Participation[] = [];
-    const collectionRef = collection(this.db, Collection.PARTICIPATIONS).withConverter(participationConverter);
-    const q = query(collectionRef, ...constraints);
-    const querySnapshot = await getDocs(q);
-    querySnapshot.forEach((item: QueryDocumentSnapshot<Participation>) => {
-      participations.push(item.data());
-      if (!environment.production) console.info('Got participation', item.data());
-    });
-    return participations;
-  }
-
-  /* ------------------------------------------- CLIENT ------------------------------------------- */
-  public async getAllClients(): Promise<Client[]> {
-    const clients: Client[] = [];
-    const collectionRef = collection(this.db, Collection.CLIENTS).withConverter(clientConverter);
-    const querySnapshot = await getDocs(collectionRef);
-    querySnapshot.forEach((item: QueryDocumentSnapshot<Client>) => {
-      clients.push(item.data());
-      if (!environment.production) console.info('Got client', item.data());
-    });
-    return clients;
-  }
-
-  public async getClientByUid(clientUid: string): Promise<Client> {
-    const collectionRef = collection(this.db, Collection.CLIENTS).withConverter(clientConverter);
-    const docRef = doc(collectionRef, clientUid);
-    const docSnap = await getDoc(docRef);
-    if (!environment.production) console.info('Got client', docSnap.data());
-    return docSnap.data() as Client;
-  }
-
-  public async getClientsByMultipleConstraints(constraints: QueryConstraint[]): Promise<Client[]> {
-    const clients: Client[] = [];
-    const collectionRef = collection(this.db, Collection.CLIENTS).withConverter(clientConverter);
-    const q = query(collectionRef, ...constraints);
-    const querySnapshot = await getDocs(q);
-    querySnapshot.forEach((item: QueryDocumentSnapshot<Client>) => {
-      clients.push(item.data());
-      if (!environment.production) console.info('Got client', item.data());
-    });
-    return clients;
+    return documents;
   }
 }

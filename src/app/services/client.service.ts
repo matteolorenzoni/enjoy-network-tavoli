@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { DocumentData, documentId, DocumentReference, QueryConstraint, where } from '@angular/fire/firestore';
-import { ClientDTO } from '../models/collection';
+import { ClientDTO, Collection } from '../models/collection';
+import { clientConverter } from '../models/converter';
 import { Client, Participation } from '../models/type';
 import { FirebaseCreateService } from './firebase/firebase-crud/firebase-create.service';
 import { FirebaseDeleteService } from './firebase/firebase-crud/firebase-delete.service';
@@ -20,12 +21,16 @@ export class ClientService {
 
   /* ------------------------------------------- GET ------------------------------------------- */
   public async getAllClients(): Promise<Client[]> {
-    const clients: Client[] = await this.firebaseReadService.getAllClients();
+    const clients: Client[] = await this.firebaseReadService.getAllDocuments(Collection.CLIENTS, clientConverter);
     return clients;
   }
 
   public async getClient(clientUid: string): Promise<Client> {
-    const client: Client = await this.firebaseReadService.getClientByUid(clientUid);
+    const client: Client = await this.firebaseReadService.getDocumentByUid(
+      Collection.CLIENTS,
+      clientUid,
+      clientConverter
+    );
     return client;
   }
 
@@ -34,7 +39,11 @@ export class ClientService {
 
     const idConstraint: QueryConstraint = where(documentId(), 'in', clientUids);
     const constricts: QueryConstraint[] = [idConstraint];
-    const clients: Client[] = await this.firebaseReadService.getClientsByMultipleConstraints(constricts);
+    const clients: Client[] = await this.firebaseReadService.getDocumentsByMultipleConstraints(
+      Collection.CLIENTS,
+      constricts,
+      clientConverter
+    );
     return clients;
   }
 
