@@ -32,15 +32,4 @@ export class ParticipationService {
   }
 
   /* ------------------------------------------- UPDATE ------------------------------------------- */
-  public async updateParticipationPaymentProp(participationUid: string, hasPayed: boolean): Promise<void> {
-    const participation: Participation = await this.firebaseReadService.getDocumentByUid(
-      Collection.PARTICIPATIONS,
-      participationUid,
-      participationConverter
-    );
-    if (participation) {
-      const propsToUpdate = { payed: hasPayed };
-      await this.firebaseUpdateService.updateDocumentProps(Collection.PARTICIPATIONS, participation, propsToUpdate);
-    }
-  }
 }

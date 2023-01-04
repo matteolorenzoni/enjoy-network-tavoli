@@ -79,16 +79,4 @@ export class ParticipationListComponent implements OnInit {
   goToCreateClient(): void {
     this.router.navigate([`create-item/${this.tableUid}/client/null`]);
   }
-
-  handleParticipationChange(param: { partecipationUid: string; hasPayed: boolean }): void {
-    this.participationService
-      .updateParticipationPaymentProp(param.partecipationUid, param.hasPayed)
-      .then(() => {
-        this.getData();
-        this.toastService.showSuccess('Pagamento aggiornato');
-      })
-      .catch((err: Error) => {
-        this.toastService.showError(err);
-      });
-  }
 }

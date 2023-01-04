@@ -65,7 +65,6 @@ export class ClientService {
           tableUid,
           clientUid,
           active: true,
-          payed: false,
           scanned: false
         }
       };

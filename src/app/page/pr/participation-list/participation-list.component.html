@@ -6,10 +6,7 @@
     FILTRI
   </button>
   <ul [@staggeredFadeInIncrement]="participationsAndClientArray.length" class="flex flex-col divide-y divide-gray-700">
-    <en-item-participation
-      *ngFor="let item of participationsAndClientArray"
-      [pc]="item"
-      (payedChangeEvent)="handleParticipationChange($event)"></en-item-participation>
+    <en-item-participation *ngFor="let item of participationsAndClientArray" [pc]="item"></en-item-participation>
   </ul>
   <div class="theme-primary fixed left-0 bottom-4 right-0 mx-auto flex h-12 max-w-[48rem] justify-end">
     <div [@fadeInAnimation] class="mr-4">
