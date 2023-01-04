@@ -40,11 +40,11 @@ export class FirebaseUpdateService {
 
   /* ------------------------------------------- EMPLOYEE ------------------------------------------- */
   public async updateEmployee(employee: Employee): Promise<void> {
-    const { uid, employeeDTO } = employee;
-    employeeDTO.modificatedAt = new Date();
+    const { uid, props } = employee;
+    props.modificatedAt = new Date();
     const collectionRef = collection(this.db, Collection.EMPLOYEES);
     const docRef = doc(collectionRef, uid);
-    await updateDoc(docRef, employeeDTO);
+    await updateDoc(docRef, props);
     if (!environment.production) console.info('Updated employee', employee);
   }
 

@@ -11,15 +11,15 @@ import { Assignment, Client, Employee, Event, Participation, Table } from './typ
 
 export const employeeConverter: FirestoreDataConverter<Employee> = {
   toFirestore(employee: Employee): WithFieldValue<DocumentData> {
-    const { employeeDTO } = employee;
+    const { props } = employee;
     const data: EmployeeDTO = {
-      name: employeeDTO.name,
-      lastName: employeeDTO.lastName,
-      role: employeeDTO.role,
-      phone: employeeDTO.phone,
-      zone: employeeDTO.zone,
-      active: employeeDTO.active,
-      createdAt: employeeDTO.createdAt ? employeeDTO.createdAt : new Date(),
+      name: props.name,
+      lastName: props.lastName,
+      role: props.role,
+      phone: props.phone,
+      zone: props.zone,
+      active: props.active,
+      createdAt: props.createdAt ? props.createdAt : new Date(),
       modificatedAt: new Date()
     };
     return data;
@@ -28,7 +28,7 @@ export const employeeConverter: FirestoreDataConverter<Employee> = {
     const data: EmployeeDTO = snapshot.data(options) as EmployeeDTO;
     const employee: Employee = {
       uid: snapshot.id,
-      employeeDTO: {
+      props: {
         name: data.name,
         lastName: data.lastName,
         role: data.role,

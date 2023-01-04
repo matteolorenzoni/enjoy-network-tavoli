@@ -25,9 +25,9 @@ export class SessionStorageService {
       employeeUid,
       employeeConverter
     );
-    const { uid, employeeDTO } = employee;
+    const { uid, props } = employee;
     sessionStorage.setItem('uid', uid);
-    Object.entries(employeeDTO).forEach(([key, value]) => {
+    Object.entries(props).forEach(([key, value]) => {
       sessionStorage.setItem(key, typeof value === 'string' ? value : JSON.stringify(value));
     });
   }

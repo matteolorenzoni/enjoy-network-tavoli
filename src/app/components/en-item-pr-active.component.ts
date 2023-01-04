@@ -12,10 +12,8 @@ import { Employee } from '../models/type';
         [checked]="isChecked"
         [disabled]="isDisabled"
         (change)="onChangeCheck($event)" />
-      <div class="shrink-0 basis-40 truncate xs:basis-48">
-        {{ employee.employeeDTO.name }} {{ employee.employeeDTO.lastName }}
-      </div>
-      <div class="grow truncate">{{ employee.employeeDTO.zone }}</div>
+      <div class="shrink-0 basis-40 truncate xs:basis-48">{{ employee.props.name }} {{ employee.props.lastName }}</div>
+      <div class="grow truncate">{{ employee.props.zone }}</div>
     </li>
   `,
   styles: [

@@ -92,9 +92,9 @@ export class AssignmentListComponent {
           if (assignment) {
             this.assignmentsAndEmployeeArray.push({
               ...assignment,
-              name: employee.employeeDTO.name,
-              lastName: employee.employeeDTO.lastName,
-              zone: employee.employeeDTO.zone
+              name: employee.props.name,
+              lastName: employee.props.lastName,
+              zone: employee.props.zone
             } as AssignmentAndEmployee);
           }
         });

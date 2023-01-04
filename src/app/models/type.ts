@@ -35,7 +35,7 @@ export type Event = {
 
 export type Employee = {
   readonly uid: string;
-  employeeDTO: EmployeeDTO;
+  props: EmployeeDTO;
 };
 
 export type Assignment = {

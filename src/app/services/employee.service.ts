@@ -73,17 +73,17 @@ export class EmployeeService {
   }
 
   /* ------------------------------------------- ADD ------------------------------------------- */
-  public async addOrUpdateEmployee(uid: string | null, employeeDTO: EmployeeDTO, email: string): Promise<void> {
+  public async addOrUpdateEmployee(uid: string | null, props: EmployeeDTO, email: string): Promise<void> {
     if (!uid) {
       /* Add new user */
       const userCredential: UserCredential = await this.userService.register(email, PASSWORD_DEFAULT);
 
       /* Add new employee */
-      const employee: Employee = { uid: userCredential.user.uid, employeeDTO };
+      const employee: Employee = { uid: userCredential.user.uid, props };
       await this.firebaseCreateService.addEmployee(employee);
     } else {
       /* Update document */
-      const employee: Employee = { uid, employeeDTO };
+      const employee: Employee = { uid, props };
       await this.firebaseUpdateService.updateEmployee(employee);
     }
   }

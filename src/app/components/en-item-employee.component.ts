@@ -9,16 +9,16 @@ import { ToastService } from '../services/toast.service';
   selector: 'en-item-employee[employee]',
   template: `
     <li class="flex h-14 items-center gap-2">
-      <ng-container *ngIf="employeeDTO.active; else elseTemplate">
+      <ng-container *ngIf="props.active; else elseTemplate">
         <fa-icon [icon]="activeIcon" class="text-emerald-600"></fa-icon>
       </ng-container>
       <ng-template #elseTemplate>
         <fa-icon [icon]="notActiveIcon" class="text-red-600"></fa-icon>
       </ng-template>
       <div class="center mx-2 w-full shrink-0 basis-20 rounded bg-primary-60/70 text-white">
-        {{ employeeDTO.role | uppercase | slice: 0:5 }}
+        {{ props.role | uppercase | slice: 0:5 }}
       </div>
-      <div class="shrink truncate text-white">{{ employeeDTO.name }} {{ employeeDTO.lastName }}</div>
+      <div class="shrink truncate text-white">{{ props.name }} {{ props.lastName }}</div>
       <div class="ml-auto shrink-0 px-1">
         <fa-icon
           [icon]="modifyIcon"
@@ -51,14 +51,14 @@ export class EnItemEmployeeComponent {
 
   /* Employee */
   uid = '';
-  employeeDTO!: EmployeeDTO;
+  props!: EmployeeDTO;
 
   constructor(private employeeService: EmployeeService, private toastService: ToastService) {}
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['employee']) {
       this.uid = this.employee.uid;
-      this.employeeDTO = this.employee.employeeDTO;
+      this.props = this.employee.props;
     }
   }
 

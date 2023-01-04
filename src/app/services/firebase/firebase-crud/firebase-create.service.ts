@@ -54,13 +54,13 @@ export class FirebaseCreateService {
 
   /* ------------------------------------------- EMPLOYEE ------------------------------------------- */
   public async addEmployee(employee: Employee): Promise<void> {
-    const { uid, employeeDTO } = employee;
-    employeeDTO.createdAt = new Date();
-    employeeDTO.modificatedAt = new Date();
+    const { uid, props } = employee;
+    props.createdAt = new Date();
+    props.modificatedAt = new Date();
     const collectionRef = collection(this.db, Collection.EMPLOYEES);
     const docRef = doc(collectionRef, uid);
-    await setDoc(docRef, employeeDTO);
-    if (!environment.production) console.info('Added employee', employeeDTO);
+    await setDoc(docRef, props);
+    if (!environment.production) console.info('Added employee', props);
   }
 
   /* ------------------------------------------- TABLE ------------------------------------------- */

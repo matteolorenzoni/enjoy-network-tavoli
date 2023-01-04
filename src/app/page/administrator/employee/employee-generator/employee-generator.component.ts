@@ -67,14 +67,14 @@ export class EmployeeGeneratorComponent implements OnInit {
       this.employeeService
         .getEmployee(this.employeeUid)
         .then((employee: Employee) => {
-          const { employeeDTO } = employee;
-          if (employeeDTO) {
+          const { props } = employee;
+          if (props) {
             this.employeeForm.patchValue({
-              name: employeeDTO.name,
-              lastName: employeeDTO.lastName,
-              role: employeeDTO.role,
-              phone: employeeDTO.phone,
-              zone: employeeDTO.zone
+              name: props.name,
+              lastName: props.lastName,
+              role: props.role,
+              phone: props.phone,
+              zone: props.zone
             });
             this.lblButton = 'Modifica dipendente';
           }
