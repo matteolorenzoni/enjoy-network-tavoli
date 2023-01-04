@@ -10,11 +10,11 @@ import { Event } from 'src/app/models/type';
       (click)="goToSelector()">
       <div class="flex group-hover:hidden">
         <div>
-          <p class="text-xl font-medium text-primary-60">{{ event.eventDTO.name }}</p>
-          <p class="text-xs font-light">{{ event.eventDTO.place }}</p>
+          <p class="text-xl font-medium text-primary-60">{{ event.props.name }}</p>
+          <p class="text-xs font-light">{{ event.props.place }}</p>
         </div>
         <div class="center ml-auto rounded-xl bg-gray-800 p-2 text-primary-60">
-          <p>{{ event.eventDTO.date | date: 'dd/MM/YYYY' }}</p>
+          <p>{{ event.props.date | date: 'dd/MM/YYYY' }}</p>
         </div>
       </div>
       <div class="hidden h-full group-hover:flex">

@@ -60,7 +60,7 @@ export class AssignmentService {
     employeeUids.forEach((employeeUid) => {
       assignments.push({
         uid: '',
-        assignmentDTO: {
+        props: {
           eventUid,
           employeeUid,
           active: true,

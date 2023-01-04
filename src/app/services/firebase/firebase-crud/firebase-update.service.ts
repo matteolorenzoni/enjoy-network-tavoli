@@ -18,11 +18,11 @@ export class FirebaseUpdateService {
 
   /* ------------------------------------------- EVENT ------------------------------------------- */
   public async updateEvent(event: Event): Promise<void> {
-    const { uid, eventDTO } = event;
-    eventDTO.modificatedAt = new Date();
+    const { uid, props } = event;
+    props.modificatedAt = new Date();
     const collectionRef = collection(this.db, Collection.EVENTS);
     const docRef = doc(collectionRef, uid);
-    await updateDoc(docRef, eventDTO);
+    await updateDoc(docRef, props);
     if (!environment.production) console.info('Updated event', event);
   }
 
@@ -50,11 +50,11 @@ export class FirebaseUpdateService {
 
   /* ------------------------------------------- TABLE ------------------------------------------- */
   public async updateTable(table: Table): Promise<void> {
-    const { uid, tableDTO } = table;
-    tableDTO.modificatedAt = new Date();
+    const { uid, props } = table;
+    props.modificatedAt = new Date();
     const collectionRef = collection(this.db, Collection.TABLES);
     const docRef = doc(collectionRef, uid);
-    await updateDoc(docRef, tableDTO);
+    await updateDoc(docRef, props);
     if (!environment.production) console.info('Updated table', table);
   }
 
@@ -82,11 +82,11 @@ export class FirebaseUpdateService {
 
   /* ------------------------------------------- CLIENT  ------------------------------------------- */
   public async updateClient(client: Client): Promise<void> {
-    const { uid, clientDTO } = client;
-    clientDTO.modificatedAt = new Date();
+    const { uid, props } = client;
+    props.modificatedAt = new Date();
     const collectionRef = collection(this.db, Collection.CLIENTS);
     const docRef = doc(collectionRef, uid);
-    await updateDoc(docRef, clientDTO);
+    await updateDoc(docRef, props);
     if (!environment.production) console.info('Updated client', client);
   }
 }

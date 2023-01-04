@@ -98,13 +98,13 @@ export class EmployeeService {
       constraints,
       assignmentConverter
     );
-    const assignmentsToDelete: Assignment[] = assignments.filter((item) => item.assignmentDTO.personMarked === 0);
+    const assignmentsToDelete: Assignment[] = assignments.filter((item) => item.props.personMarked === 0);
     const assignmentsToDeleteUids: string[] = assignmentsToDelete.map((item) => item.uid);
     await this.firebaseDeleteService.deleteDocumentsByUids(Collection.ASSIGNMENTS, assignmentsToDeleteUids);
-    const assignmentsToMinimize: Assignment[] = assignments.filter((item) => item.assignmentDTO.personMarked > 0);
+    const assignmentsToMinimize: Assignment[] = assignments.filter((item) => item.props.personMarked > 0);
     assignmentsToMinimize.forEach(async (assignment) => {
       const propsToUpdate: Partial<AssignmentDTO> = {
-        personAssigned: assignment.assignmentDTO.personMarked,
+        personAssigned: assignment.props.personMarked,
         active: false
       };
       await this.firebaseUpdateService.updateAssignmentProps(assignment, propsToUpdate);

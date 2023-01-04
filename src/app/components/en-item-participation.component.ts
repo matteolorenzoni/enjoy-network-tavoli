@@ -14,7 +14,7 @@ import { PartecipationAndClient } from '../models/type';
         <div>{{ hasScanned ? '🟠' : '⚪' }}</div>
       </div>
       <div>
-        <p>{{ pc.client.clientDTO.name }} {{ pc.client.clientDTO.lastName }}</p>
+        <p>{{ pc.client.props.name }} {{ pc.client.props.lastName }}</p>
       </div>
       <div class="ml-auto flex items-center">
         <label class="relative ml-2 inline-flex cursor-pointer items-center">
@@ -70,9 +70,9 @@ export class EnItemParticipationComponent {
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['pc']) {
       const currentValue = changes['pc'].currentValue as PartecipationAndClient;
-      this.isActive = currentValue.participation.participationDTO.active;
-      this.hasPayed = currentValue.participation.participationDTO.payed;
-      this.hasScanned = currentValue.participation.participationDTO.scanned;
+      this.isActive = currentValue.participation.props.active;
+      this.hasPayed = currentValue.participation.props.payed;
+      this.hasScanned = currentValue.participation.props.scanned;
 
       /* Form IsActive */
       this.formIsActive.setValue(this.hasPayed);

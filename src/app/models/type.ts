@@ -30,7 +30,7 @@ export type BottomNavigation = {
 
 export type Event = {
   readonly uid: string;
-  eventDTO: EventDTO;
+  props: EventDTO;
 };
 
 export type Employee = {
@@ -40,22 +40,22 @@ export type Employee = {
 
 export type Assignment = {
   readonly uid: string;
-  assignmentDTO: AssignmentDTO;
+  props: AssignmentDTO;
 };
 
 export type Table = {
   readonly uid: string;
-  tableDTO: TableDTO;
+  props: TableDTO;
 };
 
 export type Participation = {
   readonly uid: string;
-  participationDTO: ParticipationDTO;
+  props: ParticipationDTO;
 };
 
 export type Client = {
   readonly uid: string;
-  clientDTO: ClientDTO;
+  props: ClientDTO;
 };
 
 // TODO: da modificare

@@ -46,24 +46,24 @@ export class EventService {
   }
 
   /* ------------------------------------------- ADD ------------------------------------------- */
-  public async addOrUpdateEvent(photo: File | null, uid: string | null, eventDTO: EventDTO): Promise<void> {
-    let { imageUrl } = eventDTO;
+  public async addOrUpdateEvent(photo: File | null, uid: string | null, props: EventDTO): Promise<void> {
+    let { imageUrl } = props;
 
     if (photo) {
       /* Add new image */
-      const photoUrl = await this.firebaseStorage.addPhotoToEvent(eventDTO, photo);
+      const photoUrl = await this.firebaseStorage.addPhotoToEvent(props, photo);
       imageUrl = photoUrl;
     }
 
     if (!uid) {
       /* Add new event */
-      const event: Event = { uid: '', eventDTO };
-      event.eventDTO.imageUrl = imageUrl;
+      const event: Event = { uid: '', props };
+      event.props.imageUrl = imageUrl;
       await this.firebaseCreateService.addEvent(event);
     } else {
       /* Update document */
-      const event: Event = { uid, eventDTO };
-      event.eventDTO.imageUrl = imageUrl;
+      const event: Event = { uid, props };
+      event.props.imageUrl = imageUrl;
       await this.firebaseUpdateService.updateEvent(event);
     }
   }
@@ -82,7 +82,7 @@ export class EventService {
     await this.firebaseDeleteService.deleteDocumentsByUids(Collection.ASSIGNMENTS, assignmentUids);
 
     /* Delete image */
-    const photoUrl = event.eventDTO.imageUrl;
+    const photoUrl = event.props.imageUrl;
     try {
       const photoName = photoUrl.split('%2F')[1].split('?')[0];
       await this.firebaseStorage.deletePhoto(photoName);

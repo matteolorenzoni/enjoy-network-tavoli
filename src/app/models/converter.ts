@@ -45,20 +45,20 @@ export const employeeConverter: FirestoreDataConverter<Employee> = {
 
 export const eventConverter: FirestoreDataConverter<Event> = {
   toFirestore(event: Event): WithFieldValue<DocumentData> {
-    const { eventDTO } = event;
+    const { props } = event;
     const data: EventDTO = {
-      imageUrl: eventDTO.imageUrl,
-      name: eventDTO.name,
-      date: eventDTO.date,
-      timeStart: eventDTO.timeStart,
-      timeEnd: eventDTO.timeEnd,
-      maxPerson: eventDTO.maxPerson,
-      place: eventDTO.place,
-      guest: eventDTO.guest,
-      description: eventDTO.description,
-      messageText: eventDTO.messageText,
-      createdAt: eventDTO.createdAt ? eventDTO.createdAt : new Date(),
-      modificatedAt: eventDTO.modificatedAt ? eventDTO.modificatedAt : new Date()
+      imageUrl: props.imageUrl,
+      name: props.name,
+      date: props.date,
+      timeStart: props.timeStart,
+      timeEnd: props.timeEnd,
+      maxPerson: props.maxPerson,
+      place: props.place,
+      guest: props.guest,
+      description: props.description,
+      messageText: props.messageText,
+      createdAt: props.createdAt ? props.createdAt : new Date(),
+      modificatedAt: props.modificatedAt ? props.modificatedAt : new Date()
     };
     return data;
   },
@@ -66,7 +66,7 @@ export const eventConverter: FirestoreDataConverter<Event> = {
     const data: EventDTO = snapshot.data(options) as EventDTO;
     const event: Event = {
       uid: snapshot.id,
-      eventDTO: {
+      props: {
         imageUrl: data.imageUrl,
         name: data.name,
         date: new Date((data.date as unknown as Timestamp).seconds * 1000),
@@ -87,15 +87,15 @@ export const eventConverter: FirestoreDataConverter<Event> = {
 
 export const assignmentConverter: FirestoreDataConverter<Assignment> = {
   toFirestore(assignment: Assignment): WithFieldValue<DocumentData> {
-    const { assignmentDTO } = assignment;
+    const { props } = assignment;
     const data: AssignmentDTO = {
-      eventUid: assignmentDTO.eventUid,
-      employeeUid: assignmentDTO.employeeUid,
-      active: assignmentDTO.active,
-      personMarked: assignmentDTO.personMarked,
-      personAssigned: assignmentDTO.personAssigned,
-      createdAt: assignmentDTO.createdAt ? assignmentDTO.createdAt : new Date(),
-      modificatedAt: assignmentDTO.modificatedAt ? assignmentDTO.modificatedAt : new Date()
+      eventUid: props.eventUid,
+      employeeUid: props.employeeUid,
+      active: props.active,
+      personMarked: props.personMarked,
+      personAssigned: props.personAssigned,
+      createdAt: props.createdAt ? props.createdAt : new Date(),
+      modificatedAt: props.modificatedAt ? props.modificatedAt : new Date()
     };
     return data;
   },
@@ -103,7 +103,7 @@ export const assignmentConverter: FirestoreDataConverter<Assignment> = {
     const data: AssignmentDTO = snapshot.data(options) as AssignmentDTO;
     const assignment: Assignment = {
       uid: snapshot.id,
-      assignmentDTO: {
+      props: {
         eventUid: data.eventUid,
         employeeUid: data.employeeUid,
         active: data.active,
@@ -119,18 +119,18 @@ export const assignmentConverter: FirestoreDataConverter<Assignment> = {
 
 export const tableConverter: FirestoreDataConverter<Table> = {
   toFirestore(table: Table): WithFieldValue<DocumentData> {
-    const { tableDTO } = table;
+    const { props } = table;
     const data: TableDTO = {
-      eventUid: tableDTO.eventUid,
-      employeeUid: tableDTO.employeeUid,
-      name: tableDTO.name,
-      price: tableDTO.price,
-      hour: tableDTO.hour,
-      drink: tableDTO.drink,
-      personMarked: tableDTO.personMarked ? tableDTO.personMarked : 0,
-      personAssigned: tableDTO.personAssigned ? tableDTO.personAssigned : 0,
-      createdAt: tableDTO.createdAt ? tableDTO.createdAt : new Date(),
-      modificatedAt: tableDTO.modificatedAt ? tableDTO.modificatedAt : new Date()
+      eventUid: props.eventUid,
+      employeeUid: props.employeeUid,
+      name: props.name,
+      price: props.price,
+      hour: props.hour,
+      drink: props.drink,
+      personMarked: props.personMarked ? props.personMarked : 0,
+      personAssigned: props.personAssigned ? props.personAssigned : 0,
+      createdAt: props.createdAt ? props.createdAt : new Date(),
+      modificatedAt: props.modificatedAt ? props.modificatedAt : new Date()
     };
     return data;
   },
@@ -138,7 +138,7 @@ export const tableConverter: FirestoreDataConverter<Table> = {
     const data: TableDTO = snapshot.data(options) as TableDTO;
     const table: Table = {
       uid: snapshot.id,
-      tableDTO: {
+      props: {
         eventUid: data.eventUid,
         employeeUid: data.employeeUid,
         name: data.name,
@@ -157,13 +157,13 @@ export const tableConverter: FirestoreDataConverter<Table> = {
 
 export const clientConverter: FirestoreDataConverter<Client> = {
   toFirestore(client: Client): WithFieldValue<DocumentData> {
-    const { clientDTO } = client;
+    const { props } = client;
     const data: ClientDTO = {
-      name: clientDTO.name,
-      lastName: clientDTO.lastName,
-      phone: clientDTO.phone,
-      createdAt: clientDTO.createdAt ? clientDTO.createdAt : new Date(),
-      modificatedAt: clientDTO.modificatedAt ? clientDTO.modificatedAt : new Date()
+      name: props.name,
+      lastName: props.lastName,
+      phone: props.phone,
+      createdAt: props.createdAt ? props.createdAt : new Date(),
+      modificatedAt: props.modificatedAt ? props.modificatedAt : new Date()
     };
     return data;
   },
@@ -171,7 +171,7 @@ export const clientConverter: FirestoreDataConverter<Client> = {
     const data: ClientDTO = snapshot.data(options) as ClientDTO;
     const client: Client = {
       uid: snapshot.id,
-      clientDTO: {
+      props: {
         name: data.name,
         lastName: data.lastName,
         phone: data.phone,
@@ -185,15 +185,15 @@ export const clientConverter: FirestoreDataConverter<Client> = {
 
 export const participationConverter: FirestoreDataConverter<Participation> = {
   toFirestore(participation: Participation): WithFieldValue<DocumentData> {
-    const { participationDTO } = participation;
+    const { props } = participation;
     const data: ParticipationDTO = {
-      tableUid: participationDTO.tableUid,
-      clientUid: participationDTO.clientUid,
-      active: participationDTO.active,
-      payed: participationDTO.payed,
-      scanned: participationDTO.scanned,
-      createdAt: participationDTO.createdAt ? participationDTO.createdAt : new Date(),
-      modificatedAt: participationDTO.modificatedAt ? participationDTO.modificatedAt : new Date()
+      tableUid: props.tableUid,
+      clientUid: props.clientUid,
+      active: props.active,
+      payed: props.payed,
+      scanned: props.scanned,
+      createdAt: props.createdAt ? props.createdAt : new Date(),
+      modificatedAt: props.modificatedAt ? props.modificatedAt : new Date()
     };
     return data;
   },
@@ -201,7 +201,7 @@ export const participationConverter: FirestoreDataConverter<Participation> = {
     const data: ParticipationDTO = snapshot.data(options) as ParticipationDTO;
     const participation: Participation = {
       uid: snapshot.id,
-      participationDTO: {
+      props: {
         tableUid: data.tableUid,
         clientUid: data.clientUid,
         active: data.active,

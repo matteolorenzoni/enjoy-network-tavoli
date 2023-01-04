@@ -48,17 +48,17 @@ export class ClientService {
   }
 
   /* ------------------------------------------- CREATE ------------------------------------------- */
-  public async addOrUpdateClient(uid: string | null, clientDTO: ClientDTO, tableUid: string): Promise<void> {
+  public async addOrUpdateClient(uid: string | null, props: ClientDTO, tableUid: string): Promise<void> {
     if (!uid) {
       /* Add new client */
-      const client: Client = { uid: '', clientDTO };
+      const client: Client = { uid: '', props };
       const docRef: DocumentReference<DocumentData> = await this.firebaseCreateService.addClient(client);
       const clientUid: string = docRef.id;
 
       /* Add new participation */
       const participation: Participation = {
         uid: '',
-        participationDTO: {
+        props: {
           tableUid,
           clientUid,
           active: true,
@@ -69,7 +69,7 @@ export class ClientService {
       await this.firebaseCreateService.addParticipation(participation);
     } else {
       /* Update document */
-      const client: Client = { uid, clientDTO };
+      const client: Client = { uid, props };
       await this.firebaseUpdateService.updateClient(client);
     }
   }

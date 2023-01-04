@@ -61,7 +61,7 @@ export class TableListComponent implements OnInit {
     this.eventService
       .getEvent(eventUid)
       .then((event) => {
-        this.eventDate = event.eventDTO.date;
+        this.eventDate = event.props.date;
       })
       .catch((error: Error) => {
         this.toastService.showError(error);
@@ -73,7 +73,7 @@ export class TableListComponent implements OnInit {
       .getAssignmentsByEventUidAndEmployeeUid(eventUid, employeeUid)
       .then((assignments) => {
         /* Get the first assignment */
-        this.eventMaxPersonAssigned = assignments.length > 0 ? assignments[0].assignmentDTO.personAssigned : 0;
+        this.eventMaxPersonAssigned = assignments.length > 0 ? assignments[0].props.personAssigned : 0;
       })
       .catch((error: Error) => {
         this.toastService.showError(error);
@@ -88,11 +88,11 @@ export class TableListComponent implements OnInit {
 
         /* Calculate the number of people assigned and marked */
         this.eventPersonMarked = tables.reduce(
-          (acc, table) => acc + (table.tableDTO.personMarked ? table.tableDTO.personMarked : 0),
+          (acc, table) => acc + (table.props.personMarked ? table.props.personMarked : 0),
           0
         );
         this.eventPersonAssigned = tables.reduce(
-          (acc, table) => acc + (table.tableDTO.personAssigned ? table.tableDTO.personAssigned : 0),
+          (acc, table) => acc + (table.props.personAssigned ? table.props.personAssigned : 0),
           0
         );
       })

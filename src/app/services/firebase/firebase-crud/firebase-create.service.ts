@@ -28,12 +28,12 @@ export class FirebaseCreateService {
 
   /* ------------------------------------------- EVENT ------------------------------------------- */
   public async addEvent(event: Event): Promise<DocumentReference<DocumentData>> {
-    const { eventDTO } = event;
-    eventDTO.createdAt = new Date();
-    eventDTO.modificatedAt = new Date();
+    const { props } = event;
+    props.createdAt = new Date();
+    props.modificatedAt = new Date();
     const collectionRef = collection(this.db, Collection.EVENTS);
-    const docRef = await addDoc(collectionRef, eventDTO);
-    if (!environment.production) console.info('Added event', eventDTO);
+    const docRef = await addDoc(collectionRef, props);
+    if (!environment.production) console.info('Added event', props);
     return docRef;
   }
 
@@ -42,12 +42,12 @@ export class FirebaseCreateService {
     const batch = writeBatch(this.db);
     const collectionRef = collection(this.db, Collection.ASSIGNMENTS);
     assignments.forEach((assignment: Assignment) => {
-      const { assignmentDTO } = assignment;
-      assignmentDTO.createdAt = new Date();
-      assignmentDTO.modificatedAt = new Date();
+      const { props } = assignment;
+      props.createdAt = new Date();
+      props.modificatedAt = new Date();
       const docRef = doc(collectionRef);
-      batch.set(docRef, assignment.assignmentDTO);
-      if (!environment.production) console.info('Added assignment', assignment.assignmentDTO);
+      batch.set(docRef, assignment.props);
+      if (!environment.production) console.info('Added assignment', assignment.props);
     });
     await batch.commit();
   }
@@ -65,36 +65,36 @@ export class FirebaseCreateService {
 
   /* ------------------------------------------- TABLE ------------------------------------------- */
   public async addTable(table: Table): Promise<DocumentReference<DocumentData>> {
-    const { tableDTO } = table;
-    tableDTO.createdAt = new Date();
-    tableDTO.modificatedAt = new Date();
-    tableDTO.personMarked = 0;
-    tableDTO.personAssigned = 0;
+    const { props } = table;
+    props.createdAt = new Date();
+    props.modificatedAt = new Date();
+    props.personMarked = 0;
+    props.personAssigned = 0;
     const collectionRef = collection(this.db, Collection.TABLES);
-    const docRef = await addDoc(collectionRef, tableDTO);
-    if (!environment.production) console.info('Added table', tableDTO);
+    const docRef = await addDoc(collectionRef, props);
+    if (!environment.production) console.info('Added table', props);
     return docRef;
   }
 
   /* ------------------------------------------- PARTICIPATION ------------------------------------------- */
   public async addParticipation(participation: Participation): Promise<DocumentReference<DocumentData>> {
-    const { participationDTO } = participation;
-    participationDTO.createdAt = new Date();
-    participationDTO.modificatedAt = new Date();
+    const { props } = participation;
+    props.createdAt = new Date();
+    props.modificatedAt = new Date();
     const collectionRef = collection(this.db, Collection.PARTICIPATIONS);
-    const docRef = await addDoc(collectionRef, participationDTO);
-    if (!environment.production) console.info('Added partecipation', participationDTO);
+    const docRef = await addDoc(collectionRef, props);
+    if (!environment.production) console.info('Added partecipation', props);
     return docRef;
   }
 
   /* ------------------------------------------- CLIENT ------------------------------------------- */
   public async addClient(client: Client): Promise<DocumentReference<DocumentData>> {
-    const { clientDTO } = client;
-    clientDTO.createdAt = new Date();
-    clientDTO.modificatedAt = new Date();
+    const { props } = client;
+    props.createdAt = new Date();
+    props.modificatedAt = new Date();
     const collectionRef = collection(this.db, Collection.CLIENTS);
-    const docRef = await addDoc(collectionRef, clientDTO);
-    if (!environment.production) console.info('Added client', clientDTO);
+    const docRef = await addDoc(collectionRef, props);
+    if (!environment.production) console.info('Added client', props);
     return docRef;
   }
 }

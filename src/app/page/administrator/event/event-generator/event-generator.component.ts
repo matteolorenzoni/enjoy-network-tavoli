@@ -65,21 +65,21 @@ export class EventGeneratorComponent implements OnInit {
       this.eventService
         .getEvent(this.eventUid)
         .then((event) => {
-          const { eventDTO } = event;
+          const { props } = event;
           if (event) {
             this.eventForm.patchValue({
-              imageUrl: eventDTO.imageUrl,
-              name: eventDTO.name,
-              date: eventDTO.date.toJSON().split('T')[0],
-              timeStart: eventDTO.timeStart,
-              timeEnd: eventDTO.timeEnd,
-              maxPerson: eventDTO.maxPerson,
-              place: eventDTO.place,
-              guest: eventDTO.guest,
-              description: eventDTO.description,
-              messageText: eventDTO.messageText
+              imageUrl: props.imageUrl,
+              name: props.name,
+              date: props.date.toJSON().split('T')[0],
+              timeStart: props.timeStart,
+              timeEnd: props.timeEnd,
+              maxPerson: props.maxPerson,
+              place: props.place,
+              guest: props.guest,
+              description: props.description,
+              messageText: props.messageText
             });
-            this.imageSrc = eventDTO.imageUrl;
+            this.imageSrc = props.imageUrl;
             this.lblButton = 'Modifica evento';
           }
         })

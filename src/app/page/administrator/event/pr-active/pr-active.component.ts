@@ -52,7 +52,7 @@ export class PrActiveComponent implements OnInit {
       .getAssignmentsByEventUid(this.eventUid)
       .then((assignments) => {
         this.assignments = assignments;
-        this.assignmentEmployeeUids = assignments.map((assignment) => assignment.assignmentDTO.employeeUid);
+        this.assignmentEmployeeUids = assignments.map((assignment) => assignment.props.employeeUid);
       })
       .catch((err: Error) => {
         this.toastService.showError(err);
@@ -73,8 +73,8 @@ export class PrActiveComponent implements OnInit {
   }
 
   isDisabled(employee: Employee): boolean {
-    const assignment = this.assignments.find((item) => item.assignmentDTO.employeeUid === employee.uid);
-    const personMarked = assignment?.assignmentDTO.personMarked || 0;
+    const assignment = this.assignments.find((item) => item.props.employeeUid === employee.uid);
+    const personMarked = assignment?.props.personMarked || 0;
     return personMarked > 0;
   }
 
@@ -88,7 +88,7 @@ export class PrActiveComponent implements OnInit {
   }
 
   onSave(): void {
-    const oldEmployeeUids = this.assignments.map((assignment) => assignment.assignmentDTO.employeeUid);
+    const oldEmployeeUids = this.assignments.map((assignment) => assignment.props.employeeUid);
     const newEmployeeUids = this.assignmentEmployeeUids;
     const employeeAddedUids = newEmployeeUids.filter((employeeUid) => !oldEmployeeUids.includes(employeeUid));
     const removedEmployeeUids = oldEmployeeUids.filter((employeeUid) => !newEmployeeUids.includes(employeeUid));

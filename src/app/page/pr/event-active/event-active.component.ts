@@ -35,7 +35,7 @@ export class EventActiveComponent implements OnInit {
     this.assignmentService
       .getAssignmentsByEmployeeUid(employeeUid)
       .then((assignments) => {
-        const eventUids = assignments.map((assignment) => assignment.assignmentDTO.eventUid);
+        const eventUids = assignments.map((assignment) => assignment.props.eventUid);
         this.eventService
           .getEventsByUids(eventUids)
           .then((events) => {

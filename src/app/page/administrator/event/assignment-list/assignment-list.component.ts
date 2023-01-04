@@ -61,7 +61,7 @@ export class AssignmentListComponent {
     this.eventService
       .getEvent(eventUid)
       .then((event) => {
-        this.maxPerson = event.eventDTO.maxPerson;
+        this.maxPerson = event.props.maxPerson;
       })
       .catch((err: Error) => {
         this.toastService.showError(err);
@@ -72,8 +72,8 @@ export class AssignmentListComponent {
     this.assignmentService
       .getAssignmentsByEventUid(eventUid)
       .then((assignments) => {
-        this.personAssigned = assignments.reduce((acc, item) => acc + item.assignmentDTO.personAssigned, 0);
-        this.personMarked = assignments.reduce((acc, item) => acc + item.assignmentDTO.personMarked, 0);
+        this.personAssigned = assignments.reduce((acc, item) => acc + item.props.personAssigned, 0);
+        this.personMarked = assignments.reduce((acc, item) => acc + item.props.personMarked, 0);
         this.getEmployee(assignments);
       })
       .catch((err: Error) => {
@@ -82,13 +82,13 @@ export class AssignmentListComponent {
   }
 
   getEmployee(assignments: Assignment[]): void {
-    const employeeUids = assignments.map((item) => item.assignmentDTO.employeeUid);
+    const employeeUids = assignments.map((item) => item.props.employeeUid);
     this.employeeService
       .getEmployeesByUids(employeeUids)
       .then((employees) => {
         this.assignmentsAndEmployeeArray = [];
         employees.forEach((employee) => {
-          const assignment = assignments.find((item) => item.assignmentDTO.employeeUid === employee.uid);
+          const assignment = assignments.find((item) => item.props.employeeUid === employee.uid);
           if (assignment) {
             this.assignmentsAndEmployeeArray.push({
               ...assignment,

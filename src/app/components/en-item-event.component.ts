@@ -19,7 +19,7 @@ import { EventDTO } from '../models/collection';
             APRI
           </p>
           <img
-            [src]="eventDTO.imageUrl"
+            [src]="props.imageUrl"
             [alt]="dateFormatted + '_image'"
             class="
               absolute
@@ -42,9 +42,9 @@ import { EventDTO } from '../models/collection';
               xs:w-48" />
           <div class="flex h-full w-full overflow-hidden pl-28 group-hover:hidden xs:pl-44">
             <div class="flex flex-col justify-center text-white">
-              <p class="truncate text-base font-semibold xs:text-lg">{{ eventDTO.name }}</p>
+              <p class="truncate text-base font-semibold xs:text-lg">{{ props.name }}</p>
               <p class="truncate text-xs font-normal xs:text-sm xs:font-light">
-                {{ dateFormatted }} ({{ eventDTO.place }})
+                {{ dateFormatted }} ({{ props.place }})
               </p>
             </div>
             <div class="center absolute right-0 top-0 bottom-0 p-2 text-lg font-extrabold xs:text-2xl">
@@ -59,7 +59,7 @@ import { EventDTO } from '../models/collection';
           (click)="toggleOpen()">
           <p class="center absolute inset-0 z-10 text-white backdrop-blur-[2px]">CHIUDI</p>
           <img
-            [src]="eventDTO.imageUrl"
+            [src]="props.imageUrl"
             [alt]="dateFormatted + '_image'"
             class="center relative h-full w-full object-cover" />
         </div>
@@ -108,7 +108,7 @@ export class EnItemEventComponent {
   /* Props */
   isOpen = false;
   uid = '';
-  eventDTO!: EventDTO;
+  props!: EventDTO;
   eventInfo: { label: string; value: string }[] = [];
   dateFormatted = '';
   maxPersonFormatted = '';
@@ -121,17 +121,17 @@ export class EnItemEventComponent {
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['event']) {
       this.uid = this.event.uid;
-      this.eventDTO = this.event.eventDTO;
-      this.dateFormatted = this.datePipe.transform(this.eventDTO.date, 'dd/MM/yyyy') || '';
-      this.maxPersonFormatted = `0/${this.eventDTO.maxPerson}`;
-      this.eventInfo.push({ label: 'Nome', value: this.eventDTO.name });
+      this.props = this.event.props;
+      this.dateFormatted = this.datePipe.transform(this.props.date, 'dd/MM/yyyy') || '';
+      this.maxPersonFormatted = `0/${this.props.maxPerson}`;
+      this.eventInfo.push({ label: 'Nome', value: this.props.name });
       this.eventInfo.push({ label: 'Data', value: this.dateFormatted });
       this.eventInfo.push({ label: 'Paganti', value: this.maxPersonFormatted });
-      this.eventInfo.push({ label: 'Orario', value: `${this.eventDTO.timeStart} - ${this.eventDTO.timeEnd}` });
-      this.eventInfo.push({ label: 'Luogo', value: this.eventDTO.place });
-      this.eventInfo.push({ label: 'Ospite/i', value: this.eventDTO.guest });
-      this.eventInfo.push({ label: 'Descrizione', value: this.eventDTO.description });
-      this.eventInfo.push({ label: 'Messaggio', value: this.eventDTO.messageText });
+      this.eventInfo.push({ label: 'Orario', value: `${this.props.timeStart} - ${this.props.timeEnd}` });
+      this.eventInfo.push({ label: 'Luogo', value: this.props.place });
+      this.eventInfo.push({ label: 'Ospite/i', value: this.props.guest });
+      this.eventInfo.push({ label: 'Descrizione', value: this.props.description });
+      this.eventInfo.push({ label: 'Messaggio', value: this.props.messageText });
 
       this.itemNavigationMenu = [
         { link: [this.uid, 'table'], name: 'Tavoli', definition: faWineBottle },

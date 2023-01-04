@@ -53,11 +53,11 @@ export class ClientGeneratorComponent implements OnInit {
       this.clientService
         .getClient(this.clientUid)
         .then((client) => {
-          const { clientDTO } = client;
+          const { props } = client;
           this.clientForm.patchValue({
-            name: clientDTO.name,
-            lastName: clientDTO.lastName,
-            phone: clientDTO.phone
+            name: props.name,
+            lastName: props.lastName,
+            phone: props.phone
           });
           this.lblButton = 'Modifica cliente';
         })

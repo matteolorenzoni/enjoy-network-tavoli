@@ -58,12 +58,12 @@ export class TableGeneratorComponent implements OnInit {
       this.tableService
         .getTable(this.tableUid)
         .then((table) => {
-          const { tableDTO } = table;
+          const { props } = table;
           this.tableForm.patchValue({
-            name: tableDTO.name,
-            price: tableDTO.price,
-            hour: tableDTO.hour.toISOString().slice(0, 16),
-            drink: tableDTO.drink
+            name: props.name,
+            price: props.price,
+            hour: props.hour.toISOString().slice(0, 16),
+            drink: props.drink
           });
           this.lblButton = 'Modifica tavolo';
         })

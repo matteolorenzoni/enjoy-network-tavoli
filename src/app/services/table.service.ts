@@ -49,14 +49,14 @@ export class TableService {
   }
 
   /* ------------------------------------------- ADD ------------------------------------------- */
-  public async addOrUpdateTable(uid: string | null, tableDTO: TableDTO): Promise<void> {
+  public async addOrUpdateTable(uid: string | null, props: TableDTO): Promise<void> {
     if (!uid) {
       /* Add new table */
-      const table: Table = { uid: '', tableDTO };
+      const table: Table = { uid: '', props };
       await this.firebaseCreateService.addTable(table);
     } else {
       /* Update document */
-      const table: Table = { uid, tableDTO };
+      const table: Table = { uid, props };
       await this.firebaseUpdateService.updateTable(table);
     }
   }
