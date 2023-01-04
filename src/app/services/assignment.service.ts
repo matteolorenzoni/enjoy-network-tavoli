@@ -81,7 +81,7 @@ export class AssignmentService {
     );
     if (assignment) {
       const propsToUpdate = { personAssigned };
-      await this.firebaseUpdateService.updateAssignmentProps(assignment, propsToUpdate);
+      await this.firebaseUpdateService.updateDocumentProps(Collection.ASSIGNMENTS, assignment, propsToUpdate);
     }
   }
 
@@ -97,7 +97,7 @@ export class AssignmentService {
       } else {
         /** If the person is not active for the event, are removed as many as person assigned as possible  */
         const propsToUpdate = active ? { active: true } : { personAssigned: personMarked, active: false };
-        await this.firebaseUpdateService.updateAssignmentProps(assignment, propsToUpdate);
+        await this.firebaseUpdateService.updateDocumentProps(Collection.ASSIGNMENTS, assignment, propsToUpdate);
       }
     }
   }

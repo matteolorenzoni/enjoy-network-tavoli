@@ -84,7 +84,7 @@ export class EmployeeService {
     } else {
       /* Update document */
       const employee: Employee = { uid, props };
-      await this.firebaseUpdateService.updateEmployee(employee);
+      await this.firebaseUpdateService.updateDocument(Collection.EMPLOYEES, employee);
     }
   }
 
@@ -107,7 +107,7 @@ export class EmployeeService {
         personAssigned: assignment.props.personMarked,
         active: false
       };
-      await this.firebaseUpdateService.updateAssignmentProps(assignment, propsToUpdate);
+      await this.firebaseUpdateService.updateDocumentProps(Collection.ASSIGNMENTS, assignment, propsToUpdate);
     });
 
     /* Delete employee */

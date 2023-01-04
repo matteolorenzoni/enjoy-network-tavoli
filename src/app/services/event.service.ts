@@ -64,7 +64,7 @@ export class EventService {
       /* Update document */
       const event: Event = { uid, props };
       event.props.imageUrl = imageUrl;
-      await this.firebaseUpdateService.updateEvent(event);
+      await this.firebaseUpdateService.updateDocument(Collection.EVENTS, event);
     }
   }
 

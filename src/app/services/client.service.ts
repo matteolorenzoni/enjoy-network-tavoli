@@ -73,7 +73,7 @@ export class ClientService {
     } else {
       /* Update document */
       const client: Client = { uid, props };
-      await this.firebaseUpdateService.updateClient(client);
+      await this.firebaseUpdateService.updateDocument(Collection.CLIENTS, client);
     }
   }
 

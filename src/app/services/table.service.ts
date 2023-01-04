@@ -57,7 +57,7 @@ export class TableService {
     } else {
       /* Update document */
       const table: Table = { uid, props };
-      await this.firebaseUpdateService.updateTable(table);
+      await this.firebaseUpdateService.updateDocument(Collection.TABLES, table);
     }
   }
 

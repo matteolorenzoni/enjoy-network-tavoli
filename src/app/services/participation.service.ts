@@ -40,7 +40,7 @@ export class ParticipationService {
     );
     if (participation) {
       const propsToUpdate = { payed: hasPayed };
-      await this.firebaseUpdateService.updateParticipationProps(participation, propsToUpdate);
+      await this.firebaseUpdateService.updateDocumentProps(Collection.PARTICIPATIONS, participation, propsToUpdate);
     }
   }
 }
