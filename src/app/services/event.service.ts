@@ -59,7 +59,7 @@ export class EventService {
       /* Add new event */
       const event: Event = { uid: '', props };
       event.props.imageUrl = imageUrl;
-      await this.firebaseCreateService.addEvent(event);
+      await this.firebaseCreateService.addDocument(Collection.EVENTS, event);
     } else {
       /* Update document */
       const event: Event = { uid, props };

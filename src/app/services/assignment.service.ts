@@ -69,7 +69,7 @@ export class AssignmentService {
         }
       } as Assignment);
     });
-    await this.firebaseCreateService.addAssignments(assignments);
+    await this.firebaseCreateService.addDocuments(Collection.ASSIGNMENTS, assignments);
   }
 
   /* ------------------------------------------- UPDATE ------------------------------------------- */

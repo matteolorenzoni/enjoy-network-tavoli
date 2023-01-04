@@ -53,7 +53,7 @@ export class TableService {
     if (!uid) {
       /* Add new table */
       const table: Table = { uid: '', props };
-      await this.firebaseCreateService.addTable(table);
+      await this.firebaseCreateService.addDocument(Collection.TABLES, table);
     } else {
       /* Update document */
       const table: Table = { uid, props };

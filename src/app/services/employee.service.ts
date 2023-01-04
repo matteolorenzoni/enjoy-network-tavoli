@@ -80,7 +80,7 @@ export class EmployeeService {
 
       /* Add new employee */
       const employee: Employee = { uid: userCredential.user.uid, props };
-      await this.firebaseCreateService.addEmployee(employee);
+      await this.firebaseCreateService.addDocumentWithUid(Collection.EMPLOYEES, employee);
     } else {
       /* Update document */
       const employee: Employee = { uid, props };

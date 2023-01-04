@@ -52,7 +52,10 @@ export class ClientService {
     if (!uid) {
       /* Add new client */
       const client: Client = { uid: '', props };
-      const docRef: DocumentReference<DocumentData> = await this.firebaseCreateService.addClient(client);
+      const docRef: DocumentReference<DocumentData> = await this.firebaseCreateService.addDocument(
+        Collection.CLIENTS,
+        client
+      );
       const clientUid: string = docRef.id;
 
       /* Add new participation */
@@ -66,7 +69,7 @@ export class ClientService {
           scanned: false
         }
       };
-      await this.firebaseCreateService.addParticipation(participation);
+      await this.firebaseCreateService.addDocument(Collection.PARTICIPATIONS, participation);
     } else {
       /* Update document */
       const client: Client = { uid, props };

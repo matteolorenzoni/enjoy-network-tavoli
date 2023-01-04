@@ -26,75 +26,47 @@ export class FirebaseCreateService {
     this.db = getFirestore();
   }
 
-  /* ------------------------------------------- EVENT ------------------------------------------- */
-  public async addEvent(event: Event): Promise<DocumentReference<DocumentData>> {
-    const { props } = event;
+  public async addDocument(
+    collectionName: Collection,
+    data: Event | Assignment | Employee | Table | Participation | Client
+  ): Promise<DocumentReference<DocumentData>> {
+    const { props } = data;
     props.createdAt = new Date();
     props.modificatedAt = new Date();
-    const collectionRef = collection(this.db, Collection.EVENTS);
+    const collectionRef = collection(this.db, collectionName);
     const docRef = await addDoc(collectionRef, props);
-    if (!environment.production) console.info('Added event', props);
+    if (!environment.production) console.info('Added document', props);
     return docRef;
   }
 
-  /* ------------------------------------------- ASSIGNEMNET ------------------------------------------- */
-  public async addAssignments(assignments: Assignment[]): Promise<void> {
+  public async addDocumentWithUid(
+    collectionName: Collection,
+    data: Event | Assignment | Employee | Table | Participation | Client
+  ): Promise<DocumentReference<DocumentData>> {
+    const { uid, props } = data;
+    props.createdAt = new Date();
+    props.modificatedAt = new Date();
+    const collectionRef = collection(this.db, collectionName);
+    const docRef = doc(collectionRef, uid);
+    await setDoc(docRef, props);
+    if (!environment.production) console.info('Added document', props);
+    return docRef;
+  }
+
+  public async addDocuments(
+    collectionName: Collection,
+    data: (Event | Assignment | Employee | Table | Participation | Client)[]
+  ): Promise<void> {
     const batch = writeBatch(this.db);
-    const collectionRef = collection(this.db, Collection.ASSIGNMENTS);
-    assignments.forEach((assignment: Assignment) => {
-      const { props } = assignment;
+    const collectionRef = collection(this.db, collectionName);
+    data.forEach((document: Event | Assignment | Employee | Table | Participation | Client) => {
+      const { props } = document;
       props.createdAt = new Date();
       props.modificatedAt = new Date();
       const docRef = doc(collectionRef);
-      batch.set(docRef, assignment.props);
-      if (!environment.production) console.info('Added assignment', assignment.props);
+      batch.set(docRef, props);
+      if (!environment.production) console.info('Added document', props);
     });
     await batch.commit();
-  }
-
-  /* ------------------------------------------- EMPLOYEE ------------------------------------------- */
-  public async addEmployee(employee: Employee): Promise<void> {
-    const { uid, props } = employee;
-    props.createdAt = new Date();
-    props.modificatedAt = new Date();
-    const collectionRef = collection(this.db, Collection.EMPLOYEES);
-    const docRef = doc(collectionRef, uid);
-    await setDoc(docRef, props);
-    if (!environment.production) console.info('Added employee', props);
-  }
-
-  /* ------------------------------------------- TABLE ------------------------------------------- */
-  public async addTable(table: Table): Promise<DocumentReference<DocumentData>> {
-    const { props } = table;
-    props.createdAt = new Date();
-    props.modificatedAt = new Date();
-    props.personMarked = 0;
-    props.personAssigned = 0;
-    const collectionRef = collection(this.db, Collection.TABLES);
-    const docRef = await addDoc(collectionRef, props);
-    if (!environment.production) console.info('Added table', props);
-    return docRef;
-  }
-
-  /* ------------------------------------------- PARTICIPATION ------------------------------------------- */
-  public async addParticipation(participation: Participation): Promise<DocumentReference<DocumentData>> {
-    const { props } = participation;
-    props.createdAt = new Date();
-    props.modificatedAt = new Date();
-    const collectionRef = collection(this.db, Collection.PARTICIPATIONS);
-    const docRef = await addDoc(collectionRef, props);
-    if (!environment.production) console.info('Added partecipation', props);
-    return docRef;
-  }
-
-  /* ------------------------------------------- CLIENT ------------------------------------------- */
-  public async addClient(client: Client): Promise<DocumentReference<DocumentData>> {
-    const { props } = client;
-    props.createdAt = new Date();
-    props.modificatedAt = new Date();
-    const collectionRef = collection(this.db, Collection.CLIENTS);
-    const docRef = await addDoc(collectionRef, props);
-    if (!environment.production) console.info('Added client', props);
-    return docRef;
   }
 }
