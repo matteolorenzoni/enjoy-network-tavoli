@@ -32,4 +32,15 @@ export class ParticipationService {
   }
 
   /* ------------------------------------------- UPDATE ------------------------------------------- */
+  public async madeParticipationNotActive(participationUid: string): Promise<void> {
+    const participation: Participation = await this.firebaseReadService.getDocumentByUid(
+      Collection.PARTICIPATIONS,
+      participationUid,
+      participationConverter
+    );
+    const propsToUpdate = {
+      isActive: false
+    };
+    await this.firebaseUpdateService.updateDocumentProps(Collection.PARTICIPATIONS, participation, propsToUpdate);
+  }
 }

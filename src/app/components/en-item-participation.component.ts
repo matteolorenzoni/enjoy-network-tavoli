@@ -1,6 +1,8 @@
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
-import { Component, Input, SimpleChanges } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { Subscription } from 'rxjs';
+import { ToastService } from '../services/toast.service';
+import { ParticipationService } from '../services/participation.service';
 import { PartecipationAndClient } from '../models/type';
 
 @Component({
@@ -21,7 +23,7 @@ import { PartecipationAndClient } from '../models/type';
         <fa-icon
           [icon]="deleteIcon"
           class="ml-4 text-lg text-gray-500 hover:cursor-pointer hover:text-gray-300 active:text-gray-800"
-          (click)="deleteParticipation()"></fa-icon>
+          (click)="madeParticipationNotActive()"></fa-icon>
       </div>
     </li>
   `,
@@ -39,33 +41,21 @@ export class EnItemParticipationComponent {
   /* Icons */
   deleteIcon = faTrash;
 
-  /* Participation */
-  isActive = false;
-  hasScanned = false;
-
   /* Subscriptions */
   subIsActive!: Subscription;
 
   /* ------------------------------ Constructor ------------------------------ */
-  constructor() {
-    // do nothing
-  }
-
-  /* ------------------------------ LifeCycle ------------------------------ */
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes['pc']) {
-      const currentValue = changes['pc'].currentValue as PartecipationAndClient;
-      this.isActive = currentValue.participation.props.active;
-      this.hasScanned = currentValue.participation.props.scanned;
-    }
-  }
-
-  ngOnDestroy(): void {
-    if (this.subIsActive) this.subIsActive.unsubscribe();
-  }
+  constructor(private participationService: ParticipationService, private toastService: ToastService) {}
 
   /* ------------------------------ Methods ------------------------------ */
-  deleteParticipation(): void {
-    console.log('deleteParticipation');
+  madeParticipationNotActive(): void {
+    this.participationService
+      .madeParticipationNotActive(this.pc.participation.uid)
+      .then(() => {
+        this.toastService.showSuccess('Partecipazione rimossa');
+      })
+      .catch((error) => {
+        this.toastService.showError(error);
+      });
   }
 }
