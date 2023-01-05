@@ -19,6 +19,20 @@ export class ParticipationService {
     private firebaseDeleteService: FirebaseDeleteService
   ) {}
 
+  /* ------------------------------------------- CREATE ------------------------------------------- */
+  public async addParticipation(tableUid: string, clientUid: string): Promise<void> {
+    const participation: Participation = {
+      uid: '',
+      props: {
+        tableUid,
+        clientUid,
+        isActive: true,
+        isScanned: false
+      }
+    };
+    await this.firebaseCreateService.addDocument(Collection.PARTICIPATIONS, participation);
+  }
+
   /* ------------------------------------------- GET ------------------------------------------- */
   public async getParticipationsByTableUid(tableUid: string): Promise<Participation[]> {
     const idConstraint: QueryConstraint = where('tableUid', '==', tableUid);
@@ -42,5 +56,19 @@ export class ParticipationService {
       isActive: false
     };
     await this.firebaseUpdateService.updateDocumentProps(Collection.PARTICIPATIONS, participation, propsToUpdate);
+  }
+
+  /* ------------------------------------------- DELETE ------------------------------------------- */
+  public async deleteParticipation(tableUid: string, clientUid: string): Promise<void> {
+    const tableUidConstraint: QueryConstraint = where('tableUid', '==', tableUid);
+    const clientUidConstraint: QueryConstraint = where('clientUid', '==', clientUid);
+    const constraints: QueryConstraint[] = [tableUidConstraint, clientUidConstraint];
+    const participations: Participation[] = await this.firebaseReadService.getDocumentsByMultipleConstraints(
+      Collection.PARTICIPATIONS,
+      constraints,
+      participationConverter
+    );
+    const participationsUids: string[] = participations.map((participation) => participation.uid);
+    await this.firebaseDeleteService.deleteDocumentsByUids(Collection.PARTICIPATIONS, participationsUids);
   }
 }
