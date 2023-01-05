@@ -21,6 +21,7 @@ export class TableGeneratorComponent implements OnInit {
 
   /* Table */
   tableUid: string | null = '';
+  personMarked = 0;
 
   /* Form */
   tableForm: FormGroup;
@@ -65,6 +66,7 @@ export class TableGeneratorComponent implements OnInit {
             hour: props.hour.toISOString().slice(0, 16),
             drink: props.drink
           });
+          this.personMarked = props.personMarked;
           this.lblButton = 'Modifica tavolo';
         })
         .catch((err: Error) => {
@@ -88,7 +90,8 @@ export class TableGeneratorComponent implements OnInit {
       name: this.tableForm.value.name?.trim().replace(/\s\s+/g, ' ') || '',
       price: this.tableForm.value.price,
       hour: new Date(this.tableForm.value.hour),
-      drink: this.tableForm.value.drink
+      drink: this.tableForm.value.drink,
+      personMarked: this.personMarked || 0
     };
 
     /* If the table uid is null, it means that we are creating a new table */

@@ -11,9 +11,7 @@ import { Table } from '../models/type';
         <p class="truncate">{{ table.props.name }}</p>
       </div>
       <div class="ml-auto flex-none shrink-0 basis-16 pl-2">
-        <p class="m-auto rounded-xl bg-neutral py-1 px-4 text-center">
-          {{ table.props.personMarked }}/{{ table.props.personAssigned }}
-        </p>
+        <p class="m-auto rounded-xl bg-neutral py-1 px-4 text-center">{{ table.props.personMarked }}</p>
       </div>
       <div class="flex flex-none shrink-0 basis-24 justify-end gap-1">
         <fa-icon

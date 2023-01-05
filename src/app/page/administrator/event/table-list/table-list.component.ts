@@ -91,10 +91,6 @@ export class TableListComponent implements OnInit {
           (acc, table) => acc + (table.props.personMarked ? table.props.personMarked : 0),
           0
         );
-        this.eventPersonAssigned = tables.reduce(
-          (acc, table) => acc + (table.props.personAssigned ? table.props.personAssigned : 0),
-          0
-        );
       })
       .catch((error: Error) => {
         this.toastService.showError(error);
