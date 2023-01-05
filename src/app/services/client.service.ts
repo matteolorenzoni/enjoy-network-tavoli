@@ -47,6 +47,18 @@ export class ClientService {
     return clients;
   }
 
+  public async getClientByPhone(phone: string): Promise<Client | null> {
+    const phoneConstraint: QueryConstraint = where('phone', '==', phone);
+    const constricts: QueryConstraint[] = [phoneConstraint];
+    const clients: Client[] = await this.firebaseReadService.getDocumentsByMultipleConstraints(
+      Collection.CLIENTS,
+      constricts,
+      clientConverter
+    );
+    if (clients.length === 0) return null;
+    return clients[0];
+  }
+
   /* ------------------------------------------- CREATE ------------------------------------------- */
   public async addOrUpdateClient(uid: string | null, props: ClientDTO, tableUid: string): Promise<void> {
     if (!uid) {
