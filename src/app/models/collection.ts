@@ -61,8 +61,8 @@ export type TableDTO = {
 export type ParticipationDTO = {
   tableUid: string;
   clientUid: string;
-  active: boolean;
-  scanned: boolean;
+  isActive: boolean;
+  isScanned: boolean;
   createdAt?: Date;
   modificatedAt?: Date;
 };

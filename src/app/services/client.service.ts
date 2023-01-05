@@ -64,8 +64,8 @@ export class ClientService {
         props: {
           tableUid,
           clientUid,
-          active: true,
-          scanned: false
+          isActive: true,
+          isScanned: false
         }
       };
       await this.firebaseCreateService.addDocument(Collection.PARTICIPATIONS, participation);

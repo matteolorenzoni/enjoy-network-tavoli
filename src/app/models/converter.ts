@@ -189,8 +189,8 @@ export const participationConverter: FirestoreDataConverter<Participation> = {
     const data: ParticipationDTO = {
       tableUid: props.tableUid,
       clientUid: props.clientUid,
-      active: props.active,
-      scanned: props.scanned,
+      isActive: props.isActive,
+      isScanned: props.isScanned,
       createdAt: props.createdAt ? props.createdAt : new Date(),
       modificatedAt: props.modificatedAt ? props.modificatedAt : new Date()
     };
@@ -203,8 +203,8 @@ export const participationConverter: FirestoreDataConverter<Participation> = {
       props: {
         tableUid: data.tableUid,
         clientUid: data.clientUid,
-        active: data.active,
-        scanned: data.scanned,
+        isActive: data.isActive,
+        isScanned: data.isScanned,
         createdAt: new Date((data.createdAt as unknown as Timestamp).seconds * 1000),
         modificatedAt: new Date((data.modificatedAt as unknown as Timestamp).seconds * 1000)
       }
