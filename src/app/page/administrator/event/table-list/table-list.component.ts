@@ -27,7 +27,6 @@ export class TableListComponent implements OnInit {
   eventUid: string | null = null;
   eventDate: Date | null = null;
   eventPersonMarked = 0;
-  eventPersonAssigned = 0;
   eventMaxPersonAssigned = 0;
 
   /* Table */

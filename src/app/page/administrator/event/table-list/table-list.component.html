@@ -7,7 +7,7 @@
   </button>
   <en-countdown [date]="eventDate"></en-countdown>
   <div class="m-4 flex">
-    <p class="m-auto text-xl">{{ eventPersonMarked }}/{{ eventPersonAssigned }}/{{ eventMaxPersonAssigned }}</p>
+    <p class="m-auto text-xl">{{ eventPersonMarked }}/{{ eventMaxPersonAssigned }}</p>
   </div>
   <ul [@staggeredFadeInIncrement]="tables.length" class="flex flex-col divide-y divide-gray-700">
     <en-item-table
