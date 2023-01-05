@@ -66,7 +66,7 @@ export class ParticipationListComponent implements OnInit {
         this.participationsAndClientArray = [];
         clients.forEach((client) => {
           const participation = participations.find((item) => item.props.clientUid === client.uid);
-          if (participation) {
+          if (participation && participation.props.isActive) {
             this.participationsAndClientArray.push({ participation, client });
           }
         });
