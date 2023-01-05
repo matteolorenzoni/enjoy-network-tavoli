@@ -13,7 +13,8 @@ import { ToastService } from '../services/toast.service';
       *ngIf="toast.isVisible"
       [ngClass]="{
         'bg-emerald-600': toast.type === ToastType.SUCCESS,
-        'bg-red-600': toast.type === ToastType.ERROR
+        'bg-red-600': toast.type === ToastType.ERROR,
+        'bg-gray-400': toast.type === ToastType.INFO
       }"
       class="absolute bottom-0 mx-auto flex w-[80%] max-w-3xl items-center rounded-lg py-3 px-6 font-roboto text-base font-medium text-white"
       role="alert">

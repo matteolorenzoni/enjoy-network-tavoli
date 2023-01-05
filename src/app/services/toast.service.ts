@@ -13,14 +13,12 @@ export class ToastService {
     isVisible: false
   });
 
-  constructor() {
-    // do nothing
-  }
-
+  /* Success */
   public showSuccess(message: string): void {
     this.show(ToastType.SUCCESS, message);
   }
 
+  /* Error */
   public showError(err: Error): void {
     console.error(err);
     this.show(ToastType.ERROR, err.message);
@@ -31,10 +29,12 @@ export class ToastService {
     this.show(ToastType.ERROR, message);
   }
 
+  /* Warning */
   public showWarning(message: string): void {
     this.show(ToastType.WARNING, message);
   }
 
+  /* Info */
   public showInfo(message: string): void {
     this.show(ToastType.INFO, message);
   }
@@ -53,20 +53,5 @@ export class ToastService {
       message: null,
       isVisible: false
     });
-  }
-
-  public getToastStyle(): string {
-    switch (this.toast$.value.type) {
-      case ToastType.SUCCESS:
-        return 'bg-emerald-400 text-emerald-700';
-      case ToastType.ERROR:
-        return 'bg-red-400 text-red-700';
-      case ToastType.WARNING:
-        return 'bg-yellow-400 text-yellow-700';
-      case ToastType.INFO:
-        return 'bg-blue-400 text-blue-700';
-      default:
-        return 'bg-emerald-400 text-emerald-700';
-    }
   }
 }
