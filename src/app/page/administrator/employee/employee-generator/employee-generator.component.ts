@@ -40,7 +40,7 @@ export class EmployeeGeneratorComponent implements OnInit {
       role: new FormControl(RoleType.PR, [Validators.required, Validators.pattern(/[\S]/)]),
       phone: new FormControl(null, [Validators.required, Validators.pattern(/^[0-9]*$/)]),
       zone: new FormControl(null, [Validators.required, Validators.pattern(/[\S]/)]),
-      active: new FormControl(true, [Validators.required])
+      isActive: new FormControl(true, [Validators.required])
     });
     this.employeeForm.controls['role'].valueChanges.subscribe((value) => {
       if (value !== RoleType.PR) {
@@ -68,13 +68,15 @@ export class EmployeeGeneratorComponent implements OnInit {
         .getEmployee(this.employeeUid)
         .then((employee: Employee) => {
           const { props } = employee;
+          console.log(props);
           if (props) {
             this.employeeForm.patchValue({
               name: props.name,
               lastName: props.lastName,
               role: props.role,
               phone: props.phone,
-              zone: props.zone
+              zone: props.zone,
+              isActive: props.isActive
             });
             this.lblButton = 'Modifica dipendente';
           }
@@ -94,7 +96,7 @@ export class EmployeeGeneratorComponent implements OnInit {
       role: this.employeeForm.value.role,
       phone: this.employeeForm.value.phone,
       zone: this.employeeForm.value.zone?.trim().replace(/\s\s+/g, ' ') || '',
-      active: this.employeeForm.value.active
+      isActive: this.employeeForm.value.isActive
     };
     const uidFormatted = this.employeeUid === '' || this.employeeUid === 'null' ? null : this.employeeUid;
     this.employeeService

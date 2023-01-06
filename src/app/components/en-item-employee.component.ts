@@ -9,7 +9,7 @@ import { ToastService } from '../services/toast.service';
   selector: 'en-item-employee[employee]',
   template: `
     <li class="flex h-14 items-center gap-2">
-      <ng-container *ngIf="props.active; else elseTemplate">
+      <ng-container *ngIf="props.isActive; else elseTemplate">
         <fa-icon [icon]="activeIcon" class="text-emerald-600"></fa-icon>
       </ng-container>
       <ng-template #elseTemplate>

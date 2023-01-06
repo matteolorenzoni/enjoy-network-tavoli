@@ -30,7 +30,7 @@ export type EmployeeDTO = {
   role: RoleType;
   phone: string;
   zone: string;
-  active: boolean;
+  isActive: boolean;
   createdAt?: Date;
   modifiedAt?: Date;
 };

@@ -18,7 +18,7 @@ export const employeeConverter: FirestoreDataConverter<Employee> = {
       role: props.role,
       phone: props.phone,
       zone: props.zone,
-      active: props.active,
+      isActive: props.isActive,
       createdAt: props.createdAt ? props.createdAt : new Date(),
       modifiedAt: new Date()
     };
@@ -34,7 +34,7 @@ export const employeeConverter: FirestoreDataConverter<Employee> = {
         role: data.role,
         phone: data.phone,
         zone: data.zone,
-        active: data.active,
+        isActive: data.isActive,
         createdAt: new Date((data.createdAt as unknown as Timestamp).seconds * 1000),
         modifiedAt: new Date((data.modifiedAt as unknown as Timestamp).seconds * 1000)
       }
