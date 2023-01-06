@@ -44,7 +44,7 @@ export class EmployeeService {
   }
 
   public async getEmployeesPrAndActive(): Promise<Employee[]> {
-    const activeConstraint: QueryConstraint = where('active', '==', true);
+    const activeConstraint: QueryConstraint = where('isActive', '==', true);
     const prConstraint: QueryConstraint = where('role', '==', RoleType.PR);
     const constricts: QueryConstraint[] = [activeConstraint, prConstraint];
     const employees: Employee[] = await this.firebaseReadService.getDocumentsByMultipleConstraints(
@@ -60,7 +60,7 @@ export class EmployeeService {
 
     const idConstraint: QueryConstraint = where(documentId(), 'in', employeeUids);
     // TODO: ordinamento
-    // const firstOrder: QueryConstraint = orderBy('active');
+    // const firstOrder: QueryConstraint = orderBy('isActive');
     // const secondOrder: QueryConstraint = orderBy('personAssigned');
     // const thirdOrder: QueryConstraint = orderBy('personMarked');
     const constricts: QueryConstraint[] = [idConstraint];

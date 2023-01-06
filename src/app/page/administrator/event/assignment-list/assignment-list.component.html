@@ -17,9 +17,9 @@
     <en-item-assignment
       *ngFor="let item of assignmentsAndEmployeeArray"
       [assUid]="item.uid"
-      [assActive]="item.props.active"
+      [assActive]="item.props.isActive"
       [assPersonAssigned]="item.props.personAssigned"
-      [assPersonMarked]="item.props.personMarked"
+      [assPersonMarked]="12"
       [empName]="item.name"
       [empLastName]="item.lastName"
       [empZone]="item.zone"
