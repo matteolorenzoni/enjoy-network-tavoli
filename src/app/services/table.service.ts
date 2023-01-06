@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { QueryConstraint, where } from '@angular/fire/firestore';
 import { Collection, TableDTO } from '../models/collection';
-import { tableConverter } from '../models/converter';
-import { Table } from '../models/type';
+import { participationConverter, tableConverter } from '../models/converter';
+import { Participation, Table } from '../models/type';
 import { FirebaseCreateService } from './firebase/firebase-crud/firebase-create.service';
 import { FirebaseDeleteService } from './firebase/firebase-crud/firebase-delete.service';
 import { FirebaseReadService } from './firebase/firebase-crud/firebase-read.service';
@@ -63,6 +63,18 @@ export class TableService {
 
   /* ------------------------------------------- DELETE ------------------------------------------- */
   public async deleteTable(uid: string): Promise<void> {
+    /* Make participations inactive */
+    const tableUidConstraint = where('tableUid', '==', uid);
+    const constricts: QueryConstraint[] = [tableUidConstraint];
+    const participations: Participation[] = await this.firebaseReadService.getDocumentsByMultipleConstraints(
+      Collection.PARTICIPATIONS,
+      constricts,
+      participationConverter
+    );
+    const propsTpUpdate = { isActive: false };
+    await this.firebaseUpdateService.updateDocumentsProp(Collection.PARTICIPATIONS, participations, propsTpUpdate);
+
+    /* Delete table */
     await this.firebaseDeleteService.deleteDocumentByUid(Collection.TABLES, uid);
   }
 }
