@@ -66,7 +66,7 @@ export class AssignmentService {
         props: {
           eventUid,
           employeeUid,
-          active: true,
+          isActive: true,
           personMarked: 0,
           personAssigned: 0
         }

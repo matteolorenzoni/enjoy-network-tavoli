@@ -105,7 +105,7 @@ export class EmployeeService {
     assignmentsToMinimize.forEach(async (assignment) => {
       const propsToUpdate: Partial<AssignmentDTO> = {
         personAssigned: assignment.props.personMarked,
-        active: false
+        isActive: false
       };
       await this.firebaseUpdateService.updateDocumentProps(Collection.ASSIGNMENTS, assignment, propsToUpdate);
     });
