@@ -27,7 +27,7 @@ import { ParticipationService } from '../services/participation.service';
         <fa-icon
           [icon]="deleteIcon"
           class="ml-2 text-gray-500 hover:cursor-pointer hover:text-gray-300 active:text-gray-800"
-          (click)="deletTable()"></fa-icon>
+          (click)="deleteTable()"></fa-icon>
       </div>
     </li>
   `,
@@ -73,7 +73,7 @@ export class EnItemTableComponent {
     this.router.navigate([`create-item/${this.eventUid}/table/${this.table.uid}`]);
   }
 
-  deletTable(): void {
+  deleteTable(): void {
     this.deleteTableEvent.emit(this.table.uid);
   }
 

@@ -62,7 +62,7 @@ export class ClientGeneratorComponent implements OnInit {
 
   public onSubmit() {
     this.isLoading = true;
-    this.addPaticipationAndClient();
+    this.addParticipationAndClient();
   }
 
   public checkIfPhoneNumberIsAlreadyUsed() {
@@ -89,7 +89,7 @@ export class ClientGeneratorComponent implements OnInit {
     }
   }
 
-  public addPaticipationAndClient(): void {
+  public addParticipationAndClient(): void {
     /* Check if the uids are valid */
     if (!this.tableUid || !this.clientUid) {
       throw new Error('Errore: parametri non validi');
