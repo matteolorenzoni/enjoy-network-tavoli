@@ -136,7 +136,7 @@ export class ClientGeneratorComponent implements OnInit {
     this.participation
       .addParticipation(this.tableUid, this.clientUid)
       .then(() => {
-        this.toastService.showSuccess('Partecipazione aggiunta');
+        this.toastService.showSuccess('Participazione aggiunta');
       })
       .catch((err: Error) => {
         this.toastService.showError(err);

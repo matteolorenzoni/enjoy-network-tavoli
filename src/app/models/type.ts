@@ -61,7 +61,7 @@ export type Client = {
 // TODO: da modificare
 export type AssignmentAndEmployee = Assignment & Pick<EmployeeDTO, 'name' | 'lastName' | 'zone'>;
 
-export type PartecipationAndClient = {
+export type ParticipationAndClient = {
   participation: Participation;
   client: Client;
 };

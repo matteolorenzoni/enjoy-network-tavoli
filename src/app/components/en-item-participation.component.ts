@@ -3,7 +3,7 @@ import { Component, Input } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { ToastService } from '../services/toast.service';
 import { ParticipationService } from '../services/participation.service';
-import { PartecipationAndClient } from '../models/type';
+import { ParticipationAndClient } from '../models/type';
 
 @Component({
   selector: 'en-item-participation[pc]',
@@ -36,7 +36,7 @@ import { PartecipationAndClient } from '../models/type';
   ]
 })
 export class EnItemParticipationComponent {
-  @Input() pc!: PartecipationAndClient;
+  @Input() pc!: ParticipationAndClient;
 
   /* Icons */
   deleteIcon = faTrash;
@@ -52,7 +52,7 @@ export class EnItemParticipationComponent {
     this.participationService
       .madeParticipationNotActive(this.pc.participation.uid)
       .then(() => {
-        this.toastService.showSuccess('Partecipazione rimossa');
+        this.toastService.showSuccess('Participazione rimossa');
       })
       .catch((error) => {
         this.toastService.showError(error);

@@ -4,7 +4,7 @@ import { faFilter, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { fadeInAnimation, staggeredFadeInIncrement } from 'src/app/animations/animations';
 import { ToastService } from 'src/app/services/toast.service';
 import { ClientService } from 'src/app/services/client.service';
-import { PartecipationAndClient, Participation } from '../../../models/type';
+import { ParticipationAndClient, Participation } from '../../../models/type';
 import { ParticipationService } from '../../../services/participation.service';
 
 @Component({
@@ -22,7 +22,7 @@ export class ParticipationListComponent implements OnInit {
   tableUid: string | null = null;
 
   /* Client */
-  participationsAndClientArray: PartecipationAndClient[] = [];
+  participationsAndClientArray: ParticipationAndClient[] = [];
 
   constructor(
     private router: Router,
