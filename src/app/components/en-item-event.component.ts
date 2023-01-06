@@ -166,7 +166,6 @@ export class EnItemEventComponent {
     this.tableService
       .getTableByEventUid(this.event.uid)
       .then((table: Table[]) => {
-        console.log(table);
         this.table = table;
         this.getAllParticipations();
       })

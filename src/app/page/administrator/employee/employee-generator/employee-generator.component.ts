@@ -68,7 +68,6 @@ export class EmployeeGeneratorComponent implements OnInit {
         .getEmployee(this.employeeUid)
         .then((employee: Employee) => {
           const { props } = employee;
-          console.log(props);
           if (props) {
             this.employeeForm.patchValue({
               name: props.name,
