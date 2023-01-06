@@ -9,7 +9,10 @@ import {
   getFirestore,
   QueryConstraint,
   QueryDocumentSnapshot,
-  FirestoreDataConverter
+  FirestoreDataConverter,
+  getCountFromServer,
+  AggregateField,
+  AggregateQuerySnapshot
 } from '@angular/fire/firestore';
 import { environment } from 'src/environments/environment';
 
@@ -69,5 +72,15 @@ export class FirebaseReadService {
       if (!environment.production) console.info('Got document', item.data());
     });
     return documents;
+  }
+
+  public async getDocumentsByMultipleConstraintsCount(
+    collectionName: string,
+    constraints: QueryConstraint[]
+  ): Promise<AggregateQuerySnapshot<{ count: AggregateField<number> }>> {
+    const collectionRef = collection(this.db, collectionName);
+    const q = query(collectionRef, ...constraints);
+    const aggregateField = await getCountFromServer(q);
+    return aggregateField;
   }
 }
