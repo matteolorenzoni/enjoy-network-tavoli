@@ -1,7 +1,9 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output, SimpleChanges } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { faUserPlus, faPen, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { ToastService } from '../services/toast.service';
 import { Table } from '../models/type';
+import { ParticipationService } from '../services/participation.service';
 
 @Component({
   selector: 'en-item-table[eventUid][table][deleteTableEvent]',
@@ -11,7 +13,7 @@ import { Table } from '../models/type';
         <p class="truncate">{{ table.props.name }}</p>
       </div>
       <div class="ml-auto flex-none shrink-0 basis-16 pl-2">
-        <p class="m-auto rounded-xl bg-neutral py-1 px-4 text-center">{{ table.props.personMarked }}</p>
+        <p class="m-auto rounded-xl bg-neutral py-1 px-4 text-center">{{ tableParticipation }}</p>
       </div>
       <div class="flex flex-none shrink-0 basis-24 justify-end gap-1">
         <fa-icon
@@ -42,12 +44,26 @@ export class EnItemTableComponent {
   @Input() eventUid!: string | null;
   @Output() deleteTableEvent = new EventEmitter<string>();
 
+  /* Participation */
+  tableParticipation = 0;
+
   /* Icons */
   addIcon = faUserPlus;
   updateIcon = faPen;
   deleteIcon = faTrash;
 
-  constructor(private router: Router, private route: ActivatedRoute) {}
+  constructor(
+    private router: Router,
+    private route: ActivatedRoute,
+    private participationService: ParticipationService,
+    private toastService: ToastService
+  ) {}
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['table']) {
+      this.getTablePersonMarked();
+    }
+  }
 
   goToClient(): void {
     this.router.navigate([`./table/${this.table.uid}`], { relativeTo: this.route });
@@ -59,5 +75,16 @@ export class EnItemTableComponent {
 
   deletTable(): void {
     this.deleteTableEvent.emit(this.table.uid);
+  }
+
+  getTablePersonMarked(): void {
+    this.participationService
+      .getTableParticipation(this.table.uid)
+      .then((count) => {
+        this.tableParticipation = count;
+      })
+      .catch((error) => {
+        this.toastService.showError(error);
+      });
   }
 }

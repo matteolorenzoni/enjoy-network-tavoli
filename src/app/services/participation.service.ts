@@ -36,13 +36,25 @@ export class ParticipationService {
   /* ------------------------------------------- GET ------------------------------------------- */
   public async getParticipationsByTableUid(tableUid: string): Promise<Participation[]> {
     const idConstraint: QueryConstraint = where('tableUid', '==', tableUid);
-    const constraints: QueryConstraint[] = [idConstraint];
+    const isActiveConstraint = where('isActive', '==', true);
+    const constraints: QueryConstraint[] = [idConstraint, isActiveConstraint];
     const participations: Participation[] = await this.firebaseReadService.getDocumentsByMultipleConstraints(
       Collection.PARTICIPATIONS,
       constraints,
       participationConverter
     );
     return participations;
+  }
+
+  public async getTableParticipation(tableUid: string): Promise<number> {
+    const tableUidConstraint = where('tableUid', '==', tableUid);
+    const isActiveConstraint = where('isActive', '==', true);
+    const constricts: QueryConstraint[] = [tableUidConstraint, isActiveConstraint];
+    const aggregate = await this.firebaseReadService.getDocumentsByMultipleConstraintsCount(
+      Collection.PARTICIPATIONS,
+      constricts
+    );
+    return aggregate.data().count;
   }
 
   /* ------------------------------------------- UPDATE ------------------------------------------- */
