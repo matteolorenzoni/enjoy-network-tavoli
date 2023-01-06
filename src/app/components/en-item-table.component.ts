@@ -79,7 +79,7 @@ export class EnItemTableComponent {
 
   getTablePersonMarked(): void {
     this.participationService
-      .getTableParticipation(this.table.uid)
+      .getParticipationsCountByTableUid(this.table.uid)
       .then((count) => {
         this.tableParticipation = count;
       })

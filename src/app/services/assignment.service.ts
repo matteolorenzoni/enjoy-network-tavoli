@@ -42,7 +42,10 @@ export class AssignmentService {
     return assignments;
   }
 
-  public async getAssignmentsByEventUidAndEmployeeUid(eventUid: string, employeeUid: string): Promise<Assignment[]> {
+  public async getAssignmentByEventUidAndEmployeeUid(
+    eventUid: string,
+    employeeUid: string
+  ): Promise<Assignment | null> {
     const eventUidConstraint: QueryConstraint = where('eventUid', '==', eventUid);
     const employeeUidConstraint: QueryConstraint = where('employeeUid', '==', employeeUid);
     const constraints: QueryConstraint[] = [eventUidConstraint, employeeUidConstraint];
@@ -51,7 +54,7 @@ export class AssignmentService {
       constraints,
       assignmentConverter
     );
-    return assignments;
+    return assignments && assignments.length > 0 ? assignments[0] : null;
   }
 
   /* ------------------------------------------- ADD ------------------------------------------- */

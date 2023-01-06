@@ -14,7 +14,7 @@
       *ngFor="let table of tables"
       [eventUid]="eventUid"
       [table]="table"
-      (deleteTableEvent)="onDeleteTableEvent($event)"></en-item-table>
+      (deleteTableEvent)="deleteTable($event)"></en-item-table>
   </ul>
   <div class="theme-primary fixed left-0 bottom-4 right-0 mx-auto flex h-12 max-w-[48rem] justify-end">
     <div [@fadeInAnimation] class="mr-4">

@@ -1,3 +1,4 @@
+import { ParticipationService } from 'src/app/services/participation.service';
 import { SessionStorageService } from 'src/app/services/sessionstorage.service';
 import { ToastService } from 'src/app/services/toast.service';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -32,33 +33,36 @@ export class TableListComponent implements OnInit {
   /* Table */
   tables: Table[] = [];
 
+  /* ---------------------------------------- Constructor ---------------------------------------- */
   constructor(
     private router: Router,
     private route: ActivatedRoute,
     private eventService: EventService,
     private assignmentService: AssignmentService,
     private tableService: TableService,
+    private participationService: ParticipationService,
     private toastService: ToastService,
     private sessionStorage: SessionStorageService
   ) {}
 
+  /* ---------------------------------------- LifeCycle ---------------------------------------- */
   ngOnInit(): void {
     this.eventUid = this.route.snapshot.paramMap.get('uid');
     this.employeeUid = this.sessionStorage.getEmployeeUid();
 
-    /* Check if the parameters are valid */
-    if (!this.eventUid || !this.employeeUid) {
-      throw new Error('Errore: parametri non validi');
-    }
-
-    this.getEventDate(this.eventUid);
-    this.getEventMaxPersonAssigned(this.eventUid, this.employeeUid);
-    this.getTables(this.eventUid, this.employeeUid);
+    this.getEventDate();
+    this.getEventMaxPersonAssigned();
+    this.getTables();
   }
 
-  getEventDate(eventUid: string): void {
+  /* ---------------------------------------- Http methods ---------------------------------------- */
+  /* To get the event date */
+  getEventDate(): void {
+    if (!this.eventUid) {
+      throw new Error('Errore: parametri non validi');
+    }
     this.eventService
-      .getEvent(eventUid)
+      .getEvent(this.eventUid)
       .then((event) => {
         this.eventDate = event.props.date;
       })
@@ -67,53 +71,67 @@ export class TableListComponent implements OnInit {
       });
   }
 
-  getEventMaxPersonAssigned(eventUid: string, employeeUid: string): void {
+  /* To get the max person assigned for the event */
+  getEventMaxPersonAssigned(): void {
+    if (!this.eventUid || !this.employeeUid) {
+      throw new Error('Errore: parametri non validi');
+    }
+
     this.assignmentService
-      .getAssignmentsByEventUidAndEmployeeUid(eventUid, employeeUid)
-      .then((assignments) => {
-        /* Get the first assignment */
-        this.eventMaxPersonAssigned = assignments.length > 0 ? assignments[0].props.personAssigned : 0;
+      .getAssignmentByEventUidAndEmployeeUid(this.eventUid, this.employeeUid)
+      .then((assignment) => {
+        this.eventMaxPersonAssigned = assignment ? assignment.props.personAssigned : 0;
       })
       .catch((error: Error) => {
         this.toastService.showError(error);
       });
   }
 
-  getTables(eventUid: string, employeeUid: string): void {
+  /* To get the list of tables */
+  getTables(): void {
+    if (!this.eventUid || !this.employeeUid) {
+      throw new Error('Errore: parametri non validi');
+    }
+
     this.tableService
-      .getTableByEventUidAndEmployeeUid(eventUid, employeeUid)
+      .getTableByEventUidAndEmployeeUid(this.eventUid, this.employeeUid)
       .then((tables: Table[]) => {
         this.tables = tables;
-
-        /* Calculate the number of people assigned and marked */
-        this.eventPersonMarked = tables.reduce(
-          (acc, table) => acc + (table.props.personMarked ? table.props.personMarked : 0),
-          0
-        );
+        const tableUids = tables.map((table) => table.uid);
+        this.getAllTableParticipation(tableUids);
       })
       .catch((error: Error) => {
         this.toastService.showError(error);
       });
   }
 
-  goToCreateTable(): void {
-    this.router.navigate([`create-item/${this.eventUid}/table/null`]);
+  /* To get the number of person marked for each table */
+  getAllTableParticipation(tableUids: string[]): void {
+    this.participationService
+      .getParticipationsCountByMultiTableUid(tableUids)
+      .then((count) => {
+        this.eventPersonMarked = count;
+      })
+      .catch((error: Error) => {
+        this.toastService.showError(error);
+      });
   }
 
-  onDeleteTableEvent(tableUid: string): void {
+  /* To delete a table */
+  deleteTable(tableUid: string): void {
     this.tableService
       .deleteTable(tableUid)
       .then(() => {
-        /* Check if the parameters are valid */
-        if (!this.eventUid || !this.employeeUid) {
-          throw new Error('Errore: parametri non validi');
-        }
-
-        this.getTables(this.eventUid, this.employeeUid);
+        this.getTables();
         this.toastService.showSuccess('Tavolo eliminato con successo');
       })
       .catch((error: Error) => {
         this.toastService.showError(error);
       });
+  }
+
+  /* ---------------------------------------- Methods ---------------------------------------- */
+  goToCreateTable(): void {
+    this.router.navigate([`create-item/${this.eventUid}/table/null`]);
   }
 }

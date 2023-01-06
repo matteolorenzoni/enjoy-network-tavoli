@@ -46,13 +46,24 @@ export class ParticipationService {
     return participations;
   }
 
-  public async getTableParticipation(tableUid: string): Promise<number> {
+  public async getParticipationsCountByTableUid(tableUid: string): Promise<number> {
     const tableUidConstraint = where('tableUid', '==', tableUid);
     const isActiveConstraint = where('isActive', '==', true);
     const constricts: QueryConstraint[] = [tableUidConstraint, isActiveConstraint];
     const aggregate = await this.firebaseReadService.getDocumentsByMultipleConstraintsCount(
       Collection.PARTICIPATIONS,
       constricts
+    );
+    return aggregate.data().count;
+  }
+
+  public async getParticipationsCountByMultiTableUid(tableUids: string[]): Promise<number> {
+    const idConstraint: QueryConstraint = where('tableUid', 'in', tableUids);
+    const isActiveConstraint = where('isActive', '==', true);
+    const constraints: QueryConstraint[] = [idConstraint, isActiveConstraint];
+    const aggregate = await this.firebaseReadService.getDocumentsByMultipleConstraintsCount(
+      Collection.PARTICIPATIONS,
+      constraints
     );
     return aggregate.data().count;
   }
