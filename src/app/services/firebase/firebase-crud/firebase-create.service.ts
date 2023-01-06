@@ -32,7 +32,7 @@ export class FirebaseCreateService {
   ): Promise<DocumentReference<DocumentData>> {
     const { props } = data;
     props.createdAt = new Date();
-    props.modificatedAt = new Date();
+    props.modifiedAt = new Date();
     const collectionRef = collection(this.db, collectionName);
     const docRef = await addDoc(collectionRef, props);
     if (!environment.production) console.info('Added document', props);
@@ -45,7 +45,7 @@ export class FirebaseCreateService {
   ): Promise<DocumentReference<DocumentData>> {
     const { uid, props } = data;
     props.createdAt = new Date();
-    props.modificatedAt = new Date();
+    props.modifiedAt = new Date();
     const collectionRef = collection(this.db, collectionName);
     const docRef = doc(collectionRef, uid);
     await setDoc(docRef, props);
@@ -62,7 +62,7 @@ export class FirebaseCreateService {
     data.forEach((document: Event | Assignment | Employee | Table | Participation | Client) => {
       const { props } = document;
       props.createdAt = new Date();
-      props.modificatedAt = new Date();
+      props.modifiedAt = new Date();
       const docRef = doc(collectionRef);
       batch.set(docRef, props);
       if (!environment.production) console.info('Added document', props);

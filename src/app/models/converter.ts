@@ -20,7 +20,7 @@ export const employeeConverter: FirestoreDataConverter<Employee> = {
       zone: props.zone,
       active: props.active,
       createdAt: props.createdAt ? props.createdAt : new Date(),
-      modificatedAt: new Date()
+      modifiedAt: new Date()
     };
     return data;
   },
@@ -36,7 +36,7 @@ export const employeeConverter: FirestoreDataConverter<Employee> = {
         zone: data.zone,
         active: data.active,
         createdAt: new Date((data.createdAt as unknown as Timestamp).seconds * 1000),
-        modificatedAt: new Date((data.modificatedAt as unknown as Timestamp).seconds * 1000)
+        modifiedAt: new Date((data.modifiedAt as unknown as Timestamp).seconds * 1000)
       }
     };
     return employee;
@@ -58,7 +58,7 @@ export const eventConverter: FirestoreDataConverter<Event> = {
       description: props.description,
       messageText: props.messageText,
       createdAt: props.createdAt ? props.createdAt : new Date(),
-      modificatedAt: props.modificatedAt ? props.modificatedAt : new Date()
+      modifiedAt: props.modifiedAt ? props.modifiedAt : new Date()
     };
     return data;
   },
@@ -78,7 +78,7 @@ export const eventConverter: FirestoreDataConverter<Event> = {
         description: data.description,
         messageText: data.messageText,
         createdAt: new Date((data.createdAt as unknown as Timestamp).seconds * 1000),
-        modificatedAt: new Date((data.modificatedAt as unknown as Timestamp).seconds * 1000)
+        modifiedAt: new Date((data.modifiedAt as unknown as Timestamp).seconds * 1000)
       }
     };
     return event;
@@ -95,7 +95,7 @@ export const assignmentConverter: FirestoreDataConverter<Assignment> = {
       personMarked: props.personMarked,
       personAssigned: props.personAssigned,
       createdAt: props.createdAt ? props.createdAt : new Date(),
-      modificatedAt: props.modificatedAt ? props.modificatedAt : new Date()
+      modifiedAt: props.modifiedAt ? props.modifiedAt : new Date()
     };
     return data;
   },
@@ -110,7 +110,7 @@ export const assignmentConverter: FirestoreDataConverter<Assignment> = {
         personMarked: data.personMarked,
         personAssigned: data.personAssigned,
         createdAt: new Date((data.createdAt as unknown as Timestamp).seconds * 1000),
-        modificatedAt: new Date((data.modificatedAt as unknown as Timestamp).seconds * 1000)
+        modifiedAt: new Date((data.modifiedAt as unknown as Timestamp).seconds * 1000)
       }
     };
     return assignment;
@@ -128,7 +128,7 @@ export const tableConverter: FirestoreDataConverter<Table> = {
       hour: props.hour,
       drink: props.drink,
       createdAt: props.createdAt ? props.createdAt : new Date(),
-      modificatedAt: props.modificatedAt ? props.modificatedAt : new Date()
+      modifiedAt: props.modifiedAt ? props.modifiedAt : new Date()
     };
     return data;
   },
@@ -144,7 +144,7 @@ export const tableConverter: FirestoreDataConverter<Table> = {
         hour: new Date((data.hour as unknown as Timestamp).seconds * 1000),
         drink: data.drink,
         createdAt: new Date((data.createdAt as unknown as Timestamp).seconds * 1000),
-        modificatedAt: new Date((data.modificatedAt as unknown as Timestamp).seconds * 1000)
+        modifiedAt: new Date((data.modifiedAt as unknown as Timestamp).seconds * 1000)
       }
     };
     return table;
@@ -159,7 +159,7 @@ export const clientConverter: FirestoreDataConverter<Client> = {
       lastName: props.lastName,
       phone: props.phone,
       createdAt: props.createdAt ? props.createdAt : new Date(),
-      modificatedAt: props.modificatedAt ? props.modificatedAt : new Date()
+      modifiedAt: props.modifiedAt ? props.modifiedAt : new Date()
     };
     return data;
   },
@@ -172,7 +172,7 @@ export const clientConverter: FirestoreDataConverter<Client> = {
         lastName: data.lastName,
         phone: data.phone,
         createdAt: new Date((data.createdAt as unknown as Timestamp).seconds * 1000),
-        modificatedAt: new Date((data.modificatedAt as unknown as Timestamp).seconds * 1000)
+        modifiedAt: new Date((data.modifiedAt as unknown as Timestamp).seconds * 1000)
       }
     };
     return client;
@@ -188,7 +188,7 @@ export const participationConverter: FirestoreDataConverter<Participation> = {
       isActive: props.isActive,
       isScanned: props.isScanned,
       createdAt: props.createdAt ? props.createdAt : new Date(),
-      modificatedAt: props.modificatedAt ? props.modificatedAt : new Date()
+      modifiedAt: props.modifiedAt ? props.modifiedAt : new Date()
     };
     return data;
   },
@@ -202,7 +202,7 @@ export const participationConverter: FirestoreDataConverter<Participation> = {
         isActive: data.isActive,
         isScanned: data.isScanned,
         createdAt: new Date((data.createdAt as unknown as Timestamp).seconds * 1000),
-        modificatedAt: new Date((data.modificatedAt as unknown as Timestamp).seconds * 1000)
+        modifiedAt: new Date((data.modifiedAt as unknown as Timestamp).seconds * 1000)
       }
     };
     return participation;

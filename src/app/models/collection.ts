@@ -21,7 +21,7 @@ export type EventDTO = {
   description: string;
   messageText: string;
   createdAt?: Date;
-  modificatedAt?: Date;
+  modifiedAt?: Date;
 };
 
 export type EmployeeDTO = {
@@ -32,7 +32,7 @@ export type EmployeeDTO = {
   zone: string;
   active: boolean;
   createdAt?: Date;
-  modificatedAt?: Date;
+  modifiedAt?: Date;
 };
 
 export type AssignmentDTO = {
@@ -42,7 +42,7 @@ export type AssignmentDTO = {
   personMarked: number;
   personAssigned: number;
   createdAt?: Date;
-  modificatedAt?: Date;
+  modifiedAt?: Date;
 };
 
 export type TableDTO = {
@@ -53,7 +53,7 @@ export type TableDTO = {
   hour: Date;
   drink: string;
   createdAt?: Date;
-  modificatedAt?: Date;
+  modifiedAt?: Date;
 };
 
 export type ParticipationDTO = {
@@ -62,7 +62,7 @@ export type ParticipationDTO = {
   isActive: boolean;
   isScanned: boolean;
   createdAt?: Date;
-  modificatedAt?: Date;
+  modifiedAt?: Date;
 };
 
 export type ClientDTO = {
@@ -70,5 +70,5 @@ export type ClientDTO = {
   lastName: string;
   phone: string;
   createdAt?: Date;
-  modificatedAt?: Date;
+  modifiedAt?: Date;
 };

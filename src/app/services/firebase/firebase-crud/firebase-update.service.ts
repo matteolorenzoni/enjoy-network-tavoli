@@ -21,7 +21,7 @@ export class FirebaseUpdateService {
     data: Event | Assignment | Employee | Table | Participation | Client
   ): Promise<void> {
     const { uid, props } = data;
-    props.modificatedAt = new Date();
+    props.modifiedAt = new Date();
     const collectionRef = collection(this.db, collectionName);
     const docRef = doc(collectionRef, uid);
     await updateDoc(docRef, props);
