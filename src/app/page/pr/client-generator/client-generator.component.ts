@@ -5,6 +5,7 @@ import { ClientService } from 'src/app/services/client.service';
 import { ToastService } from 'src/app/services/toast.service';
 import { Location } from '@angular/common';
 import { ClientDTO } from 'src/app/models/collection';
+import { ParticipationService } from 'src/app/services/participation.service';
 
 @Component({
   selector: 'app-client-generator',
@@ -16,11 +17,11 @@ export class ClientGeneratorComponent implements OnInit {
   tableUid: string | null = null;
 
   /* Client */
-
   clientUid: string | null = null;
 
   /* Form */
   clientForm: FormGroup;
+  phoneIsChecked = false;
   isLoading: boolean;
 
   /* Label */
@@ -30,36 +31,57 @@ export class ClientGeneratorComponent implements OnInit {
     private route: ActivatedRoute,
     private location: Location,
     private clientService: ClientService,
+    private participation: ParticipationService,
     private toastService: ToastService
   ) {
+    /* Init form */
     this.clientForm = new FormGroup({
       name: new FormControl(null, [Validators.required, Validators.pattern(/[\S]/)]),
       lastName: new FormControl(null, [Validators.required, Validators.pattern(/[\S]/)]),
-      phone: new FormControl(null, [Validators.required, Validators.pattern(/^[0-9]*$/)])
+      phone: new FormControl(null, [Validators.required, Validators.pattern(/^\d{9,10}$/)])
     });
+
+    /* Disable name and last name until phone is checked */
+    this.clientForm.controls['name'].disable();
+    this.clientForm.controls['lastName'].disable();
+
+    /* Reset name and last name when phone is changed */
+    this.clientForm.controls['phone'].valueChanges.subscribe(() => {
+      this.clientForm.controls['name'].reset();
+      this.clientForm.controls['lastName'].reset();
+      this.phoneIsChecked = false;
+    });
+
     this.isLoading = false;
   }
 
   ngOnInit(): void {
     this.tableUid = this.route.snapshot.paramMap.get('tableUid');
     this.clientUid = this.route.snapshot.paramMap.get('uid');
+  }
 
-    /* Check if the uids are valid */
-    if (!this.tableUid || !this.clientUid) {
-      throw new Error('Errore: parametri non validi');
-    }
+  public onSubmit() {
+    this.isLoading = true;
+    this.addPaticipationAndClient();
+  }
 
-    if (this.clientUid !== 'null') {
+  public checkIfPhoneNumberIsAlreadyUsed() {
+    if (this.clientForm.value.phone) {
       this.clientService
-        .getClient(this.clientUid)
+        .getClientByPhone(this.clientForm.value.phone)
         .then((client) => {
-          const { props } = client;
-          this.clientForm.patchValue({
-            name: props.name,
-            lastName: props.lastName,
-            phone: props.phone
-          });
-          this.lblButton = 'Modifica cliente';
+          if (client) {
+            // TODO: mettere il popup
+            alert(
+              `Questo numero appartiene a: ${client?.props.name} ${client?.props.lastName}, lo vuoi aggiungere al tavolo?`
+            );
+
+            this.addParticipation();
+          } else {
+            this.phoneIsChecked = true;
+            this.clientForm.controls['name'].enable();
+            this.clientForm.controls['lastName'].enable();
+          }
         })
         .catch((err: Error) => {
           this.toastService.showError(err);
@@ -67,9 +89,7 @@ export class ClientGeneratorComponent implements OnInit {
     }
   }
 
-  public onSubmit() {
-    this.isLoading = true;
-
+  public addPaticipationAndClient(): void {
     /* Check if the uids are valid */
     if (!this.tableUid || !this.clientUid) {
       throw new Error('Errore: parametri non validi');
@@ -79,7 +99,7 @@ export class ClientGeneratorComponent implements OnInit {
     const newClient: ClientDTO = {
       name: this.clientForm.value.name,
       lastName: this.clientForm.value.lastName,
-      phone: this.clientForm.value.phone
+      phone: this.clientForm.getRawValue().phone
     };
 
     /* If the table uid is null, it means that we are creating a new table */
@@ -98,6 +118,22 @@ export class ClientGeneratorComponent implements OnInit {
       })
       .finally(() => {
         this.isLoading = false;
+      });
+  }
+
+  public addParticipation(): void {
+    /* Check if the uids are valid */
+    if (!this.tableUid || !this.clientUid) {
+      throw new Error('Errore: parametri non validi');
+    }
+
+    this.participation
+      .addParticipation(this.tableUid, this.clientUid)
+      .then(() => {
+        this.toastService.showSuccess('Partecipazione aggiunta');
+      })
+      .catch((err: Error) => {
+        this.toastService.showError(err);
       });
   }
 }

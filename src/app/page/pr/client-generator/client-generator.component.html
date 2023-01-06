@@ -1,66 +1,70 @@
 <form class="flex flex-col gap-12 xs:gap-16" [formGroup]="clientForm" (ngSubmit)="onSubmit()">
-  <div class="group relative z-0 w-full">
-    <input
-      type="text"
-      name="name_input"
-      id="name_input"
-      class="peer block w-full appearance-none bg-transparent py-2.5 px-0 text-base text-primary-100 focus:text-primary-60 focus:outline-none focus:ring-0"
-      formControlName="name"
-      autocomplete="off"
-      placeholder=" "
-      required />
-    <label
-      for="name_input"
-      class="absolute top-3 -z-10 origin-[0] -translate-y-6 scale-75 transform text-base text-primary-100 duration-300 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100 peer-focus:left-0 peer-focus:-translate-y-6 peer-focus:scale-75 peer-focus:font-medium peer-focus:text-primary-60">
-      Nome
-    </label>
-    <hr class="border-primary-100 peer-focus:border-primary-60" />
-  </div>
-
-  <div class="group relative z-0 w-full">
-    <input
-      type="text"
-      name="last_name_input"
-      id="last_name_input"
-      class="peer block w-full appearance-none bg-transparent py-2.5 px-0 text-base text-primary-100 focus:text-primary-60 focus:outline-none focus:ring-0"
-      formControlName="lastName"
-      autocomplete="off"
-      placeholder=" "
-      required />
-    <label
-      for="last_name_input"
-      class="absolute top-3 -z-10 origin-[0] -translate-y-6 scale-75 transform text-base text-primary-100 duration-300 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100 peer-focus:left-0 peer-focus:-translate-y-6 peer-focus:scale-75 peer-focus:font-medium peer-focus:text-primary-60">
-      Cognome
-    </label>
-    <hr class="border-primary-100 peer-focus:border-primary-60" />
-  </div>
-
-  <div class="group relative z-0 w-full">
+  <label for="default-search" class="sr-only mb-2 text-sm font-medium text-white">Search</label>
+  <div class="group relative z-0 mt-8 w-full">
+    <div class="pr4 pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">+ 39</div>
     <input
       type="tel"
       pattern="[0-9]{10}"
       name="tel_input"
       id="tel_input"
-      class="peer block w-full appearance-none py-2.5 px-0 text-base text-primary-100 focus:text-primary-60 focus:outline-none focus:ring-0 enabled:bg-transparent disabled:cursor-not-allowed"
+      class="block w-full rounded-lg border border-gray-600 bg-gray-700 p-4 pl-12 text-sm text-white placeholder-gray-400 focus:outline-none focus:ring-0"
       formControlName="phone"
       autocomplete="off"
-      placeholder=" "
+      placeholder="Numero di telefono"
       required />
-    <label
-      for="tel_input"
-      class="absolute top-3 -z-10 origin-[0] -translate-y-6 scale-75 transform text-base text-primary-100 duration-300 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100 peer-focus:left-0 peer-focus:-translate-y-6 peer-focus:scale-75 peer-focus:font-medium peer-focus:text-primary-60">
-      Numero di telefono
-    </label>
-    <hr class="border-primary-100 peer-focus:border-primary-60" />
+    <button
+      type="button"
+      class="text-whitefocus:outline-none absolute right-2.5 bottom-2.5 rounded-lg bg-primary-60 px-4 py-2 text-sm font-medium text-black hover:bg-white hover:text-primary-50"
+      (click)="checkIfPhoneNumberIsAlreadyUsed()">
+      Cerca
+    </button>
   </div>
 
-  <div class="mx-auto w-52">
-    <en-button
-      buttonName="login-button"
-      [buttonText]="lblButton"
-      buttonType="submit"
-      [buttonIsDisabled]="!clientForm.valid"
-      palette="primary"
-      [isLoading]="isLoading"></en-button>
-  </div>
+  <ng-container *ngIf="phoneIsChecked">
+    <div class="group relative z-0 w-full">
+      <input
+        type="text"
+        name="name_input"
+        id="name_input"
+        class="peer block w-full appearance-none bg-transparent py-2.5 px-0 text-base text-primary-100 focus:text-primary-60 focus:outline-none focus:ring-0 disabled:cursor-not-allowed disabled:bg-neutral"
+        formControlName="name"
+        autocomplete="off"
+        placeholder=" "
+        required />
+      <label
+        for="name_input"
+        class="absolute top-3 -z-10 origin-[0] -translate-y-6 scale-75 transform text-base text-primary-100 duration-300 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100 peer-focus:left-0 peer-focus:-translate-y-6 peer-focus:scale-75 peer-focus:font-medium peer-focus:text-primary-60">
+        Nome
+      </label>
+      <hr class="border-primary-100 peer-focus:border-primary-60" />
+    </div>
+
+    <div class="group relative z-0 w-full">
+      <input
+        type="text"
+        name="last_name_input"
+        id="last_name_input"
+        class="peer block w-full appearance-none bg-transparent py-2.5 px-0 text-base text-primary-100 focus:text-primary-60 focus:outline-none focus:ring-0 disabled:cursor-not-allowed disabled:bg-neutral"
+        formControlName="lastName"
+        autocomplete="off"
+        placeholder=" "
+        required />
+      <label
+        for="last_name_input"
+        class="absolute top-3 -z-10 origin-[0] -translate-y-6 scale-75 transform text-base text-primary-100 duration-300 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100 peer-focus:left-0 peer-focus:-translate-y-6 peer-focus:scale-75 peer-focus:font-medium peer-focus:text-primary-60">
+        Cognome
+      </label>
+      <hr class="border-primary-100 peer-focus:border-primary-60" />
+    </div>
+
+    <div class="mx-auto w-52">
+      <en-button
+        buttonName="login-button"
+        [buttonText]="lblButton"
+        buttonType="submit"
+        [buttonIsDisabled]="!clientForm.valid"
+        palette="primary"
+        [isLoading]="isLoading"></en-button>
+    </div>
+  </ng-container>
 </form>
