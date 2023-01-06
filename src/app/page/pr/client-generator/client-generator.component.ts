@@ -97,8 +97,14 @@ export class ClientGeneratorComponent implements OnInit {
 
     /* create the new table */
     const newClient: ClientDTO = {
-      name: this.clientForm.value.name,
-      lastName: this.clientForm.value.lastName,
+      name: this.clientForm.value.name
+        .split(' ')
+        .map((word: string) => word.charAt(0).toUpperCase() + word.substring(1).toLowerCase())
+        .join(' '),
+      lastName: this.clientForm.value.lastName
+        .split(' ')
+        .map((word: string) => word.charAt(0).toUpperCase() + word.substring(1).toLowerCase())
+        .join(' '),
       phone: this.clientForm.getRawValue().phone
     };
 
