@@ -2,10 +2,11 @@ import { EventService } from 'src/app/services/event.service';
 import { DatePipe } from '@angular/common';
 import { Component, Input, SimpleChanges, Output, EventEmitter } from '@angular/core';
 import { faPen, faUsers, faWineBottle } from '@fortawesome/free-solid-svg-icons';
-import { Event } from 'src/app/models/type';
+import { Event, Table } from 'src/app/models/type';
 import { ToastService } from '../services/toast.service';
 import { expandEventItemDetailsAnimation } from '../animations/animations';
-import { EventDTO } from '../models/collection';
+import { TableService } from '../services/table.service';
+import { ParticipationService } from '../services/participation.service';
 
 @Component({
   selector: 'en-item-event[event][eventDeletedEvent]',
@@ -19,7 +20,7 @@ import { EventDTO } from '../models/collection';
             APRI
           </p>
           <img
-            [src]="props.imageUrl"
+            [src]="event.props.imageUrl"
             [alt]="dateFormatted + '_image'"
             class="
               absolute
@@ -42,13 +43,13 @@ import { EventDTO } from '../models/collection';
               xs:w-48" />
           <div class="flex h-full w-full overflow-hidden pl-28 group-hover:hidden xs:pl-44">
             <div class="flex flex-col justify-center text-white">
-              <p class="truncate text-base font-semibold xs:text-lg">{{ props.name }}</p>
+              <p class="truncate text-base font-semibold xs:text-lg">{{ event.props.name }}</p>
               <p class="truncate text-xs font-normal xs:text-sm xs:font-light">
-                {{ dateFormatted }} ({{ props.place }})
+                {{ dateFormatted }} ({{ event.props.place }})
               </p>
             </div>
             <div class="center absolute right-0 top-0 bottom-0 p-2 text-lg font-extrabold xs:text-2xl">
-              <p class="text-gray-300">{{ maxPersonFormatted }}</p>
+              <p class="text-gray-300">{{ personMarked }}/{{ event.props.maxPerson }}</p>
             </div>
           </div>
         </div>
@@ -59,7 +60,7 @@ import { EventDTO } from '../models/collection';
           (click)="toggleOpen()">
           <p class="center absolute inset-0 z-10 text-white backdrop-blur-[2px]">CHIUDI</p>
           <img
-            [src]="props.imageUrl"
+            [src]="event.props.imageUrl"
             [alt]="dateFormatted + '_image'"
             class="center relative h-full w-full object-cover" />
         </div>
@@ -105,46 +106,49 @@ export class EnItemEventComponent {
   @Input() event!: Event;
   @Output() eventDeletedEvent: EventEmitter<any> = new EventEmitter();
 
-  /* Props */
+  /* Event */
   isOpen = false;
-  uid = '';
-  props!: EventDTO;
-  eventInfo: { label: string; value: string }[] = [];
+  personMarked = 0;
+  eventInfo: { label: string; value: string | number }[] = [];
   dateFormatted = '';
-  maxPersonFormatted = '';
+
+  /* Table */
+  table: Table[] = [];
 
   /* Menu */
   itemNavigationMenu: any[] = [];
 
-  constructor(private datePipe: DatePipe, private eventService: EventService, private toastService: ToastService) {}
+  constructor(
+    private datePipe: DatePipe,
+    private eventService: EventService,
+    private tableService: TableService,
+    private participationService: ParticipationService,
+    private toastService: ToastService
+  ) {}
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['event']) {
-      this.uid = this.event.uid;
-      this.props = this.event.props;
-      this.dateFormatted = this.datePipe.transform(this.props.date, 'dd/MM/yyyy') || '';
-      this.maxPersonFormatted = `0/${this.props.maxPerson}`;
-      this.eventInfo.push({ label: 'Nome', value: this.props.name });
+      this.dateFormatted = this.datePipe.transform(this.event.props.date, 'dd/MM/yyyy') || '';
+      this.eventInfo.push({ label: 'Nome', value: this.event.props.name });
       this.eventInfo.push({ label: 'Data', value: this.dateFormatted });
-      this.eventInfo.push({ label: 'Paganti', value: this.maxPersonFormatted });
-      this.eventInfo.push({ label: 'Orario', value: `${this.props.timeStart} - ${this.props.timeEnd}` });
-      this.eventInfo.push({ label: 'Luogo', value: this.props.place });
-      this.eventInfo.push({ label: 'Ospite/i', value: this.props.guest });
-      this.eventInfo.push({ label: 'Descrizione', value: this.props.description });
-      this.eventInfo.push({ label: 'Messaggio', value: this.props.messageText });
+      this.eventInfo.push({ label: 'Paganti', value: this.personMarked });
+      this.eventInfo.push({ label: 'Orario', value: `${this.event.props.timeStart} - ${this.event.props.timeEnd}` });
+      this.eventInfo.push({ label: 'Luogo', value: this.event.props.place });
+      this.eventInfo.push({ label: 'Ospite/i', value: this.event.props.guest });
+      this.eventInfo.push({ label: 'Descrizione', value: this.event.props.description });
+      this.eventInfo.push({ label: 'Messaggio', value: this.event.props.messageText });
 
       this.itemNavigationMenu = [
-        { link: [this.uid, 'table'], name: 'Tavoli', definition: faWineBottle },
-        { link: [this.uid, 'assignments'], name: 'Dipendenti', definition: faUsers },
-        { link: ['/create-item/event/', this.uid], name: 'Modifica', definition: faPen }
+        { link: [this.event.uid, 'table'], name: 'Tavoli', definition: faWineBottle },
+        { link: [this.event.uid, 'assignments'], name: 'Dipendenti', definition: faUsers },
+        { link: ['/create-item/event/', this.event.uid], name: 'Modifica', definition: faPen }
       ];
+
+      this.getTable();
     }
   }
 
-  toggleOpen(): void {
-    this.isOpen = !this.isOpen;
-  }
-
+  /* --------------------------------------- HTTP Methods --------------------------------------- */
   deleteEvent(): void {
     this.eventService
       .deleteEvent(this.event)
@@ -156,5 +160,35 @@ export class EnItemEventComponent {
       .catch((err: Error) => {
         this.toastService.showError(err);
       });
+  }
+
+  getTable(): void {
+    this.tableService
+      .getTableByEventUid(this.event.uid)
+      .then((table: Table[]) => {
+        console.log(table);
+        this.table = table;
+        this.getAllParticipations();
+      })
+      .catch((err: Error) => {
+        this.toastService.showError(err);
+      });
+  }
+
+  getAllParticipations(): void {
+    const tableUids = this.table.map((table: Table) => table.uid);
+    this.participationService
+      .getParticipationsCountByMultiTableUid(tableUids)
+      .then((count) => {
+        this.personMarked = count;
+      })
+      .catch((err: Error) => {
+        this.toastService.showError(err);
+      });
+  }
+
+  /* --------------------------------------- Methods --------------------------------------- */
+  toggleOpen(): void {
+    this.isOpen = !this.isOpen;
   }
 }

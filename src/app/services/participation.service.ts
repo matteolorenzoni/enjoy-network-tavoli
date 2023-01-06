@@ -58,6 +58,8 @@ export class ParticipationService {
   }
 
   public async getParticipationsCountByMultiTableUid(tableUids: string[]): Promise<number> {
+    if (!tableUids || tableUids.length === 0) return 0;
+
     const idConstraint: QueryConstraint = where('tableUid', 'in', tableUids);
     const isActiveConstraint = where('isActive', '==', true);
     const constraints: QueryConstraint[] = [idConstraint, isActiveConstraint];
