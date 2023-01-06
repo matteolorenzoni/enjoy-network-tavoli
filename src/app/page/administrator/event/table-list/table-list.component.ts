@@ -117,19 +117,6 @@ export class TableListComponent implements OnInit {
       });
   }
 
-  /* To delete a table */
-  deleteTable(tableUid: string): void {
-    this.tableService
-      .deleteTable(tableUid)
-      .then(() => {
-        this.getTables();
-        this.toastService.showSuccess('Tavolo eliminato con successo');
-      })
-      .catch((error: Error) => {
-        this.toastService.showError(error);
-      });
-  }
-
   /* ---------------------------------------- Methods ---------------------------------------- */
   goToCreateTable(): void {
     this.router.navigate([`create-item/${this.eventUid}/table/null`]);

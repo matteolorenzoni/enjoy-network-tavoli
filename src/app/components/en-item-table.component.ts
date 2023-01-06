@@ -1,12 +1,13 @@
-import { Component, EventEmitter, Input, Output, SimpleChanges } from '@angular/core';
+import { Component, Input, SimpleChanges } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { faUserPlus, faPen, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { ToastService } from '../services/toast.service';
 import { Table } from '../models/type';
 import { ParticipationService } from '../services/participation.service';
+import { TableService } from '../services/table.service';
 
 @Component({
-  selector: 'en-item-table[eventUid][table][deleteTableEvent]',
+  selector: 'en-item-table[eventUid][table]',
   template: `
     <li class="flex h-16 items-center">
       <div class="overflow-hidden">
@@ -42,7 +43,6 @@ import { ParticipationService } from '../services/participation.service';
 export class EnItemTableComponent {
   @Input() table!: Table;
   @Input() eventUid!: string | null;
-  @Output() deleteTableEvent = new EventEmitter<string>();
 
   /* Participation */
   tableParticipation = 0;
@@ -55,6 +55,7 @@ export class EnItemTableComponent {
   constructor(
     private router: Router,
     private route: ActivatedRoute,
+    private tableService: TableService,
     private participationService: ParticipationService,
     private toastService: ToastService
   ) {}
@@ -74,7 +75,14 @@ export class EnItemTableComponent {
   }
 
   deleteTable(): void {
-    this.deleteTableEvent.emit(this.table.uid);
+    this.tableService
+      .deleteTable(this.table.uid)
+      .then(() => {
+        this.toastService.showSuccess('Tavolo eliminato con successo');
+      })
+      .catch((error: Error) => {
+        this.toastService.showError(error);
+      });
   }
 
   getTablePersonMarked(): void {
