@@ -43,6 +43,7 @@ export class AssignmentListComponent {
   ) {}
 
   ngOnInit(): void {
+    // TODO: da rendere nullable
     this.eventUid = this.route.snapshot.paramMap.get('uid') ?? '';
 
     if (!this.eventUid) {
@@ -90,12 +91,7 @@ export class AssignmentListComponent {
         employees.forEach((employee) => {
           const assignment = assignments.find((item) => item.props.employeeUid === employee.uid);
           if (assignment) {
-            this.assignmentsAndEmployeeArray.push({
-              ...assignment,
-              name: employee.props.name,
-              lastName: employee.props.lastName,
-              zone: employee.props.zone
-            } as AssignmentAndEmployee);
+            this.assignmentsAndEmployeeArray.push({ assignment, employee });
           }
         });
       })

@@ -58,8 +58,10 @@ export type Client = {
   props: ClientDTO;
 };
 
-// TODO: da modificare
-export type AssignmentAndEmployee = Assignment & Pick<EmployeeDTO, 'name' | 'lastName' | 'zone'>;
+export type AssignmentAndEmployee = {
+  assignment: Assignment;
+  employee: Employee;
+};
 
 export type ParticipationAndClient = {
   participation: Participation;

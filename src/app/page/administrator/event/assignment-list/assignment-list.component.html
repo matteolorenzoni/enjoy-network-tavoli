@@ -16,14 +16,7 @@
   <ul [@staggeredFadeInIncrement]="assignmentsAndEmployeeArray.length" class="flex flex-col divide-y divide-gray-700">
     <en-item-assignment
       *ngFor="let item of assignmentsAndEmployeeArray"
-      [assUid]="item.uid"
-      [assActive]="item.props.isActive"
-      [assPersonAssigned]="item.props.personAssigned"
-      [assPersonMarked]="12"
-      [empName]="item.name"
-      [empLastName]="item.lastName"
-      [empZone]="item.zone"
-      [currentPersonAssigned]="personAssigned"
+      [ae]="item"
       [maxPerson]="maxPerson"
       (refreshAssignmentAndEmployeeArrayEvent)="getData()"></en-item-assignment>
   </ul>
