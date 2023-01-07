@@ -32,7 +32,7 @@ export class EmployeeListComponent {
       next(data) {
         that.employees = data;
       },
-      error(error) {
+      error(error: Error) {
         that.toastService.showError(error);
       }
     });

@@ -70,8 +70,8 @@ export class AssignmentListComponent {
           .reduce((acc, item) => acc + item.props.personMarked, 0);
         that.getEmployee(data);
       },
-      error(err) {
-        that.toastService.showError(err);
+      error(error: Error) {
+        that.toastService.showError(error);
       }
     });
   }
