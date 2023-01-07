@@ -1,6 +1,6 @@
 import { EventService } from 'src/app/services/event.service';
 import { DatePipe } from '@angular/common';
-import { Component, Input, SimpleChanges, Output, EventEmitter } from '@angular/core';
+import { Component, Input, SimpleChanges } from '@angular/core';
 import { faPen, faUsers, faWineBottle } from '@fortawesome/free-solid-svg-icons';
 import { Event, Table } from 'src/app/models/type';
 import { ToastService } from '../services/toast.service';
@@ -9,7 +9,7 @@ import { TableService } from '../services/table.service';
 import { ParticipationService } from '../services/participation.service';
 
 @Component({
-  selector: 'en-item-event[event][eventDeletedEvent]',
+  selector: 'en-item-event[event]',
   template: `
     <li class="my-2 overflow-hidden rounded">
       <ng-container *ngIf="!isOpen; else elseTemplate">
@@ -104,7 +104,6 @@ import { ParticipationService } from '../services/participation.service';
 })
 export class EnItemEventComponent {
   @Input() event!: Event;
-  @Output() eventDeletedEvent: EventEmitter<any> = new EventEmitter();
 
   /* Event */
   isOpen = false;
@@ -155,7 +154,6 @@ export class EnItemEventComponent {
       .then(() => {
         this.isOpen = false;
         this.toastService.showSuccess('Evento eliminato');
-        this.eventDeletedEvent.emit();
       })
       .catch((err: Error) => {
         this.toastService.showError(err);

@@ -6,7 +6,7 @@
     FILTRI
   </button>
   <ul [@staggeredFadeInIncrement]="events.length" class="flex flex-col divide-y divide-gray-700">
-    <en-item-event *ngFor="let event of events" [event]="event" (eventDeletedEvent)="getEvents()"></en-item-event>
+    <en-item-event *ngFor="let event of events" [event]="event"></en-item-event>
   </ul>
   <div class="theme-primary fixed left-0 bottom-24 right-0 mx-auto flex h-12 max-w-[48rem] justify-end">
     <div [@fadeInAnimation] class="mr-4">

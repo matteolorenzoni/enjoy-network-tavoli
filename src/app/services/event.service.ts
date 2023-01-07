@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { documentId, QueryConstraint, where } from '@angular/fire/firestore';
+import { Observable } from 'rxjs';
 import { assignmentConverter, eventConverter } from '../models/converter';
 import { Collection, EventDTO } from '../models/collection';
 import { Assignment, Event } from '../models/type';
@@ -27,9 +28,12 @@ export class EventService {
     return event;
   }
 
-  public async getAllEvents(): Promise<Event[]> {
-    const events = await this.firebaseReadService.getAllDocuments(Collection.EVENTS, eventConverter);
-    return events;
+  public getRealTimeAllEvents(): Observable<Event[]> {
+    const employees: Observable<Event[]> = this.firebaseReadService.getRealTimeAllDocuments(
+      Collection.EVENTS,
+      eventConverter
+    );
+    return employees;
   }
 
   public async getEventsByUids(eventUids: string[]): Promise<Event[]> {

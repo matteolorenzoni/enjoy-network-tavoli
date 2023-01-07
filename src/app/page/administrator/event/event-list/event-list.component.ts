@@ -5,6 +5,7 @@ import { fadeInAnimation, staggeredFadeInIncrement } from 'src/app/animations/an
 import { EventService } from 'src/app/services/event.service';
 import { Event } from 'src/app/models/type';
 import { ToastService } from 'src/app/services/toast.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-event',
@@ -19,25 +20,30 @@ export class EventListComponent implements OnInit {
 
   /* Events */
   events: Event[] = [];
+  eventsSubscription!: Subscription;
 
+  /* -------------------------------------- Constructor -------------------------------------- */
   constructor(private router: Router, private eventService: EventService, private toastService: ToastService) {}
 
+  /* -------------------------------------- LifeCycle -------------------------------------- */
   ngOnInit(): void {
-    this.getEvents();
+    const that = this;
+    this.eventsSubscription = this.eventService.getRealTimeAllEvents().subscribe({
+      next(data) {
+        that.events = data;
+      },
+      error(error: Error) {
+        that.toastService.showError(error);
+      }
+    });
   }
 
+  ngOnDestroy(): void {
+    if (this.eventsSubscription) this.eventsSubscription.unsubscribe();
+  }
+
+  /* -------------------------------------- Methods -------------------------------------- */
   goToCreateEvent(): void {
     this.router.navigate(['create-item/event/null']);
-  }
-
-  getEvents(): void {
-    this.eventService
-      .getAllEvents()
-      .then((events) => {
-        this.events = events;
-      })
-      .catch((err: Error) => {
-        this.toastService.showError(err);
-      });
   }
 }
