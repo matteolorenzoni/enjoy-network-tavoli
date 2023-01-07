@@ -31,7 +31,6 @@ export class PrActiveComponent implements OnInit {
 
   /* Assignment */
   assignments: Assignment[] = [];
-  assignmentEmployeeUids: string[] = [];
 
   constructor(
     private route: ActivatedRoute,
@@ -52,7 +51,6 @@ export class PrActiveComponent implements OnInit {
       .getAssignmentsByEventUid(this.eventUid)
       .then((assignments) => {
         this.assignments = assignments;
-        this.assignmentEmployeeUids = assignments.map((assignment) => assignment.props.employeeUid);
       })
       .catch((err: Error) => {
         this.toastService.showError(err);
@@ -62,43 +60,6 @@ export class PrActiveComponent implements OnInit {
       .getEmployeesPrAndActive()
       .then((employees) => {
         this.activePrs = employees;
-      })
-      .catch((err: Error) => {
-        this.toastService.showError(err);
-      });
-  }
-
-  isChecked(employee: Employee): boolean {
-    return this.assignmentEmployeeUids.includes(employee.uid);
-  }
-
-  isDisabled(employee: Employee): boolean {
-    const assignment = this.assignments.find((item) => item.props.employeeUid === employee.uid);
-    const personMarked = assignment?.props.personMarked || 0;
-    return personMarked > 0;
-  }
-
-  handleAssignmentChange(assignment: { checked: boolean; employeeUid: string }): void {
-    const assignmentIndex = this.assignmentEmployeeUids.indexOf(assignment.employeeUid);
-    if (assignmentIndex > -1) {
-      this.assignmentEmployeeUids.splice(assignmentIndex, 1);
-    } else {
-      this.assignmentEmployeeUids.push(assignment.employeeUid);
-    }
-  }
-
-  onSave(): void {
-    const oldEmployeeUids = this.assignments.map((assignment) => assignment.props.employeeUid);
-    const newEmployeeUids = this.assignmentEmployeeUids;
-    const employeeAddedUids = newEmployeeUids.filter((employeeUid) => !oldEmployeeUids.includes(employeeUid));
-    const removedEmployeeUids = oldEmployeeUids.filter((employeeUid) => !newEmployeeUids.includes(employeeUid));
-    this.assignmentService
-      .addAssignment(this.eventUid, employeeAddedUids)
-      .then(() => {
-        this.assignmentService.deleteAssignmentRemovedFromList(this.eventUid, removedEmployeeUids).then(() => {
-          this.toastService.showSuccess('Lista aggiornata');
-          this.goBack();
-        });
       })
       .catch((err: Error) => {
         this.toastService.showError(err);

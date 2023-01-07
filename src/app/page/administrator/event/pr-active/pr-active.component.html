@@ -6,19 +6,11 @@
       <fa-icon [icon]="filterIcon" class="mr-2"></fa-icon>
       FILTRI
     </button>
-    <button
-      type="button"
-      class="mb-6 w-full rounded-lg border border-primary-60 bg-transparent py-2.5 px-5 text-sm font-medium text-primary-60 hover:bg-primary-60 hover:text-black focus:z-10 focus:outline-none focus:ring-4 focus:ring-primary-50"
-      (click)="onSave()">
-      SALVA
-    </button>
   </div>
   <ul [@staggeredFadeInIncrement]="activePrs.length" class="flex flex-col divide-y divide-gray-700">
     <en-item-pr-active
       *ngFor="let employee of activePrs"
       [employee]="employee"
-      [isChecked]="isChecked(employee)"
-      [isDisabled]="isDisabled(employee)"
-      (changeCheckEvent)="handleAssignmentChange($event)"></en-item-pr-active>
+      [assignments]="assignments"></en-item-pr-active>
   </ul>
 </section>
