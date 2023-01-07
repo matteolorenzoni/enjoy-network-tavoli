@@ -29,6 +29,7 @@ export class AssignmentListComponent {
   assignmentsAndEmployeeArray: AssignmentAndEmployee[] = [];
 
   personMarked = 0;
+  personMarkedFromEmployeeDeleted = 0;
   personAssigned = 0;
   maxPerson = 0;
 
@@ -75,6 +76,9 @@ export class AssignmentListComponent {
       .then((assignments) => {
         this.personAssigned = assignments.reduce((acc, item) => acc + item.props.personAssigned, 0);
         this.personMarked = assignments.reduce((acc, item) => acc + item.props.personMarked, 0);
+        this.personMarkedFromEmployeeDeleted = assignments
+          .filter((x) => x.props.isActive === false)
+          .reduce((acc, item) => acc + item.props.personMarked, 0);
         this.getEmployee(assignments);
       })
       .catch((err: Error) => {

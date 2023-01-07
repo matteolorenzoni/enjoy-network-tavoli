@@ -90,7 +90,7 @@ export class EmployeeService {
 
   /* ------------------------------------------- DELETE ------------------------------------------- */
   public async deleteEmployee(uid: string): Promise<void> {
-    /* Delete all assigments without person marked and remove person assigned */
+    /* Delete all assignments without person marked and remove person assigned */
     const employeeUidConstraint: QueryConstraint = where('employeeUid', '==', uid);
     const constraints: QueryConstraint[] = [employeeUidConstraint];
     const assignments: Assignment[] = await this.firebaseReadService.getDocumentsByMultipleConstraints(
@@ -98,9 +98,11 @@ export class EmployeeService {
       constraints,
       assignmentConverter
     );
+    /* Delete assignments without person marked */
     const assignmentsToDelete: Assignment[] = assignments.filter((item) => item.props.personMarked === 0);
     const assignmentsToDeleteUids: string[] = assignmentsToDelete.map((item) => item.uid);
     await this.firebaseDeleteService.deleteDocumentsByUids(Collection.ASSIGNMENTS, assignmentsToDeleteUids);
+    /* Reduce person assigned in assignments with person marked */
     const assignmentsToMinimize: Assignment[] = assignments.filter((item) => item.props.personMarked > 0);
     assignmentsToMinimize.forEach(async (assignment) => {
       const propsToUpdate: Partial<AssignmentDTO> = {
