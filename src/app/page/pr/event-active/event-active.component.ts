@@ -1,4 +1,3 @@
-import { UserService } from 'src/app/services/user.service';
 import { Component, OnInit } from '@angular/core';
 import { AssignmentService } from 'src/app/services/assignment.service';
 import { SessionStorageService } from 'src/app/services/sessionstorage.service';
@@ -15,11 +14,10 @@ import { staggeredFadeInIncrement } from 'src/app/animations/animations';
 })
 export class EventActiveComponent implements OnInit {
   /* Events */
-  eventsAvabile: Event[] = [];
+  eventsAvailable: Event[] = [];
 
   constructor(
     private sessionStorageService: SessionStorageService,
-    private userService: UserService,
     private assignmentService: AssignmentService,
     private eventService: EventService,
     private toastService: ToastService
@@ -39,7 +37,7 @@ export class EventActiveComponent implements OnInit {
         this.eventService
           .getEventsByUids(eventUids)
           .then((events) => {
-            this.eventsAvabile = events;
+            this.eventsAvailable = events;
           })
           .catch((error) => {
             this.toastService.showError(error);
