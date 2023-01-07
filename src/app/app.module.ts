@@ -40,7 +40,7 @@ import { EnItemEventComponent } from './components/en-item-event.component';
 import { EnItemPrActiveComponent } from './components/en-item-pr-active.component';
 import { PrActiveComponent } from './page/administrator/event/pr-active/pr-active.component';
 import { EventActiveComponent } from './page/pr/event-active/event-active.component';
-import { EnItemEventAvaibleComponent } from './components/en-item-event-avaible.component';
+import { EnItemEventAvailableComponent } from './components/en-item-event-available.component';
 import { TableGeneratorComponent } from './page/pr/table-generator/table-generator.component';
 import { EnItemTableComponent } from './components/en-item-table.component';
 import { ClientGeneratorComponent } from './page/pr/client-generator/client-generator.component';
@@ -77,7 +77,7 @@ import { EnItemParticipationComponent } from './components/en-item-participation
     EnItemPrActiveComponent,
     PrActiveComponent,
     EventActiveComponent,
-    EnItemEventAvaibleComponent,
+    EnItemEventAvailableComponent,
     TableGeneratorComponent,
     EnItemTableComponent,
     ClientGeneratorComponent,

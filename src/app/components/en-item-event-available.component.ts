@@ -3,7 +3,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { Event } from 'src/app/models/type';
 
 @Component({
-  selector: 'en-item-event-avaible',
+  selector: 'en-item-event-available',
   template: `
     <li
       class="group h-16 rounded-xl bg-gray-900 p-2 shadow shadow-gray-800 transition-all hover:cursor-pointer hover:bg-primary-60"
@@ -30,7 +30,7 @@ import { Event } from 'src/app/models/type';
     `
   ]
 })
-export class EnItemEventAvaibleComponent {
+export class EnItemEventAvailableComponent {
   @Input() event!: Event;
 
   constructor(private router: Router, private route: ActivatedRoute) {}
