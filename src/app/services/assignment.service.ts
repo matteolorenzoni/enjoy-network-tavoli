@@ -70,21 +70,18 @@ export class AssignmentService {
   }
 
   /* ------------------------------------------- ADD ------------------------------------------- */
-  public async addAssignment(eventUid: string, employeeUids: string[]): Promise<void> {
-    const assignments: Assignment[] = [];
-    employeeUids.forEach((employeeUid) => {
-      assignments.push({
-        uid: '',
-        props: {
-          eventUid,
-          employeeUid,
-          isActive: true,
-          personMarked: 0,
-          personAssigned: 0
-        }
-      } as Assignment);
-    });
-    await this.firebaseCreateService.addDocuments(Collection.ASSIGNMENTS, assignments);
+  public async addAssignment(eventUid: string, employeeUid: string): Promise<void> {
+    const assignment: Assignment = {
+      uid: '',
+      props: {
+        eventUid,
+        employeeUid,
+        isActive: true,
+        personMarked: 0,
+        personAssigned: 0
+      }
+    };
+    await this.firebaseCreateService.addDocument(Collection.ASSIGNMENTS, assignment);
   }
 
   /* ------------------------------------------- UPDATE ------------------------------------------- */
@@ -118,11 +115,9 @@ export class AssignmentService {
   }
 
   /* ------------------------------------------- DELETE ------------------------------------------- */
-  public async deleteAssignmentRemovedFromList(eventUid: string, employeeUids: string[]): Promise<void> {
-    if (!employeeUids || employeeUids.length === 0) return;
-
+  public async deleteAssignment(eventUid: string, employeeUid: string): Promise<void> {
     const eventUidConstraint: QueryConstraint = where('eventUid', '==', eventUid);
-    const employeeUidConstraint: QueryConstraint = where('employeeUid', 'in', employeeUids);
+    const employeeUidConstraint: QueryConstraint = where('employeeUid', '==', employeeUid);
     const constraints: QueryConstraint[] = [eventUidConstraint, employeeUidConstraint];
     const assignments: Assignment[] = await this.firebaseReadService.getDocumentsByMultipleConstraints(
       Collection.ASSIGNMENTS,
