@@ -5,21 +5,21 @@ import { Subscription } from 'rxjs';
   selector: 'en-countdown[date]',
   template: `
     <div *ngIf="date" class="center grid auto-cols-max grid-flow-col gap-5 text-center">
-      <div class="rounded-box flex flex-col bg-neutral p-2 text-neutral-content">
+      <div class="rounded-box flex w-20 flex-col items-center bg-neutral p-2 text-neutral-content">
         <span class="font-mono countdown text-5xl">
-          <span [style]="'--value: ' + days"></span>
+          {{ days }}
         </span>
         GIORNI
       </div>
-      <div class="rounded-box flex flex-col bg-neutral p-2 text-neutral-content">
+      <div class="rounded-box flex w-20 flex-col  items-center bg-neutral p-2 text-neutral-content">
         <span class="font-mono countdown text-5xl">
-          <span [style]="'--value: ' + hours"></span>
+          {{ hours }}
         </span>
         ORE
       </div>
-      <div class="rounded-box flex flex-col bg-neutral p-2 text-neutral-content">
+      <div class="rounded-box flex w-20 flex-col  items-center bg-neutral p-2 text-neutral-content">
         <span class="font-mono countdown text-5xl">
-          <span [style]="'--value: ' + minutes"></span>
+          {{ minutes }}
         </span>
         MINUTI
       </div>
@@ -48,12 +48,12 @@ export class EnCountdownComponent implements OnChanges {
     if (changes['date']) {
       const currentValue = changes['date'].currentValue as Date;
       const diff = new Date(currentValue).getTime() - new Date().getTime();
-      const days = diff / (1000 * 60 * 60 * 24);
-      const hours = diff / (1000 * 60 * 60);
-      const minutes = diff / (1000 * 60);
-      this.days = Math.floor(days);
-      this.hours = Math.floor(hours - this.days * 24);
-      this.minutes = Math.floor(minutes - this.hours * 60 - this.days * 24 * 60);
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+      const hours = Math.floor(diff / (1000 * 60 * 60));
+      const minutes = Math.floor(diff / (1000 * 60));
+      this.days = days;
+      this.hours = hours - this.days * 24;
+      this.minutes = minutes - this.hours * 60 - this.days * 24 * 60;
     }
   }
 }
