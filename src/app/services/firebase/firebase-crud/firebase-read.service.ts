@@ -80,7 +80,7 @@ export class FirebaseReadService {
     collectionName: string,
     constraints: QueryConstraint[],
     converter: FirestoreDataConverter<T>
-  ): { observable: Observable<T[]> } {
+  ): Observable<T[]> {
     /* Create an observable that will emit the documents */
     const observable = new Observable<T[]>((observer) => {
       const collectionRef = collection(this.db, collectionName).withConverter(converter);
@@ -94,7 +94,7 @@ export class FirebaseReadService {
       });
     });
 
-    return { observable };
+    return observable;
   }
 
   /* Get the count of all documents in a collection that match the constraints */

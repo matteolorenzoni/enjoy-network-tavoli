@@ -1,3 +1,4 @@
+import { Observable, Subscription } from 'rxjs';
 import { EventService } from 'src/app/services/event.service';
 import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -25,14 +26,21 @@ export class AssignmentListComponent {
   filterIcon = faFilter;
   listIcon = faList;
 
-  eventUid = '';
-  assignmentsAndEmployeeArray: AssignmentAndEmployee[] = [];
+  /* Event */
+  eventUid: string | null = null;
 
+  /* Assignment */
+  assignmentObservable!: Observable<Assignment[]>;
+  assignmentSubscription!: Subscription;
+
+  /* Assignment and Employee */
+  assignmentsAndEmployeeArray: AssignmentAndEmployee[] = [];
   personMarked = 0;
   personMarkedFromEmployeeDeleted = 0;
   personAssigned = 0;
   maxPerson = 0;
 
+  /* -------------------------------------- Constructor -------------------------------------- */
   constructor(
     private router: Router,
     private location: Location,
@@ -43,22 +51,32 @@ export class AssignmentListComponent {
     private toastService: ToastService
   ) {}
 
+  /* -------------------------------------- LifeCycle -------------------------------------- */
   ngOnInit(): void {
-    // TODO: da rendere nullable
-    this.eventUid = this.route.snapshot.paramMap.get('uid') ?? '';
+    this.eventUid = this.route.snapshot.paramMap.get('uid');
 
     if (!this.eventUid) {
-      throw new Error('Event uid is not defined');
+      throw new Error('Parametri non validi');
     }
 
-    this.getData();
-  }
-
-  getData(): void {
     this.getEvent(this.eventUid);
     this.getAssignments(this.eventUid);
+
+    this.assignmentSubscription = this.assignmentObservable.subscribe((assignments) => {
+      this.personAssigned = assignments.reduce((acc, item) => acc + item.props.personAssigned, 0);
+      this.personMarked = assignments.reduce((acc, item) => acc + item.props.personMarked, 0);
+      this.personMarkedFromEmployeeDeleted = assignments
+        .filter((x) => x.props.isActive === false)
+        .reduce((acc, item) => acc + item.props.personMarked, 0);
+      this.getEmployee(assignments);
+    });
   }
 
+  ngOnDestroy(): void {
+    if (this.assignmentSubscription) this.assignmentSubscription.unsubscribe();
+  }
+
+  /* -------------------------------------- HTTP Methods -------------------------------------- */
   getEvent(eventUid: string): void {
     this.eventService
       .getEvent(eventUid)
@@ -71,19 +89,7 @@ export class AssignmentListComponent {
   }
 
   getAssignments(eventUid: string): void {
-    this.assignmentService
-      .getAssignmentsByEventUid(eventUid)
-      .then((assignments) => {
-        this.personAssigned = assignments.reduce((acc, item) => acc + item.props.personAssigned, 0);
-        this.personMarked = assignments.reduce((acc, item) => acc + item.props.personMarked, 0);
-        this.personMarkedFromEmployeeDeleted = assignments
-          .filter((x) => x.props.isActive === false)
-          .reduce((acc, item) => acc + item.props.personMarked, 0);
-        this.getEmployee(assignments);
-      })
-      .catch((err: Error) => {
-        this.toastService.showError(err);
-      });
+    this.assignmentObservable = this.assignmentService.getRealTimeAssignmentsByEventUid(eventUid);
   }
 
   getEmployee(assignments: Assignment[]): void {
@@ -104,6 +110,7 @@ export class AssignmentListComponent {
       });
   }
 
+  /* -------------------------------------- Methods -------------------------------------- */
   goBack(): void {
     this.location.back();
   }

@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { QueryConstraint, where } from '@angular/fire/firestore';
+import { Observable } from 'rxjs';
 import { FirebaseReadService } from './firebase/firebase-crud/firebase-read.service';
 import { FirebaseCreateService } from './firebase/firebase-crud/firebase-create.service';
 import { FirebaseDeleteService } from './firebase/firebase-crud/firebase-delete.service';
@@ -24,6 +25,17 @@ export class AssignmentService {
     const idConstraint: QueryConstraint = where('eventUid', '==', eventUid);
     const constraints: QueryConstraint[] = [idConstraint];
     const assignments: Assignment[] = await this.firebaseReadService.getDocumentsByMultipleConstraints(
+      Collection.ASSIGNMENTS,
+      constraints,
+      assignmentConverter
+    );
+    return assignments;
+  }
+
+  public getRealTimeAssignmentsByEventUid(eventUid: string): Observable<Assignment[]> {
+    const idConstraint: QueryConstraint = where('eventUid', '==', eventUid);
+    const constraints: QueryConstraint[] = [idConstraint];
+    const assignments: Observable<Assignment[]> = this.firebaseReadService.getRealTimeDocumentsByMultipleConstraints(
       Collection.ASSIGNMENTS,
       constraints,
       assignmentConverter

@@ -1,5 +1,5 @@
 /* eslint-disable operator-linebreak */
-import { Component, EventEmitter, Input, Output, SimpleChanges } from '@angular/core';
+import { Component, Input, SimpleChanges } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { faCircleMinus, faCirclePlus } from '@fortawesome/free-solid-svg-icons';
 import { debounceTime, Subscription } from 'rxjs';
@@ -8,7 +8,7 @@ import { AssignmentService } from '../services/assignment.service';
 import { AssignmentAndEmployee } from '../models/type';
 
 @Component({
-  selector: 'en-item-assignment[ae][maxPerson][refreshAssignmentAndEmployeeArrayEvent]',
+  selector: 'en-item-assignment[ae][maxPerson]',
   template: ` <li class="my-2 flex h-12 flex-nowrap items-center">
     <div class="grow-2 basis-40 truncate sm:w-max">{{ ae.employee.props.name }} {{ ae.employee.props.lastName }}</div>
     <div class="hidden grow basis-20 text-sm sm:flex sm:basis-24">{{ ae.employee.props.zone | uppercase }}</div>
@@ -60,8 +60,6 @@ export class EnItemAssignmentComponent {
   @Input() ae!: AssignmentAndEmployee;
   @Input() maxPerson!: number;
 
-  @Output() refreshAssignmentAndEmployeeArrayEvent = new EventEmitter();
-
   /* Icons */
   incrementIcon = faCirclePlus;
   decrementIcon = faCircleMinus;
@@ -93,7 +91,6 @@ export class EnItemAssignmentComponent {
             this.assignmentService
               .updateAssignmentPersonAssignedProp(this.ae.assignment.uid, newPersonAssigned)
               .then(() => {
-                this.refreshAssignmentAndEmployeeArrayEvent.emit();
                 this.toastService.showSuccess('Elemento modificato');
               })
               .catch((err: Error) => {
@@ -112,7 +109,6 @@ export class EnItemAssignmentComponent {
       this.assignmentService
         .updateAssignmentIsActive(this.ae.assignment.uid, this.ae.assignment.props.personMarked, value)
         .then(() => {
-          this.refreshAssignmentAndEmployeeArrayEvent.emit();
           this.toastService.showSuccess(
             this.ae.assignment.props.personMarked ? 'Elemento modificato' : 'Elemento eliminato'
           );
