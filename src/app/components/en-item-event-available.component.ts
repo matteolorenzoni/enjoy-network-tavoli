@@ -6,7 +6,7 @@ import { Event } from 'src/app/models/type';
   selector: 'en-item-event-available',
   template: `
     <li
-      class="group h-16 rounded-xl bg-gray-900 p-2 shadow shadow-gray-800 transition-all hover:cursor-pointer hover:bg-primary-60"
+      class="group my-4 h-16 rounded-xl bg-gray-900 p-2 shadow shadow-gray-800 transition-all hover:cursor-pointer hover:bg-primary-60"
       (click)="goToSelector()">
       <div class="flex group-hover:hidden">
         <div>
