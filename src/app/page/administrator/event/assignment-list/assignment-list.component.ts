@@ -59,16 +59,20 @@ export class AssignmentListComponent {
       throw new Error('Parametri non validi');
     }
 
+    const that = this;
     this.getEvent(this.eventUid);
-    this.getAssignments(this.eventUid);
-
-    this.assignmentSubscription = this.assignmentObservable.subscribe((assignments) => {
-      this.personAssigned = assignments.reduce((acc, item) => acc + item.props.personAssigned, 0);
-      this.personMarked = assignments.reduce((acc, item) => acc + item.props.personMarked, 0);
-      this.personMarkedFromEmployeeDeleted = assignments
-        .filter((x) => x.props.isActive === false)
-        .reduce((acc, item) => acc + item.props.personMarked, 0);
-      this.getEmployee(assignments);
+    this.assignmentSubscription = this.assignmentService.getRealTimeAssignmentsByEventUid(this.eventUid).subscribe({
+      next(data: Assignment[]) {
+        that.personAssigned = data.reduce((acc, item) => acc + item.props.personAssigned, 0);
+        that.personMarked = data.reduce((acc, item) => acc + item.props.personMarked, 0);
+        that.personMarkedFromEmployeeDeleted = data
+          .filter((x) => x.props.isActive === false)
+          .reduce((acc, item) => acc + item.props.personMarked, 0);
+        that.getEmployee(data);
+      },
+      error(err) {
+        that.toastService.showError(err);
+      }
     });
   }
 
@@ -86,10 +90,6 @@ export class AssignmentListComponent {
       .catch((err: Error) => {
         this.toastService.showError(err);
       });
-  }
-
-  getAssignments(eventUid: string): void {
-    this.assignmentObservable = this.assignmentService.getRealTimeAssignmentsByEventUid(eventUid);
   }
 
   getEmployee(assignments: Assignment[]): void {

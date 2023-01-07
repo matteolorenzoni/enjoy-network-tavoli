@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { faFilter, faPlus } from '@fortawesome/free-solid-svg-icons';
-import { Observable, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { fadeInAnimation, staggeredFadeInIncrement } from 'src/app/animations/animations';
 import { Employee } from 'src/app/models/type';
 import { ToastService } from 'src/app/services/toast.service';
@@ -20,7 +20,6 @@ export class EmployeeListComponent {
 
   /* Employees */
   employees: Employee[] = [];
-  employeesObservable!: Observable<Employee[]>;
   employeesSubscription!: Subscription;
 
   /* -------------------------------------- Constructor -------------------------------------- */
