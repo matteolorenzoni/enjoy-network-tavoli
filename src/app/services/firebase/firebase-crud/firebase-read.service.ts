@@ -59,6 +59,22 @@ export class FirebaseReadService {
     return documents;
   }
 
+  /* Get in real time all documents in a collection */
+  public getRealTimeAllDocuments<T>(collectionName: string, converter: FirestoreDataConverter<T>): Observable<T[]> {
+    const observable = new Observable<T[]>((observer) => {
+      const collectionRef = collection(this.db, collectionName).withConverter(converter);
+      onSnapshot(collectionRef, (querySnapshot) => {
+        const documents: T[] = [];
+        querySnapshot.forEach((item: QueryDocumentSnapshot<T>) => {
+          documents.push(item.data());
+          if (!environment.production) console.info('Got document', item.data());
+        });
+        observer.next(documents);
+      });
+    });
+    return observable;
+  }
+
   /* Get all documents in a collection that match the constraints */
   public async getDocumentsByMultipleConstraints<T>(
     collectionName: string,
@@ -75,13 +91,12 @@ export class FirebaseReadService {
     });
     return documents;
   }
-
+  /* Get in real time all documents in a collection that match the constraints */
   public getRealTimeDocumentsByMultipleConstraints<T>(
     collectionName: string,
     constraints: QueryConstraint[],
     converter: FirestoreDataConverter<T>
   ): Observable<T[]> {
-    /* Create an observable that will emit the documents */
     const observable = new Observable<T[]>((observer) => {
       const collectionRef = collection(this.db, collectionName).withConverter(converter);
       const q = query(collectionRef, ...constraints);
@@ -93,7 +108,6 @@ export class FirebaseReadService {
         observer.next(documents);
       });
     });
-
     return observable;
   }
 
