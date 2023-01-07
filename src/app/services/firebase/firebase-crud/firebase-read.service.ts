@@ -63,14 +63,20 @@ export class FirebaseReadService {
   public getRealTimeAllDocuments<T>(collectionName: string, converter: FirestoreDataConverter<T>): Observable<T[]> {
     const observable = new Observable<T[]>((observer) => {
       const collectionRef = collection(this.db, collectionName).withConverter(converter);
-      onSnapshot(collectionRef, (querySnapshot) => {
-        const documents: T[] = [];
-        querySnapshot.forEach((item: QueryDocumentSnapshot<T>) => {
-          documents.push(item.data());
-          if (!environment.production) console.info('Got document', item.data());
-        });
-        observer.next(documents);
-      });
+      onSnapshot(
+        collectionRef,
+        (querySnapshot) => {
+          const documents: T[] = [];
+          querySnapshot.forEach((item: QueryDocumentSnapshot<T>) => {
+            documents.push(item.data());
+            if (!environment.production) console.info('Got document', item.data());
+          });
+          observer.next(documents);
+        },
+        (error) => {
+          throw new Error(error.message);
+        }
+      );
     });
     return observable;
   }
@@ -91,6 +97,7 @@ export class FirebaseReadService {
     });
     return documents;
   }
+
   /* Get in real time all documents in a collection that match the constraints */
   public getRealTimeDocumentsByMultipleConstraints<T>(
     collectionName: string,
@@ -100,13 +107,19 @@ export class FirebaseReadService {
     const observable = new Observable<T[]>((observer) => {
       const collectionRef = collection(this.db, collectionName).withConverter(converter);
       const q = query(collectionRef, ...constraints);
-      onSnapshot(q, (querySnapshot) => {
-        const documents: T[] = [];
-        querySnapshot.forEach((document: QueryDocumentSnapshot<T>) => {
-          documents.push(document.data());
-        });
-        observer.next(documents);
-      });
+      onSnapshot(
+        q,
+        (querySnapshot) => {
+          const documents: T[] = [];
+          querySnapshot.forEach((document: QueryDocumentSnapshot<T>) => {
+            documents.push(document.data());
+          });
+          observer.next(documents);
+        },
+        (error) => {
+          throw new Error(error.message);
+        }
+      );
     });
     return observable;
   }
