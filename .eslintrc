@@ -25,7 +25,8 @@
     "object-curly-newline": ["off", "always"],
     "@typescript-eslint/lines-between-class-members": ["off", "always"],
     "@typescript-eslint/no-useless-constructor": ["off", "always"],
-    "class-methods-use-this": ["off", "always"]
+    "class-methods-use-this": ["off", "always"],
+    "@typescript-eslint/no-this-alias": ["off", "always"]
   },
   "settings": {
     "import/ignore": ["node_modules"]
