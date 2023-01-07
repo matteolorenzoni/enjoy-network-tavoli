@@ -1,6 +1,7 @@
 import { UserCredential } from '@angular/fire/auth';
 import { Injectable } from '@angular/core';
 import { documentId, QueryConstraint, where } from 'firebase/firestore';
+import { Observable } from 'rxjs';
 import { UserService } from './user.service';
 import { AssignmentDTO, Collection, EmployeeDTO } from '../models/collection';
 import { Assignment, Employee } from '../models/type';
@@ -35,8 +36,8 @@ export class EmployeeService {
     return employee;
   }
 
-  public async getAllEmployees(): Promise<Employee[]> {
-    const employees: Employee[] = await this.firebaseReadService.getAllDocuments(
+  public getRealTimeAllEmployees(): Observable<Employee[]> {
+    const employees: Observable<Employee[]> = this.firebaseReadService.getRealTimeAllDocuments(
       Collection.EMPLOYEES,
       employeeConverter
     );

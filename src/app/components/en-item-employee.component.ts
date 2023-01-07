@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output, SimpleChanges } from '@angular/core';
+import { Component, Input, SimpleChanges } from '@angular/core';
 import { faCircleCheck, faCircleXmark, faPen, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { EmployeeDTO } from '../models/collection';
 import { Employee } from '../models/type';
@@ -41,7 +41,6 @@ import { ToastService } from '../services/toast.service';
 })
 export class EnItemEmployeeComponent {
   @Input() employee!: Employee;
-  @Output() employeeDeletedEvent: EventEmitter<any> = new EventEmitter();
 
   /* Icons */
   activeIcon = faCircleCheck;
@@ -67,7 +66,6 @@ export class EnItemEmployeeComponent {
       .deleteEmployee(this.uid)
       .then(() => {
         this.toastService.showSuccess('Dipendente eliminato');
-        this.employeeDeletedEvent.emit();
       })
       .catch((err: Error) => {
         this.toastService.showError(err);

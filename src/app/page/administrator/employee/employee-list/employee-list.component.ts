@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { faFilter, faPlus } from '@fortawesome/free-solid-svg-icons';
+import { Observable, Subscription } from 'rxjs';
 import { fadeInAnimation, staggeredFadeInIncrement } from 'src/app/animations/animations';
 import { Employee } from 'src/app/models/type';
 import { ToastService } from 'src/app/services/toast.service';
@@ -19,25 +20,31 @@ export class EmployeeListComponent {
 
   /* Employees */
   employees: Employee[] = [];
+  employeesObservable!: Observable<Employee[]>;
+  employeesSubscription!: Subscription;
 
+  /* -------------------------------------- Constructor -------------------------------------- */
   constructor(private router: Router, private employeeService: EmployeeService, private toastService: ToastService) {}
 
+  /* -------------------------------------- LifeCycle -------------------------------------- */
   ngOnInit(): void {
-    this.getEmployees();
+    const that = this;
+    this.employeesSubscription = this.employeeService.getRealTimeAllEmployees().subscribe({
+      next(data) {
+        that.employees = data;
+      },
+      error(error) {
+        that.toastService.showError(error);
+      }
+    });
   }
 
+  ngOnDestroy(): void {
+    if (this.employeesSubscription) this.employeesSubscription.unsubscribe();
+  }
+
+  /* -------------------------------------- Methods -------------------------------------- */
   goToCreateEmployee(): void {
     this.router.navigate(['create-item/employee/null']);
-  }
-
-  getEmployees(): void {
-    this.employeeService
-      .getAllEmployees()
-      .then((data) => {
-        this.employees = data;
-      })
-      .catch((err: Error) => {
-        this.toastService.showError(err);
-      });
   }
 }
