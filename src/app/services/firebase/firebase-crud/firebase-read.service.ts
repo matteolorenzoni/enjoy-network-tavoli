@@ -12,8 +12,10 @@ import {
   FirestoreDataConverter,
   getCountFromServer,
   AggregateField,
-  AggregateQuerySnapshot
+  AggregateQuerySnapshot,
+  onSnapshot
 } from '@angular/fire/firestore';
+import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 
 @Injectable({
@@ -74,6 +76,28 @@ export class FirebaseReadService {
     return documents;
   }
 
+  public getRealTimeDocumentsByMultipleConstraints<T>(
+    collectionName: string,
+    constraints: QueryConstraint[],
+    converter: FirestoreDataConverter<T>
+  ): { observable: Observable<T[]> } {
+    /* Create an observable that will emit the documents */
+    const observable = new Observable<T[]>((observer) => {
+      const collectionRef = collection(this.db, collectionName).withConverter(converter);
+      const q = query(collectionRef, ...constraints);
+      onSnapshot(q, (querySnapshot) => {
+        const documents: T[] = [];
+        querySnapshot.forEach((document: QueryDocumentSnapshot<T>) => {
+          documents.push(document.data());
+        });
+        observer.next(documents);
+      });
+    });
+
+    return { observable };
+  }
+
+  /* Get the count of all documents in a collection that match the constraints */
   public async getDocumentsByMultipleConstraintsCount(
     collectionName: string,
     constraints: QueryConstraint[]
