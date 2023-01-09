@@ -4,6 +4,7 @@ import { faFilter, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { fadeInAnimation, staggeredFadeInIncrement } from 'src/app/animations/animations';
 import { ToastService } from 'src/app/services/toast.service';
 import { ClientService } from 'src/app/services/client.service';
+import { Subscription } from 'rxjs';
 import { ParticipationAndClient, Participation } from '../../../models/type';
 import { ParticipationService } from '../../../services/participation.service';
 
@@ -27,6 +28,10 @@ export class ParticipationListComponent implements OnInit {
   /* Client */
   participationsAndClientArray: ParticipationAndClient[] = [];
 
+  /* Participation */
+  participationsSubscription!: Subscription;
+
+  /* --------------------------------------------- Constructor --------------------------------------------- */
   constructor(
     private router: Router,
     private route: ActivatedRoute,
@@ -35,6 +40,7 @@ export class ParticipationListComponent implements OnInit {
     private toastService: ToastService
   ) {}
 
+  /* --------------------------------------------- Lifecycle --------------------------------------------- */
   ngOnInit(): void {
     this.eventUid = this.route.snapshot.paramMap.get('eventUid');
     this.tableUid = this.route.snapshot.paramMap.get('tableUid');
@@ -42,23 +48,29 @@ export class ParticipationListComponent implements OnInit {
     this.getData();
   }
 
+  ngOnDestroy(): void {
+    if (this.participationsSubscription) {
+      this.participationsSubscription.unsubscribe();
+    }
+  }
+
+  /* --------------------------------------------- HTTP Methods --------------------------------------------- */
   getData(): void {
     /* Check if the parameters are valid */
     if (!this.tableUid) {
       throw new Error('Errore: parametri non validi');
     }
 
-    this.getParticipations(this.tableUid);
-  }
-
-  getParticipations(tableUid: string): void {
-    this.participationService
-      .getParticipationsByTableUid(tableUid)
-      .then((participations) => {
-        this.getClientsFromParticipants(participations);
-      })
-      .catch((err: Error) => {
-        this.toastService.showError(err);
+    const that = this;
+    this.participationsSubscription = this.participationService
+      .getRealTimeParticipationsByTableUid(this.tableUid)
+      .subscribe({
+        next(data: Participation[]) {
+          that.getClientsFromParticipants(data);
+        },
+        error(error: Error) {
+          that.toastService.showError(error);
+        }
       });
   }
 
@@ -80,6 +92,7 @@ export class ParticipationListComponent implements OnInit {
       });
   }
 
+  /* --------------------------------------------- Methods --------------------------------------------- */
   goToCreateClient(): void {
     this.router.navigate([`create-item/${this.eventUid}/${this.tableUid}/client/null`]);
   }

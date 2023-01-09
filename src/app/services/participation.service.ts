@@ -1,5 +1,7 @@
+/* eslint-disable operator-linebreak */
 import { Injectable } from '@angular/core';
 import { QueryConstraint, where } from '@angular/fire/firestore';
+import { Observable } from 'rxjs';
 import { Assignment, Participation } from '../models/type';
 import { assignmentConverter, participationConverter } from '../models/converter';
 import { Collection } from '../models/collection';
@@ -45,15 +47,16 @@ export class ParticipationService {
   }
 
   /* ------------------------------------------- GET ------------------------------------------- */
-  public async getParticipationsByTableUid(tableUid: string): Promise<Participation[]> {
+  public getRealTimeParticipationsByTableUid(tableUid: string): Observable<Participation[]> {
     const idConstraint: QueryConstraint = where('tableUid', '==', tableUid);
     const isActiveConstraint = where('isActive', '==', true);
     const constraints: QueryConstraint[] = [idConstraint, isActiveConstraint];
-    const participations: Participation[] = await this.firebaseReadService.getDocumentsByMultipleConstraints(
-      Collection.PARTICIPATIONS,
-      constraints,
-      participationConverter
-    );
+    const participations: Observable<Participation[]> =
+      this.firebaseReadService.getRealTimeDocumentsByMultipleConstraints(
+        Collection.PARTICIPATIONS,
+        constraints,
+        participationConverter
+      );
     return participations;
   }
 

@@ -1,4 +1,4 @@
-import { Observable, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { EventService } from 'src/app/services/event.service';
 import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -30,7 +30,6 @@ export class AssignmentListComponent {
   eventUid: string | null = null;
 
   /* Assignment */
-  assignmentObservable!: Observable<Assignment[]>;
   assignmentSubscription!: Subscription;
 
   /* Assignment and Employee */
