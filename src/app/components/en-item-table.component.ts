@@ -7,7 +7,7 @@ import { ParticipationService } from '../services/participation.service';
 import { TableService } from '../services/table.service';
 
 @Component({
-  selector: 'en-item-table[eventUid][table]',
+  selector: 'en-item-table[table][goToClientIsDisabled]',
   template: `
     <li class="flex h-16 items-center">
       <div class="overflow-hidden">
@@ -42,7 +42,10 @@ import { TableService } from '../services/table.service';
 })
 export class EnItemTableComponent {
   @Input() table!: Table;
-  @Input() eventUid!: string | null;
+  @Input() goToClientIsDisabled!: boolean;
+
+  /* Event */
+  eventUid: string | null = null;
 
   /* Participation */
   tableParticipation = 0;
@@ -60,6 +63,10 @@ export class EnItemTableComponent {
     private toastService: ToastService
   ) {}
 
+  ngOnInit(): void {
+    this.eventUid = this.route.snapshot.paramMap.get('eventUid');
+  }
+
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['table']) {
       this.getTablePersonMarked();
@@ -67,7 +74,11 @@ export class EnItemTableComponent {
   }
 
   goToClient(): void {
-    this.router.navigate([`../${this.table.uid}/participations`], { relativeTo: this.route });
+    if (this.goToClientIsDisabled) {
+      this.toastService.showErrorMessage('Hai raggiunto il limite massimo per questo evento, contatta uno staffer');
+    } else {
+      this.router.navigate([`../${this.table.uid}/participations`], { relativeTo: this.route });
+    }
   }
 
   updateTable(): void {

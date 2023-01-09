@@ -119,10 +119,15 @@ export class ParticipationService {
 
     /* If there is no assignment, return false */
     if (assignments.length <= 0) {
-      return false;
+      throw new Error('Si è verificato un errore, contatta uno staffer');
     }
 
     const assignment: Assignment = assignments[0];
+
+    if (assignment.props.personMarked + value > assignment.props.personAssigned) {
+      throw new Error('Hai raggiunto il limite massimo per questo evento, contatta uno staffer');
+    }
+
     const propsToUpdate = { personMarked: assignment.props.personMarked + value };
     await this.firebaseUpdateService.updateDocumentProps(Collection.ASSIGNMENTS, assignment, propsToUpdate);
     return true;
