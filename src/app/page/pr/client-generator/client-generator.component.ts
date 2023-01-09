@@ -143,7 +143,13 @@ export class ClientGeneratorComponent implements OnInit {
     }
 
     this.participation
-      .addParticipation(this.eventUid, this.employeeUid, this.tableUid, this.clientUid)
+      .addParticipation(
+        this.eventUid,
+        this.employeeUid,
+        this.tableUid,
+        this.clientUid,
+        this.clientForm.getRawValue().phone
+      )
       .then(() => {
         this.toastService.showSuccess('Partecipazione aggiunta');
       })

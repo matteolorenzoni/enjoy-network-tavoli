@@ -26,7 +26,8 @@ export class ParticipationService {
     eventUid: string,
     employeeUid: string,
     tableUid: string,
-    clientUid: string
+    clientUid: string,
+    clientPhone: string
   ): Promise<void> {
     /* Increase the number of marked people */
     const okOperation = await this.updateAssignmentMarkedPerson(eventUid, employeeUid, -1);
@@ -38,6 +39,7 @@ export class ParticipationService {
         props: {
           tableUid,
           clientUid,
+          clientPhone,
           isActive: true,
           isScanned: false
         }
