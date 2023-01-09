@@ -102,12 +102,12 @@ export class ClientGeneratorComponent implements OnInit {
 
   public addParticipationAndClient(): void {
     /* Check if the uids are valid */
-    if (!this.eventUid || !this.employeeUid || !this.tableUid || !this.clientUid) {
+    if (!this.eventUid || !this.employeeUid || !this.tableUid) {
       throw new Error('Errore: parametri non validi');
     }
 
     const newClient: Client = {
-      uid: this.clientUid === 'null' ? '' : this.clientUid,
+      uid: this.clientUid ?? '',
       props: {
         name: this.clientForm.value.name
           .split(' ')
@@ -123,7 +123,7 @@ export class ClientGeneratorComponent implements OnInit {
 
     /* Add or update the table */
     this.clientService
-      .addOrUpdateClient(newClient, this.eventUid, this.employeeUid, this.tableUid)
+      .addClient(newClient, this.eventUid, this.employeeUid, this.tableUid)
       .then(() => {
         this.clientForm.reset();
         this.location.back();
@@ -152,6 +152,9 @@ export class ClientGeneratorComponent implements OnInit {
       })
       .catch((err: Error) => {
         this.toastService.showError(err);
+      })
+      .finally(() => {
+        this.isLoading = false;
       });
   }
 }

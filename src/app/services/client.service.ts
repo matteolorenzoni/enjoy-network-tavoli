@@ -60,12 +60,7 @@ export class ClientService {
   }
 
   /* ------------------------------------------- CREATE ------------------------------------------- */
-  public async addOrUpdateClient(
-    client: Client,
-    eventUid: string,
-    employeeUid: string,
-    tableUid: string
-  ): Promise<void> {
+  public async addClient(client: Client, eventUid: string, employeeUid: string, tableUid: string): Promise<void> {
     if (!client.uid) {
       /* Add new client */
       const docRef: DocumentReference<DocumentData> = await this.firebaseCreateService.addDocument(
@@ -74,7 +69,7 @@ export class ClientService {
       );
       const clientUid: string = docRef.id;
 
-      /* Increase assignment */
+      /* Find assignment */
       const eventUidConstraint: QueryConstraint = where('eventUid', '==', eventUid);
       const employeeUidConstraint: QueryConstraint = where('employeeUid', '==', employeeUid);
       const constraints: QueryConstraint[] = [eventUidConstraint, employeeUidConstraint];
@@ -83,27 +78,29 @@ export class ClientService {
         constraints,
         assignmentConverter
       );
-      if (assignments.length > 0) {
-        const assignment: Assignment = assignments[0];
-        const propsToUpdate = { personMarked: assignment.props.personMarked + 1 };
-        await this.firebaseUpdateService.updateDocumentProps(Collection.ASSIGNMENTS, assignment, propsToUpdate);
 
-        /* Add new participation */
-        const participation: Participation = {
-          uid: '',
-          props: {
-            eventUid,
-            tableUid,
-            clientUid,
-            isActive: true,
-            isScanned: false
-          }
-        };
-        await this.firebaseCreateService.addDocument(Collection.PARTICIPATIONS, participation);
+      /* If there is no assignment, return false */
+      if (assignments.length <= 0) {
+        throw new Error('Si è verificato un errore, contatta uno staffer');
       }
-    } else {
-      /* Update document */
-      await this.firebaseUpdateService.updateDocument(Collection.CLIENTS, client);
+
+      /* Increase assignment */
+      const assignment: Assignment = assignments[0];
+      const propsToUpdate = { personMarked: assignment.props.personMarked + 1 };
+      await this.firebaseUpdateService.updateDocumentProps(Collection.ASSIGNMENTS, assignment, propsToUpdate);
+
+      /* Add new participation */
+      const participation: Participation = {
+        uid: '',
+        props: {
+          eventUid,
+          tableUid,
+          clientUid,
+          isActive: true,
+          isScanned: false
+        }
+      };
+      await this.firebaseCreateService.addDocument(Collection.PARTICIPATIONS, participation);
     }
   }
 
