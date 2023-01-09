@@ -89,7 +89,7 @@ const routes: Routes = [
       { path: 'event/:uid', component: EventGeneratorComponent },
       { path: 'employee/:uid', component: EmployeeGeneratorComponent },
       { path: ':eventUid/table/:uid', component: TableGeneratorComponent },
-      { path: ':tableUid/client/:uid', component: ClientGeneratorComponent },
+      { path: ':eventUid/:tableUid/client/:uid', component: ClientGeneratorComponent },
       { path: '', component: PageNotFoundComponent }
     ]
   },

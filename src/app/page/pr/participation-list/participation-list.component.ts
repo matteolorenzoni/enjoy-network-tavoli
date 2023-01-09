@@ -18,6 +18,9 @@ export class ParticipationListComponent implements OnInit {
   filterIcon = faFilter;
   plusIcon = faPlus;
 
+  /* Event */
+  eventUid: string | null = null;
+
   /* Table */
   tableUid: string | null = null;
 
@@ -33,6 +36,7 @@ export class ParticipationListComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.eventUid = this.route.snapshot.paramMap.get('eventUid');
     this.tableUid = this.route.snapshot.paramMap.get('tableUid');
 
     this.getData();
@@ -77,6 +81,6 @@ export class ParticipationListComponent implements OnInit {
   }
 
   goToCreateClient(): void {
-    this.router.navigate([`create-item/${this.tableUid}/client/null`]);
+    this.router.navigate([`create-item/${this.eventUid}/${this.tableUid}/client/null`]);
   }
 }
