@@ -55,10 +55,10 @@ export class EventGeneratorComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.eventUid = this.route.snapshot.paramMap.get('uid');
+    this.eventUid = this.route.snapshot.paramMap.get('eventUid');
 
     if (!this.eventUid) {
-      throw new Error('Employee uid is not defined');
+      throw new Error('Parametri non validi');
     }
 
     if (this.eventUid !== 'null') {

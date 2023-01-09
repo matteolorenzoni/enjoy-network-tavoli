@@ -56,7 +56,7 @@ export class EmployeeGeneratorComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.employeeUid = this.route.snapshot.paramMap.get('uid');
+    this.employeeUid = this.route.snapshot.paramMap.get('employeeUid');
 
     if (!this.employeeUid) {
       throw new Error('Parametri non validi');

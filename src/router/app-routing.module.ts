@@ -86,10 +86,10 @@ const routes: Routes = [
     path: 'create-item',
     component: CreateItemComponent,
     children: [
-      { path: 'event/:uid', component: EventGeneratorComponent },
-      { path: 'employee/:uid', component: EmployeeGeneratorComponent },
-      { path: ':eventUid/table/:uid', component: TableGeneratorComponent },
-      { path: ':eventUid/:tableUid/client/:uid', component: ClientGeneratorComponent },
+      { path: 'event/:eventUid', component: EventGeneratorComponent },
+      { path: 'employee/:employeeUid', component: EmployeeGeneratorComponent },
+      { path: ':eventUid/table/:tableUid', component: TableGeneratorComponent },
+      { path: ':eventUid/:tableUid/client/:clientUid', component: ClientGeneratorComponent },
       { path: '', component: PageNotFoundComponent }
     ]
   },
