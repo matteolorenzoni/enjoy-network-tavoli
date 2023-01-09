@@ -94,7 +94,6 @@ export class ClientService {
           props: {
             tableUid,
             clientUid,
-            clientPhone: client.props.phone,
             isActive: true,
             isScanned: false
           }
