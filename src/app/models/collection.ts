@@ -57,6 +57,7 @@ export type TableDTO = {
 };
 
 export type ParticipationDTO = {
+  eventUid: string;
   tableUid: string;
   clientUid: string;
   isActive: boolean;

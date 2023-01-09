@@ -183,6 +183,7 @@ export const participationConverter: FirestoreDataConverter<Participation> = {
   toFirestore(participation: Participation): WithFieldValue<DocumentData> {
     const { props } = participation;
     const data: ParticipationDTO = {
+      eventUid: props.eventUid,
       tableUid: props.tableUid,
       clientUid: props.clientUid,
       isActive: props.isActive,
@@ -197,6 +198,7 @@ export const participationConverter: FirestoreDataConverter<Participation> = {
     const participation: Participation = {
       uid: snapshot.id,
       props: {
+        eventUid: data.eventUid,
         tableUid: data.tableUid,
         clientUid: data.clientUid,
         isActive: data.isActive,

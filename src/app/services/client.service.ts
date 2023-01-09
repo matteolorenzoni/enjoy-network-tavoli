@@ -92,6 +92,7 @@ export class ClientService {
         const participation: Participation = {
           uid: '',
           props: {
+            eventUid,
             tableUid,
             clientUid,
             isActive: true,
