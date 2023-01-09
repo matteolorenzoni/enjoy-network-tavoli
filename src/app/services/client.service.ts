@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { DocumentData, documentId, DocumentReference, QueryConstraint, where } from '@angular/fire/firestore';
-import { ClientDTO, Collection } from '../models/collection';
-import { clientConverter } from '../models/converter';
-import { Client, Participation } from '../models/type';
+import { Collection } from '../models/collection';
+import { assignmentConverter, clientConverter } from '../models/converter';
+import { Assignment, Client, Participation } from '../models/type';
 import { FirebaseCreateService } from './firebase/firebase-crud/firebase-create.service';
 import { FirebaseDeleteService } from './firebase/firebase-crud/firebase-delete.service';
 import { FirebaseReadService } from './firebase/firebase-crud/firebase-read.service';
@@ -60,30 +60,48 @@ export class ClientService {
   }
 
   /* ------------------------------------------- CREATE ------------------------------------------- */
-  public async addOrUpdateClient(uid: string | null, props: ClientDTO, tableUid: string): Promise<void> {
-    if (!uid) {
+  public async addOrUpdateClient(
+    client: Client,
+    eventUid: string,
+    employeeUid: string,
+    tableUid: string
+  ): Promise<void> {
+    if (!client.uid) {
       /* Add new client */
-      const client: Client = { uid: '', props };
       const docRef: DocumentReference<DocumentData> = await this.firebaseCreateService.addDocument(
         Collection.CLIENTS,
         client
       );
       const clientUid: string = docRef.id;
 
-      /* Add new participation */
-      const participation: Participation = {
-        uid: '',
-        props: {
-          tableUid,
-          clientUid,
-          isActive: true,
-          isScanned: false
-        }
-      };
-      await this.firebaseCreateService.addDocument(Collection.PARTICIPATIONS, participation);
+      /* Increase assignment */
+      const eventUidConstraint: QueryConstraint = where('eventUid', '==', eventUid);
+      const employeeUidConstraint: QueryConstraint = where('employeeUid', '==', employeeUid);
+      const constraints: QueryConstraint[] = [eventUidConstraint, employeeUidConstraint];
+      const assignments: Assignment[] = await this.firebaseReadService.getDocumentsByMultipleConstraints(
+        Collection.ASSIGNMENTS,
+        constraints,
+        assignmentConverter
+      );
+      if (assignments.length > 0) {
+        const assignment: Assignment = assignments[0];
+        const propsToUpdate = { personMarked: assignment.props.personMarked + 1 };
+        await this.firebaseUpdateService.updateDocumentProps(Collection.ASSIGNMENTS, assignment, propsToUpdate);
+
+        /* Add new participation */
+        const participation: Participation = {
+          uid: '',
+          props: {
+            tableUid,
+            clientUid,
+            isActive: true,
+            isScanned: false
+          }
+        };
+        await this.firebaseCreateService.addDocument(Collection.PARTICIPATIONS, participation);
+      }
     } else {
       /* Update document */
-      const client: Client = { uid, props };
       await this.firebaseUpdateService.updateDocument(Collection.CLIENTS, client);
     }
   }
