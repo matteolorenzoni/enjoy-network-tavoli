@@ -17,8 +17,8 @@ export class DashboardComponent implements OnInit {
       role: RoleType.ADMINISTRATOR,
       name: 'administrator',
       icons: [
-        { link: '/dashboard/administrator/event', name: 'Eventi', definition: faCalendarDay },
-        { link: '/dashboard/administrator/employee', name: 'Dipendenti', definition: faUsers },
+        { link: '/dashboard/administrator/events', name: 'Eventi', definition: faCalendarDay },
+        { link: '/dashboard/administrator/employees', name: 'Dipendenti', definition: faUsers },
         { link: '/dashboard/administrator/statistics', name: 'Statistiche', definition: faChartPie },
         { link: '/dashboard/administrator/setting', name: 'Impostazioni', definition: faGear }
       ]

@@ -24,7 +24,7 @@ export class PrActiveComponent implements OnInit {
   filterIcon = faFilter;
 
   /* Event */
-  eventUid = '';
+  eventUid: string | null = null;
 
   /* Employee */
   activePrs: Employee[] = [];
@@ -41,10 +41,10 @@ export class PrActiveComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.eventUid = this.route.snapshot.paramMap.get('uid') ?? '';
+    this.eventUid = this.route.snapshot.paramMap.get('eventUid');
 
     if (!this.eventUid) {
-      throw new Error('Event uid is not defined');
+      throw new Error('Parametri non validi');
     }
 
     this.assignmentService

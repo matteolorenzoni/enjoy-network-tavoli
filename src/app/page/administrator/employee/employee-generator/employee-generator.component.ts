@@ -18,7 +18,7 @@ export class EmployeeGeneratorComponent implements OnInit {
   roles = Object.values(RoleType);
 
   /* Employee */
-  employeeUid = '';
+  employeeUid: string | null = null;
 
   /* Form */
   employeeForm: FormGroup;
@@ -56,10 +56,10 @@ export class EmployeeGeneratorComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.employeeUid = this.route.snapshot.paramMap.get('uid') ?? '';
+    this.employeeUid = this.route.snapshot.paramMap.get('uid');
 
     if (!this.employeeUid) {
-      throw new Error('Employee uid is not defined');
+      throw new Error('Parametri non validi');
     }
 
     if (this.employeeUid !== 'null') {

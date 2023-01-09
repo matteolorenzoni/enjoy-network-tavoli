@@ -44,7 +44,7 @@ export class EnItemPrActiveComponent {
 
   /* ------------------------------ Lifecycle Hooks ------------------------------ */
   ngOnInit(): void {
-    this.eventUid = this.route.snapshot.paramMap.get('uid');
+    this.eventUid = this.route.snapshot.paramMap.get('eventUid');
   }
 
   /* ------------------------------ Methods ------------------------------ */

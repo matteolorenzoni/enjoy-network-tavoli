@@ -27,19 +27,19 @@ const routes: Routes = [
       {
         path: 'administrator',
         children: [
-          { path: 'event', component: EventListComponent },
-          { path: 'employee', component: EmployeeListComponent },
+          { path: 'events', component: EventListComponent },
+          { path: 'employees', component: EmployeeListComponent },
           { path: 'statistics', component: StatisticsComponent },
           { path: 'setting', component: SettingComponent },
-          { path: '', redirectTo: 'event', pathMatch: 'full' }
+          { path: '', redirectTo: 'events', pathMatch: 'full' }
         ]
       },
       {
         path: 'pr',
         children: [
-          { path: 'event', component: EventActiveComponent },
+          { path: 'events', component: EventActiveComponent },
           { path: 'setting', component: SettingComponent },
-          { path: '', redirectTo: 'event', pathMatch: 'full' }
+          { path: '', redirectTo: 'events', pathMatch: 'full' }
         ]
       },
       { path: '', redirectTo: 'administrator', pathMatch: 'full' }
@@ -53,9 +53,9 @@ const routes: Routes = [
         path: 'administrator',
         children: [
           {
-            path: 'event/:uid',
+            path: ':eventUid',
             children: [
-              { path: 'table', component: TableListComponent },
+              { path: 'tables', component: TableListComponent },
               { path: 'assignments', component: AssignmentListComponent },
               { path: 'pr-active', component: PrActiveComponent }
             ]
@@ -65,8 +65,19 @@ const routes: Routes = [
       {
         path: 'pr',
         children: [
-          { path: 'event/:eventUid/table/:tableUid', component: ParticipationListComponent },
-          { path: 'event/:uid', component: TableListComponent }
+          {
+            path: ':eventUid',
+            children: [
+              {
+                path: 'tables',
+                component: TableListComponent
+              },
+              {
+                path: ':tableUid',
+                children: [{ path: 'participations', component: ParticipationListComponent }]
+              }
+            ]
+          }
         ]
       }
     ]

@@ -20,7 +20,7 @@ export class EventGeneratorComponent implements OnInit {
   places = Object.values(PlaceType);
 
   /* Event */
-  eventUid = '';
+  eventUid: string | null = null;
 
   /* Form */
   photoFile: File | null = null;
@@ -55,7 +55,7 @@ export class EventGeneratorComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.eventUid = this.route.snapshot.paramMap.get('uid') ?? '';
+    this.eventUid = this.route.snapshot.paramMap.get('uid');
 
     if (!this.eventUid) {
       throw new Error('Employee uid is not defined');

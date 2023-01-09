@@ -47,7 +47,7 @@ export class TableListComponent implements OnInit {
 
   /* ---------------------------------------- LifeCycle ---------------------------------------- */
   ngOnInit(): void {
-    this.eventUid = this.route.snapshot.paramMap.get('uid');
+    this.eventUid = this.route.snapshot.paramMap.get('eventUid');
     this.employeeUid = this.sessionStorage.getEmployeeUid();
 
     this.getEventDate();

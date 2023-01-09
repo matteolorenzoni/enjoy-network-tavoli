@@ -53,7 +53,7 @@ export class AssignmentListComponent {
 
   /* -------------------------------------- LifeCycle -------------------------------------- */
   ngOnInit(): void {
-    this.eventUid = this.route.snapshot.paramMap.get('uid');
+    this.eventUid = this.route.snapshot.paramMap.get('eventUid');
 
     if (!this.eventUid) {
       throw new Error('Parametri non validi');

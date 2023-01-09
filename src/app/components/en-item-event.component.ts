@@ -138,8 +138,8 @@ export class EnItemEventComponent {
       this.eventInfo.push({ label: 'Messaggio', value: this.event.props.messageText });
 
       this.itemNavigationMenu = [
-        { link: [this.event.uid, 'table'], name: 'Tavoli', definition: faWineBottle },
-        { link: [this.event.uid, 'assignments'], name: 'Dipendenti', definition: faUsers },
+        { link: [`../${this.event.uid}/tables`], name: 'Tavoli', definition: faWineBottle },
+        { link: [`../${this.event.uid}/assignments`], name: 'Dipendenti', definition: faUsers },
         { link: ['/create-item/event/', this.event.uid], name: 'Modifica', definition: faPen }
       ];
 

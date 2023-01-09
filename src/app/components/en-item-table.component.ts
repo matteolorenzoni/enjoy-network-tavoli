@@ -67,7 +67,7 @@ export class EnItemTableComponent {
   }
 
   goToClient(): void {
-    this.router.navigate([`./table/${this.table.uid}`], { relativeTo: this.route });
+    this.router.navigate([`../${this.table.uid}/participations`], { relativeTo: this.route });
   }
 
   updateTable(): void {
