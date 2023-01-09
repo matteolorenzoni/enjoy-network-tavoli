@@ -22,20 +22,32 @@ export class ParticipationService {
   ) {}
 
   /* ------------------------------------------- CREATE ------------------------------------------- */
-  public async addParticipation(
+  public async addOrUpdateParticipation(
     eventUid: string,
     employeeUid: string,
     tableUid: string,
     clientUid: string
   ): Promise<void> {
-    /* Increase the number of marked people */
-    const okOperation = await this.updateAssignmentMarkedPerson(eventUid, employeeUid, -1);
+    /* Check if the client has already a participation */
+    const eventUidConstraint: QueryConstraint = where('eventUid', '==', eventUid);
+    const clientUidConstraint: QueryConstraint = where('clientUid', '==', clientUid);
+    const constraints: QueryConstraint[] = [eventUidConstraint, clientUidConstraint];
+    const participations: Participation[] = await this.firebaseReadService.getDocumentsByMultipleConstraints(
+      Collection.PARTICIPATIONS,
+      constraints,
+      participationConverter
+    );
 
-    /* Add participation */
-    if (okOperation) {
+    /* If the client has not a active or not active participations, create a new one */
+    if (participations.length <= 0) {
+      /* Increase the number of marked people if it is possible */
+      await this.updateAssignmentMarkedPerson(eventUid, employeeUid, 1);
+
+      /* Add participation */
       const participation: Participation = {
         uid: '',
         props: {
+          eventUid,
           tableUid,
           clientUid,
           isActive: true,
@@ -43,7 +55,22 @@ export class ParticipationService {
         }
       };
       await this.firebaseCreateService.addDocument(Collection.PARTICIPATIONS, participation);
+      return;
     }
+
+    /* If the participation is not active switch it in active */
+    if (participations[0] && !participations[0].props.isActive) {
+      /* Increase the number of marked people if it is possible */
+      await this.updateAssignmentMarkedPerson(eventUid, employeeUid, 1);
+
+      /* Make the old participation active */
+      const propsToUpdate = { isActive: true };
+      await this.firebaseUpdateService.updateDocumentProps(Collection.PARTICIPATIONS, participations[0], propsToUpdate);
+      return;
+    }
+
+    /* If the participation is active throw an error */
+    throw new Error("Il cliente è già segnato all'interno di un'altro tavolo per questo evento");
   }
 
   /* ------------------------------------------- GET ------------------------------------------- */
@@ -91,23 +118,21 @@ export class ParticipationService {
     participationUid: string
   ): Promise<void> {
     /* Decrease the number of marked people */
-    const okOperation = await this.updateAssignmentMarkedPerson(eventUid, employeeUid, -1);
+    await this.updateAssignmentMarkedPerson(eventUid, employeeUid, -1);
 
     /* If the operation was successful, update the participation */
-    if (okOperation) {
-      const participation: Participation = await this.firebaseReadService.getDocumentByUid(
-        Collection.PARTICIPATIONS,
-        participationUid,
-        participationConverter
-      );
-      const propsToUpdate = {
-        isActive: false
-      };
-      await this.firebaseUpdateService.updateDocumentProps(Collection.PARTICIPATIONS, participation, propsToUpdate);
-    }
+    const participation: Participation = await this.firebaseReadService.getDocumentByUid(
+      Collection.PARTICIPATIONS,
+      participationUid,
+      participationConverter
+    );
+    const propsToUpdate = {
+      isActive: false
+    };
+    await this.firebaseUpdateService.updateDocumentProps(Collection.PARTICIPATIONS, participation, propsToUpdate);
   }
 
-  public async updateAssignmentMarkedPerson(eventUid: string, employeeUid: string, value: 1 | -1): Promise<boolean> {
+  public async updateAssignmentMarkedPerson(eventUid: string, employeeUid: string, value: 1 | -1) {
     const eventUidConstraint: QueryConstraint = where('eventUid', '==', eventUid);
     const employeeUidConstraint: QueryConstraint = where('employeeUid', '==', employeeUid);
     const constraints: QueryConstraint[] = [eventUidConstraint, employeeUidConstraint];
@@ -130,7 +155,6 @@ export class ParticipationService {
 
     const propsToUpdate = { personMarked: assignment.props.personMarked + value };
     await this.firebaseUpdateService.updateDocumentProps(Collection.ASSIGNMENTS, assignment, propsToUpdate);
-    return true;
   }
 
   /* ------------------------------------------- DELETE ------------------------------------------- */

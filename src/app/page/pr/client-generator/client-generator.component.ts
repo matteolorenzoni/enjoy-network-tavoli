@@ -68,6 +68,7 @@ export class ClientGeneratorComponent implements OnInit {
     this.employeeUid = this.sessionStorage.getEmployeeUid();
     this.tableUid = this.route.snapshot.paramMap.get('tableUid');
     this.clientUid = this.route.snapshot.paramMap.get('uid');
+    if (this.clientUid === 'null') this.clientUid = null;
   }
 
   public onSubmit() {
@@ -86,7 +87,7 @@ export class ClientGeneratorComponent implements OnInit {
               `Questo numero appartiene a: ${client?.props.name} ${client?.props.lastName}, lo vuoi aggiungere al tavolo?`
             );
 
-            this.addParticipation();
+            this.addParticipation(client.uid);
           } else {
             this.phoneIsChecked = true;
             this.clientForm.controls['name'].enable();
@@ -136,15 +137,17 @@ export class ClientGeneratorComponent implements OnInit {
       });
   }
 
-  public addParticipation(): void {
+  public addParticipation(clientUid: string): void {
     /* Check if the uids are valid */
-    if (!this.eventUid || !this.employeeUid || !this.tableUid || !this.clientUid) {
+    if (!this.eventUid || !this.employeeUid || !this.tableUid || !clientUid) {
       throw new Error('Errore: parametri non validi');
     }
 
     this.participation
-      .addParticipation(this.eventUid, this.employeeUid, this.tableUid, this.clientUid)
+      .addOrUpdateParticipation(this.eventUid, this.employeeUid, this.tableUid, clientUid)
       .then(() => {
+        this.clientForm.reset();
+        this.location.back();
         this.toastService.showSuccess('Partecipazione aggiunta');
       })
       .catch((err: Error) => {
