@@ -4,8 +4,9 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ClientService } from 'src/app/services/client.service';
 import { ToastService } from 'src/app/services/toast.service';
 import { Location } from '@angular/common';
-import { ClientDTO } from 'src/app/models/collection';
 import { ParticipationService } from 'src/app/services/participation.service';
+import { SessionStorageService } from 'src/app/services/sessionstorage.service';
+import { Client } from 'src/app/models/type';
 
 @Component({
   selector: 'app-client-generator',
@@ -13,6 +14,12 @@ import { ParticipationService } from 'src/app/services/participation.service';
   styleUrls: ['./client-generator.component.scss']
 })
 export class ClientGeneratorComponent implements OnInit {
+  /* Event */
+  eventUid: string | null = null;
+
+  /* Employee */
+  employeeUid: string | null = null;
+
   /* Table */
   tableUid: string | null = null;
 
@@ -32,6 +39,7 @@ export class ClientGeneratorComponent implements OnInit {
     private location: Location,
     private clientService: ClientService,
     private participation: ParticipationService,
+    private sessionStorage: SessionStorageService,
     private toastService: ToastService
   ) {
     /* Init form */
@@ -56,6 +64,8 @@ export class ClientGeneratorComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.eventUid = this.route.snapshot.paramMap.get('eventUid');
+    this.employeeUid = this.sessionStorage.getEmployeeUid();
     this.tableUid = this.route.snapshot.paramMap.get('tableUid');
     this.clientUid = this.route.snapshot.paramMap.get('uid');
   }
@@ -91,29 +101,28 @@ export class ClientGeneratorComponent implements OnInit {
 
   public addParticipationAndClient(): void {
     /* Check if the uids are valid */
-    if (!this.tableUid || !this.clientUid) {
+    if (!this.eventUid || !this.employeeUid || !this.tableUid || !this.clientUid) {
       throw new Error('Errore: parametri non validi');
     }
 
-    /* create the new table */
-    const newClient: ClientDTO = {
-      name: this.clientForm.value.name
-        .split(' ')
-        .map((word: string) => word.charAt(0).toUpperCase() + word.substring(1).toLowerCase())
-        .join(' '),
-      lastName: this.clientForm.value.lastName
-        .split(' ')
-        .map((word: string) => word.charAt(0).toUpperCase() + word.substring(1).toLowerCase())
-        .join(' '),
-      phone: this.clientForm.getRawValue().phone
+    const newClient: Client = {
+      uid: this.clientUid === 'null' ? '' : this.clientUid,
+      props: {
+        name: this.clientForm.value.name
+          .split(' ')
+          .map((word: string) => word.charAt(0).toUpperCase() + word.substring(1).toLowerCase())
+          .join(' '),
+        lastName: this.clientForm.value.lastName
+          .split(' ')
+          .map((word: string) => word.charAt(0).toUpperCase() + word.substring(1).toLowerCase())
+          .join(' '),
+        phone: this.clientForm.getRawValue().phone
+      }
     };
-
-    /* If the table uid is null, it means that we are creating a new table */
-    const uidFormatted = this.clientUid === 'null' ? null : this.clientUid;
 
     /* Add or update the table */
     this.clientService
-      .addOrUpdateClient(uidFormatted, newClient, this.tableUid)
+      .addOrUpdateClient(newClient, this.eventUid, this.employeeUid, this.tableUid)
       .then(() => {
         this.clientForm.reset();
         this.location.back();
@@ -129,14 +138,14 @@ export class ClientGeneratorComponent implements OnInit {
 
   public addParticipation(): void {
     /* Check if the uids are valid */
-    if (!this.tableUid || !this.clientUid) {
+    if (!this.eventUid || !this.employeeUid || !this.tableUid || !this.clientUid) {
       throw new Error('Errore: parametri non validi');
     }
 
     this.participation
-      .addParticipation(this.tableUid, this.clientUid)
+      .addParticipation(this.eventUid, this.employeeUid, this.tableUid, this.clientUid)
       .then(() => {
-        this.toastService.showSuccess('Participazione aggiunta');
+        this.toastService.showSuccess('Partecipazione aggiunta');
       })
       .catch((err: Error) => {
         this.toastService.showError(err);

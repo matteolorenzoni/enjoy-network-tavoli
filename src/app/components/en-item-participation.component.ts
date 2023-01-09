@@ -1,6 +1,8 @@
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
 import { Component, Input } from '@angular/core';
 import { Subscription } from 'rxjs';
+import { ActivatedRoute } from '@angular/router';
+import { SessionStorageService } from '../services/sessionstorage.service';
 import { ToastService } from '../services/toast.service';
 import { ParticipationService } from '../services/participation.service';
 import { ParticipationAndClient } from '../models/type';
@@ -9,11 +11,6 @@ import { ParticipationAndClient } from '../models/type';
   selector: 'en-item-participation[pc]',
   template: `
     <li class="flex h-12 items-center">
-      <!-- <div class="mr-4 flex">
-        <div>{{ isActive ? '🟠' : '⚪' }}</div>
-        <div>{{ hasPayed ? '🟠' : '⚪' }}</div>
-        <div>{{ hasScanned ? '🟠' : '⚪' }}</div>
-      </div> -->
       <p class="truncate">
         {{ pc.client.props.name }} {{ pc.client.props.lastName }}
         <span class="ml-4 text-xs">{{ pc.participation.props.createdAt | date: 'dd/MM/YYYY' }}</span>
@@ -38,6 +35,12 @@ import { ParticipationAndClient } from '../models/type';
 export class EnItemParticipationComponent {
   @Input() pc!: ParticipationAndClient;
 
+  /* Event */
+  eventUid: string | null = null;
+
+  /* Employee */
+  employeeUid: string | null = null;
+
   /* Icons */
   deleteIcon = faTrash;
 
@@ -45,14 +48,28 @@ export class EnItemParticipationComponent {
   subIsActive!: Subscription;
 
   /* ------------------------------ Constructor ------------------------------ */
-  constructor(private participationService: ParticipationService, private toastService: ToastService) {}
+  constructor(
+    private route: ActivatedRoute,
+    private participationService: ParticipationService,
+    private sessionStorageService: SessionStorageService,
+    private toastService: ToastService
+  ) {}
+
+  ngOnInit(): void {
+    this.eventUid = this.route.snapshot.paramMap.get('eventUid');
+    this.employeeUid = this.sessionStorageService.getEmployeeUid();
+  }
 
   /* ------------------------------ Methods ------------------------------ */
   madeParticipationNotActive(): void {
+    if (!this.eventUid || !this.employeeUid || !this.pc.participation.uid) {
+      throw new Error('Errore: parametri non validi');
+    }
+
     this.participationService
-      .madeParticipationNotActive(this.pc.participation.uid)
+      .madeParticipationNotActive(this.eventUid, this.employeeUid, this.pc.participation.uid)
       .then(() => {
-        this.toastService.showSuccess('Participazione rimossa');
+        this.toastService.showSuccess('Partecipazione rimossa');
       })
       .catch((error) => {
         this.toastService.showError(error);

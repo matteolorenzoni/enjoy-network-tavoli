@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { QueryConstraint, where } from '@angular/fire/firestore';
+import { Assignment, Participation } from '../models/type';
+import { assignmentConverter, participationConverter } from '../models/converter';
 import { Collection } from '../models/collection';
-import { participationConverter } from '../models/converter';
-import { Participation } from '../models/type';
 import { FirebaseCreateService } from './firebase/firebase-crud/firebase-create.service';
 import { FirebaseDeleteService } from './firebase/firebase-crud/firebase-delete.service';
 import { FirebaseReadService } from './firebase/firebase-crud/firebase-read.service';
@@ -20,17 +20,28 @@ export class ParticipationService {
   ) {}
 
   /* ------------------------------------------- CREATE ------------------------------------------- */
-  public async addParticipation(tableUid: string, clientUid: string): Promise<void> {
-    const participation: Participation = {
-      uid: '',
-      props: {
-        tableUid,
-        clientUid,
-        isActive: true,
-        isScanned: false
-      }
-    };
-    await this.firebaseCreateService.addDocument(Collection.PARTICIPATIONS, participation);
+  public async addParticipation(
+    eventUid: string,
+    employeeUid: string,
+    tableUid: string,
+    clientUid: string
+  ): Promise<void> {
+    /* Increase the number of marked people */
+    const okOperation = await this.updateAssignmentMarkedPerson(eventUid, employeeUid, -1);
+
+    /* Add participation */
+    if (okOperation) {
+      const participation: Participation = {
+        uid: '',
+        props: {
+          tableUid,
+          clientUid,
+          isActive: true,
+          isScanned: false
+        }
+      };
+      await this.firebaseCreateService.addDocument(Collection.PARTICIPATIONS, participation);
+    }
   }
 
   /* ------------------------------------------- GET ------------------------------------------- */
@@ -71,16 +82,47 @@ export class ParticipationService {
   }
 
   /* ------------------------------------------- UPDATE ------------------------------------------- */
-  public async madeParticipationNotActive(participationUid: string): Promise<void> {
-    const participation: Participation = await this.firebaseReadService.getDocumentByUid(
-      Collection.PARTICIPATIONS,
-      participationUid,
-      participationConverter
+  public async madeParticipationNotActive(
+    eventUid: string,
+    employeeUid: string,
+    participationUid: string
+  ): Promise<void> {
+    /* Decrease the number of marked people */
+    const okOperation = await this.updateAssignmentMarkedPerson(eventUid, employeeUid, -1);
+
+    /* If the operation was successful, update the participation */
+    if (okOperation) {
+      const participation: Participation = await this.firebaseReadService.getDocumentByUid(
+        Collection.PARTICIPATIONS,
+        participationUid,
+        participationConverter
+      );
+      const propsToUpdate = {
+        isActive: false
+      };
+      await this.firebaseUpdateService.updateDocumentProps(Collection.PARTICIPATIONS, participation, propsToUpdate);
+    }
+  }
+
+  public async updateAssignmentMarkedPerson(eventUid: string, employeeUid: string, value: 1 | -1): Promise<boolean> {
+    const eventUidConstraint: QueryConstraint = where('eventUid', '==', eventUid);
+    const employeeUidConstraint: QueryConstraint = where('employeeUid', '==', employeeUid);
+    const constraints: QueryConstraint[] = [eventUidConstraint, employeeUidConstraint];
+    const assignments: Assignment[] = await this.firebaseReadService.getDocumentsByMultipleConstraints(
+      Collection.ASSIGNMENTS,
+      constraints,
+      assignmentConverter
     );
-    const propsToUpdate = {
-      isActive: false
-    };
-    await this.firebaseUpdateService.updateDocumentProps(Collection.PARTICIPATIONS, participation, propsToUpdate);
+
+    /* If there is no assignment, return false */
+    if (assignments.length <= 0) {
+      return false;
+    }
+
+    const assignment: Assignment = assignments[0];
+    const propsToUpdate = { personMarked: assignment.props.personMarked + value };
+    await this.firebaseUpdateService.updateDocumentProps(Collection.ASSIGNMENTS, assignment, propsToUpdate);
+    return true;
   }
 
   /* ------------------------------------------- DELETE ------------------------------------------- */
