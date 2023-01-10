@@ -74,6 +74,21 @@ export class ParticipationService {
   }
 
   /* ------------------------------------------- GET ------------------------------------------- */
+  public async getParticipationByTableUidAndClientUid(
+    tableUid: string,
+    clientUid: string
+  ): Promise<Participation | undefined> {
+    const tableUidConstraint: QueryConstraint = where('tableUid', '==', tableUid);
+    const clientUidConstraint: QueryConstraint = where('clientUid', '==', clientUid);
+    const constraints: QueryConstraint[] = [tableUidConstraint, clientUidConstraint];
+    const participations: Participation[] = await this.firebaseReadService.getDocumentsByMultipleConstraints(
+      Collection.PARTICIPATIONS,
+      constraints,
+      participationConverter
+    );
+    return participations[0] || undefined;
+  }
+
   public getRealTimeParticipationsByTableUid(tableUid: string): Observable<Participation[]> {
     const idConstraint: QueryConstraint = where('tableUid', '==', tableUid);
     const isActiveConstraint = where('isActive', '==', true);
