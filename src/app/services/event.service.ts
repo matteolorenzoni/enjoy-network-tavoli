@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { documentId, QueryConstraint, where } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 import { assignmentConverter, eventConverter } from '../models/converter';
-import { Collection, EventDTO } from '../models/collection';
+import { Collection } from '../models/collection';
 import { Assignment, Event } from '../models/type';
 import { FirebaseCreateService } from './firebase/firebase-crud/firebase-create.service';
 import { FirebaseUpdateService } from './firebase/firebase-crud/firebase-update.service';
@@ -50,25 +50,20 @@ export class EventService {
   }
 
   /* ------------------------------------------- ADD ------------------------------------------- */
-  public async addOrUpdateEvent(photo: File | null, uid: string | null, props: EventDTO): Promise<void> {
-    let { imageUrl } = props;
+  public async addOrUpdateEvent(photo: File | null, event: Event): Promise<void> {
+    const newEvent: Event = event;
 
     if (photo) {
       /* Add new image */
-      const photoUrl = await this.firebaseStorage.addPhotoToEvent(props, photo);
-      imageUrl = photoUrl;
+      newEvent.props.imageUrl = await this.firebaseStorage.addPhotoToEvent(event.props, photo);
     }
 
-    if (!uid) {
+    if (!event.uid) {
       /* Add new event */
-      const event: Event = { uid: '', props };
-      event.props.imageUrl = imageUrl;
-      await this.firebaseCreateService.addDocument(Collection.EVENTS, event);
+      await this.firebaseCreateService.addDocument(Collection.EVENTS, newEvent);
     } else {
       /* Update document */
-      const event: Event = { uid, props };
-      event.props.imageUrl = imageUrl;
-      await this.firebaseUpdateService.updateDocument(Collection.EVENTS, event);
+      await this.firebaseUpdateService.updateDocument(Collection.EVENTS, newEvent);
     }
   }
 

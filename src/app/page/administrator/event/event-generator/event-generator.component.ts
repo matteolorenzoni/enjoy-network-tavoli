@@ -6,8 +6,8 @@ import { fadeInAnimation } from 'src/app/animations/animations';
 import { EventService } from 'src/app/services/event.service';
 import { ToastService } from 'src/app/services/toast.service';
 import { ActivatedRoute } from '@angular/router';
-import { EventDTO } from 'src/app/models/collection';
-import { PlaceType } from '../../../../models/enum';
+import { Event } from 'src/app/models/type';
+import { PlaceType } from 'src/app/models/enum';
 
 @Component({
   selector: 'app-event-generator',
@@ -56,12 +56,13 @@ export class EventGeneratorComponent implements OnInit {
 
   ngOnInit(): void {
     this.eventUid = this.route.snapshot.paramMap.get('eventUid');
+    this.eventUid = this.eventUid === 'null' ? null : this.eventUid;
 
     if (!this.eventUid) {
       throw new Error('Parametri non validi');
     }
 
-    if (this.eventUid !== 'null') {
+    if (this.eventUid) {
       this.eventService
         .getEvent(this.eventUid)
         .then((event) => {
@@ -92,27 +93,29 @@ export class EventGeneratorComponent implements OnInit {
   public onSubmit() {
     this.isLoading = true;
     /* Event */
-    const newEvent: EventDTO = {
-      imageUrl: this.eventForm.value.imageUrl,
-      name: this.eventForm.value.name?.trim().replace(/\s\s+/g, ' ') || '',
-      date: new Date(this.eventForm.value.date),
-      timeStart: this.eventForm.value.timeStart,
-      timeEnd: this.eventForm.value.timeEnd,
-      maxPerson: this.eventForm.value.maxPerson,
-      place: this.eventForm.value.place,
-      guest: this.eventForm.value.guest?.trim().replace(/\s\s+/g, ' ') || '',
-      description: this.eventForm.value.description?.trim().replace(/\s\s+/g, ' ') || '',
-      messageText: this.eventForm.value.messageText
+    const newEvent: Event = {
+      uid: this.eventUid ?? '',
+      props: {
+        imageUrl: this.eventForm.value.imageUrl,
+        name: this.eventForm.value.name?.trim().replace(/\s\s+/g, ' ') || '',
+        date: new Date(this.eventForm.value.date),
+        timeStart: this.eventForm.value.timeStart,
+        timeEnd: this.eventForm.value.timeEnd,
+        maxPerson: this.eventForm.value.maxPerson,
+        place: this.eventForm.value.place,
+        guest: this.eventForm.value.guest?.trim().replace(/\s\s+/g, ' ') || '',
+        description: this.eventForm.value.description?.trim().replace(/\s\s+/g, ' ') || '',
+        messageText: this.eventForm.value.messageText
+      }
     };
-    // TODO: da rimuovere
-    const uidFormatted = this.eventUid === '' || this.eventUid === 'null' ? null : this.eventUid;
+
     this.eventService
-      .addOrUpdateEvent(this.photoFile, uidFormatted, newEvent)
+      .addOrUpdateEvent(this.photoFile, newEvent)
       .then(() => {
         this.imageSrc = null;
         this.eventForm.reset();
         this.location.back();
-        this.toastService.showSuccess(uidFormatted ? 'Evento modificato' : 'Evento creato');
+        this.toastService.showSuccess(newEvent.uid ? 'Evento modificato' : 'Evento creato');
       })
       .catch((err: Error) => {
         this.toastService.showError(err);
@@ -122,9 +125,8 @@ export class EventGeneratorComponent implements OnInit {
       });
   }
 
-  public loadPhoto(e: Event) {
-    const target = e.target as HTMLInputElement;
-    const files = target.files as FileList;
+  public loadPhoto(e: any) {
+    const files = (e.target as HTMLInputElement).files as FileList;
     if (files[0]) {
       this.eventForm.patchValue({ imageUrl: files[0].type });
       this.photoFile = files[0];

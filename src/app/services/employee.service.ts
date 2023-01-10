@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { documentId, QueryConstraint, where } from 'firebase/firestore';
 import { Observable } from 'rxjs';
 import { UserService } from './user.service';
-import { AssignmentDTO, Collection, EmployeeDTO } from '../models/collection';
+import { AssignmentDTO, Collection } from '../models/collection';
 import { Assignment, Employee } from '../models/type';
 import { FirebaseCreateService } from './firebase/firebase-crud/firebase-create.service';
 import { FirebaseDeleteService } from './firebase/firebase-crud/firebase-delete.service';
@@ -74,17 +74,16 @@ export class EmployeeService {
   }
 
   /* ------------------------------------------- ADD ------------------------------------------- */
-  public async addOrUpdateEmployee(uid: string | null, props: EmployeeDTO, email: string): Promise<void> {
-    if (!uid) {
+  public async addOrUpdateEmployee(email: string, employee: Employee): Promise<void> {
+    if (!employee.uid) {
       /* Add new user */
       const userCredential: UserCredential = await this.userService.register(email, PASSWORD_DEFAULT);
 
       /* Add new employee */
-      const employee: Employee = { uid: userCredential.user.uid, props };
-      await this.firebaseCreateService.addDocumentWithUid(Collection.EMPLOYEES, employee);
+      const newEmployee = { uid: userCredential.user.uid, props: employee.props };
+      await this.firebaseCreateService.addDocumentWithUid(Collection.EMPLOYEES, newEmployee);
     } else {
       /* Update document */
-      const employee: Employee = { uid, props };
       await this.firebaseUpdateService.updateDocument(Collection.EMPLOYEES, employee);
     }
   }

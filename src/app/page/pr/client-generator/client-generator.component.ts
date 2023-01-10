@@ -68,7 +68,7 @@ export class ClientGeneratorComponent implements OnInit {
     this.employeeUid = this.sessionStorage.getEmployeeUid();
     this.tableUid = this.route.snapshot.paramMap.get('tableUid');
     this.clientUid = this.route.snapshot.paramMap.get('clientUid');
-    if (this.clientUid === 'null') this.clientUid = null;
+    this.clientUid = this.clientUid === 'null' ? null : this.clientUid;
   }
 
   public onSubmit() {

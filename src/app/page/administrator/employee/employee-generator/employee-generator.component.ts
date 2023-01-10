@@ -5,7 +5,6 @@ import { RoleType } from 'src/app/models/enum';
 import { EmployeeService } from 'src/app/services/employee.service';
 import { ToastService } from 'src/app/services/toast.service';
 import { Location } from '@angular/common';
-import { EmployeeDTO } from 'src/app/models/collection';
 import { Employee } from 'src/app/models/type';
 
 @Component({
@@ -57,12 +56,13 @@ export class EmployeeGeneratorComponent implements OnInit {
 
   ngOnInit(): void {
     this.employeeUid = this.route.snapshot.paramMap.get('employeeUid');
+    this.employeeUid = this.employeeUid === 'null' ? null : this.employeeUid;
 
     if (!this.employeeUid) {
       throw new Error('Parametri non validi');
     }
 
-    if (this.employeeUid !== 'null') {
+    if (this.employeeUid) {
       this.employeeForm.controls['email'].disable();
       this.employeeService
         .getEmployee(this.employeeUid)
@@ -89,17 +89,20 @@ export class EmployeeGeneratorComponent implements OnInit {
   public onSubmit() {
     this.isLoading = true;
     const { email } = this.employeeForm.value;
-    const employee: EmployeeDTO = {
-      name: this.employeeForm.value.name?.trim().replace(/\s\s+/g, ' ') || '',
-      lastName: this.employeeForm.value.lastName?.trim().replace(/\s\s+/g, ' ') || '',
-      role: this.employeeForm.value.role,
-      phone: this.employeeForm.value.phone,
-      zone: this.employeeForm.value.zone?.trim().replace(/\s\s+/g, ' ') || '',
-      isActive: this.employeeForm.value.isActive
+
+    const employee: Employee = {
+      uid: this.employeeUid ?? '',
+      props: {
+        name: this.employeeForm.value.name?.trim().replace(/\s\s+/g, ' ') || '',
+        lastName: this.employeeForm.value.lastName?.trim().replace(/\s\s+/g, ' ') || '',
+        role: this.employeeForm.value.role,
+        phone: this.employeeForm.value.phone,
+        zone: this.employeeForm.value.zone?.trim().replace(/\s\s+/g, ' ') || '',
+        isActive: this.employeeForm.value.isActive
+      }
     };
-    const uidFormatted = this.employeeUid === '' || this.employeeUid === 'null' ? null : this.employeeUid;
     this.employeeService
-      .addOrUpdateEmployee(uidFormatted, employee, email)
+      .addOrUpdateEmployee(email, employee)
       .then(() => {
         this.employeeForm.reset();
         this.location.back();

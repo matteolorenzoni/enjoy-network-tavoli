@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { TableDTO } from 'src/app/models/collection';
 import { ToastService } from 'src/app/services/toast.service';
 import { TableService } from 'src/app/services/table.service';
 import { Location } from '@angular/common';
+import { Table } from 'src/app/models/type';
 import { SessionStorageService } from '../../../services/sessionstorage.service';
 
 @Component({
@@ -49,13 +49,14 @@ export class TableGeneratorComponent implements OnInit {
   ngOnInit(): void {
     this.eventUid = this.route.snapshot.paramMap.get('eventUid');
     this.employeeUid = this.sessionStorage.getEmployeeUid();
-    this.tableUid = this.route.snapshot.paramMap.get('uid');
+    this.tableUid = this.route.snapshot.paramMap.get('tableUid');
+    this.tableUid = this.tableUid === 'null' ? null : this.tableUid;
 
     if (!this.eventUid || !this.employeeUid || !this.tableUid) {
       throw new Error('Errore: parametri non validi');
     }
 
-    if (this.tableUid !== 'null') {
+    if (this.tableUid) {
       this.tableService
         .getTable(this.tableUid)
         .then((table) => {
@@ -83,21 +84,21 @@ export class TableGeneratorComponent implements OnInit {
     }
 
     /* create the new table */
-    const newTable: TableDTO = {
-      eventUid: this.eventUid,
-      employeeUid: this.employeeUid,
-      name: this.tableForm.value.name?.trim().replace(/\s\s+/g, ' ') || '',
-      price: this.tableForm.value.price,
-      hour: new Date(this.tableForm.value.hour),
-      drink: this.tableForm.value.drink
+    const newTable: Table = {
+      uid: this.tableUid ?? '',
+      props: {
+        eventUid: this.eventUid,
+        employeeUid: this.employeeUid,
+        name: this.tableForm.value.name?.trim().replace(/\s\s+/g, ' ') || '',
+        price: this.tableForm.value.price,
+        hour: new Date(this.tableForm.value.hour),
+        drink: this.tableForm.value.drink
+      }
     };
-
-    /* If the table uid is null, it means that we are creating a new table */
-    const uidFormatted = this.tableUid === 'null' ? null : this.tableUid;
 
     /* Add or update the table */
     this.tableService
-      .addOrUpdateTable(uidFormatted, newTable)
+      .addOrUpdateTable(newTable)
       .then(() => {
         this.tableForm.reset();
         this.location.back();

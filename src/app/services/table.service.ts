@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { QueryConstraint, where } from '@angular/fire/firestore';
-import { Collection, TableDTO } from '../models/collection';
+import { Collection } from '../models/collection';
 import { participationConverter, tableConverter } from '../models/converter';
 import { Participation, Table } from '../models/type';
 import { FirebaseCreateService } from './firebase/firebase-crud/firebase-create.service';
@@ -49,14 +49,12 @@ export class TableService {
   }
 
   /* ------------------------------------------- ADD ------------------------------------------- */
-  public async addOrUpdateTable(uid: string | null, props: TableDTO): Promise<void> {
-    if (!uid) {
+  public async addOrUpdateTable(table: Table): Promise<void> {
+    if (!table.uid) {
       /* Add new table */
-      const table: Table = { uid: '', props };
       await this.firebaseCreateService.addDocument(Collection.TABLES, table);
     } else {
       /* Update document */
-      const table: Table = { uid, props };
       await this.firebaseUpdateService.updateDocument(Collection.TABLES, table);
     }
   }
