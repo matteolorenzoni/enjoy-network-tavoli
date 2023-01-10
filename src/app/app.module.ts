@@ -1,5 +1,6 @@
 import { NgModule, isDevMode } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { QRCodeModule } from 'angularx-qrcode';
 
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ServiceWorkerModule } from '@angular/service-worker';
@@ -91,6 +92,7 @@ import { QrCodeMessageComponent } from './page/client/qr-code-message/qr-code-me
     AppRoutingModule,
     BrowserAnimationsModule,
     ReactiveFormsModule,
+    QRCodeModule,
     ServiceWorkerModule.register('ngsw-worker.js', {
       enabled: !isDevMode(),
       // Register the ServiceWorker as soon as the application is stable

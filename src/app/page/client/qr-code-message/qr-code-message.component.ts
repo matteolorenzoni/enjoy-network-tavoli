@@ -31,6 +31,11 @@ export class QrCodeMessageComponent implements OnInit {
   clientUid?: string;
   client!: Client;
 
+  /* QrCode */
+  qrdata = 'aa';
+  img = '../../../../assets/images/logo-dark.jpg';
+  zoom = false;
+
   constructor(
     private route: ActivatedRoute,
     private router: Router,
@@ -136,5 +141,9 @@ export class QrCodeMessageComponent implements OnInit {
         this.toastService.showError(error);
         this.router.navigate(['error'], { relativeTo: this.route });
       });
+  }
+
+  toggleZoom() {
+    this.zoom = !this.zoom;
   }
 }
