@@ -27,7 +27,7 @@ export class DashboardComponent implements OnInit {
       role: RoleType.PR,
       name: 'pr',
       icons: [
-        { link: '/dashboard/pr/event', name: 'Eventi', definition: faCalendarDay },
+        { link: '/dashboard/pr/events', name: 'Eventi', definition: faCalendarDay },
         { link: '/dashboard/pr/setting', name: 'Impostazioni', definition: faGear }
       ]
     }
