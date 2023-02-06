@@ -7,7 +7,7 @@ import { ParticipationService } from '../services/participation.service';
 import { TableService } from '../services/table.service';
 
 @Component({
-  selector: 'en-item-table[table][goToClientIsDisabled]',
+  selector: 'en-item-table[table][canAddClient]',
   template: `
     <li class="flex h-16 items-center">
       <div class="overflow-hidden">
@@ -42,7 +42,7 @@ import { TableService } from '../services/table.service';
 })
 export class EnItemTableComponent {
   @Input() table!: Table;
-  @Input() goToClientIsDisabled!: boolean;
+  @Input() canAddClient!: boolean;
 
   /* Event */
   eventUid: string | null = null;
@@ -74,11 +74,10 @@ export class EnItemTableComponent {
   }
 
   goToClient(): void {
-    if (this.goToClientIsDisabled) {
-      this.toastService.showErrorMessage('Hai raggiunto il limite massimo per questo evento, contatta uno staffer');
-    } else {
-      this.router.navigate([`../${this.table.uid}/participations`], { relativeTo: this.route });
-    }
+    this.router.navigate([`../${this.table.uid}/participations`], {
+      relativeTo: this.route,
+      queryParams: { canAddClient: this.canAddClient }
+    });
   }
 
   updateTable(): void {

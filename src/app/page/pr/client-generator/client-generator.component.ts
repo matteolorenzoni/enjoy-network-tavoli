@@ -1,10 +1,9 @@
 import { EventService } from 'src/app/services/event.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ClientService } from 'src/app/services/client.service';
 import { ToastService } from 'src/app/services/toast.service';
-import { Location } from '@angular/common';
 import { ParticipationService } from 'src/app/services/participation.service';
 import { SessionStorageService } from 'src/app/services/sessionstorage.service';
 import { Client } from 'src/app/models/type';
@@ -38,7 +37,7 @@ export class ClientGeneratorComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private location: Location,
+    private router: Router,
     private eventService: EventService,
     private clientService: ClientService,
     private participation: ParticipationService,
@@ -147,7 +146,7 @@ export class ClientGeneratorComponent implements OnInit {
       .addClient(newClient, this.eventUid, this.employeeUid, this.tableUid, this.eventMessage)
       .then(() => {
         this.clientForm.reset();
-        this.location.back();
+        this.router.navigate([`dashboard/pr/${this.eventUid}/tables`]);
         this.toastService.showSuccess('Cliente creato');
       })
       .catch((err: Error) => {
@@ -168,7 +167,7 @@ export class ClientGeneratorComponent implements OnInit {
       .addOrUpdateParticipation(this.eventUid, this.employeeUid, this.tableUid, clientUid, this.eventMessage)
       .then(() => {
         this.clientForm.reset();
-        this.location.back();
+        this.router.navigate([`dashboard/pr/${this.eventUid}/tables`]);
         this.toastService.showSuccess('Partecipazione aggiunta');
       })
       .catch((err: Error) => {

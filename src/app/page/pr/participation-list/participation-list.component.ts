@@ -21,6 +21,7 @@ export class ParticipationListComponent implements OnInit {
 
   /* Event */
   eventUid: string | null = null;
+  canAddClient = false;
 
   /* Table */
   tableUid: string | null = null;
@@ -44,6 +45,7 @@ export class ParticipationListComponent implements OnInit {
   ngOnInit(): void {
     this.eventUid = this.route.snapshot.paramMap.get('eventUid');
     this.tableUid = this.route.snapshot.paramMap.get('tableUid');
+    this.canAddClient = this.route.snapshot.queryParams['canAddClient'] === 'true';
 
     this.getData();
   }
@@ -95,5 +97,9 @@ export class ParticipationListComponent implements OnInit {
   /* --------------------------------------------- Methods --------------------------------------------- */
   goToCreateClient(): void {
     this.router.navigate([`create-item/${this.eventUid}/${this.tableUid}/client/null`]);
+  }
+
+  onDeleteParticipation() {
+    this.canAddClient = true;
   }
 }

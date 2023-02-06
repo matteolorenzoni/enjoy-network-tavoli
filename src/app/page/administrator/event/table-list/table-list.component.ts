@@ -121,8 +121,4 @@ export class TableListComponent implements OnInit {
   goToCreateTable(): void {
     this.router.navigate([`create-item/${this.eventUid}/table/null`]);
   }
-
-  goToClientIsDisabled(): boolean {
-    return this.eventPersonMarked >= this.eventMaxPersonAssigned;
-  }
 }
