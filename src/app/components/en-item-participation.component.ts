@@ -11,15 +11,18 @@ import { ParticipationAndClient } from '../models/type';
   selector: 'en-item-participation[pc]',
   template: `
     <li class="flex h-12 items-center">
-      <p class="truncate">
+      <p class="truncate ">
         {{ pc.client.props.name }} {{ pc.client.props.lastName }}
-        <span class="ml-4 text-xs">{{ pc.participation.props.createdAt | date: 'dd/MM/YYYY' }}</span>
+        <span class="ml-4 text-xs text-gray-500"
+          >{{ pc.participation.props.createdAt | date: 'dd/MM/YYYY' }} -
+          {{ pc.participation.props.createdAt | date: 'HH:mm' }}</span
+        >
       </p>
 
       <div class="ml-auto">
         <fa-icon
           [icon]="deleteIcon"
-          class="ml-4 text-lg text-gray-500 hover:cursor-pointer hover:text-gray-300 active:text-gray-800"
+          class="ml-4 text-lg text-gray-400 hover:cursor-pointer hover:text-gray-300 active:text-gray-800"
           (click)="madeParticipationNotActive()"></fa-icon>
       </div>
     </li>
