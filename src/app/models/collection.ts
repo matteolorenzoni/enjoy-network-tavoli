@@ -62,6 +62,7 @@ export type ParticipationDTO = {
   clientUid: string;
   isActive: boolean;
   isScanned: boolean;
+  messageIsReceived: boolean;
   createdAt?: Date;
   modifiedAt?: Date;
 };

@@ -105,7 +105,8 @@ export class ClientService {
           tableUid,
           clientUid,
           isActive: true,
-          isScanned: false
+          isScanned: false,
+          messageIsReceived: false
         }
       };
       await this.firebaseCreateService.addDocument(Collection.PARTICIPATIONS, participation);

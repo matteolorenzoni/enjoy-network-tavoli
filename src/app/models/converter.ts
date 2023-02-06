@@ -188,6 +188,7 @@ export const participationConverter: FirestoreDataConverter<Participation> = {
       clientUid: props.clientUid,
       isActive: props.isActive,
       isScanned: props.isScanned,
+      messageIsReceived: props.messageIsReceived,
       createdAt: props.createdAt ? props.createdAt : new Date(),
       modifiedAt: props.modifiedAt ? props.modifiedAt : new Date()
     };
@@ -203,6 +204,7 @@ export const participationConverter: FirestoreDataConverter<Participation> = {
         clientUid: data.clientUid,
         isActive: data.isActive,
         isScanned: data.isScanned,
+        messageIsReceived: data.messageIsReceived,
         createdAt: new Date((data.createdAt as unknown as Timestamp).seconds * 1000),
         modifiedAt: new Date((data.modifiedAt as unknown as Timestamp).seconds * 1000)
       }
