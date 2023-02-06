@@ -66,7 +66,6 @@ export class QrCodeMessageComponent implements OnInit {
         }
 
         this.event = event;
-        console.log(this.event);
       })
       .catch((error: Error) => {
         this.toastService.showError(error);
