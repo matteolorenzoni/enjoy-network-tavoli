@@ -67,3 +67,25 @@ export type ParticipationAndClient = {
   participation: Participation;
   client: Client;
 };
+
+export type SMS = {
+  to: string;
+  text: string;
+  sandbox: boolean;
+};
+
+export type SMSResponse = {
+  from: string;
+  text: string;
+  transactionId: string;
+  smsInserted: number;
+  smsNotInserted: number;
+  sms: SMSInfo[];
+};
+
+export type SMSInfo = {
+  to: string;
+  id: number;
+  status: 'INSERTED' | 'NOT_INSERTED';
+  statusDetail: 'BADNUMBERFORMAT' | 'DUPLICATESMS' | 'BLACKLIST ';
+};

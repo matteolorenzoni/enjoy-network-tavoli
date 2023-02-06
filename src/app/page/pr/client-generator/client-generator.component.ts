@@ -1,3 +1,4 @@
+import { EventService } from 'src/app/services/event.service';
 import { ActivatedRoute } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
@@ -16,6 +17,7 @@ import { Client } from 'src/app/models/type';
 export class ClientGeneratorComponent implements OnInit {
   /* Event */
   eventUid: string | null = null;
+  eventMessage = '';
 
   /* Employee */
   employeeUid: string | null = null;
@@ -37,6 +39,7 @@ export class ClientGeneratorComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private location: Location,
+    private eventService: EventService,
     private clientService: ClientService,
     private participation: ParticipationService,
     private sessionStorage: SessionStorageService,
@@ -69,6 +72,23 @@ export class ClientGeneratorComponent implements OnInit {
     this.tableUid = this.route.snapshot.paramMap.get('tableUid');
     this.clientUid = this.route.snapshot.paramMap.get('clientUid');
     this.clientUid = this.clientUid === 'null' ? null : this.clientUid;
+
+    this.getEventMessage();
+  }
+
+  public getEventMessage(): void {
+    if (!this.eventUid) {
+      throw new Error('Errore: parametri non validi');
+    }
+
+    this.eventService
+      .getEvent(this.eventUid)
+      .then((event) => {
+        this.eventMessage = event?.props.messageText ?? '';
+      })
+      .catch((err: Error) => {
+        this.toastService.showError(err);
+      });
   }
 
   public onSubmit() {
@@ -89,6 +109,7 @@ export class ClientGeneratorComponent implements OnInit {
 
             this.addParticipation(client.uid);
           } else {
+            this.toastService.showInfo('Cliente non ancora registrato, inserire i dati');
             this.phoneIsChecked = true;
             this.clientForm.controls['name'].enable();
             this.clientForm.controls['lastName'].enable();
@@ -123,7 +144,7 @@ export class ClientGeneratorComponent implements OnInit {
 
     /* Add or update the table */
     this.clientService
-      .addClient(newClient, this.eventUid, this.employeeUid, this.tableUid)
+      .addClient(newClient, this.eventUid, this.employeeUid, this.tableUid, this.eventMessage)
       .then(() => {
         this.clientForm.reset();
         this.location.back();
@@ -144,7 +165,7 @@ export class ClientGeneratorComponent implements OnInit {
     }
 
     this.participation
-      .addOrUpdateParticipation(this.eventUid, this.employeeUid, this.tableUid, clientUid)
+      .addOrUpdateParticipation(this.eventUid, this.employeeUid, this.tableUid, clientUid, this.eventMessage)
       .then(() => {
         this.clientForm.reset();
         this.location.back();

@@ -2,11 +2,12 @@ import { Injectable } from '@angular/core';
 import { DocumentData, documentId, DocumentReference, QueryConstraint, where } from '@angular/fire/firestore';
 import { Collection } from '../models/collection';
 import { assignmentConverter, clientConverter } from '../models/converter';
-import { Assignment, Client, Participation } from '../models/type';
+import { Assignment, Client, Participation, SMS } from '../models/type';
 import { FirebaseCreateService } from './firebase/firebase-crud/firebase-create.service';
 import { FirebaseDeleteService } from './firebase/firebase-crud/firebase-delete.service';
 import { FirebaseReadService } from './firebase/firebase-crud/firebase-read.service';
 import { FirebaseUpdateService } from './firebase/firebase-crud/firebase-update.service';
+import { SmsHostingService } from './sms-hosting.service';
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +17,8 @@ export class ClientService {
     private firebaseCreateService: FirebaseCreateService,
     private firebaseReadService: FirebaseReadService,
     private firebaseUpdateService: FirebaseUpdateService,
-    private firebaseDeleteService: FirebaseDeleteService
+    private firebaseDeleteService: FirebaseDeleteService,
+    private smsHostingService: SmsHostingService
   ) {}
 
   /* ------------------------------------------- GET ------------------------------------------- */
@@ -60,7 +62,13 @@ export class ClientService {
   }
 
   /* ------------------------------------------- CREATE ------------------------------------------- */
-  public async addClient(client: Client, eventUid: string, employeeUid: string, tableUid: string): Promise<void> {
+  public async addClient(
+    client: Client,
+    eventUid: string,
+    employeeUid: string,
+    tableUid: string,
+    eventMessage: string
+  ): Promise<void> {
     if (!client.uid) {
       /* Add new client */
       const docRef: DocumentReference<DocumentData> = await this.firebaseCreateService.addDocument(
@@ -101,6 +109,19 @@ export class ClientService {
         }
       };
       await this.firebaseCreateService.addDocument(Collection.PARTICIPATIONS, participation);
+
+      /* Send sms */
+      const sms: SMS = {
+        to: '393389108738',
+        text: eventMessage,
+        sandbox: true
+      };
+      this.smsHostingService.sendSms(sms).subscribe({
+        next: (data) => console.log(data),
+        error: (error: Error) => {
+          throw new Error(error.message);
+        }
+      });
     }
   }
 

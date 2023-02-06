@@ -3,7 +3,7 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false,
+  production: !false,
   firebase: {
     projectId: 'enjoy-network-tavoli',
     appId: '1:682704062987:web:bfebc270cfdb2fd2e3550e',
@@ -13,6 +13,10 @@ export const environment = {
     authDomain: 'enjoy-network-tavoli.firebaseapp.com',
     messagingSenderId: '682704062987',
     measurementId: 'G-4LWJ0DDBN5'
+  },
+  smsHosting: {
+    username: 'SMSHTRO41JB2NB5RV2ZNF',
+    password: 'WR3NSN1BWOTVD66QRAQTWFZ3E6QHK4U5'
   }
 };
 

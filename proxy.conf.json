@@ -1,0 +1,8 @@
+{
+  "/rest/api": {
+    "target": "https://api.smshosting.it",
+    "secure": true,
+    "changeOrigin": true,
+    "logLevel": "debug"
+  }
+}

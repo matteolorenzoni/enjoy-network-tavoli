@@ -2,13 +2,14 @@
 import { Injectable } from '@angular/core';
 import { QueryConstraint, where } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
-import { Assignment, Participation } from '../models/type';
+import { Assignment, Participation, SMS } from '../models/type';
 import { assignmentConverter, participationConverter } from '../models/converter';
 import { Collection } from '../models/collection';
 import { FirebaseCreateService } from './firebase/firebase-crud/firebase-create.service';
 import { FirebaseDeleteService } from './firebase/firebase-crud/firebase-delete.service';
 import { FirebaseReadService } from './firebase/firebase-crud/firebase-read.service';
 import { FirebaseUpdateService } from './firebase/firebase-crud/firebase-update.service';
+import { SmsHostingService } from './sms-hosting.service';
 
 @Injectable({
   providedIn: 'root'
@@ -18,7 +19,8 @@ export class ParticipationService {
     private firebaseCreateService: FirebaseCreateService,
     private firebaseReadService: FirebaseReadService,
     private firebaseUpdateService: FirebaseUpdateService,
-    private firebaseDeleteService: FirebaseDeleteService
+    private firebaseDeleteService: FirebaseDeleteService,
+    private smsHostingService: SmsHostingService
   ) {}
 
   /* ------------------------------------------- CREATE ------------------------------------------- */
@@ -26,7 +28,8 @@ export class ParticipationService {
     eventUid: string,
     employeeUid: string,
     tableUid: string,
-    clientUid: string
+    clientUid: string,
+    eventMessage: string
   ): Promise<void> {
     /* Check if the client has already a participation */
     const eventUidConstraint: QueryConstraint = where('eventUid', '==', eventUid);
@@ -38,7 +41,7 @@ export class ParticipationService {
       participationConverter
     );
 
-    /* If the client has not a active or not active participations, create a new one */
+    /* 1) If the client hasn't an active or not-active participation, create a new one */
     if (participations.length <= 0) {
       /* Increase the number of marked people if it is possible */
       await this.updateAssignmentMarkedPerson(eventUid, employeeUid, 1);
@@ -55,10 +58,23 @@ export class ParticipationService {
         }
       };
       await this.firebaseCreateService.addDocument(Collection.PARTICIPATIONS, participation);
+
+      /* Send sms */
+      const sms: SMS = {
+        to: '393389108738',
+        text: eventMessage,
+        sandbox: false
+      };
+      this.smsHostingService.sendSms(sms).subscribe({
+        next: (data) => console.log(data),
+        error: (error: Error) => {
+          throw new Error(error.message);
+        }
+      });
       return;
     }
 
-    /* If the participation is not active switch it in active */
+    /* 2) If the participation is not active switch it in active */
     if (participations[0] && !participations[0].props.isActive) {
       /* Increase the number of marked people if it is possible */
       await this.updateAssignmentMarkedPerson(eventUid, employeeUid, 1);
@@ -69,7 +85,7 @@ export class ParticipationService {
       return;
     }
 
-    /* If the participation is active throw an error */
+    /* 3) If the participation is active throw an error */
     throw new Error("Il cliente è già segnato all'interno di un'altro tavolo per questo evento");
   }
 
