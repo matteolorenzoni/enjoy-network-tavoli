@@ -15,6 +15,7 @@ import { TableGeneratorComponent } from 'src/app/page/pr/table-generator/table-g
 import { SettingComponent } from 'src/app/page/setting/setting.component';
 import { StatisticsComponent } from 'src/app/page/statistics/statistics.component';
 import { ParticipationListComponent } from 'src/app/page/pr/participation-list/participation-list.component';
+import { UpdatePasswordComponent } from '../app/page/setting/update-password/update-password.component';
 import { QrCodeMessageComponent } from '../app/page/client/qr-code-message/qr-code-message.component';
 import { ClientGeneratorComponent } from '../app/page/pr/client-generator/client-generator.component';
 import { PrActiveComponent } from '../app/page/administrator/event/pr-active/pr-active.component';
@@ -91,6 +92,7 @@ const routes: Routes = [
       { path: 'employee/:employeeUid', component: EmployeeGeneratorComponent },
       { path: ':eventUid/table/:tableUid', component: TableGeneratorComponent },
       { path: ':eventUid/:tableUid/client/:clientUid', component: ClientGeneratorComponent },
+      { path: 'setting/update-password', component: UpdatePasswordComponent },
       { path: '', component: PageNotFoundComponent }
     ]
   },

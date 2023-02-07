@@ -49,6 +49,7 @@ import { ClientGeneratorComponent } from './page/pr/client-generator/client-gene
 import { ParticipationListComponent } from './page/pr/participation-list/participation-list.component';
 import { EnItemParticipationComponent } from './components/en-item-participation.component';
 import { QrCodeMessageComponent } from './page/client/qr-code-message/qr-code-message.component';
+import { UpdatePasswordComponent } from './page/setting/update-password/update-password.component';
 
 @NgModule({
   declarations: [
@@ -86,7 +87,8 @@ import { QrCodeMessageComponent } from './page/client/qr-code-message/qr-code-me
     ClientGeneratorComponent,
     ParticipationListComponent,
     EnItemParticipationComponent,
-    QrCodeMessageComponent
+    QrCodeMessageComponent,
+    UpdatePasswordComponent
   ],
   imports: [
     BrowserModule,
