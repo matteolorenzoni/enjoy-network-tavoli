@@ -19,7 +19,7 @@ export type EventDTO = {
   place: string;
   guest: string;
   description: string;
-  messageText: string;
+  message: string;
   createdAt?: Date;
   modifiedAt?: Date;
 };
@@ -29,6 +29,7 @@ export type EmployeeDTO = {
   lastName: string;
   role: RoleType;
   phone: string;
+  email: string;
   zone: string;
   isActive: boolean;
   createdAt?: Date;
@@ -40,7 +41,7 @@ export type AssignmentDTO = {
   employeeUid: string;
   isActive: boolean;
   personMarked: number;
-  personAssigned: number;
+  maxPersonMarkable: number;
   createdAt?: Date;
   modifiedAt?: Date;
 };

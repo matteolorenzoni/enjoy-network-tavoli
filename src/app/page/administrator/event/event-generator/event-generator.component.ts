@@ -49,7 +49,7 @@ export class EventGeneratorComponent implements OnInit {
       place: new FormControl(PlaceType.BACCARA, [Validators.required]),
       guest: new FormControl(null),
       description: new FormControl(null),
-      messageText: new FormControl(null)
+      message: new FormControl(null)
     });
     this.isLoading = false;
   }
@@ -78,7 +78,7 @@ export class EventGeneratorComponent implements OnInit {
               place: props.place,
               guest: props.guest,
               description: props.description,
-              messageText: props.messageText
+              message: props.message
             });
             this.imageSrc = props.imageUrl;
             this.lblButton = 'Modifica evento';
@@ -105,7 +105,7 @@ export class EventGeneratorComponent implements OnInit {
         place: this.eventForm.value.place,
         guest: this.eventForm.value.guest?.trim().replace(/\s\s+/g, ' ') || '',
         description: this.eventForm.value.description?.trim().replace(/\s\s+/g, ' ') || '',
-        messageText: this.eventForm.value.messageText
+        message: this.eventForm.value.message
       }
     };
 

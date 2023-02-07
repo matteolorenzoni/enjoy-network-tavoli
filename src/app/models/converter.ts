@@ -17,6 +17,7 @@ export const employeeConverter: FirestoreDataConverter<Employee> = {
       lastName: props.lastName,
       role: props.role,
       phone: props.phone,
+      email: props.email,
       zone: props.zone,
       isActive: props.isActive,
       createdAt: props.createdAt ? props.createdAt : new Date(),
@@ -33,6 +34,7 @@ export const employeeConverter: FirestoreDataConverter<Employee> = {
         lastName: data.lastName,
         role: data.role,
         phone: data.phone,
+        email: data.email,
         zone: data.zone,
         isActive: data.isActive,
         createdAt: new Date((data.createdAt as unknown as Timestamp).seconds * 1000),
@@ -56,7 +58,7 @@ export const eventConverter: FirestoreDataConverter<Event> = {
       place: props.place,
       guest: props.guest,
       description: props.description,
-      messageText: props.messageText,
+      message: props.message,
       createdAt: props.createdAt ? props.createdAt : new Date(),
       modifiedAt: props.modifiedAt ? props.modifiedAt : new Date()
     };
@@ -76,7 +78,7 @@ export const eventConverter: FirestoreDataConverter<Event> = {
         place: data.place,
         guest: data.guest,
         description: data.description,
-        messageText: data.messageText,
+        message: data.message,
         createdAt: new Date((data.createdAt as unknown as Timestamp).seconds * 1000),
         modifiedAt: new Date((data.modifiedAt as unknown as Timestamp).seconds * 1000)
       }
@@ -93,7 +95,7 @@ export const assignmentConverter: FirestoreDataConverter<Assignment> = {
       employeeUid: props.employeeUid,
       isActive: props.isActive,
       personMarked: props.personMarked,
-      personAssigned: props.personAssigned,
+      maxPersonMarkable: props.maxPersonMarkable,
       createdAt: props.createdAt ? props.createdAt : new Date(),
       modifiedAt: props.modifiedAt ? props.modifiedAt : new Date()
     };
@@ -108,7 +110,7 @@ export const assignmentConverter: FirestoreDataConverter<Assignment> = {
         employeeUid: data.employeeUid,
         isActive: data.isActive,
         personMarked: data.personMarked,
-        personAssigned: data.personAssigned,
+        maxPersonMarkable: data.maxPersonMarkable,
         createdAt: new Date((data.createdAt as unknown as Timestamp).seconds * 1000),
         modifiedAt: new Date((data.modifiedAt as unknown as Timestamp).seconds * 1000)
       }

@@ -78,21 +78,21 @@ export class AssignmentService {
         employeeUid,
         isActive: true,
         personMarked: 0,
-        personAssigned: 0
+        maxPersonMarkable: 0
       }
     };
     await this.firebaseCreateService.addDocument(Collection.ASSIGNMENTS, assignment);
   }
 
   /* ------------------------------------------- UPDATE ------------------------------------------- */
-  public async updateAssignmentPersonAssignedProp(assignmentUid: string, personAssigned: number): Promise<void> {
+  public async updateAssignmentPersonAssignedProp(assignmentUid: string, maxPersonMarkable: number): Promise<void> {
     const assignment: Assignment = await this.firebaseReadService.getDocumentByUid(
       Collection.ASSIGNMENTS,
       assignmentUid,
       assignmentConverter
     );
     if (assignment) {
-      const propsToUpdate = { personAssigned };
+      const propsToUpdate = { maxPersonMarkable };
       await this.firebaseUpdateService.updateDocumentProps(Collection.ASSIGNMENTS, assignment, propsToUpdate);
     }
   }
@@ -108,7 +108,7 @@ export class AssignmentService {
         this.firebaseDeleteService.deleteDocumentByUid(Collection.ASSIGNMENTS, assignmentUid);
       } else {
         /** If the person is not active for the event, are removed as many as person assigned as possible  */
-        const propsToUpdate = isActive ? { isActive: true } : { personAssigned: personMarked, isActive: false };
+        const propsToUpdate = isActive ? { isActive: true } : { maxPersonMarkable: personMarked, isActive: false };
         await this.firebaseUpdateService.updateDocumentProps(Collection.ASSIGNMENTS, assignment, propsToUpdate);
       }
     }

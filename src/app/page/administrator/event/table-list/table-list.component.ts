@@ -80,7 +80,7 @@ export class TableListComponent implements OnInit {
     this.assignmentService
       .getAssignmentByEventUidAndEmployeeUid(this.eventUid, this.employeeUid)
       .then((assignment) => {
-        this.eventMaxPersonAssigned = assignment ? assignment.props.personAssigned : 0;
+        this.eventMaxPersonAssigned = assignment ? assignment.props.maxPersonMarkable : 0;
       })
       .catch((error: Error) => {
         this.toastService.showError(error);

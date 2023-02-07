@@ -98,6 +98,7 @@ export class EmployeeGeneratorComponent implements OnInit {
         role: this.employeeForm.value.role,
         phone: this.employeeForm.value.phone,
         zone: this.employeeForm.value.zone?.trim().replace(/\s\s+/g, ' ') || '',
+        email: email?.trim().replace(/\s\s+/g, ' ') || '',
         isActive: this.employeeForm.value.isActive
       }
     };

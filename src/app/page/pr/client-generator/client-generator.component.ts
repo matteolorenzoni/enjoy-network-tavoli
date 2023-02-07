@@ -83,7 +83,7 @@ export class ClientGeneratorComponent implements OnInit {
     this.eventService
       .getEvent(this.eventUid)
       .then((event) => {
-        this.eventMessage = event?.props.messageText ?? '';
+        this.eventMessage = event?.props.message ?? '';
       })
       .catch((err: Error) => {
         this.toastService.showError(err);

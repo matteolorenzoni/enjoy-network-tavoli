@@ -36,7 +36,7 @@ export class AssignmentListComponent {
   assignmentsAndEmployeeArray: AssignmentAndEmployee[] = [];
   personMarked = 0;
   personMarkedFromEmployeeDeleted = 0;
-  personAssigned = 0;
+  maxPersonMarkable = 0;
   maxPerson = 0;
 
   /* -------------------------------------- Constructor -------------------------------------- */
@@ -62,7 +62,7 @@ export class AssignmentListComponent {
     this.getEvent(this.eventUid);
     this.assignmentSubscription = this.assignmentService.getRealTimeAssignmentsByEventUid(this.eventUid).subscribe({
       next(data: Assignment[]) {
-        that.personAssigned = data.reduce((acc, item) => acc + item.props.personAssigned, 0);
+        that.maxPersonMarkable = data.reduce((acc, item) => acc + item.props.maxPersonMarkable, 0);
         that.personMarked = data.reduce((acc, item) => acc + item.props.personMarked, 0);
         that.personMarkedFromEmployeeDeleted = data
           .filter((x) => x.props.isActive === false)

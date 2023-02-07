@@ -62,7 +62,7 @@ export class EmployeeService {
     const idConstraint: QueryConstraint = where(documentId(), 'in', employeeUids);
     // TODO: ordinamento
     // const firstOrder: QueryConstraint = orderBy('isActive');
-    // const secondOrder: QueryConstraint = orderBy('personAssigned');
+    // const secondOrder: QueryConstraint = orderBy('maxPersonMarkable');
     // const thirdOrder: QueryConstraint = orderBy('personMarked');
     const constricts: QueryConstraint[] = [idConstraint];
     const employees: Employee[] = await this.firebaseReadService.getDocumentsByMultipleConstraints(
@@ -106,7 +106,7 @@ export class EmployeeService {
     const assignmentsToMinimize: Assignment[] = assignments.filter((item) => item.props.personMarked > 0);
     assignmentsToMinimize.forEach(async (assignment) => {
       const propsToUpdate: Partial<AssignmentDTO> = {
-        personAssigned: assignment.props.personMarked,
+        maxPersonMarkable: assignment.props.maxPersonMarkable,
         isActive: false
       };
       await this.firebaseUpdateService.updateDocumentProps(Collection.ASSIGNMENTS, assignment, propsToUpdate);

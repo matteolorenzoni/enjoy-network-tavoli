@@ -181,7 +181,7 @@ export class ParticipationService {
 
     const assignment: Assignment = assignments[0];
 
-    if (assignment.props.personMarked + value > assignment.props.personAssigned) {
+    if (assignment.props.personMarked + value > assignment.props.maxPersonMarkable) {
       throw new Error('Hai raggiunto il limite massimo per questo evento, contatta uno staffer');
     }
 

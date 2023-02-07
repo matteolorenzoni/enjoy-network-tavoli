@@ -135,7 +135,7 @@ export class EnItemEventComponent {
       this.eventInfo.push({ label: 'Luogo', value: this.event.props.place });
       this.eventInfo.push({ label: 'Ospite/i', value: this.event.props.guest });
       this.eventInfo.push({ label: 'Descrizione', value: this.event.props.description });
-      this.eventInfo.push({ label: 'Messaggio', value: this.event.props.messageText });
+      this.eventInfo.push({ label: 'Messaggio', value: this.event.props.message });
 
       this.itemNavigationMenu = [
         { link: [`../${this.event.uid}/tables`], name: 'Tavoli', definition: faWineBottle },

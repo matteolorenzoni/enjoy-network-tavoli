@@ -13,7 +13,7 @@ import { AssignmentAndEmployee } from '../models/type';
     <div class="grow-2 basis-40 truncate sm:w-max">{{ ae.employee.props.name }} {{ ae.employee.props.lastName }}</div>
     <div class="hidden grow basis-20 text-sm sm:flex sm:basis-24">{{ ae.employee.props.zone | uppercase }}</div>
     <div class="flex basis-36 justify-end gap-1 ">
-      <div class="center mr-1">{{ ae.assignment.props.personMarked }}/{{ ae.assignment.props.personAssigned }}</div>
+      <div class="center mr-1">{{ ae.assignment.props.personMarked }}/{{ ae.assignment.props.maxPersonMarkable }}</div>
       <div class="center relative flex h-6 w-24 flex-row rounded-lg bg-transparent">
         <button
           data-action="decrement"
@@ -82,10 +82,10 @@ export class EnItemAssignmentComponent {
       .pipe(debounceTime(1200))
       .subscribe((newPersonAssigned) => {
         /* Check if the value is different from the previous one */
-        if (this.ae.assignment.props.personAssigned !== newPersonAssigned) {
+        if (this.ae.assignment.props.maxPersonMarkable !== newPersonAssigned) {
           /* Check if the value is less than the max person */
           const hypotheticalPersonAssigned =
-            this.ae.assignment.props.personAssigned + newPersonAssigned - this.ae.assignment.props.personAssigned;
+            this.ae.assignment.props.maxPersonMarkable + newPersonAssigned - this.ae.assignment.props.maxPersonMarkable;
           if (hypotheticalPersonAssigned <= this.maxPerson) {
             /* Update the value */
             this.assignmentService
@@ -98,7 +98,7 @@ export class EnItemAssignmentComponent {
               });
           } else {
             /* Reset the value */
-            this.formPersonAssigned.setValue(this.ae.assignment.props.personAssigned);
+            this.formPersonAssigned.setValue(this.ae.assignment.props.maxPersonMarkable);
             this.toastService.showErrorMessage('Non puoi assegnare più persone di quelle disponibili');
           }
         }
@@ -122,7 +122,7 @@ export class EnItemAssignmentComponent {
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['ae']) {
       /* Form PersonAssigned */
-      this.formPersonAssigned.setValue(this.ae.assignment.props.personAssigned);
+      this.formPersonAssigned.setValue(this.ae.assignment.props.maxPersonMarkable);
       if (!this.ae.assignment.props.isActive) {
         this.formPersonAssigned.disable();
       }
