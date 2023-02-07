@@ -35,12 +35,8 @@ export class UserService {
     return signInWithEmailAndPassword(this.auth, email, password);
   }
 
-  // TODO: da implementare
-  public disableUser() {}
-
   public logout(): Promise<void> {
     this.router.navigate(['/login']);
-    sessionStorage.clear();
     return signOut(this.auth);
   }
 }

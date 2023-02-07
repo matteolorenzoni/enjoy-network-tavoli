@@ -1,1 +1,12 @@
-<p>setting works!</p>
+<nav class="p-4">
+  <ul class="flex flex-col gap-6">
+    <li class="text-lg text-gray-500 hover:cursor-pointer hover:text-gray-300 active:text-gray-800">
+      <fa-icon [icon]="changePasswordIcon" class="mr-6"></fa-icon>
+      Cambia la password
+    </li>
+    <li class="text-lg text-gray-500 hover:cursor-pointer hover:text-gray-300 active:text-gray-800" (click)="logOut()">
+      <fa-icon [icon]="logOutIcon" class="mr-6"></fa-icon>
+      Logout
+    </li>
+  </ul>
+</nav>
