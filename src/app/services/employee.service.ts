@@ -1,3 +1,4 @@
+import { environment } from 'src/environments/environment';
 import { UserCredential } from '@angular/fire/auth';
 import { Injectable } from '@angular/core';
 import { documentId, QueryConstraint, where } from 'firebase/firestore';
@@ -11,8 +12,6 @@ import { FirebaseReadService } from './firebase/firebase-crud/firebase-read.serv
 import { FirebaseUpdateService } from './firebase/firebase-crud/firebase-update.service';
 import { RoleType } from '../models/enum';
 import { assignmentConverter, employeeConverter } from '../models/converter';
-
-const PASSWORD_DEFAULT = 'enjoynetwork';
 
 @Injectable({
   providedIn: 'root'
@@ -77,7 +76,7 @@ export class EmployeeService {
   public async addOrUpdateEmployee(email: string, employee: Employee): Promise<void> {
     if (!employee.uid) {
       /* Add new user */
-      const userCredential: UserCredential = await this.userService.register(email, PASSWORD_DEFAULT);
+      const userCredential: UserCredential = await this.userService.register(email, environment.defaultPassword);
 
       /* Add new employee */
       const newEmployee = { uid: userCredential.user.uid, props: employee.props };
