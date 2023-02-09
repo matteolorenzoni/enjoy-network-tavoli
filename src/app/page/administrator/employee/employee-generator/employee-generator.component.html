@@ -21,7 +21,7 @@
       type="text"
       name="last_name_input"
       id="last_name_input"
-      class="peer block w-full appearance-none bg-transparent py-2.5 px-0 text-base text-primary-100 focus:text-primary-60 focus:outline-none focus:ring-0"
+      class="peer block w-full appearance-none py-2.5 px-0 text-base text-primary-100 focus:text-primary-60 focus:outline-none focus:ring-0 enabled:bg-transparent disabled:cursor-not-allowed"
       formControlName="lastName"
       placeholder=" "
       required />
@@ -45,7 +45,7 @@
       required />
     <label
       for="email_input"
-      class="absolute top-3 -z-10 origin-[0] -translate-y-6 scale-75 transform text-base text-primary-100 duration-300 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100 peer-focus:left-0 peer-focus:-translate-y-6 peer-focus:scale-75 peer-focus:font-medium peer-focus:text-primary-60">
+      class="absolute top-3 -z-10 origin-[0] -translate-y-6 scale-75 transform text-base text-primary-100 duration-300 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100 peer-focus:left-0 peer-focus:-translate-y-6 peer-focus:scale-75 peer-focus:font-medium peer-focus:text-primary-60 peer-disabled:-translate-y-8">
       Email
     </label>
     <hr class="border-primary-100 peer-focus:border-primary-60" />
@@ -69,10 +69,10 @@
   </div> -->
 
   <div class="group relative z-0 w-full">
-    <label for="place_select" class="block text-sm font-bold text-white group-active:text-primary-60"> Ruolo </label>
+    <label for="place_select" class="block text-xs text-primary-100 group-active:text-primary-60"> Ruolo </label>
     <select
       id="place_select"
-      class="peer block w-full appearance-none bg-transparent py-2.5 px-0 text-sm text-white focus:border-gray-200 focus:text-primary-60 focus:outline-none focus:ring-0"
+      class="peer block w-full appearance-none py-2.5 px-0 text-sm text-primary-100 focus:border-gray-200 focus:text-primary-60 focus:outline-none focus:ring-0 enabled:bg-transparent disabled:cursor-not-allowed"
       formControlName="role">
       <option
         *ngFor="let item of roles; let i = index"
