@@ -41,6 +41,7 @@ export class EventGeneratorComponent implements OnInit {
   ) {
     this.eventForm = new FormGroup({
       imageUrl: new FormControl(null, [Validators.required]),
+      code: new FormControl(null, [Validators.required, Validators.minLength(8)]),
       name: new FormControl(null, [Validators.required, Validators.pattern(/[\S]/)]),
       date: new FormControl(null, [Validators.required]),
       timeStart: new FormControl('11:00', [Validators.required, Validators.pattern(/^[0-9]{2}:[0-9]{2}$/)]),
@@ -70,6 +71,7 @@ export class EventGeneratorComponent implements OnInit {
           if (event) {
             this.eventForm.patchValue({
               imageUrl: props.imageUrl,
+              code: props.code,
               name: props.name,
               date: props.date.toJSON().split('T')[0],
               timeStart: props.timeStart,
@@ -97,6 +99,7 @@ export class EventGeneratorComponent implements OnInit {
       uid: this.eventUid ?? '',
       props: {
         imageUrl: this.eventForm.value.imageUrl,
+        code: this.eventForm.value.code,
         name: this.eventForm.value.name?.trim().replace(/\s\s+/g, ' ') || '',
         date: new Date(this.eventForm.value.date),
         timeStart: this.eventForm.value.timeStart,

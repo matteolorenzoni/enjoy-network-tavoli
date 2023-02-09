@@ -50,6 +50,7 @@ export const eventConverter: FirestoreDataConverter<Event> = {
     const { props } = event;
     const data: EventDTO = {
       imageUrl: props.imageUrl,
+      code: props.code,
       name: props.name,
       date: props.date,
       timeStart: props.timeStart,
@@ -70,6 +71,7 @@ export const eventConverter: FirestoreDataConverter<Event> = {
       uid: snapshot.id,
       props: {
         imageUrl: data.imageUrl,
+        code: data.code,
         name: data.name,
         date: new Date((data.date as unknown as Timestamp).seconds * 1000),
         timeStart: data.timeStart,

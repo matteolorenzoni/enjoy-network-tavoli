@@ -128,6 +128,7 @@ export class EnItemEventComponent {
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['event']) {
       this.dateFormatted = this.datePipe.transform(this.event.props.date, 'dd/MM/yyyy') || '';
+      this.eventInfo.push({ label: 'Codice evento', value: this.event.props.code });
       this.eventInfo.push({ label: 'Nome', value: this.event.props.name });
       this.eventInfo.push({ label: 'Data', value: this.dateFormatted });
       this.eventInfo.push({ label: 'Paganti', value: this.personMarked });

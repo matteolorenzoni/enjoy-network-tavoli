@@ -11,6 +11,7 @@ export enum Collection {
 
 export type EventDTO = {
   imageUrl: string;
+  code: string;
   name: string;
   date: Date;
   timeStart: Date;
