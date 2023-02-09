@@ -51,6 +51,7 @@ import { EnItemParticipationComponent } from './components/en-item-participation
 import { TicketComponent } from './page/client/ticket/ticket.component';
 import { UpdatePasswordComponent } from './page/setting/update-password/update-password.component';
 import { EventSelectorComponent } from './page/inspector/event-selector/event-selector.component';
+import { ScannerComponent } from './page/inspector/scanner/scanner.component';
 
 @NgModule({
   declarations: [
@@ -90,7 +91,8 @@ import { EventSelectorComponent } from './page/inspector/event-selector/event-se
     EnItemParticipationComponent,
     TicketComponent,
     UpdatePasswordComponent,
-    EventSelectorComponent
+    EventSelectorComponent,
+    ScannerComponent
   ],
   imports: [
     BrowserModule,
