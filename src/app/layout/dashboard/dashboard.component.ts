@@ -1,7 +1,7 @@
 import { UserService } from 'src/app/services/user.service';
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { faCalendarDay, faChartPie, faGear, faUsers } from '@fortawesome/free-solid-svg-icons';
-import { BottomNavigation, IconLink } from 'src/app/models/type';
+import { BottomNavigation } from 'src/app/models/type';
 import { SessionStorageService } from '../../services/sessionstorage.service';
 import { RoleType } from '../../models/enum';
 
@@ -15,7 +15,6 @@ export class DashboardComponent implements OnInit {
   navigationMenuSettings: BottomNavigation[] = [
     {
       role: RoleType.ADMINISTRATOR,
-      name: 'administrator',
       icons: [
         { link: '/dashboard/administrator/events', name: 'Eventi', definition: faCalendarDay },
         { link: '/dashboard/administrator/employees', name: 'Dipendenti', definition: faUsers },
@@ -25,14 +24,13 @@ export class DashboardComponent implements OnInit {
     },
     {
       role: RoleType.PR,
-      name: 'pr',
       icons: [
         { link: '/dashboard/pr/events', name: 'Eventi', definition: faCalendarDay },
         { link: '/dashboard/pr/setting', name: 'Impostazioni', definition: faGear }
       ]
     }
   ];
-  navigationMenu: IconLink[] = [];
+  bottomNavigation?: BottomNavigation;
 
   constructor(
     public sessionStorageService: SessionStorageService,
@@ -47,9 +45,8 @@ export class DashboardComponent implements OnInit {
       this.userService.logout();
     }
 
-    const nav = this.navigationMenuSettings.find((item) => item.role === employeeRole);
-    if (nav) this.navigationMenu = nav.icons;
-    else this.userService.logout();
+    this.bottomNavigation = this.navigationMenuSettings.find((item) => item.role === employeeRole);
+    if (!this.bottomNavigation) this.userService.logout();
   }
 
   ngAfterContentChecked() {

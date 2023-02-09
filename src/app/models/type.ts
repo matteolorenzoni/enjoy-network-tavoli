@@ -24,7 +24,6 @@ export type IconLink = {
 
 export type BottomNavigation = {
   role: RoleType;
-  name: string;
   icons: IconLink[];
 };
 
