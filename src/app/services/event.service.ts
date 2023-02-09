@@ -49,6 +49,18 @@ export class EventService {
     return eventsByAssignments;
   }
 
+  public async getEventByCode(code: string): Promise<Event | null> {
+    const codeConstraint: QueryConstraint = where('code', '==', code);
+    const constraints: QueryConstraint[] = [codeConstraint];
+    const events = await this.firebaseReadService.getDocumentsByMultipleConstraints(
+      Collection.EVENTS,
+      constraints,
+      eventConverter
+    );
+
+    return events && events.length > 0 ? events[0] : null;
+  }
+
   /* ------------------------------------------- ADD ------------------------------------------- */
   public async addOrUpdateEvent(photo: File | null, event: Event): Promise<void> {
     const newEvent: Event = event;

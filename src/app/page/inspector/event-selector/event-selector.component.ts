@@ -1,5 +1,8 @@
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { Router, ActivatedRoute } from '@angular/router';
+import { EventService } from 'src/app/services/event.service';
+import { ToastService } from 'src/app/services/toast.service';
 
 @Component({
   selector: 'app-event-selector',
@@ -11,7 +14,12 @@ export class EventSelectorComponent {
   eventForm: FormGroup;
   isLoading: boolean;
 
-  constructor() {
+  constructor(
+    private eventService: EventService,
+    private router: Router,
+    private route: ActivatedRoute,
+    private toastService: ToastService
+  ) {
     /* Init form */
     this.eventForm = new FormGroup({
       eventCode: new FormControl(null, [Validators.required, Validators.pattern(/[\S]/)])
@@ -21,6 +29,17 @@ export class EventSelectorComponent {
   }
 
   onSubmit() {
-    console.log(this.eventForm.value.eventCode);
+    this.eventService
+      .getEventByCode(this.eventForm.value.eventCode)
+      .then((event) => {
+        if (event) {
+          this.router.navigate([`../event/${event.uid}/client-list`], { relativeTo: this.route });
+        } else {
+          this.toastService.showErrorMessage('Evento non trovato');
+        }
+      })
+      .catch((error: Error) => {
+        this.toastService.showError(error);
+      });
   }
 }
