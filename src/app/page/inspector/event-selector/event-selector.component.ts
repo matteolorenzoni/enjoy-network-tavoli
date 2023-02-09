@@ -33,7 +33,7 @@ export class EventSelectorComponent {
       .getEventByCode(this.eventForm.value.eventCode)
       .then((event) => {
         if (event) {
-          this.router.navigate(['/dashboard/inspector/scanner'], { queryParams: { event: event.uid } });
+          this.router.navigate(['/dashboard/inspector/participation-list'], { queryParams: { event: event.uid } });
         } else {
           this.toastService.showErrorMessage('Evento non trovato');
         }

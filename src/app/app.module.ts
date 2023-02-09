@@ -52,6 +52,7 @@ import { TicketComponent } from './page/client/ticket/ticket.component';
 import { UpdatePasswordComponent } from './page/setting/update-password/update-password.component';
 import { EventSelectorComponent } from './page/inspector/event-selector/event-selector.component';
 import { ScannerComponent } from './page/inspector/scanner/scanner.component';
+import { InspectorParticipationListComponent } from './page/inspector/inspector-participation-list/inspector-participation-list.component';
 
 @NgModule({
   declarations: [
@@ -92,7 +93,8 @@ import { ScannerComponent } from './page/inspector/scanner/scanner.component';
     TicketComponent,
     UpdatePasswordComponent,
     EventSelectorComponent,
-    ScannerComponent
+    ScannerComponent,
+    InspectorParticipationListComponent
   ],
   imports: [
     BrowserModule,

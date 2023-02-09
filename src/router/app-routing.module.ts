@@ -17,6 +17,7 @@ import { StatisticsComponent } from 'src/app/page/statistics/statistics.componen
 import { ParticipationListComponent } from 'src/app/page/pr/participation-list/participation-list.component';
 import { TicketComponent } from 'src/app/page/client/ticket/ticket.component';
 import { EventSelectorComponent } from 'src/app/page/inspector/event-selector/event-selector.component';
+import { InspectorParticipationListComponent } from '../app/page/inspector/inspector-participation-list/inspector-participation-list.component';
 import { ScannerComponent } from '../app/page/inspector/scanner/scanner.component';
 import { UpdatePasswordComponent } from '../app/page/setting/update-password/update-password.component';
 import { ClientGeneratorComponent } from '../app/page/pr/client-generator/client-generator.component';
@@ -49,6 +50,7 @@ const routes: Routes = [
       {
         path: 'inspector',
         children: [
+          { path: 'participation-list', component: InspectorParticipationListComponent },
           { path: 'scanner', component: ScannerComponent },
           { path: 'setting', component: SettingComponent }
         ]
