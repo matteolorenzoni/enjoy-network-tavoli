@@ -1,4 +1,4 @@
-<div class="flex flex-col items-center gap-4">
+<div *ngIf="event && employee && table && participation && client" class="flex flex-col items-center gap-4">
   <div>Cliente: {{ client.props.name }} {{ client.props.lastName }}</div>
   <div>Evento: {{ event.props.name }}</div>
   <img [src]="event.props.imageUrl" class="aspect-square w-40" />
@@ -9,7 +9,7 @@
     class="hover:cursor-pointer"
     (click)="toggleZoom()"
     [qrdata]="qrdata"
-    [width]="200"
+    [width]="240"
     [errorCorrectionLevel]="'H'"
     [margin]="0"
     [imageSrc]="img"

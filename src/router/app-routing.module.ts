@@ -97,7 +97,7 @@ const routes: Routes = [
     ]
   },
   {
-    path: 'qr-code-ticket',
+    path: 'ticket',
     component: QrCodeMessageComponent
   },
   { path: '', redirectTo: 'login', pathMatch: 'full' },

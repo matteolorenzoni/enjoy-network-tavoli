@@ -21,14 +21,13 @@ export class QrCodeMessageComponent implements OnInit {
   employee!: Employee;
 
   /* Table */
-  tableUid?: string;
   table!: Table;
 
   /* Participation */
+  participationUid?: string;
   participation!: Participation;
 
   /* Client */
-  clientUid?: string;
   client!: Client;
 
   /* QrCode */
@@ -48,12 +47,28 @@ export class QrCodeMessageComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.tableUid = this.route.snapshot.queryParams['table'];
-    this.clientUid = this.route.snapshot.queryParams['client'];
-
+    this.participationUid = this.route.snapshot.queryParams['participation'];
+    if (!this.participationUid) {
+      this.router.navigate(['error'], { relativeTo: this.route });
+      return;
+    }
     this.getParticipation();
-    this.getClient();
-    this.getTable();
+  }
+
+  getParticipation() {
+    this.participationService
+      .getParticipationByUid(this.participationUid as string)
+      .then((participation) => {
+        this.participation = participation;
+
+        this.getEvent(this.participation.props.eventUid);
+        this.getTable(this.participation.props.tableUid);
+        this.getClient(this.participation.props.clientUid);
+      })
+      .catch((error: Error) => {
+        this.toastService.showError(error);
+        this.router.navigate(['errore'], { relativeTo: this.route });
+      });
   }
 
   getEvent(eventUid: string) {
@@ -84,14 +99,9 @@ export class QrCodeMessageComponent implements OnInit {
       });
   }
 
-  getTable() {
-    if (!this.tableUid) {
-      this.router.navigate(['error'], { relativeTo: this.route });
-      return;
-    }
-
+  getTable(tableUid: string) {
     this.tableService
-      .getTable(this.tableUid)
+      .getTable(tableUid)
       .then((table) => {
         this.table = table;
         this.getEmployee(this.table.props.employeeUid);
@@ -102,37 +112,9 @@ export class QrCodeMessageComponent implements OnInit {
       });
   }
 
-  getParticipation() {
-    if (!this.tableUid || !this.clientUid) {
-      this.router.navigate(['error'], { relativeTo: this.route });
-      return;
-    }
-
-    this.participationService
-      .getParticipationByTableUidAndClientUid(this.tableUid, this.clientUid)
-      .then((participation) => {
-        if (!participation) {
-          this.router.navigate(['error'], { relativeTo: this.route });
-          return;
-        }
-
-        this.participation = participation;
-        this.getEvent(this.participation.props.eventUid);
-      })
-      .catch((error: Error) => {
-        this.toastService.showError(error);
-        this.router.navigate(['errore'], { relativeTo: this.route });
-      });
-  }
-
-  getClient() {
-    if (!this.clientUid) {
-      this.router.navigate(['error'], { relativeTo: this.route });
-      return;
-    }
-
+  getClient(clientUid: string) {
     this.clientService
-      .getClient(this.clientUid)
+      .getClient(clientUid)
       .then((client) => {
         this.client = client;
       })

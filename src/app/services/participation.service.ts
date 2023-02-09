@@ -91,6 +91,15 @@ export class ParticipationService {
   }
 
   /* ------------------------------------------- GET ------------------------------------------- */
+  public async getParticipationByUid(participationUid: string): Promise<Participation> {
+    const participation = await this.firebaseReadService.getDocumentByUid(
+      Collection.PARTICIPATIONS,
+      participationUid,
+      participationConverter
+    );
+    return participation;
+  }
+
   public async getParticipationByTableUidAndClientUid(
     tableUid: string,
     clientUid: string
