@@ -1,17 +1,17 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { QrCodeMessageComponent } from './qr-code-message.component';
+import { TicketComponent } from './ticket.component';
 
-describe('QrCodeMessageComponent', () => {
-  let component: QrCodeMessageComponent;
-  let fixture: ComponentFixture<QrCodeMessageComponent>;
+describe('TicketComponent', () => {
+  let component: TicketComponent;
+  let fixture: ComponentFixture<TicketComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [QrCodeMessageComponent]
+      declarations: [TicketComponent]
     }).compileComponents();
 
-    fixture = TestBed.createComponent(QrCodeMessageComponent);
+    fixture = TestBed.createComponent(TicketComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

@@ -9,11 +9,11 @@ import { Client, Event, Participation, Table, Employee } from 'src/app/models/ty
 import { EmployeeService } from 'src/app/services/employee.service';
 
 @Component({
-  selector: 'app-qr-code-message',
-  templateUrl: './qr-code-message.component.html',
-  styleUrls: ['./qr-code-message.component.scss']
+  selector: 'app-ticket',
+  templateUrl: './ticket.component.html',
+  styleUrls: ['./ticket.component.scss']
 })
-export class QrCodeMessageComponent implements OnInit {
+export class TicketComponent implements OnInit {
   /* Event */
   event!: Event;
 

@@ -48,7 +48,7 @@ import { EnItemTableComponent } from './components/en-item-table.component';
 import { ClientGeneratorComponent } from './page/pr/client-generator/client-generator.component';
 import { ParticipationListComponent } from './page/pr/participation-list/participation-list.component';
 import { EnItemParticipationComponent } from './components/en-item-participation.component';
-import { QrCodeMessageComponent } from './page/client/qr-code-message/qr-code-message.component';
+import { TicketComponent } from './page/client/ticket/ticket.component';
 import { UpdatePasswordComponent } from './page/setting/update-password/update-password.component';
 
 @NgModule({
@@ -87,7 +87,7 @@ import { UpdatePasswordComponent } from './page/setting/update-password/update-p
     ClientGeneratorComponent,
     ParticipationListComponent,
     EnItemParticipationComponent,
-    QrCodeMessageComponent,
+    TicketComponent,
     UpdatePasswordComponent
   ],
   imports: [
