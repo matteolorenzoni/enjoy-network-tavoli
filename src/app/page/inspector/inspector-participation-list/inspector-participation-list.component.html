@@ -1,1 +1,19 @@
-<p>inspector-participation-list works!</p>
+<section>
+  <button
+    type="button"
+    class="mb-4 w-full rounded-lg border border-gray-600 bg-gray-800 py-2.5 px-5 text-sm font-medium text-gray-400 hover:bg-gray-700 hover:text-white focus:z-10 focus:outline-none focus:ring-4 focus:ring-gray-700">
+    <fa-icon [icon]="filterIcon" class="mr-2"></fa-icon>
+    FILTRI
+  </button>
+  <ul [@staggeredFadeInIncrement]="tables.length" class="flex flex-col divide-y divide-gray-700">
+    <li *ngFor="let table of tables" class="flex h-20 items-center">
+      <div
+        class="w-full overflow-hidden rounded-lg bg-gray-800 p-4 font-bold hover:cursor-pointer hover:bg-primary-55 hover:text-black"
+        (click)="goToTableParticipation(table.uid)">
+        <p class="truncate">{{ table.props.name }}</p>
+      </div>
+    </li>
+  </ul>
+</section>
+
+<!-- class="w-full overflow-hidden rounded-lg bg-primary-50 p-4 font-bold text-black hover:cursor-pointer hover:bg-gray-700 hover:text-white" -->
