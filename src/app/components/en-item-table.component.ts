@@ -85,14 +85,21 @@ export class EnItemTableComponent {
   }
 
   deleteTable(): void {
-    this.tableService
-      .deleteTable(this.table.uid)
-      .then(() => {
-        this.toastService.showSuccess('Tavolo eliminato con successo');
-      })
-      .catch((error: Error) => {
-        this.toastService.showError(error);
-      });
+    const text = 'Sei sicuro di voler rimuovere il tavolo?';
+    if (window.confirm(text) === true) {
+      if (!this.table) {
+        throw new Error('Errore: parametri non validi');
+      }
+
+      this.tableService
+        .deleteTable(this.table.uid)
+        .then(() => {
+          this.toastService.showSuccess('Tavolo eliminato con successo');
+        })
+        .catch((error: Error) => {
+          this.toastService.showError(error);
+        });
+    }
   }
 
   getTablePersonMarked(): void {

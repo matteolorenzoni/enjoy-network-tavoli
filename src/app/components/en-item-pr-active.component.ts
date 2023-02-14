@@ -73,14 +73,21 @@ export class EnItemPrActiveComponent {
   }
 
   public async deleteAssignment(eventUid: string, employeeUid: string) {
-    await this.assignmentService
-      .deleteAssignment(eventUid, employeeUid)
-      .then(() => {
-        this.toastService.showSuccess('Dipendente rimosso');
-      })
-      .catch((err: Error) => {
-        this.toastService.showError(err);
-      });
+    const text = "Sei sicuro di voler rimuovere l'assegnazione?";
+    if (window.confirm(text) === true) {
+      if (!eventUid || !employeeUid) {
+        throw new Error('Errore: parametri non validi');
+      }
+
+      await this.assignmentService
+        .deleteAssignment(eventUid, employeeUid)
+        .then(() => {
+          this.toastService.showSuccess('Dipendente rimosso');
+        })
+        .catch((err: Error) => {
+          this.toastService.showError(err);
+        });
+    }
   }
 
   isChecked(): boolean {

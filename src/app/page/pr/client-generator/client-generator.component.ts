@@ -101,12 +101,10 @@ export class ClientGeneratorComponent implements OnInit {
         .getClientByPhone(this.clientForm.value.phone)
         .then((client) => {
           if (client) {
-            // TODO: mettere il popup
-            alert(
-              `Questo numero appartiene a: ${client?.props.name} ${client?.props.lastName}, lo vuoi aggiungere al tavolo?`
-            );
-
-            this.addParticipation(client.uid);
+            const text = `Questo numero appartiene a: ${client?.props.name} ${client?.props.lastName}, lo vuoi aggiungere al tavolo?`;
+            if (window.confirm(text) === true) {
+              this.addParticipation(client.uid);
+            }
           } else {
             this.toastService.showInfo('Cliente non ancora registrato, inserire i dati');
             this.phoneIsChecked = true;

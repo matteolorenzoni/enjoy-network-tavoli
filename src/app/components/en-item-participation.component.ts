@@ -66,18 +66,21 @@ export class EnItemParticipationComponent {
 
   /* ------------------------------ Methods ------------------------------ */
   updateParticipationNotActive(): void {
-    if (!this.eventUid || !this.employeeUid || !this.pc.participation.uid) {
-      throw new Error('Errore: parametri non validi');
-    }
+    const text = 'Sei sicuro di voler rimuovere la partecipazione?';
+    if (window.confirm(text) === true) {
+      if (!this.eventUid || !this.employeeUid || !this.pc.participation.uid) {
+        throw new Error('Errore: parametri non validi');
+      }
 
-    this.participationService
-      .updateParticipationNotActive(this.eventUid, this.employeeUid, this.pc.participation.uid)
-      .then(() => {
-        this.participationNotActiveEvent.emit();
-        this.toastService.showSuccess('Partecipazione rimossa');
-      })
-      .catch((error) => {
-        this.toastService.showError(error);
-      });
+      this.participationService
+        .updateParticipationNotActive(this.eventUid, this.employeeUid, this.pc.participation.uid)
+        .then(() => {
+          this.participationNotActiveEvent.emit();
+          this.toastService.showSuccess('Partecipazione rimossa');
+        })
+        .catch((error) => {
+          this.toastService.showError(error);
+        });
+    }
   }
 }

@@ -150,15 +150,22 @@ export class EnItemEventComponent {
 
   /* --------------------------------------- HTTP Methods --------------------------------------- */
   deleteEvent(): void {
-    this.eventService
-      .deleteEvent(this.event)
-      .then(() => {
-        this.isOpen = false;
-        this.toastService.showSuccess('Evento eliminato');
-      })
-      .catch((err: Error) => {
-        this.toastService.showError(err);
-      });
+    const text = 'Sei sicuro di voler eliminare questo evento?';
+    if (window.confirm(text) === true) {
+      if (!this.event) {
+        throw new Error('Errore: parametri non validi');
+      }
+
+      this.eventService
+        .deleteEvent(this.event)
+        .then(() => {
+          this.isOpen = false;
+          this.toastService.showSuccess('Evento eliminato');
+        })
+        .catch((err: Error) => {
+          this.toastService.showError(err);
+        });
+    }
   }
 
   getTable(): void {
