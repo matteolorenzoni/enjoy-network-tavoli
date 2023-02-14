@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { DocumentData, documentId, DocumentReference, QueryConstraint, where } from '@angular/fire/firestore';
 import { Collection } from '../models/collection';
 import { assignmentConverter, clientConverter } from '../models/converter';
-import { Assignment, Client, Participation, SMS } from '../models/type';
+import { Assignment, Client, Participation } from '../models/type';
 import { FirebaseCreateService } from './firebase/firebase-crud/firebase-create.service';
 import { FirebaseDeleteService } from './firebase/firebase-crud/firebase-delete.service';
 import { FirebaseReadService } from './firebase/firebase-crud/firebase-read.service';
@@ -109,16 +109,31 @@ export class ClientService {
           messageIsReceived: false
         }
       };
-      await this.firebaseCreateService.addDocument(Collection.PARTICIPATIONS, participation);
+      const document: DocumentReference<DocumentData> = await this.firebaseCreateService.addDocument(
+        Collection.PARTICIPATIONS,
+        participation
+      );
 
       /* Send sms */
-      const sms: SMS = {
-        to: '393389108738',
-        text: eventMessage,
-        sandbox: true
-      };
-      this.smsHostingService.sendSms(sms).subscribe({
-        next: (data) => console.log(data),
+      this.smsHostingService.shortenURL(document.id).subscribe({
+        next: (shortenURL) => {
+          this.smsHostingService
+            .sendSms(`39${client.props.phone}`, eventMessage, { clientName: client.props.name, link: shortenURL })
+            .subscribe({
+              next: async (data) => {
+                console.log(data);
+                const participationPropsToUpdate = { messageIsReceived: true };
+                await this.firebaseUpdateService.updateDocumentProps(
+                  Collection.PARTICIPATIONS,
+                  { ...participation, uid: document.id },
+                  participationPropsToUpdate
+                );
+              },
+              error: (error: Error) => {
+                throw new Error(error.message);
+              }
+            });
+        },
         error: (error: Error) => {
           throw new Error(error.message);
         }

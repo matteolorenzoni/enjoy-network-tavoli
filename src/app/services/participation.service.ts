@@ -1,9 +1,9 @@
 /* eslint-disable operator-linebreak */
 import { Injectable } from '@angular/core';
-import { QueryConstraint, where } from '@angular/fire/firestore';
+import { DocumentData, DocumentReference, QueryConstraint, where } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
-import { Assignment, Participation, SMS } from '../models/type';
-import { assignmentConverter, participationConverter } from '../models/converter';
+import { Assignment, Client, Participation } from '../models/type';
+import { assignmentConverter, clientConverter, participationConverter } from '../models/converter';
 import { Collection } from '../models/collection';
 import { FirebaseCreateService } from './firebase/firebase-crud/firebase-create.service';
 import { FirebaseDeleteService } from './firebase/firebase-crud/firebase-delete.service';
@@ -58,16 +58,38 @@ export class ParticipationService {
           messageIsReceived: false
         }
       };
-      await this.firebaseCreateService.addDocument(Collection.PARTICIPATIONS, participation);
+      const document: DocumentReference<DocumentData> = await this.firebaseCreateService.addDocument(
+        Collection.PARTICIPATIONS,
+        participation
+      );
 
-      /* Send sms */
-      const sms: SMS = {
-        to: '393389108738',
-        text: eventMessage,
-        sandbox: false
-      };
-      this.smsHostingService.sendSms(sms).subscribe({
-        next: (data) => console.log(data),
+      /*  Send sms  */
+      const client: Client = await this.firebaseReadService.getDocumentByUid(
+        Collection.CLIENTS,
+        clientUid,
+        clientConverter
+      );
+
+      this.smsHostingService.shortenURL(document.id).subscribe({
+        next: (shortenURL) => {
+          this.smsHostingService
+            .sendSms(`39${client.props.phone}`, eventMessage, { clientName: client.props.name, link: shortenURL })
+            .subscribe({
+              next: async (data) => {
+                console.log(data);
+                const participationPropsToUpdate = { messageIsReceived: true };
+
+                await this.firebaseUpdateService.updateDocumentProps(
+                  Collection.PARTICIPATIONS,
+                  { ...participation, uid: document.id },
+                  participationPropsToUpdate
+                );
+              },
+              error: (error: Error) => {
+                throw new Error(error.message);
+              }
+            });
+        },
         error: (error: Error) => {
           throw new Error(error.message);
         }
