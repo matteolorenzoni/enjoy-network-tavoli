@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { QueryConstraint, where } from '@angular/fire/firestore';
+import { Observable } from 'rxjs';
 import { Collection } from '../models/collection';
 import { participationConverter, tableConverter } from '../models/converter';
 import { Participation, Table } from '../models/type';
@@ -43,6 +44,19 @@ export class TableService {
     const tables: Table[] = await this.firebaseReadService.getDocumentsByMultipleConstraints(
       Collection.TABLES,
       constricts,
+      tableConverter
+    );
+    return tables;
+  }
+
+  public getRealTimeTableByEventUidAndEmployeeUid(eventUid: string, employeeUid: string): Observable<Table[]> {
+    const eventUidConstraint: QueryConstraint = where('eventUid', '==', eventUid);
+    const employeeUidConstraint: QueryConstraint = where('employeeUid', '==', employeeUid);
+    const constraints: QueryConstraint[] = [eventUidConstraint, employeeUidConstraint];
+
+    const tables: Observable<Table[]> = this.firebaseReadService.getRealTimeDocumentsByMultipleConstraints(
+      Collection.TABLES,
+      constraints,
       tableConverter
     );
     return tables;

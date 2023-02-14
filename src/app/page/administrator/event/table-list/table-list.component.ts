@@ -7,6 +7,7 @@ import { faFilter, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { fadeInAnimation, staggeredFadeInIncrement } from 'src/app/animations/animations';
 import { Table } from 'src/app/models/type';
 import { AssignmentService } from 'src/app/services/assignment.service';
+import { Subscription } from 'rxjs';
 import { TableService } from '../../../../services/table.service';
 import { EventService } from '../../../../services/event.service';
 
@@ -33,6 +34,9 @@ export class TableListComponent implements OnInit {
   /* Table */
   tables: Table[] = [];
 
+  /* Participation */
+  tablesSubscription!: Subscription;
+
   /* ---------------------------------------- Constructor ---------------------------------------- */
   constructor(
     private router: Router,
@@ -53,6 +57,12 @@ export class TableListComponent implements OnInit {
     this.getEventDate();
     this.getEventMaxPersonAssigned();
     this.getTables();
+  }
+
+  ngOnDestroy(): void {
+    if (this.tablesSubscription) {
+      this.tablesSubscription.unsubscribe();
+    }
   }
 
   /* ---------------------------------------- Http methods ---------------------------------------- */
@@ -93,15 +103,18 @@ export class TableListComponent implements OnInit {
       throw new Error('Errore: parametri non validi');
     }
 
-    this.tableService
-      .getTableByEventUidAndEmployeeUid(this.eventUid, this.employeeUid)
-      .then((tables: Table[]) => {
-        this.tables = tables;
-        const tableUids = tables.map((table) => table.uid);
-        this.getAllTableParticipation(tableUids);
-      })
-      .catch((error: Error) => {
-        this.toastService.showError(error);
+    const that = this;
+    this.tablesSubscription = this.tableService
+      .getRealTimeTableByEventUidAndEmployeeUid(this.eventUid, this.employeeUid)
+      .subscribe({
+        next(data: Table[]) {
+          that.tables = data;
+          const tableUids = data.map((table) => table.uid);
+          that.getAllTableParticipation(tableUids);
+        },
+        error(error: Error) {
+          that.toastService.showError(error);
+        }
       });
   }
 
