@@ -1,4 +1,4 @@
-import { faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faCopy, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
@@ -21,8 +21,13 @@ import { ParticipationAndClient } from '../models/type';
 
       <div class="ml-auto">
         <fa-icon
-          [icon]="deleteIcon"
+          [icon]="copyIcon"
           class="ml-4 text-lg text-gray-400 hover:cursor-pointer hover:text-gray-300 active:text-gray-800"
+          (click)="copyTicketLink(pc.participation.uid)"></fa-icon>
+
+        <fa-icon
+          [icon]="deleteIcon"
+          class="ml-6 text-lg text-gray-400 hover:cursor-pointer hover:text-gray-300 active:text-gray-800"
           (click)="updateParticipationNotActive()"></fa-icon>
       </div>
     </li>
@@ -46,6 +51,7 @@ export class EnItemParticipationComponent {
   employeeUid: string | null = null;
 
   /* Icons */
+  copyIcon = faCopy;
   deleteIcon = faTrash;
 
   /* Subscriptions */
@@ -65,6 +71,13 @@ export class EnItemParticipationComponent {
   }
 
   /* ------------------------------ Methods ------------------------------ */
+  copyTicketLink(participationUid: string): void {
+    const { origin } = window.location;
+    const link = `${origin}/ticket?participation=${participationUid}`;
+    navigator.clipboard.writeText(link);
+    this.toastService.showSuccess('Link copiato');
+  }
+
   updateParticipationNotActive(): void {
     const text = 'Sei sicuro di voler rimuovere la partecipazione?';
     if (window.confirm(text) === true) {
