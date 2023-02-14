@@ -83,8 +83,8 @@ export type SMSResponse = {
 };
 
 export type SMSInfo = {
-  to: string;
   id: number;
+  to: string;
   status: 'INSERTED' | 'NOT_INSERTED';
-  statusDetail: 'BADNUMBERFORMAT' | 'DUPLICATESMS' | 'BLACKLIST ';
+  statusDetail?: 'BADNUMBERFORMAT' | 'DUPLICATESMS' | 'BLACKLIST ';
 };
