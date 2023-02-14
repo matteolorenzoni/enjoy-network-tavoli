@@ -23,7 +23,7 @@ import { ParticipationAndClient } from '../models/type';
         <fa-icon
           [icon]="deleteIcon"
           class="ml-4 text-lg text-gray-400 hover:cursor-pointer hover:text-gray-300 active:text-gray-800"
-          (click)="madeParticipationNotActive()"></fa-icon>
+          (click)="updateParticipationNotActive()"></fa-icon>
       </div>
     </li>
   `,
@@ -65,13 +65,13 @@ export class EnItemParticipationComponent {
   }
 
   /* ------------------------------ Methods ------------------------------ */
-  madeParticipationNotActive(): void {
+  updateParticipationNotActive(): void {
     if (!this.eventUid || !this.employeeUid || !this.pc.participation.uid) {
       throw new Error('Errore: parametri non validi');
     }
 
     this.participationService
-      .madeParticipationNotActive(this.eventUid, this.employeeUid, this.pc.participation.uid)
+      .updateParticipationNotActive(this.eventUid, this.employeeUid, this.pc.participation.uid)
       .then(() => {
         this.participationNotActiveEvent.emit();
         this.toastService.showSuccess('Partecipazione rimossa');

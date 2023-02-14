@@ -175,7 +175,7 @@ export class ParticipationService {
   }
 
   /* ------------------------------------------- UPDATE ------------------------------------------- */
-  public async madeParticipationNotActive(
+  public async updateParticipationNotActive(
     eventUid: string,
     employeeUid: string,
     participationUid: string
