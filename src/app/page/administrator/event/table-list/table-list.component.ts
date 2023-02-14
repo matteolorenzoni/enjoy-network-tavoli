@@ -5,9 +5,10 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
 import { faFilter, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { fadeInAnimation, staggeredFadeInIncrement } from 'src/app/animations/animations';
-import { Table } from 'src/app/models/type';
+import { Assignment, Table } from 'src/app/models/type';
 import { AssignmentService } from 'src/app/services/assignment.service';
 import { Subscription } from 'rxjs';
+import { RoleType } from '../../../../models/enum';
 import { TableService } from '../../../../services/table.service';
 import { EventService } from '../../../../services/event.service';
 
@@ -24,6 +25,7 @@ export class TableListComponent implements OnInit {
 
   /* Employee */
   employeeUid: string | null = null;
+  employeeRole: RoleType | null = null;
 
   /* Event */
   eventUid: string | null = null;
@@ -53,6 +55,7 @@ export class TableListComponent implements OnInit {
   ngOnInit(): void {
     this.eventUid = this.route.snapshot.paramMap.get('eventUid');
     this.employeeUid = this.sessionStorage.getEmployeeUid();
+    this.employeeRole = this.sessionStorage.getEmployeeRole();
 
     this.getEventDate();
     this.getEventMaxPersonAssigned();
@@ -87,14 +90,25 @@ export class TableListComponent implements OnInit {
       throw new Error('Errore: parametri non validi');
     }
 
-    this.assignmentService
-      .getAssignmentByEventUidAndEmployeeUid(this.eventUid, this.employeeUid)
-      .then((assignment) => {
-        this.eventMaxPersonAssigned = assignment ? assignment.props.maxPersonMarkable : 0;
-      })
-      .catch((error: Error) => {
-        this.toastService.showError(error);
-      });
+    if (this.employeeRole !== RoleType.ADMINISTRATOR) {
+      this.assignmentService
+        .getAssignmentByEventUidAndEmployeeUid(this.eventUid, this.employeeUid)
+        .then((assignment) => {
+          this.eventMaxPersonAssigned = assignment ? assignment.props.maxPersonMarkable : 0;
+        })
+        .catch((error: Error) => {
+          this.toastService.showError(error);
+        });
+    } else {
+      this.assignmentService
+        .getAssignmentsByEventUid(this.eventUid)
+        .then((assignments: Assignment[]) => {
+          this.eventMaxPersonAssigned = assignments.reduce((acc, cur) => acc + cur.props.maxPersonMarkable, 0);
+        })
+        .catch((error: Error) => {
+          this.toastService.showError(error);
+        });
+    }
   }
 
   /* To get the list of tables */
@@ -104,9 +118,22 @@ export class TableListComponent implements OnInit {
     }
 
     const that = this;
-    this.tablesSubscription = this.tableService
-      .getRealTimeTableByEventUidAndEmployeeUid(this.eventUid, this.employeeUid)
-      .subscribe({
+
+    if (this.employeeRole !== RoleType.ADMINISTRATOR) {
+      this.tablesSubscription = this.tableService
+        .getRealTimeTableByEventUidAndEmployeeUid(this.eventUid, this.employeeUid)
+        .subscribe({
+          next(data: Table[]) {
+            that.tables = data;
+            const tableUids = data.map((table) => table.uid);
+            that.getAllTableParticipation(tableUids);
+          },
+          error(error: Error) {
+            that.toastService.showError(error);
+          }
+        });
+    } else {
+      this.tablesSubscription = this.tableService.getRealTimeTableByEventUid(this.eventUid).subscribe({
         next(data: Table[]) {
           that.tables = data;
           const tableUids = data.map((table) => table.uid);
@@ -116,6 +143,7 @@ export class TableListComponent implements OnInit {
           that.toastService.showError(error);
         }
       });
+    }
   }
 
   /* To get the number of person marked for each table */

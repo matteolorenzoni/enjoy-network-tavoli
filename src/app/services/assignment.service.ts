@@ -54,6 +54,17 @@ export class AssignmentService {
     return assignments;
   }
 
+  public async getAssignmentByEventUid(eventUid: string): Promise<Assignment | null> {
+    const eventUidConstraint: QueryConstraint = where('eventUid', '==', eventUid);
+    const constraints: QueryConstraint[] = [eventUidConstraint];
+    const assignments: Assignment[] = await this.firebaseReadService.getDocumentsByMultipleConstraints(
+      Collection.ASSIGNMENTS,
+      constraints,
+      assignmentConverter
+    );
+    return assignments && assignments.length > 0 ? assignments[0] : null;
+  }
+
   public async getAssignmentByEventUidAndEmployeeUid(
     eventUid: string,
     employeeUid: string

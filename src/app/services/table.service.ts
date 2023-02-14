@@ -49,6 +49,18 @@ export class TableService {
     return tables;
   }
 
+  public getRealTimeTableByEventUid(eventUid: string): Observable<Table[]> {
+    const eventUidConstraint: QueryConstraint = where('eventUid', '==', eventUid);
+    const constraints: QueryConstraint[] = [eventUidConstraint];
+
+    const tables: Observable<Table[]> = this.firebaseReadService.getRealTimeDocumentsByMultipleConstraints(
+      Collection.TABLES,
+      constraints,
+      tableConverter
+    );
+    return tables;
+  }
+
   public getRealTimeTableByEventUidAndEmployeeUid(eventUid: string, employeeUid: string): Observable<Table[]> {
     const eventUidConstraint: QueryConstraint = where('eventUid', '==', eventUid);
     const employeeUidConstraint: QueryConstraint = where('employeeUid', '==', employeeUid);
