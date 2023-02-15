@@ -66,10 +66,12 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "enjoy-network-tavoli:build:production"
+              "browserTarget": "enjoy-network-tavoli:build:production",
+              "proxyConfig": "./proxy.conf.json"
             },
             "development": {
-              "browserTarget": "enjoy-network-tavoli:build:development"
+              "browserTarget": "enjoy-network-tavoli:build:development",
+              "proxyConfig": "./proxy.conf.json"
             }
           },
           "defaultConfiguration": "development"
@@ -100,7 +102,8 @@
             "ssr": false,
             "browserTarget": "enjoy-network-tavoli:build:production",
             "firebaseProject": "enjoy-network-tavoli",
-            "firebaseHostingSite": "enjoy-network-tavoli"
+            "firebaseHostingSite": "enjoy-network-tavoli",
+            "proxyConfig": "./proxy.conf.json"
           }
         }
       }
