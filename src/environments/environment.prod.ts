@@ -9,5 +9,10 @@ export const environment = {
     authDomain: 'enjoy-network-tavoli.firebaseapp.com',
     messagingSenderId: '682704062987',
     measurementId: 'G-4LWJ0DDBN5'
+  },
+  defaultPassword: 'enjoynetwork',
+  smsHosting: {
+    username: 'SMSHTRO41JB2NB5RV2ZNF',
+    password: 'WR3NSN1BWOTVD66QRAQTWFZ3E6QHK4U5'
   }
 };
