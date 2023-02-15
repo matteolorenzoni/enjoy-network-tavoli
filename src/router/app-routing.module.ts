@@ -70,7 +70,11 @@ const routes: Routes = [
             children: [
               { path: 'tables', component: TableListComponent },
               { path: 'assignments', component: AssignmentListComponent },
-              { path: 'pr-active', component: PrActiveComponent }
+              { path: 'pr-active', component: PrActiveComponent },
+              {
+                path: ':tableUid',
+                children: [{ path: 'participations', component: ParticipationListComponent }]
+              }
             ]
           }
         ]
