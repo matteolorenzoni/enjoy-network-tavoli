@@ -10,6 +10,8 @@ import { FirebaseDeleteService } from './firebase/firebase-crud/firebase-delete.
 import { FirebaseReadService } from './firebase/firebase-crud/firebase-read.service';
 import { FirebaseUpdateService } from './firebase/firebase-crud/firebase-update.service';
 import { SmsHostingService } from './sms-hosting.service';
+import { SessionStorageService } from './sessionstorage.service';
+import { RoleType } from '../models/enum';
 
 @Injectable({
   providedIn: 'root'
@@ -20,7 +22,8 @@ export class ParticipationService {
     private firebaseReadService: FirebaseReadService,
     private firebaseUpdateService: FirebaseUpdateService,
     private firebaseDeleteService: FirebaseDeleteService,
-    private smsHostingService: SmsHostingService
+    private smsHostingService: SmsHostingService,
+    private sessionStorageService: SessionStorageService
   ) {}
 
   /* ------------------------------------------- CREATE ------------------------------------------- */
@@ -206,7 +209,9 @@ export class ParticipationService {
     );
 
     /* If there is no assignment, return false */
+    const employeeRole = this.sessionStorageService.getEmployeeRole();
     if (assignments.length <= 0) {
+      if (employeeRole === RoleType.ADMINISTRATOR) return;
       throw new Error('Si è verificato un errore, contatta uno staffer');
     }
 

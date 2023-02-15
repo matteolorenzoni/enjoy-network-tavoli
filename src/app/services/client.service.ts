@@ -2,11 +2,13 @@ import { Injectable } from '@angular/core';
 import { DocumentData, documentId, DocumentReference, QueryConstraint, where } from '@angular/fire/firestore';
 import { Collection } from '../models/collection';
 import { assignmentConverter, clientConverter } from '../models/converter';
+import { RoleType } from '../models/enum';
 import { Assignment, Client, Participation } from '../models/type';
 import { FirebaseCreateService } from './firebase/firebase-crud/firebase-create.service';
 import { FirebaseDeleteService } from './firebase/firebase-crud/firebase-delete.service';
 import { FirebaseReadService } from './firebase/firebase-crud/firebase-read.service';
 import { FirebaseUpdateService } from './firebase/firebase-crud/firebase-update.service';
+import { SessionStorageService } from './sessionstorage.service';
 import { SmsHostingService } from './sms-hosting.service';
 
 @Injectable({
@@ -18,7 +20,8 @@ export class ClientService {
     private firebaseReadService: FirebaseReadService,
     private firebaseUpdateService: FirebaseUpdateService,
     private firebaseDeleteService: FirebaseDeleteService,
-    private smsHostingService: SmsHostingService
+    private smsHostingService: SmsHostingService,
+    private sessionStorageService: SessionStorageService
   ) {}
 
   /* ------------------------------------------- GET ------------------------------------------- */
@@ -88,14 +91,17 @@ export class ClientService {
       );
 
       /* If there is no assignment, return false */
-      if (assignments.length <= 0) {
+      const employeeRole = this.sessionStorageService.getEmployeeRole();
+      if (assignments.length <= 0 && employeeRole !== RoleType.ADMINISTRATOR) {
         throw new Error('Si è verificato un errore, contatta uno staffer');
       }
 
       /* Increase assignment */
-      const assignment: Assignment = assignments[0];
-      const propsToUpdate = { personMarked: assignment.props.personMarked + 1 };
-      await this.firebaseUpdateService.updateDocumentProps(Collection.ASSIGNMENTS, assignment, propsToUpdate);
+      if (employeeRole !== RoleType.ADMINISTRATOR) {
+        const assignment: Assignment = assignments[0];
+        const propsToUpdate = { personMarked: assignment.props.personMarked + 1 };
+        await this.firebaseUpdateService.updateDocumentProps(Collection.ASSIGNMENTS, assignment, propsToUpdate);
+      }
 
       /* Add new participation */
       const participation: Participation = {
