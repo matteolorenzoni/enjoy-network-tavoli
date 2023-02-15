@@ -42,14 +42,22 @@ export class ClientService {
   public async getClientsByUids(clientUids: string[]): Promise<Client[]> {
     if (!clientUids || clientUids.length === 0) return [];
 
-    const idConstraint: QueryConstraint = where(documentId(), 'in', clientUids);
-    const constricts: QueryConstraint[] = [idConstraint];
-    const clients: Client[] = await this.firebaseReadService.getDocumentsByMultipleConstraints(
-      Collection.CLIENTS,
-      constricts,
-      clientConverter
-    );
-    return clients;
+    const clientPromises: Promise<Client[]>[] = [];
+
+    for (let i = 0; i < clientUids.length; i += 10) {
+      const idConstraint: QueryConstraint = where(documentId(), 'in', clientUids.slice(i, i + 10));
+      const constricts: QueryConstraint[] = [idConstraint];
+      const promise = this.firebaseReadService.getDocumentsByMultipleConstraints(
+        Collection.CLIENTS,
+        constricts,
+        clientConverter
+      );
+      clientPromises.push(promise);
+    }
+
+    const clients: Client[][] = await Promise.all(clientPromises);
+
+    return clients.flat();
   }
 
   public async getClientByPhone(phone: string): Promise<Client | null> {

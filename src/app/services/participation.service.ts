@@ -81,7 +81,6 @@ export class ParticipationService {
               next: async (data) => {
                 console.log(data);
                 const participationPropsToUpdate = { messageIsReceived: true };
-
                 await this.firebaseUpdateService.updateDocumentProps(
                   Collection.PARTICIPATIONS,
                   { ...participation, uid: document.id },
@@ -167,14 +166,22 @@ export class ParticipationService {
   public async getParticipationsCountByMultiTableUid(tableUids: string[]): Promise<number> {
     if (!tableUids || tableUids.length === 0) return 0;
 
-    const idConstraint: QueryConstraint = where('tableUid', 'in', tableUids);
-    const isActiveConstraint = where('isActive', '==', true);
-    const constraints: QueryConstraint[] = [idConstraint, isActiveConstraint];
-    const aggregate = await this.firebaseReadService.getDocumentsByMultipleConstraintsCount(
-      Collection.PARTICIPATIONS,
-      constraints
-    );
-    return aggregate.data().count;
+    const countPromises = [];
+
+    for (let i = 0; i < tableUids.length; i += 10) {
+      const idConstraint: QueryConstraint = where('tableUid', 'in', tableUids.slice(i, i + 10));
+      const isActiveConstraint = where('isActive', '==', true);
+      const constraints: QueryConstraint[] = [idConstraint, isActiveConstraint];
+      const promise = this.firebaseReadService.getDocumentsByMultipleConstraintsCount(
+        Collection.PARTICIPATIONS,
+        constraints
+      );
+      countPromises.push(promise);
+    }
+
+    const countSnapshots = await Promise.all(countPromises);
+    const count = countSnapshots.reduce((acc, curr) => acc + curr.data().count, 0);
+    return count;
   }
 
   /* ------------------------------------------- UPDATE ------------------------------------------- */

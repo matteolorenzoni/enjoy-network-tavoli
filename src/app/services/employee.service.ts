@@ -58,18 +58,22 @@ export class EmployeeService {
   public async getEmployeesByUids(employeeUids: string[]): Promise<Employee[]> {
     if (!employeeUids || employeeUids.length === 0) return [];
 
-    const idConstraint: QueryConstraint = where(documentId(), 'in', employeeUids);
-    // TODO: ordinamento
-    // const firstOrder: QueryConstraint = orderBy('isActive');
-    // const secondOrder: QueryConstraint = orderBy('maxPersonMarkable');
-    // const thirdOrder: QueryConstraint = orderBy('personMarked');
-    const constricts: QueryConstraint[] = [idConstraint];
-    const employees: Employee[] = await this.firebaseReadService.getDocumentsByMultipleConstraints(
-      Collection.EMPLOYEES,
-      constricts,
-      employeeConverter
-    );
-    return employees;
+    const employeePromises: Promise<Employee[]>[] = [];
+
+    for (let i = 0; i < employeeUids.length; i += 10) {
+      const idConstraint: QueryConstraint = where(documentId(), 'in', employeeUids.slice(i, i + 10));
+      const constricts: QueryConstraint[] = [idConstraint];
+      const promise = this.firebaseReadService.getDocumentsByMultipleConstraints(
+        Collection.EMPLOYEES,
+        constricts,
+        employeeConverter
+      );
+      employeePromises.push(promise);
+    }
+
+    const employees: Employee[][] = await Promise.all(employeePromises);
+
+    return employees.flat();
   }
 
   /* ------------------------------------------- ADD ------------------------------------------- */

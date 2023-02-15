@@ -39,14 +39,22 @@ export class EventService {
   public async getEventsByUids(eventUids: string[]): Promise<Event[]> {
     if (!eventUids || eventUids.length === 0) return [];
 
-    const eventUidConstraint: QueryConstraint = where(documentId(), 'in', eventUids);
-    const constraints: QueryConstraint[] = [eventUidConstraint];
-    const eventsByAssignments = await this.firebaseReadService.getDocumentsByMultipleConstraints(
-      Collection.EVENTS,
-      constraints,
-      eventConverter
-    );
-    return eventsByAssignments;
+    const eventPromises: Promise<Event[]>[] = [];
+
+    for (let i = 0; i < eventUids.length; i += 10) {
+      const eventUidConstraint: QueryConstraint = where(documentId(), 'in', eventUids.slice(i, i + 10));
+      const constraints: QueryConstraint[] = [eventUidConstraint];
+      const promise = this.firebaseReadService.getDocumentsByMultipleConstraints(
+        Collection.EVENTS,
+        constraints,
+        eventConverter
+      );
+      eventPromises.push(promise);
+    }
+
+    const events: Event[][] = await Promise.all(eventPromises);
+
+    return events.flat();
   }
 
   public async getEventByCode(code: string): Promise<Event | null> {
