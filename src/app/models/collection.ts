@@ -1,12 +1,12 @@
 import { RoleType } from './enum';
 
 export enum Collection {
-  EMPLOYEES = 'employees',
-  EVENTS = 'events',
-  ASSIGNMENTS = 'assignments',
-  TABLES = 'tables',
-  PARTICIPATIONS = 'participations',
-  CLIENTS = 'clients'
+  EMPLOYEES = 'PROD_employees',
+  EVENTS = 'PROD_events',
+  ASSIGNMENTS = 'PROD_assignments',
+  TABLES = 'PROD_tables',
+  PARTICIPATIONS = 'PROD_participations',
+  CLIENTS = 'PROD_clients'
 }
 
 export type EventDTO = {
