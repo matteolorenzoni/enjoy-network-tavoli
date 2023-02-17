@@ -1,7 +1,7 @@
 import { environment } from 'src/environments/environment';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { Observable } from 'rxjs';
 import { SMS, SMSResponse } from '../models/type';
 
 @Injectable({
@@ -11,7 +11,7 @@ export class SmsHostingService {
   constructor(private http: HttpClient) {}
 
   sendSms(to: string, text: string, params: { clientName: string; link: string }): Observable<SMSResponse> {
-    const url = 'rest/api/sms/send';
+    const url = 'https://api.smshosting.it/rest/api/sms/send';
 
     /* Replace params */
     let messageClone = text;
@@ -28,6 +28,7 @@ export class SmsHostingService {
     const credentials = btoa(`${username}:${password}`);
     const httpOptions = {
       headers: new HttpHeaders({
+        'Access-Control-Allow-Headers': '*',
         'Content-Type': 'application/json',
         Authorization: `Basic ${credentials}`
       })
@@ -36,11 +37,11 @@ export class SmsHostingService {
     return this.http.post<SMSResponse>(url, sms, httpOptions);
   }
 
-  shortenURL(participationUid: string): Observable<string> {
+  shortenURL(participationUid: string): Observable<{ ok: boolean; result: { full_short_link: string } }> {
     const { origin } = window.location;
     const urlToReduce = `${origin}/ticket?participation=${participationUid}`;
-    // const url = `v2/shorten?url=${encodeURIComponent(urlToReduce)}`;
-    // return this.http.get<string>(url);
-    return of(urlToReduce);
+    const url = `https://api.shrtco.de/v2/shorten?url=${encodeURIComponent(urlToReduce)}`;
+    return this.http.get<{ ok: boolean; result: { full_short_link: string } }>(url);
+    // return of(urlToReduce);
   }
 }

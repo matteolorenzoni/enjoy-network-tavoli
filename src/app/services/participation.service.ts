@@ -75,8 +75,12 @@ export class ParticipationService {
 
       this.smsHostingService.shortenURL(document.id).subscribe({
         next: (shortenURL) => {
+          console.log(shortenURL);
           this.smsHostingService
-            .sendSms(`39${client.props.phone}`, eventMessage, { clientName: client.props.name, link: shortenURL })
+            .sendSms(`39${client.props.phone}`, eventMessage, {
+              clientName: client.props.name,
+              link: shortenURL.result.full_short_link
+            })
             .subscribe({
               next: async (data) => {
                 console.log(data);
