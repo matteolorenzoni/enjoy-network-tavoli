@@ -134,8 +134,8 @@ export class EnItemEventComponent {
       this.eventInfo.push({ label: 'Paganti', value: this.personMarked });
       this.eventInfo.push({ label: 'Orario', value: `${this.event.props.timeStart} - ${this.event.props.timeEnd}` });
       this.eventInfo.push({ label: 'Luogo', value: this.event.props.place });
-      this.eventInfo.push({ label: 'Ospite/i', value: this.event.props.guest || '' });
-      this.eventInfo.push({ label: 'Descrizione', value: this.event.props.description || '' });
+      this.eventInfo.push({ label: 'Ospite/i', value: this.event.props?.guest || '' });
+      this.eventInfo.push({ label: 'Descrizione', value: this.event.props?.description || '' });
       this.eventInfo.push({ label: 'Messaggio', value: this.event.props.message });
 
       this.itemNavigationMenu = [

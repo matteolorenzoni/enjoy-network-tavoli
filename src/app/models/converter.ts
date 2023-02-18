@@ -81,8 +81,8 @@ export const eventConverter: FirestoreDataConverter<Event> = {
         guest: data.guest,
         description: data.description,
         message: data.message,
-        createdAt: new Date((data.createdAt as unknown as Timestamp).seconds * 1000),
-        modifiedAt: new Date((data.modifiedAt as unknown as Timestamp).seconds * 1000)
+        createdAt: data.createdAt && new Date((data.createdAt as unknown as Timestamp).seconds * 1000),
+        modifiedAt: data.createdAt && new Date((data.modifiedAt as unknown as Timestamp).seconds * 1000)
       }
     };
     return event;

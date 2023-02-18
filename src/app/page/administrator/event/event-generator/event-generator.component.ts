@@ -106,8 +106,10 @@ export class EventGeneratorComponent implements OnInit {
         timeEnd: this.eventForm.value.timeEnd,
         maxPerson: this.eventForm.value.maxPerson,
         place: this.eventForm.value.place,
-        guest: this.eventForm.value.guest?.trim().replace(/\s\s+/g, ' ') || null,
-        description: this.eventForm.value.description?.trim().replace(/\s\s+/g, ' ') || null,
+        ...(this.eventForm.value.guest && { guest: this.eventForm.value.guest?.trim().replace(/\s\s+/g, ' ') }),
+        ...(this.eventForm.value.description && {
+          description: this.eventForm.value.description?.trim().replace(/\s\s+/g, ' ')
+        }),
         message: this.eventForm.value.message
       }
     };
