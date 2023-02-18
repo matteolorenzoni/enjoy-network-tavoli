@@ -18,8 +18,8 @@ export type EventDTO = {
   timeEnd: Date;
   maxPerson: number;
   place: string;
-  guest: string;
-  description: string;
+  guest?: string;
+  description?: string;
   message: string;
   createdAt?: Date;
   modifiedAt?: Date;

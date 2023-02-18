@@ -60,8 +60,8 @@ export const eventConverter: FirestoreDataConverter<Event> = {
       guest: props.guest,
       description: props.description,
       message: props.message,
-      createdAt: props.createdAt ? props.createdAt : new Date(),
-      modifiedAt: props.modifiedAt ? props.modifiedAt : new Date()
+      createdAt: props?.createdAt || new Date(),
+      modifiedAt: props?.modifiedAt || new Date()
     };
     return data;
   },

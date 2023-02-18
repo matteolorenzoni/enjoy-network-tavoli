@@ -1,5 +1,5 @@
 /* eslint-disable prefer-destructuring */
-import { DatePipe, Location } from '@angular/common';
+import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { fadeInAnimation } from 'src/app/animations/animations';
@@ -36,8 +36,7 @@ export class EventGeneratorComponent implements OnInit {
     private route: ActivatedRoute,
     private location: Location,
     private eventService: EventService,
-    private toastService: ToastService,
-    private date: DatePipe
+    private toastService: ToastService
   ) {
     this.eventForm = new FormGroup({
       imageUrl: new FormControl(null, [Validators.required]),
@@ -50,7 +49,7 @@ export class EventGeneratorComponent implements OnInit {
       place: new FormControl(PlaceType.BACCARA, [Validators.required]),
       guest: new FormControl(null),
       description: new FormControl(null),
-      message: new FormControl(null)
+      message: new FormControl(null, [Validators.required])
     });
     this.isLoading = false;
   }
@@ -94,20 +93,21 @@ export class EventGeneratorComponent implements OnInit {
 
   public onSubmit() {
     this.isLoading = true;
+
     /* Event */
     const newEvent: Event = {
       uid: this.eventUid ?? '',
       props: {
         imageUrl: this.eventForm.value.imageUrl,
         code: this.eventForm.value.code,
-        name: this.eventForm.value.name?.trim().replace(/\s\s+/g, ' ') || '',
+        name: this.eventForm.value.name.trim().replace(/\s\s+/g, ' '),
         date: new Date(this.eventForm.value.date),
         timeStart: this.eventForm.value.timeStart,
         timeEnd: this.eventForm.value.timeEnd,
         maxPerson: this.eventForm.value.maxPerson,
         place: this.eventForm.value.place,
-        guest: this.eventForm.value.guest?.trim().replace(/\s\s+/g, ' ') || '',
-        description: this.eventForm.value.description?.trim().replace(/\s\s+/g, ' ') || '',
+        guest: this.eventForm.value.guest?.trim().replace(/\s\s+/g, ' ') || null,
+        description: this.eventForm.value.description?.trim().replace(/\s\s+/g, ' ') || null,
         message: this.eventForm.value.message
       }
     };
