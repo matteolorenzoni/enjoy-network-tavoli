@@ -39,9 +39,9 @@ export class TableGeneratorComponent implements OnInit {
   ) {
     this.tableForm = new FormGroup({
       name: new FormControl(null, [Validators.required, Validators.pattern(/[\S]/)]),
-      price: new FormControl(null, [Validators.required, Validators.pattern(/^[0-9]*$/)]),
-      hour: new FormControl(new Date(), [Validators.required]),
-      drink: new FormControl(null, [Validators.required, Validators.pattern(/[\S]/)])
+      price: new FormControl(30, [Validators.required, Validators.pattern(/^[0-9]*$/)]),
+      hour: new FormControl(null),
+      drink: new FormControl(null, [Validators.pattern(/[\S]/)])
     });
     this.isLoading = false;
   }
@@ -64,7 +64,7 @@ export class TableGeneratorComponent implements OnInit {
           this.tableForm.patchValue({
             name: props.name,
             price: props.price,
-            hour: props.hour.toISOString().slice(0, 16),
+            hour: props.hour?.toISOString().slice(0, 16) || '',
             drink: props.drink
           });
           this.lblButton = 'Modifica tavolo';
@@ -83,16 +83,18 @@ export class TableGeneratorComponent implements OnInit {
       throw new Error('Errore: parametri non validi');
     }
 
+    const { name, price, hour, drink } = this.tableForm.value;
+
     /* create the new table */
     const newTable: Table = {
       uid: this.tableUid ?? '',
       props: {
         eventUid: this.eventUid,
         employeeUid: this.employeeUid,
-        name: this.tableForm.value.name?.trim().replace(/\s\s+/g, ' ') || '',
-        price: this.tableForm.value.price,
-        hour: new Date(this.tableForm.value.hour),
-        drink: this.tableForm.value.drink
+        name: name.trim().replace(/\s\s+/g, ' ') || '',
+        price,
+        hour: hour ? new Date(hour) : undefined,
+        drink
       }
     };
 

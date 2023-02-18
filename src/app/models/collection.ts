@@ -40,9 +40,9 @@ export type EmployeeDTO = {
 export type AssignmentDTO = {
   eventUid: string;
   employeeUid: string;
-  isActive: boolean;
   personMarked: number;
   maxPersonMarkable: number;
+  isActive: boolean;
   createdAt?: Date;
   modifiedAt?: Date;
 };
@@ -52,8 +52,8 @@ export type TableDTO = {
   employeeUid: string;
   name: string;
   price: number;
-  hour: Date;
-  drink: string;
+  hour?: Date;
+  drink?: string;
   createdAt?: Date;
   modifiedAt?: Date;
 };
