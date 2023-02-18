@@ -41,6 +41,7 @@ export class EmployeeGeneratorComponent implements OnInit {
       zone: new FormControl(null, [Validators.required, Validators.pattern(/[\S]/)]),
       isActive: new FormControl(true, [Validators.required])
     });
+
     this.employeeForm.controls['role'].valueChanges.subscribe((value) => {
       if (value !== RoleType.PR) {
         this.employeeForm.controls['lastName'].reset();
@@ -93,12 +94,12 @@ export class EmployeeGeneratorComponent implements OnInit {
 
   public onSubmit() {
     this.isLoading = true;
-    const { name, lastName, role, phone, zone, email, isActive } = this.employeeForm.value;
+    const { name, lastName, role, phone, zone, email, isActive } = this.employeeForm.getRawValue();
 
     const employee: Employee = {
       uid: this.employeeUid ?? '',
       props: {
-        name: name?.trim().replace(/\s\s+/g, ' ') || null,
+        name: name.trim().replace(/\s\s+/g, ' '),
         lastName: lastName?.trim().replace(/\s\s+/g, ' ') || null,
         role: role || null,
         phone: phone || null,
@@ -107,6 +108,7 @@ export class EmployeeGeneratorComponent implements OnInit {
         isActive: isActive || false
       }
     };
+
     this.employeeService
       .addOrUpdateEmployee(email, employee)
       .then(() => {

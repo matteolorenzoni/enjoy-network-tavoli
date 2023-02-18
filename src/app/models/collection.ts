@@ -27,11 +27,11 @@ export type EventDTO = {
 
 export type EmployeeDTO = {
   name: string;
-  lastName: string | null;
-  role: RoleType;
-  phone: string | null;
+  lastName?: string;
   email: string;
-  zone: string | null;
+  role: RoleType;
+  phone?: string;
+  zone?: string;
   isActive: boolean;
   createdAt?: Date;
   modifiedAt?: Date;
