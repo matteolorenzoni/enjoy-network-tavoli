@@ -30,8 +30,14 @@ export class FirebaseCreateService {
     data: Event | Assignment | Employee | Table | Participation | Client
   ): Promise<DocumentReference<DocumentData>> {
     const { props } = data;
+
+    /* Sanitize props */
+    Object.entries(props).forEach(([key, value]) => {
+      if (value === null) delete (props as any)[key];
+    });
     props.createdAt = new Date();
     props.modifiedAt = new Date();
+
     const collectionRef = collection(this.db, collectionName);
     const docRef = await addDoc(collectionRef, props);
     return docRef;
@@ -42,8 +48,14 @@ export class FirebaseCreateService {
     data: Event | Assignment | Employee | Table | Participation | Client
   ): Promise<DocumentReference<DocumentData>> {
     const { uid, props } = data;
+
+    /* Sanitize props */
+    Object.entries(props).forEach(([key, value]) => {
+      if (value === null) delete (props as any)[key];
+    });
     props.createdAt = new Date();
     props.modifiedAt = new Date();
+
     const collectionRef = collection(this.db, collectionName);
     const docRef = doc(collectionRef, uid);
     await setDoc(docRef, props);
@@ -58,8 +70,14 @@ export class FirebaseCreateService {
     const collectionRef = collection(this.db, collectionName);
     data.forEach((document: Event | Assignment | Employee | Table | Participation | Client) => {
       const { props } = document;
+
+      /* Sanitize props */
+      Object.entries(props).forEach(([key, value]) => {
+        if (value === null) delete (props as any)[key];
+      });
       props.createdAt = new Date();
       props.modifiedAt = new Date();
+
       const docRef = doc(collectionRef);
       batch.set(docRef, props);
     });

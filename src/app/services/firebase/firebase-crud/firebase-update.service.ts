@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Firestore, doc, getFirestore, collection, writeBatch, updateDoc } from '@angular/fire/firestore';
+import { Firestore, doc, getFirestore, collection, writeBatch, deleteField, updateDoc } from '@angular/fire/firestore';
 import { Collection } from 'src/app/models/collection';
 import { Client, Employee, Event, Participation, Table } from 'src/app/models/type';
 import { Assignment } from '../../../models/type';
@@ -20,7 +20,13 @@ export class FirebaseUpdateService {
     data: Event | Assignment | Employee | Table | Participation | Client
   ): Promise<void> {
     const { uid, props } = data;
+
+    /* Sanitize props */
+    Object.entries(props).forEach(([key, value]) => {
+      if (value === null) (props as any)[key] = deleteField();
+    });
     props.modifiedAt = new Date();
+
     const collectionRef = collection(this.db, collectionName);
     const docRef = doc(collectionRef, uid);
     await updateDoc(docRef, props);
