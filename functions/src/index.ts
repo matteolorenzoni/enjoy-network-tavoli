@@ -30,3 +30,17 @@ export const aaaa = functions.firestore.document('PROD_participations/{participa
       console.log(error);
     });
 });
+
+export const sanitizeOnUpdate = functions.firestore.document('{collection}/{id}').onUpdate((change, context) => {
+  const beforeData = change.before.data();
+  const afterData = change.after.data();
+
+  const keys = Object.keys(afterData);
+  const nullKeys = keys.filter((key) => afterData[key] === null || afterData[key] === '');
+  nullKeys.forEach((key) => delete afterData[key]);
+
+  afterData['createdAt'] = beforeData['createdAt'];
+  afterData['modifiedAt'] = new Date();
+
+  return change.after.ref.update(afterData);
+});
