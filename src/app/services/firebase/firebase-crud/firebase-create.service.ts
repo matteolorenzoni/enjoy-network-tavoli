@@ -33,7 +33,7 @@ export class FirebaseCreateService {
 
     /* Sanitize props */
     Object.entries(props).forEach(([key, value]) => {
-      if (value === null) delete (props as any)[key];
+      if (!value) delete (props as any)[key];
     });
     props.createdAt = new Date();
     props.modifiedAt = new Date();
@@ -51,7 +51,7 @@ export class FirebaseCreateService {
 
     /* Sanitize props */
     Object.entries(props).forEach(([key, value]) => {
-      if (value === null) delete (props as any)[key];
+      if (!value) delete (props as any)[key];
     });
     props.createdAt = new Date();
     props.modifiedAt = new Date();
@@ -73,7 +73,7 @@ export class FirebaseCreateService {
 
       /* Sanitize props */
       Object.entries(props).forEach(([key, value]) => {
-        if (value === null) delete (props as any)[key];
+        if (!value) delete (props as any)[key];
       });
       props.createdAt = new Date();
       props.modifiedAt = new Date();
