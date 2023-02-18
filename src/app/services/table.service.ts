@@ -96,7 +96,7 @@ export class TableService {
       participationConverter
     );
     const propsTpUpdate = { isActive: false };
-    await this.firebaseUpdateService.updateDocumentsProp(Collection.PARTICIPATIONS, participations, propsTpUpdate);
+    await this.firebaseUpdateService.updateDocumentsProps(Collection.PARTICIPATIONS, participations, propsTpUpdate);
 
     /* Delete table */
     await this.firebaseDeleteService.deleteDocumentByUid(Collection.TABLES, uid);

@@ -108,7 +108,7 @@ export class ClientService {
       if (employeeRole !== RoleType.ADMINISTRATOR) {
         const assignment: Assignment = assignments[0];
         const propsToUpdate = { personMarked: assignment.props.personMarked + 1 };
-        await this.firebaseUpdateService.updateDocumentProps(Collection.ASSIGNMENTS, assignment, propsToUpdate);
+        await this.firebaseUpdateService.updateDocumentsProps(Collection.ASSIGNMENTS, [assignment], propsToUpdate);
       }
 
       /* Add new participation */
@@ -141,9 +141,9 @@ export class ClientService {
               next: async (data) => {
                 console.log(data);
                 const participationPropsToUpdate = { messageIsReceived: true };
-                await this.firebaseUpdateService.updateDocumentProps(
+                await this.firebaseUpdateService.updateDocumentsProps(
                   Collection.PARTICIPATIONS,
-                  { ...participation, uid: document.id },
+                  [{ ...participation, uid: document.id }],
                   participationPropsToUpdate
                 );
               },

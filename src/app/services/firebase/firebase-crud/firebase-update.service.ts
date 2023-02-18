@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Firestore, doc, updateDoc, getFirestore, collection, writeBatch, setDoc } from '@angular/fire/firestore';
+import { Firestore, doc, getFirestore, collection, writeBatch, updateDoc } from '@angular/fire/firestore';
 import { Collection } from 'src/app/models/collection';
 import { Client, Employee, Event, Participation, Table } from 'src/app/models/type';
 import { Assignment } from '../../../models/type';
@@ -20,32 +20,23 @@ export class FirebaseUpdateService {
     data: Event | Assignment | Employee | Table | Participation | Client
   ): Promise<void> {
     const { uid, props } = data;
-    const collectionRef = collection(this.db, collectionName);
-    const docRef = doc(collectionRef, uid);
-    await setDoc(docRef, props);
-  }
-
-  public async updateDocumentProps(
-    collectionName: Collection,
-    data: Event | Assignment | Employee | Table | Participation | Client,
-    props: Partial<typeof data['props']>
-  ): Promise<void> {
-    const { uid } = data;
+    props.modifiedAt = new Date();
     const collectionRef = collection(this.db, collectionName);
     const docRef = doc(collectionRef, uid);
     await updateDoc(docRef, props);
   }
 
-  public async updateDocumentsProp(
+  public async updateDocumentsProps(
     collectionName: Collection,
     data: Event[] | Assignment[] | Employee[] | Table[] | Participation[] | Client[],
-    prop: Partial<typeof data[0]['props']>
+    props: Partial<typeof data[0]['props']>
   ): Promise<void> {
+    const propsUpdated = { ...props, modifiedAt: new Date() };
     const batch = writeBatch(this.db);
     const collectionRef = collection(this.db, collectionName);
     data.forEach((item) => {
       const docRef = doc(collectionRef, item.uid);
-      batch.update(docRef, prop);
+      batch.update(docRef, propsUpdated);
     });
     await batch.commit();
   }

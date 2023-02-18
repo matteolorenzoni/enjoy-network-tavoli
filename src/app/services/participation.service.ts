@@ -85,9 +85,9 @@ export class ParticipationService {
               next: async (data) => {
                 console.log(data);
                 const participationPropsToUpdate = { messageIsReceived: true };
-                await this.firebaseUpdateService.updateDocumentProps(
+                await this.firebaseUpdateService.updateDocumentsProps(
                   Collection.PARTICIPATIONS,
-                  { ...participation, uid: document.id },
+                  [{ ...participation, uid: document.id }],
                   participationPropsToUpdate
                 );
               },
@@ -104,13 +104,13 @@ export class ParticipationService {
     }
 
     /* 2) If the participation is not active switch it in active */
-    if (participations[0] && !participations[0].props.isActive) {
+    if (participations.length > 0 && participations.every((x) => !x.props.isActive)) {
       /* Increase the number of marked people if it is possible */
       await this.updateAssignmentMarkedPerson(eventUid, employeeUid, 1);
 
       /* Make the old participation active */
       const propsToUpdate = { isActive: true };
-      await this.firebaseUpdateService.updateDocumentProps(Collection.PARTICIPATIONS, participations[0], propsToUpdate);
+      await this.firebaseUpdateService.updateDocumentsProps(Collection.PARTICIPATIONS, participations, propsToUpdate);
       return;
     }
 
@@ -206,7 +206,7 @@ export class ParticipationService {
     const propsToUpdate = {
       isActive: false
     };
-    await this.firebaseUpdateService.updateDocumentProps(Collection.PARTICIPATIONS, participation, propsToUpdate);
+    await this.firebaseUpdateService.updateDocumentsProps(Collection.PARTICIPATIONS, [participation], propsToUpdate);
   }
 
   public async updateAssignmentMarkedPerson(eventUid: string, employeeUid: string, value: 1 | -1) {
@@ -233,7 +233,7 @@ export class ParticipationService {
     }
 
     const propsToUpdate = { personMarked: assignment.props.personMarked + value };
-    await this.firebaseUpdateService.updateDocumentProps(Collection.ASSIGNMENTS, assignment, propsToUpdate);
+    await this.firebaseUpdateService.updateDocumentsProps(Collection.ASSIGNMENTS, [assignment], propsToUpdate);
   }
 
   /* ------------------------------------------- DELETE ------------------------------------------- */

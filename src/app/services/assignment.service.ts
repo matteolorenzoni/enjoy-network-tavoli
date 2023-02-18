@@ -104,7 +104,7 @@ export class AssignmentService {
     );
     if (assignment) {
       const propsToUpdate = { maxPersonMarkable };
-      await this.firebaseUpdateService.updateDocumentProps(Collection.ASSIGNMENTS, assignment, propsToUpdate);
+      await this.firebaseUpdateService.updateDocumentsProps(Collection.ASSIGNMENTS, [assignment], propsToUpdate);
     }
   }
 
@@ -120,7 +120,7 @@ export class AssignmentService {
       } else {
         /** If the person is not active for the event, are removed as many as person assigned as possible  */
         const propsToUpdate = isActive ? { isActive: true } : { maxPersonMarkable: personMarked, isActive: false };
-        await this.firebaseUpdateService.updateDocumentProps(Collection.ASSIGNMENTS, assignment, propsToUpdate);
+        await this.firebaseUpdateService.updateDocumentsProps(Collection.ASSIGNMENTS, [assignment], propsToUpdate);
       }
     }
   }

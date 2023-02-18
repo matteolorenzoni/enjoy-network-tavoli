@@ -112,7 +112,7 @@ export class EmployeeService {
         maxPersonMarkable: assignment.props.maxPersonMarkable,
         isActive: false
       };
-      await this.firebaseUpdateService.updateDocumentProps(Collection.ASSIGNMENTS, assignment, propsToUpdate);
+      await this.firebaseUpdateService.updateDocumentsProps(Collection.ASSIGNMENTS, [assignment], propsToUpdate);
     });
 
     /* Delete employee */
