@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { Firestore, doc, updateDoc, getFirestore, collection, writeBatch } from '@angular/fire/firestore';
 import { Collection } from 'src/app/models/collection';
 import { Client, Employee, Event, Participation, Table } from 'src/app/models/type';
-import { environment } from 'src/environments/environment';
 import { Assignment } from '../../../models/type';
 
 @Injectable({
@@ -25,7 +24,6 @@ export class FirebaseUpdateService {
     const collectionRef = collection(this.db, collectionName);
     const docRef = doc(collectionRef, uid);
     await updateDoc(docRef, props);
-    if (!environment.production) console.info('Updated document', data);
   }
 
   public async updateDocumentProps(
@@ -37,7 +35,6 @@ export class FirebaseUpdateService {
     const collectionRef = collection(this.db, collectionName);
     const docRef = doc(collectionRef, uid);
     await updateDoc(docRef, props);
-    if (!environment.production) console.info('Updated document props', data);
   }
 
   public async updateDocumentsProp(
@@ -50,7 +47,6 @@ export class FirebaseUpdateService {
     data.forEach((item) => {
       const docRef = doc(collectionRef, item.uid);
       batch.update(docRef, prop);
-      if (!environment.production) console.info('Updated document', item);
     });
     await batch.commit();
   }

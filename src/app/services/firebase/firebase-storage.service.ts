@@ -10,7 +10,6 @@ import {
   UploadTaskSnapshot
 } from '@angular/fire/storage';
 import { EventDTO, Collection } from 'src/app/models/collection';
-import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -34,11 +33,9 @@ export class FirebaseStorageService {
 
     /* Upload */
     const snapshot: UploadTaskSnapshot = await uploadBytesResumable(storageRef, photo);
-    if (!environment.production) console.info('Uploaded a blob or file!', snapshot);
 
     /* Get download URL */
     const downloadURL: string = await getDownloadURL(snapshot.ref);
-    if (!environment.production) console.info('File available at', downloadURL);
 
     return downloadURL;
   }
@@ -46,6 +43,5 @@ export class FirebaseStorageService {
   public async deletePhoto(imageUrl: string): Promise<void> {
     const storageRef = ref(this.storage, `${Collection.EVENTS}/${imageUrl}`);
     await deleteObject(storageRef);
-    if (!environment.production) console.info('Foto eliminata:', imageUrl);
   }
 }

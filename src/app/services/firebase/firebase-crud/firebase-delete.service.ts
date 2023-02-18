@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { Firestore, doc, deleteDoc, getFirestore, collection, writeBatch } from '@angular/fire/firestore';
-import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -17,7 +16,6 @@ export class FirebaseDeleteService {
     const collectionRef = collection(this.db, collectionName);
     const docRef = doc(collectionRef, documentUid);
     await deleteDoc(docRef);
-    if (!environment.production) console.info('Documento eliminato:', documentUid);
   }
 
   public async deleteDocumentsByUids(collectionName: string, documentUids: string[]): Promise<void> {
@@ -28,6 +26,5 @@ export class FirebaseDeleteService {
       batch.delete(docRef);
     });
     await batch.commit();
-    if (!environment.production) console.info('Documenti eliminati:', documentUids);
   }
 }

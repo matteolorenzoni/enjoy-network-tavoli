@@ -11,7 +11,6 @@ import {
   setDoc
 } from '@angular/fire/firestore';
 import { Collection } from 'src/app/models/collection';
-import { environment } from 'src/environments/environment';
 import { Assignment, Client, Employee, Event, Table } from 'src/app/models/type';
 import { Participation } from '../../../models/type';
 
@@ -35,7 +34,6 @@ export class FirebaseCreateService {
     props.modifiedAt = new Date();
     const collectionRef = collection(this.db, collectionName);
     const docRef = await addDoc(collectionRef, props);
-    if (!environment.production) console.info('Added document', props);
     return docRef;
   }
 
@@ -49,7 +47,6 @@ export class FirebaseCreateService {
     const collectionRef = collection(this.db, collectionName);
     const docRef = doc(collectionRef, uid);
     await setDoc(docRef, props);
-    if (!environment.production) console.info('Added document', props);
     return docRef;
   }
 
@@ -65,7 +62,6 @@ export class FirebaseCreateService {
       props.modifiedAt = new Date();
       const docRef = doc(collectionRef);
       batch.set(docRef, props);
-      if (!environment.production) console.info('Added document', props);
     });
     await batch.commit();
   }

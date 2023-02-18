@@ -16,7 +16,6 @@ import {
   onSnapshot
 } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
-import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -43,7 +42,6 @@ export class FirebaseReadService {
     if (!docSnap.exists()) throw new Error('No such document!');
 
     /* Return the document */
-    if (!environment.production) console.info('Got document', docSnap.data());
     return docSnap.data() as T;
   }
 
@@ -54,7 +52,6 @@ export class FirebaseReadService {
     const querySnapshot = await getDocs(collectionRef);
     querySnapshot.forEach((item: QueryDocumentSnapshot<T>) => {
       documents.push(item.data());
-      if (!environment.production) console.info('Got document', item.data());
     });
     return documents;
   }
@@ -69,7 +66,6 @@ export class FirebaseReadService {
           const documents: T[] = [];
           querySnapshot.forEach((item: QueryDocumentSnapshot<T>) => {
             documents.push(item.data());
-            if (!environment.production) console.info('Got document', item.data());
           });
           observer.next(documents);
         },
@@ -93,7 +89,6 @@ export class FirebaseReadService {
     const querySnapshot = await getDocs(q);
     querySnapshot.forEach((item: QueryDocumentSnapshot<T>) => {
       documents.push(item.data());
-      if (!environment.production) console.info('Got document', item.data());
     });
     return documents;
   }
