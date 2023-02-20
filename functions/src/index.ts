@@ -109,9 +109,15 @@ export const sendSms = functions.firestore
       const smsResponse = response.data as SMSResponse;
 
       if (smsResponse.smsNotInserted > 0) {
-        snap.ref.update({ errorIfMessageIsNotReceived: smsResponse.sms[0].statusDetail });
+        snap.ref.update({
+          errorIfMessageIsNotReceived: smsResponse.sms[0].statusDetail,
+          modifiedAt: new Date()
+        });
       } else {
-        snap.ref.update({ messageIsReceived: true });
+        snap.ref.update({
+          messageIsReceived: true,
+          modifiedAt: new Date()
+        });
       }
     } catch (error) {
       console.error(error);
