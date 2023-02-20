@@ -1,10 +1,9 @@
-<div *ngIf="event && employee && table && participation" class="flex flex-col items-center gap-4">
+<div *ngIf="event && table && participation" class="flex flex-col items-center gap-4">
   <div>Cliente: {{ participation.props.name }} {{ participation.props.lastName }}</div>
   <div>Evento: {{ event.props.name }}</div>
   <img [src]="event.props.imageUrl" class="aspect-square w-40" />
   <div>Tavolo: {{ table.props.name }}</div>
   <div>Questo è il tuo QrCode bla bla bla .....</div>
-  <div>In caso di necessità: {{ employee.props.name }} {{ employee.props.lastName }}, {{ employee.props.phone }}</div>
   <qrcode
     class="hover:cursor-pointer"
     (click)="toggleZoom()"
