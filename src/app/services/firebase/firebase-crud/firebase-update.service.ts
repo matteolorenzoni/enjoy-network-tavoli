@@ -23,7 +23,7 @@ export class FirebaseUpdateService {
 
     /* Sanitize props */
     Object.entries(props).forEach(([key, value]) => {
-      if (!value) (props as any)[key] = deleteField();
+      if (value === null || value === undefined) (props as any)[key] = deleteField();
     });
     props.modifiedAt = new Date();
 
