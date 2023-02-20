@@ -62,11 +62,6 @@ export type AssignmentAndEmployee = {
   employee: Employee;
 };
 
-export type ParticipationAndClient = {
-  participation: Participation;
-  client: Client;
-};
-
 export type SMS = {
   to: string;
   text: string;

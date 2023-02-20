@@ -61,10 +61,12 @@ export type TableDTO = {
 export type ParticipationDTO = {
   eventUid: string;
   tableUid: string;
-  clientUid: string;
-  isActive: boolean;
+  name: string;
+  lastName: string;
+  phone: string;
   isScanned: boolean;
   messageIsReceived: boolean;
+  isActive: boolean;
   createdAt?: Date;
   modifiedAt?: Date;
 };

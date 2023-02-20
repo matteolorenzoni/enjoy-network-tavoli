@@ -189,7 +189,9 @@ export const participationConverter: FirestoreDataConverter<Participation> = {
     const data: ParticipationDTO = {
       eventUid: props.eventUid,
       tableUid: props.tableUid,
-      clientUid: props.clientUid,
+      name: props.name,
+      lastName: props.lastName,
+      phone: props.phone,
       isScanned: props.isScanned,
       messageIsReceived: props.messageIsReceived,
       isActive: props.isActive,
@@ -205,7 +207,9 @@ export const participationConverter: FirestoreDataConverter<Participation> = {
       props: {
         eventUid: data.eventUid,
         tableUid: data.tableUid,
-        clientUid: data.clientUid,
+        name: data.name,
+        lastName: data.lastName,
+        phone: data.phone,
         isScanned: data.isScanned,
         messageIsReceived: data.messageIsReceived,
         isActive: data.isActive,

@@ -1,11 +1,10 @@
 import { ParticipationService } from 'src/app/services/participation.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
-import { ClientService } from 'src/app/services/client.service';
 import { EventService } from 'src/app/services/event.service';
 import { TableService } from 'src/app/services/table.service';
 import { ToastService } from 'src/app/services/toast.service';
-import { Client, Event, Participation, Table, Employee } from 'src/app/models/type';
+import { Event, Participation, Table, Employee } from 'src/app/models/type';
 import { EmployeeService } from 'src/app/services/employee.service';
 
 @Component({
@@ -27,9 +26,6 @@ export class TicketComponent implements OnInit {
   participationUid?: string;
   participation!: Participation;
 
-  /* Client */
-  client!: Client;
-
   /* QrCode */
   qrdata = 'aa';
   img = '../../../../assets/images/logo-dark.jpg';
@@ -42,7 +38,6 @@ export class TicketComponent implements OnInit {
     private employeeService: EmployeeService,
     private tableService: TableService,
     private participationService: ParticipationService,
-    private clientService: ClientService,
     private toastService: ToastService
   ) {}
 
@@ -63,7 +58,6 @@ export class TicketComponent implements OnInit {
 
         this.getEvent(this.participation.props.eventUid);
         this.getTable(this.participation.props.tableUid);
-        this.getClient(this.participation.props.clientUid);
       })
       .catch((error: Error) => {
         this.toastService.showError(error);
@@ -105,18 +99,6 @@ export class TicketComponent implements OnInit {
       .then((table) => {
         this.table = table;
         this.getEmployee(this.table.props.employeeUid);
-      })
-      .catch((error: Error) => {
-        this.toastService.showError(error);
-        this.router.navigate(['error'], { relativeTo: this.route });
-      });
-  }
-
-  getClient(clientUid: string) {
-    this.clientService
-      .getClient(clientUid)
-      .then((client) => {
-        this.client = client;
       })
       .catch((error: Error) => {
         this.toastService.showError(error);

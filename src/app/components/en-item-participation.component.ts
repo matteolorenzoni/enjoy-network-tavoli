@@ -5,17 +5,17 @@ import { ActivatedRoute } from '@angular/router';
 import { SessionStorageService } from '../services/sessionstorage.service';
 import { ToastService } from '../services/toast.service';
 import { ParticipationService } from '../services/participation.service';
-import { ParticipationAndClient } from '../models/type';
+import { Participation } from '../models/type';
 
 @Component({
-  selector: 'en-item-participation[pc]',
+  selector: 'en-item-participation[participation]',
   template: `
     <li class="flex h-12 items-center">
       <p class="truncate ">
-        {{ pc.client.props.name }} {{ pc.client.props.lastName }}
+        {{ participation.props.name }} {{ participation.props.lastName }}
         <span class="ml-4 text-xs text-gray-500"
-          >{{ pc.participation.props.createdAt | date: 'dd/MM/YYYY' }} -
-          {{ pc.participation.props.createdAt | date: 'HH:mm' }}</span
+          >{{ participation.props.createdAt | date: 'dd/MM/YYYY' }} -
+          {{ participation.props.createdAt | date: 'HH:mm' }}</span
         >
       </p>
 
@@ -23,7 +23,7 @@ import { ParticipationAndClient } from '../models/type';
         <fa-icon
           [icon]="copyIcon"
           class="ml-4 text-lg text-gray-400 hover:cursor-pointer hover:text-gray-300 active:text-gray-800"
-          (click)="copyTicketLink(pc.participation.uid)"></fa-icon>
+          (click)="copyTicketLink(participation.uid)"></fa-icon>
 
         <fa-icon
           [icon]="deleteIcon"
@@ -41,7 +41,7 @@ import { ParticipationAndClient } from '../models/type';
   ]
 })
 export class EnItemParticipationComponent {
-  @Input() pc!: ParticipationAndClient;
+  @Input() participation!: Participation;
   @Output() participationNotActiveEvent = new EventEmitter<any>();
 
   /* Event */
@@ -81,12 +81,12 @@ export class EnItemParticipationComponent {
   updateParticipationNotActive(): void {
     const text = 'Sei sicuro di voler rimuovere la partecipazione?';
     if (window.confirm(text) === true) {
-      if (!this.eventUid || !this.employeeUid || !this.pc.participation.uid) {
+      if (!this.eventUid || !this.employeeUid || !this.participation.uid) {
         throw new Error('Errore: parametri non validi');
       }
 
       this.participationService
-        .updateParticipationNotActive(this.eventUid, this.employeeUid, this.pc.participation.uid)
+        .updateParticipationNotActive(this.eventUid, this.employeeUid, this.participation.uid)
         .then(() => {
           this.participationNotActiveEvent.emit();
           this.toastService.showSuccess('Partecipazione rimossa');

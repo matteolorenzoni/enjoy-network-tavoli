@@ -1,4 +1,3 @@
-import { EventService } from 'src/app/services/event.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
@@ -7,6 +6,7 @@ import { ToastService } from 'src/app/services/toast.service';
 import { ParticipationService } from 'src/app/services/participation.service';
 import { SessionStorageService } from 'src/app/services/sessionstorage.service';
 import { Client } from 'src/app/models/type';
+import { UtilsService } from 'src/app/services/utils.service';
 
 @Component({
   selector: 'app-client-generator',
@@ -16,16 +16,12 @@ import { Client } from 'src/app/models/type';
 export class ClientGeneratorComponent implements OnInit {
   /* Event */
   eventUid: string | null = null;
-  eventMessage = '';
 
   /* Employee */
   employeeUid: string | null = null;
 
   /* Table */
   tableUid: string | null = null;
-
-  /* Client */
-  clientUid: string | null = null;
 
   /* Form */
   clientForm: FormGroup;
@@ -38,10 +34,10 @@ export class ClientGeneratorComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private eventService: EventService,
     private clientService: ClientService,
-    private participation: ParticipationService,
-    private sessionStorage: SessionStorageService,
+    private participationService: ParticipationService,
+    private sessionStorageService: SessionStorageService,
+    private utilsService: UtilsService,
     private toastService: ToastService
   ) {
     /* Init form */
@@ -65,114 +61,93 @@ export class ClientGeneratorComponent implements OnInit {
     this.isLoading = false;
   }
 
+  /* ------------------------------------------- Lifecycle ------------------------------------------- */
   ngOnInit(): void {
     this.eventUid = this.route.snapshot.paramMap.get('eventUid');
-    this.employeeUid = this.sessionStorage.getEmployeeUid();
+    this.employeeUid = this.sessionStorageService.getEmployeeUid();
     this.tableUid = this.route.snapshot.paramMap.get('tableUid');
-    this.clientUid = this.route.snapshot.paramMap.get('clientUid');
-    this.clientUid = this.clientUid === 'null' ? null : this.clientUid;
-
-    this.getEventMessage();
   }
 
-  public getEventMessage(): void {
-    if (!this.eventUid) {
-      throw new Error('Errore: parametri non validi');
+  /* ------------------------------------------- Http Methods ------------------------------------------- */
+  public async onSubmit() {
+    try {
+      this.isLoading = true;
+
+      const { name, lastName, phone } = this.clientForm.value;
+
+      const client: Client = {
+        uid: '',
+        props: {
+          name: this.utilsService.capitalize(name),
+          lastName: this.utilsService.capitalize(lastName),
+          phone
+        }
+      };
+
+      await this.addClient(client);
+      await this.addParticipation(client);
+
+      this.isLoading = false;
+
+      this.goBack();
+    } catch (err) {
+      this.toastService.showError(err as Error);
     }
-
-    this.eventService
-      .getEvent(this.eventUid)
-      .then((event) => {
-        this.eventMessage = event?.props.message ?? '';
-      })
-      .catch((err: Error) => {
-        this.toastService.showError(err);
-      });
   }
 
-  public onSubmit() {
-    this.isLoading = true;
-    this.addParticipationAndClient();
-  }
-
-  public checkIfPhoneNumberIsAlreadyUsed() {
+  public async checkIfClientAlreadyExists() {
     if (this.clientForm.value.phone) {
-      this.clientService
-        .getClientByPhone(this.clientForm.value.phone)
-        .then((client) => {
-          if (client) {
-            const text = `Questo numero appartiene a: ${client?.props.name} ${client?.props.lastName}, lo vuoi aggiungere al tavolo?`;
-            if (window.confirm(text) === true) {
-              this.addParticipation(client.uid);
-            }
-          } else {
-            this.toastService.showInfo('Cliente non ancora registrato, inserire i dati');
-            this.phoneIsChecked = true;
-            this.clientForm.controls['name'].enable();
-            this.clientForm.controls['lastName'].enable();
-          }
-        })
-        .catch((err: Error) => {
-          this.toastService.showError(err);
-        });
+      try {
+        const client = await this.clientService.getClientByPhone(this.clientForm.value.phone);
+
+        if (!client) {
+          this.toastService.showInfo('Cliente non ancora registrato, inserire i dati');
+          this.phoneIsChecked = true;
+          this.clientForm.controls['name'].enable();
+          this.clientForm.controls['lastName'].enable();
+          return;
+        }
+
+        const text = `Questo numero appartiene a: ${client.props.name} ${client.props.lastName}, lo vuoi aggiungere al tavolo?`;
+        if (window.confirm(text) === true) {
+          this.isLoading = true;
+          await this.addParticipation(client);
+          this.isLoading = false;
+
+          this.goBack();
+        }
+      } catch (err) {
+        this.toastService.showError(err as Error);
+      }
+    } else {
+      this.toastService.showInfo('Inserire un numero di telefono');
     }
   }
 
-  public addParticipationAndClient(): void {
-    /* Check if the uids are valid */
+  public async addClient(client: Client): Promise<void> {
+    try {
+      await this.clientService.addClient(client);
+    } catch (err) {
+      throw err as Error;
+    }
+  }
+
+  public async addParticipation(client: Client): Promise<void> {
     if (!this.eventUid || !this.employeeUid || !this.tableUid) {
       throw new Error('Errore: parametri non validi');
     }
 
-    const newClient: Client = {
-      uid: this.clientUid ?? '',
-      props: {
-        name: this.clientForm.value.name
-          .split(' ')
-          .map((word: string) => word.charAt(0).toUpperCase() + word.substring(1).toLowerCase())
-          .join(' '),
-        lastName: this.clientForm.value.lastName
-          .split(' ')
-          .map((word: string) => word.charAt(0).toUpperCase() + word.substring(1).toLowerCase())
-          .join(' '),
-        phone: this.clientForm.getRawValue().phone
-      }
-    };
-
-    /* Add or update the table */
-    this.clientService
-      .addClient(newClient, this.eventUid, this.employeeUid, this.tableUid, this.eventMessage)
-      .then(() => {
-        this.clientForm.reset();
-        this.router.navigate([`dashboard/pr/${this.eventUid}/tables`]);
-        this.toastService.showSuccess('Cliente creato');
-      })
-      .catch((err: Error) => {
-        this.toastService.showError(err);
-      })
-      .finally(() => {
-        this.isLoading = false;
-      });
+    try {
+      await this.participationService.addParticipation(this.eventUid, this.employeeUid, this.tableUid, client);
+    } catch (err) {
+      throw err as Error;
+    }
   }
 
-  public addParticipation(clientUid: string): void {
-    /* Check if the uids are valid */
-    if (!this.eventUid || !this.employeeUid || !this.tableUid || !clientUid) {
-      throw new Error('Errore: parametri non validi');
-    }
-
-    this.participation
-      .addOrUpdateParticipation(this.eventUid, this.employeeUid, this.tableUid, clientUid, this.eventMessage)
-      .then(() => {
-        this.clientForm.reset();
-        this.router.navigate([`dashboard/pr/${this.eventUid}/tables`]);
-        this.toastService.showSuccess('Partecipazione aggiunta');
-      })
-      .catch((err: Error) => {
-        this.toastService.showError(err);
-      })
-      .finally(() => {
-        this.isLoading = false;
-      });
+  /* ------------------------------------------- Methods ------------------------------------------- */
+  public goBack() {
+    this.clientForm.reset();
+    this.router.navigate([`dashboard/pr/${this.eventUid}/tables`]);
+    this.toastService.showSuccess('Cliente creato');
   }
 }

@@ -1,15 +1,14 @@
 /* eslint-disable operator-linebreak */
 import { Injectable } from '@angular/core';
-import { DocumentData, DocumentReference, QueryConstraint, where } from '@angular/fire/firestore';
+import { QueryConstraint, where } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 import { Assignment, Client, Participation } from '../models/type';
-import { assignmentConverter, clientConverter, participationConverter } from '../models/converter';
+import { assignmentConverter, participationConverter } from '../models/converter';
 import { Collection } from '../models/collection';
 import { FirebaseCreateService } from './firebase/firebase-crud/firebase-create.service';
 import { FirebaseDeleteService } from './firebase/firebase-crud/firebase-delete.service';
 import { FirebaseReadService } from './firebase/firebase-crud/firebase-read.service';
 import { FirebaseUpdateService } from './firebase/firebase-crud/firebase-update.service';
-import { SmsHostingService } from './sms-hosting.service';
 import { SessionStorageService } from './sessionstorage.service';
 import { RoleType } from '../models/enum';
 
@@ -22,32 +21,31 @@ export class ParticipationService {
     private firebaseReadService: FirebaseReadService,
     private firebaseUpdateService: FirebaseUpdateService,
     private firebaseDeleteService: FirebaseDeleteService,
-    private smsHostingService: SmsHostingService,
     private sessionStorageService: SessionStorageService
   ) {}
 
   /* ------------------------------------------- CREATE ------------------------------------------- */
-  public async addOrUpdateParticipation(
+  public async addParticipation(
     eventUid: string,
     employeeUid: string,
     tableUid: string,
-    clientUid: string,
-    eventMessage: string
+    client: Client
   ): Promise<void> {
     /* Check if the client has already a participation */
     const eventUidConstraint: QueryConstraint = where('eventUid', '==', eventUid);
-    const clientUidConstraint: QueryConstraint = where('clientUid', '==', clientUid);
-    const constraints: QueryConstraint[] = [eventUidConstraint, clientUidConstraint];
+    const phoneConstraint: QueryConstraint = where('phone', '==', client.props.phone);
+    const constraints: QueryConstraint[] = [eventUidConstraint, phoneConstraint];
     const participations: Participation[] = await this.firebaseReadService.getDocumentsByMultipleConstraints(
       Collection.PARTICIPATIONS,
       constraints,
       participationConverter
     );
 
-    /* 1) If the client hasn't an active or not-active participation, create a new one */
+    /* 1 */
+    /* If the client has 0 participations, create a new one */
     if (participations.length <= 0) {
       /* Increase the number of marked people if it is possible */
-      await this.updateAssignmentMarkedPerson(eventUid, employeeUid, 1);
+      const updateAssignmentPromise = this.updateAssignmentMarkedPerson(eventUid, employeeUid, 1);
 
       /* Add participation */
       const participation: Participation = {
@@ -55,66 +53,42 @@ export class ParticipationService {
         props: {
           eventUid,
           tableUid,
-          clientUid,
+          name: client.props.name,
+          lastName: client.props.lastName,
+          phone: client.props.phone,
           isActive: true,
           isScanned: false,
           messageIsReceived: false
         }
       };
-      const document: DocumentReference<DocumentData> = await this.firebaseCreateService.addDocument(
-        Collection.PARTICIPATIONS,
-        participation
-      );
+      const addParticipationPromise = this.firebaseCreateService.addDocument(Collection.PARTICIPATIONS, participation);
 
-      /*  Send sms  */
-      const client: Client = await this.firebaseReadService.getDocumentByUid(
-        Collection.CLIENTS,
-        clientUid,
-        clientConverter
-      );
-
-      this.smsHostingService.shortenURL(document.id).subscribe({
-        next: (shortenURL) => {
-          console.log(shortenURL);
-          this.smsHostingService
-            .sendSms(`39${client.props.phone}`, eventMessage, {
-              clientName: client.props.name,
-              link: shortenURL.result.full_short_link
-            })
-            .subscribe({
-              next: async (data) => {
-                console.log(data);
-                const participationPropsToUpdate = { messageIsReceived: true };
-                await this.firebaseUpdateService.updateDocumentsProps(
-                  Collection.PARTICIPATIONS,
-                  [{ ...participation, uid: document.id }],
-                  participationPropsToUpdate
-                );
-              },
-              error: (error: Error) => {
-                throw new Error(error.message);
-              }
-            });
-        },
-        error: (error: Error) => {
-          throw new Error(error.message);
-        }
-      });
+      const promises = [updateAssignmentPromise, addParticipationPromise];
+      await Promise.all(promises);
       return;
     }
 
-    /* 2) If the participation is not active switch it in active */
-    if (participations.length > 0 && participations.every((x) => !x.props.isActive)) {
+    /* 2 */
+    /* If the participation is not active switch it in active */
+    if (participations.every((x) => !x.props.isActive)) {
       /* Increase the number of marked people if it is possible */
-      await this.updateAssignmentMarkedPerson(eventUid, employeeUid, 1);
+      const updateAssignmentPromise = await this.updateAssignmentMarkedPerson(eventUid, employeeUid, 1);
 
       /* Make the old participation active */
-      const propsToUpdate = { isActive: true };
-      await this.firebaseUpdateService.updateDocumentsProps(Collection.PARTICIPATIONS, participations, propsToUpdate);
+      const propsToUpdate = { tableUid, isActive: true };
+      const updateParticipationPromise = await this.firebaseUpdateService.updateDocumentsProps(
+        Collection.PARTICIPATIONS,
+        participations,
+        propsToUpdate
+      );
+
+      const promises = [updateAssignmentPromise, updateParticipationPromise];
+      await Promise.all(promises);
       return;
     }
 
-    /* 3) If the participation is active throw an error */
+    /* 3 */
+    /* If the participation is active throw an error */
     throw new Error("Il cliente è già segnato all'interno di un'altro tavolo per questo evento");
   }
 
