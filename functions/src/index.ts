@@ -1,46 +1,119 @@
 import * as functions from 'firebase-functions';
+import * as admin from 'firebase-admin';
 import axios from 'axios';
+import { DocumentData } from 'firebase-admin/firestore';
 
-export const aaaa = functions.firestore.document('PROD_participations/{participationId}').onCreate((snap, context) => {
-  // const participation = snap.data() as ParticipationDTO;
+admin.initializeApp();
 
-  const url = 'https://api.smshosting.it/rest/api/sms/send';
-
-  var sms = {
-    to: '393480000000',
-    text: 'sms di test',
-    sandbox: 'true'
+type ShorterUrlResponse = {
+  ok: boolean;
+  result: {
+    full_short_link: string;
   };
+};
 
-  /* Headers */
-  const username = 'SMSHTRO41JB2NB5RV2ZNF';
-  const password = 'WR3NSN1BWOTVD66QRAQTWFZ3E6QHK4U5';
-  const credentials = btoa(`${username}:${password}`);
-  const headers = {
-    'Content-Type': 'application/x-www-form-urlencoded',
-    Authorization: `Basic ${credentials}`
-  };
+type SMS = {
+  to: string;
+  text: string;
+  sandbox: boolean;
+};
 
-  axios
-    .post(url, sms, { headers })
-    .then((response: any) => {
-      console.log(JSON.stringify(response.data));
-    })
-    .catch((error: any) => {
-      console.log(error);
-    });
-});
+type SMSResponse = {
+  from: string;
+  text: string;
+  transactionId: string;
+  smsInserted: number;
+  smsNotInserted: number;
+  sms: SMSInfo[];
+};
 
-export const sanitizeOnUpdate = functions.firestore.document('{collection}/{id}').onUpdate((change, context) => {
-  const beforeData = change.before.data();
-  const afterData = change.after.data();
+type SMSInfo = {
+  id: number;
+  to: string;
+  status: 'INSERTED' | 'NOT_INSERTED';
+  statusDetail?: 'BADNUMBERFORMAT' | 'DUPLICATESMS' | 'BLACKLIST';
+};
 
-  const keys = Object.keys(afterData);
-  const nullKeys = keys.filter((key) => afterData[key] === null || afterData[key] === '');
-  nullKeys.forEach((key) => delete afterData[key]);
+type EventDTO = {
+  imageUrl: string;
+  code: string;
+  name: string;
+  date: Date;
+  timeStart: Date;
+  timeEnd: Date;
+  maxPerson: number;
+  place: string;
+  guest?: string;
+  description?: string;
+  message: string;
+  createdAt?: Date;
+  modifiedAt?: Date;
+};
 
-  afterData['createdAt'] = beforeData['createdAt'];
-  afterData['modifiedAt'] = new Date();
+type ParticipationDTO = {
+  eventUid: string;
+  tableUid: string;
+  name: string;
+  lastName: string;
+  phone: string;
+  isScanned: boolean;
+  messageIsReceived: boolean;
+  errorIfMessageIsNotReceived?: 'BADNUMBERFORMAT' | 'DUPLICATESMS' | 'BLACKLIST';
+  isActive: boolean;
+  createdAt?: Date;
+  modifiedAt?: Date;
+};
 
-  return change.after.ref.update(afterData);
-});
+export const sendSms = functions.firestore
+  .document('PROD_participations/{participationId}')
+  .onCreate(async (snap, context) => {
+    const participationUid = context.params.participationId;
+    const participationDTO = snap.data() as ParticipationDTO;
+    const { eventUid, name, phone } = participationDTO;
+
+    try {
+      /* -------------------------------------------------------- Get event -------------------------------------------------------- */
+      const document: DocumentData = await admin.firestore().doc(`PROD_events/${eventUid}`).get();
+      const eventDTO = document.data() as EventDTO;
+      const { message } = eventDTO;
+
+      /* -------------------------------------------------------- Shorter url -------------------------------------------------------- */
+      const urlToReduce = `https://enjoy-network-tavoli.web.app/ticket?participation=${participationUid}`;
+      const request_urlShortener = `https://api.shrtco.de/v2/shorten?url=${encodeURIComponent(urlToReduce)}`;
+      const response_urlShortener = await axios.get(request_urlShortener);
+      const link = (response_urlShortener.data as ShorterUrlResponse).result.full_short_link;
+
+      /* -------------------------------------------------------- Send sms -------------------------------------------------------- */
+      /* Replace params */
+      let messageClone = message.replace('{{CLIENT}}', name);
+      messageClone = messageClone.replace('{{LINK}}', link);
+
+      /* Headers */
+      const username = 'SMSHTRO41JB2NB5RV2ZNF';
+      const password = 'WR3NSN1BWOTVD66QRAQTWFZ3E6QHK4U5';
+      const credentials = btoa(`${username}:${password}`);
+      const headers = {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        Authorization: `Basic ${credentials}`
+      };
+
+      /* Create sms */
+      const request_urlSmsHosting = 'https://api.smshosting.it/rest/api/sms/send';
+      const sms: SMS = {
+        to: `39${phone}`,
+        text: messageClone,
+        sandbox: true
+      };
+
+      const response = await axios.post(request_urlSmsHosting, sms, { headers });
+      const smsResponse = response.data as SMSResponse;
+
+      if (smsResponse.smsNotInserted > 0) {
+        snap.ref.update({ errorIfMessageIsNotReceived: smsResponse.sms[0].statusDetail });
+      } else {
+        snap.ref.update({ messageIsReceived: true });
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  });
