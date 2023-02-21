@@ -89,8 +89,8 @@ export const sendSms = functions.firestore
       messageClone = messageClone.replace('{{LINK}}', link);
 
       /* Headers */
-      const username = 'SMSHTRO41JB2NB5RV2ZNF';
-      const password = 'WR3NSN1BWOTVD66QRAQTWFZ3E6QHK4U5';
+      const username = 'SMSH5CF2RGF9YALQP76PB';
+      const password = 'I0BVU9Q689OC72GGYRFEJJO45OSI7DDF';
       const credentials = btoa(`${username}:${password}`);
       const headers = {
         'Content-Type': 'application/x-www-form-urlencoded',
