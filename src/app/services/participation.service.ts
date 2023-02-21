@@ -57,7 +57,6 @@ export class ParticipationService {
           lastName: client.props.lastName,
           phone: client.props.phone,
           isActive: true,
-          isScanned: false,
           messageIsReceived: false
         }
       };
