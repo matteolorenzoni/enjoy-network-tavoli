@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { QueryConstraint, where } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
-import { Collection } from '../models/collection';
+import { environment } from 'src/environments/environment';
 import { participationConverter, tableConverter } from '../models/converter';
 import { Participation, Table } from '../models/type';
 import { FirebaseCreateService } from './firebase/firebase-crud/firebase-create.service';
@@ -22,7 +22,11 @@ export class TableService {
 
   /* ------------------------------------------- GET ------------------------------------------- */
   public async getTable(tableUid: string): Promise<Table> {
-    const table: Table = await this.firebaseReadService.getDocumentByUid(Collection.TABLES, tableUid, tableConverter);
+    const table: Table = await this.firebaseReadService.getDocumentByUid(
+      environment.collection.TABLES,
+      tableUid,
+      tableConverter
+    );
     return table;
   }
 
@@ -30,7 +34,7 @@ export class TableService {
     const eventUidConstraint: QueryConstraint = where('eventUid', '==', eventUid);
     const constricts: QueryConstraint[] = [eventUidConstraint];
     const tables: Table[] = await this.firebaseReadService.getDocumentsByMultipleConstraints(
-      Collection.TABLES,
+      environment.collection.TABLES,
       constricts,
       tableConverter
     );
@@ -42,7 +46,7 @@ export class TableService {
     const employeeUidConstraint: QueryConstraint = where('employeeUid', '==', employeeUid);
     const constricts: QueryConstraint[] = [eventUidConstraint, employeeUidConstraint];
     const tables: Table[] = await this.firebaseReadService.getDocumentsByMultipleConstraints(
-      Collection.TABLES,
+      environment.collection.TABLES,
       constricts,
       tableConverter
     );
@@ -54,7 +58,7 @@ export class TableService {
     const constraints: QueryConstraint[] = [eventUidConstraint];
 
     const tables: Observable<Table[]> = this.firebaseReadService.getRealTimeDocumentsByMultipleConstraints(
-      Collection.TABLES,
+      environment.collection.TABLES,
       constraints,
       tableConverter
     );
@@ -67,7 +71,7 @@ export class TableService {
     const constraints: QueryConstraint[] = [eventUidConstraint, employeeUidConstraint];
 
     const tables: Observable<Table[]> = this.firebaseReadService.getRealTimeDocumentsByMultipleConstraints(
-      Collection.TABLES,
+      environment.collection.TABLES,
       constraints,
       tableConverter
     );
@@ -78,10 +82,10 @@ export class TableService {
   public async addOrUpdateTable(table: Table): Promise<void> {
     if (!table.uid) {
       /* Add new table */
-      await this.firebaseCreateService.addDocument(Collection.TABLES, table);
+      await this.firebaseCreateService.addDocument(environment.collection.TABLES, table);
     } else {
       /* Update document */
-      await this.firebaseUpdateService.updateDocument(Collection.TABLES, table);
+      await this.firebaseUpdateService.updateDocument(environment.collection.TABLES, table);
     }
   }
 
@@ -91,14 +95,18 @@ export class TableService {
     const tableUidConstraint = where('tableUid', '==', uid);
     const constricts: QueryConstraint[] = [tableUidConstraint];
     const participations: Participation[] = await this.firebaseReadService.getDocumentsByMultipleConstraints(
-      Collection.PARTICIPATIONS,
+      environment.collection.PARTICIPATIONS,
       constricts,
       participationConverter
     );
     const propsTpUpdate = { isActive: false };
-    await this.firebaseUpdateService.updateDocumentsProps(Collection.PARTICIPATIONS, participations, propsTpUpdate);
+    await this.firebaseUpdateService.updateDocumentsProps(
+      environment.collection.PARTICIPATIONS,
+      participations,
+      propsTpUpdate
+    );
 
     /* Delete table */
-    await this.firebaseDeleteService.deleteDocumentByUid(Collection.TABLES, uid);
+    await this.firebaseDeleteService.deleteDocumentByUid(environment.collection.TABLES, uid);
   }
 }

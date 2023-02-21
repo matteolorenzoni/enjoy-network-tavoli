@@ -10,7 +10,6 @@ import {
   doc,
   setDoc
 } from '@angular/fire/firestore';
-import { Collection } from 'src/app/models/collection';
 import { Assignment, Client, Employee, Event, Table } from 'src/app/models/type';
 import { Participation } from '../../../models/type';
 
@@ -26,7 +25,7 @@ export class FirebaseCreateService {
   }
 
   public async addDocument(
-    collectionName: Collection,
+    collectionName: string,
     data: Event | Assignment | Employee | Table | Participation | Client
   ): Promise<DocumentReference<DocumentData>> {
     const { props } = data;
@@ -44,7 +43,7 @@ export class FirebaseCreateService {
   }
 
   public async addDocumentWithUid(
-    collectionName: Collection,
+    collectionName: string,
     data: Event | Assignment | Employee | Table | Participation | Client
   ): Promise<DocumentReference<DocumentData>> {
     const { uid, props } = data;
@@ -63,7 +62,7 @@ export class FirebaseCreateService {
   }
 
   public async addDocuments(
-    collectionName: Collection,
+    collectionName: string,
     data: (Event | Assignment | Employee | Table | Participation | Client)[]
   ): Promise<void> {
     const batch = writeBatch(this.db);

@@ -4,7 +4,7 @@ import { Injectable } from '@angular/core';
 import { documentId, QueryConstraint, where } from 'firebase/firestore';
 import { Observable } from 'rxjs';
 import { UserService } from './user.service';
-import { AssignmentDTO, Collection } from '../models/collection';
+import { AssignmentDTO } from '../models/collection';
 import { Assignment, Employee } from '../models/type';
 import { FirebaseCreateService } from './firebase/firebase-crud/firebase-create.service';
 import { FirebaseDeleteService } from './firebase/firebase-crud/firebase-delete.service';
@@ -28,7 +28,7 @@ export class EmployeeService {
   /* ------------------------------------------- GET ------------------------------------------- */
   public async getEmployee(employeeUid: string): Promise<Employee> {
     const employee: Employee = await this.firebaseReadService.getDocumentByUid(
-      Collection.EMPLOYEES,
+      environment.collection.EMPLOYEES,
       employeeUid,
       employeeConverter
     );
@@ -37,7 +37,7 @@ export class EmployeeService {
 
   public getRealTimeAllEmployees(): Observable<Employee[]> {
     const employees: Observable<Employee[]> = this.firebaseReadService.getRealTimeAllDocuments(
-      Collection.EMPLOYEES,
+      environment.collection.EMPLOYEES,
       employeeConverter
     );
     return employees;
@@ -48,7 +48,7 @@ export class EmployeeService {
     const prConstraint: QueryConstraint = where('role', '==', RoleType.PR);
     const constricts: QueryConstraint[] = [activeConstraint, prConstraint];
     const employees: Employee[] = await this.firebaseReadService.getDocumentsByMultipleConstraints(
-      Collection.EMPLOYEES,
+      environment.collection.EMPLOYEES,
       constricts,
       employeeConverter
     );
@@ -64,7 +64,7 @@ export class EmployeeService {
       const idConstraint: QueryConstraint = where(documentId(), 'in', employeeUids.slice(i, i + 10));
       const constricts: QueryConstraint[] = [idConstraint];
       const promise = this.firebaseReadService.getDocumentsByMultipleConstraints(
-        Collection.EMPLOYEES,
+        environment.collection.EMPLOYEES,
         constricts,
         employeeConverter
       );
@@ -84,10 +84,10 @@ export class EmployeeService {
 
       /* Add new employee */
       const newEmployee = { uid: userCredential.user.uid, props: employee.props };
-      await this.firebaseCreateService.addDocumentWithUid(Collection.EMPLOYEES, newEmployee);
+      await this.firebaseCreateService.addDocumentWithUid(environment.collection.EMPLOYEES, newEmployee);
     } else {
       /* Update document */
-      await this.firebaseUpdateService.updateDocument(Collection.EMPLOYEES, employee);
+      await this.firebaseUpdateService.updateDocument(environment.collection.EMPLOYEES, employee);
     }
   }
 
@@ -97,14 +97,14 @@ export class EmployeeService {
     const employeeUidConstraint: QueryConstraint = where('employeeUid', '==', uid);
     const constraints: QueryConstraint[] = [employeeUidConstraint];
     const assignments: Assignment[] = await this.firebaseReadService.getDocumentsByMultipleConstraints(
-      Collection.ASSIGNMENTS,
+      environment.collection.ASSIGNMENTS,
       constraints,
       assignmentConverter
     );
     /* Delete assignments without person marked */
     const assignmentsToDelete: Assignment[] = assignments.filter((item) => item.props.personMarked === 0);
     const assignmentsToDeleteUids: string[] = assignmentsToDelete.map((item) => item.uid);
-    await this.firebaseDeleteService.deleteDocumentsByUids(Collection.ASSIGNMENTS, assignmentsToDeleteUids);
+    await this.firebaseDeleteService.deleteDocumentsByUids(environment.collection.ASSIGNMENTS, assignmentsToDeleteUids);
     /* Reduce person assigned in assignments with person marked */
     const assignmentsToMinimize: Assignment[] = assignments.filter((item) => item.props.personMarked > 0);
     assignmentsToMinimize.forEach(async (assignment) => {
@@ -112,11 +112,15 @@ export class EmployeeService {
         maxPersonMarkable: assignment.props.maxPersonMarkable,
         isActive: false
       };
-      await this.firebaseUpdateService.updateDocumentsProps(Collection.ASSIGNMENTS, [assignment], propsToUpdate);
+      await this.firebaseUpdateService.updateDocumentsProps(
+        environment.collection.ASSIGNMENTS,
+        [assignment],
+        propsToUpdate
+      );
     });
 
     /* Delete employee */
-    await this.firebaseDeleteService.deleteDocumentByUid(Collection.EMPLOYEES, uid);
+    await this.firebaseDeleteService.deleteDocumentByUid(environment.collection.EMPLOYEES, uid);
 
     /* Delete user */
     // TODO: eliminare anche l'User

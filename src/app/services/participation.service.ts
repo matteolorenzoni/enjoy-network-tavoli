@@ -2,9 +2,9 @@
 import { Injectable } from '@angular/core';
 import { QueryConstraint, where } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
+import { environment } from 'src/environments/environment';
 import { Assignment, Client, Participation } from '../models/type';
 import { assignmentConverter, participationConverter } from '../models/converter';
-import { Collection } from '../models/collection';
 import { FirebaseCreateService } from './firebase/firebase-crud/firebase-create.service';
 import { FirebaseDeleteService } from './firebase/firebase-crud/firebase-delete.service';
 import { FirebaseReadService } from './firebase/firebase-crud/firebase-read.service';
@@ -36,7 +36,7 @@ export class ParticipationService {
     const phoneConstraint: QueryConstraint = where('phone', '==', client.props.phone);
     const constraints: QueryConstraint[] = [eventUidConstraint, phoneConstraint];
     const participations: Participation[] = await this.firebaseReadService.getDocumentsByMultipleConstraints(
-      Collection.PARTICIPATIONS,
+      environment.collection.PARTICIPATIONS,
       constraints,
       participationConverter
     );
@@ -60,7 +60,10 @@ export class ParticipationService {
           messageIsReceived: false
         }
       };
-      const addParticipationPromise = this.firebaseCreateService.addDocument(Collection.PARTICIPATIONS, participation);
+      const addParticipationPromise = this.firebaseCreateService.addDocument(
+        environment.collection.PARTICIPATIONS,
+        participation
+      );
 
       const promises = [updateAssignmentPromise, addParticipationPromise];
       await Promise.all(promises);
@@ -76,7 +79,7 @@ export class ParticipationService {
       /* Make the old participation active */
       const propsToUpdate = { tableUid, isActive: true };
       const updateParticipationPromise = await this.firebaseUpdateService.updateDocumentsProps(
-        Collection.PARTICIPATIONS,
+        environment.collection.PARTICIPATIONS,
         participations,
         propsToUpdate
       );
@@ -94,7 +97,7 @@ export class ParticipationService {
   /* ------------------------------------------- GET ------------------------------------------- */
   public async getParticipationByUid(participationUid: string): Promise<Participation> {
     const participation = await this.firebaseReadService.getDocumentByUid(
-      Collection.PARTICIPATIONS,
+      environment.collection.PARTICIPATIONS,
       participationUid,
       participationConverter
     );
@@ -109,7 +112,7 @@ export class ParticipationService {
     const clientUidConstraint: QueryConstraint = where('clientUid', '==', clientUid);
     const constraints: QueryConstraint[] = [tableUidConstraint, clientUidConstraint];
     const participations: Participation[] = await this.firebaseReadService.getDocumentsByMultipleConstraints(
-      Collection.PARTICIPATIONS,
+      environment.collection.PARTICIPATIONS,
       constraints,
       participationConverter
     );
@@ -122,7 +125,7 @@ export class ParticipationService {
     const constraints: QueryConstraint[] = [idConstraint, isActiveConstraint];
     const participations: Observable<Participation[]> =
       this.firebaseReadService.getRealTimeDocumentsByMultipleConstraints(
-        Collection.PARTICIPATIONS,
+        environment.collection.PARTICIPATIONS,
         constraints,
         participationConverter
       );
@@ -134,7 +137,7 @@ export class ParticipationService {
     const isActiveConstraint = where('isActive', '==', true);
     const constricts: QueryConstraint[] = [tableUidConstraint, isActiveConstraint];
     const aggregate = await this.firebaseReadService.getDocumentsByMultipleConstraintsCount(
-      Collection.PARTICIPATIONS,
+      environment.collection.PARTICIPATIONS,
       constricts
     );
     return aggregate.data().count;
@@ -150,7 +153,7 @@ export class ParticipationService {
       const isActiveConstraint = where('isActive', '==', true);
       const constraints: QueryConstraint[] = [idConstraint, isActiveConstraint];
       const promise = this.firebaseReadService.getDocumentsByMultipleConstraintsCount(
-        Collection.PARTICIPATIONS,
+        environment.collection.PARTICIPATIONS,
         constraints
       );
       countPromises.push(promise);
@@ -172,14 +175,18 @@ export class ParticipationService {
 
     /* If the operation was successful, update the participation */
     const participation: Participation = await this.firebaseReadService.getDocumentByUid(
-      Collection.PARTICIPATIONS,
+      environment.collection.PARTICIPATIONS,
       participationUid,
       participationConverter
     );
     const propsToUpdate = {
       isActive: false
     };
-    await this.firebaseUpdateService.updateDocumentsProps(Collection.PARTICIPATIONS, [participation], propsToUpdate);
+    await this.firebaseUpdateService.updateDocumentsProps(
+      environment.collection.PARTICIPATIONS,
+      [participation],
+      propsToUpdate
+    );
   }
 
   public async updateAssignmentMarkedPerson(eventUid: string, employeeUid: string, value: 1 | -1) {
@@ -187,7 +194,7 @@ export class ParticipationService {
     const employeeUidConstraint: QueryConstraint = where('employeeUid', '==', employeeUid);
     const constraints: QueryConstraint[] = [eventUidConstraint, employeeUidConstraint];
     const assignments: Assignment[] = await this.firebaseReadService.getDocumentsByMultipleConstraints(
-      Collection.ASSIGNMENTS,
+      environment.collection.ASSIGNMENTS,
       constraints,
       assignmentConverter
     );
@@ -206,7 +213,11 @@ export class ParticipationService {
     }
 
     const propsToUpdate = { personMarked: assignment.props.personMarked + value };
-    await this.firebaseUpdateService.updateDocumentsProps(Collection.ASSIGNMENTS, [assignment], propsToUpdate);
+    await this.firebaseUpdateService.updateDocumentsProps(
+      environment.collection.ASSIGNMENTS,
+      [assignment],
+      propsToUpdate
+    );
   }
 
   /* ------------------------------------------- DELETE ------------------------------------------- */
@@ -215,11 +226,11 @@ export class ParticipationService {
     const clientUidConstraint: QueryConstraint = where('clientUid', '==', clientUid);
     const constraints: QueryConstraint[] = [tableUidConstraint, clientUidConstraint];
     const participations: Participation[] = await this.firebaseReadService.getDocumentsByMultipleConstraints(
-      Collection.PARTICIPATIONS,
+      environment.collection.PARTICIPATIONS,
       constraints,
       participationConverter
     );
     const participationsUids: string[] = participations.map((participation) => participation.uid);
-    await this.firebaseDeleteService.deleteDocumentsByUids(Collection.PARTICIPATIONS, participationsUids);
+    await this.firebaseDeleteService.deleteDocumentsByUids(environment.collection.PARTICIPATIONS, participationsUids);
   }
 }

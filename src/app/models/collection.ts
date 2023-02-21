@@ -1,14 +1,5 @@
 import { RoleType } from './enum';
 
-export enum Collection {
-  EMPLOYEES = 'PROD_employees',
-  EVENTS = 'PROD_events',
-  ASSIGNMENTS = 'PROD_assignments',
-  TABLES = 'PROD_tables',
-  PARTICIPATIONS = 'PROD_participations',
-  CLIENTS = 'PROD_clients'
-}
-
 export type EventDTO = {
   imageUrl: string;
   code: string;

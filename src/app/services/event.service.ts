@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { documentId, QueryConstraint, where } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
+import { environment } from 'src/environments/environment';
 import { assignmentConverter, eventConverter } from '../models/converter';
-import { Collection } from '../models/collection';
 import { Assignment, Event } from '../models/type';
 import { FirebaseCreateService } from './firebase/firebase-crud/firebase-create.service';
 import { FirebaseUpdateService } from './firebase/firebase-crud/firebase-update.service';
@@ -24,13 +24,17 @@ export class EventService {
 
   /* ------------------------------------------- GET ------------------------------------------- */
   public async getEvent(eventUid: string): Promise<Event> {
-    const event = await this.firebaseReadService.getDocumentByUid(Collection.EVENTS, eventUid, eventConverter);
+    const event = await this.firebaseReadService.getDocumentByUid(
+      environment.collection.EVENTS,
+      eventUid,
+      eventConverter
+    );
     return event;
   }
 
   public getRealTimeAllEvents(): Observable<Event[]> {
     const employees: Observable<Event[]> = this.firebaseReadService.getRealTimeAllDocuments(
-      Collection.EVENTS,
+      environment.collection.EVENTS,
       eventConverter
     );
     return employees;
@@ -45,7 +49,7 @@ export class EventService {
       const eventUidConstraint: QueryConstraint = where(documentId(), 'in', eventUids.slice(i, i + 10));
       const constraints: QueryConstraint[] = [eventUidConstraint];
       const promise = this.firebaseReadService.getDocumentsByMultipleConstraints(
-        Collection.EVENTS,
+        environment.collection.EVENTS,
         constraints,
         eventConverter
       );
@@ -61,7 +65,7 @@ export class EventService {
     const codeConstraint: QueryConstraint = where('code', '==', code);
     const constraints: QueryConstraint[] = [codeConstraint];
     const events = await this.firebaseReadService.getDocumentsByMultipleConstraints(
-      Collection.EVENTS,
+      environment.collection.EVENTS,
       constraints,
       eventConverter
     );
@@ -80,10 +84,10 @@ export class EventService {
 
     if (!event.uid) {
       /* Add new event */
-      await this.firebaseCreateService.addDocument(Collection.EVENTS, newEvent);
+      await this.firebaseCreateService.addDocument(environment.collection.EVENTS, newEvent);
     } else {
       /* Update document */
-      await this.firebaseUpdateService.updateDocument(Collection.EVENTS, newEvent);
+      await this.firebaseUpdateService.updateDocument(environment.collection.EVENTS, newEvent);
     }
   }
 
@@ -93,12 +97,12 @@ export class EventService {
     const eventUidConstraint: QueryConstraint = where('eventUid', '==', event.uid);
     const constraints: QueryConstraint[] = [eventUidConstraint];
     const assignments: Assignment[] = await this.firebaseReadService.getDocumentsByMultipleConstraints(
-      Collection.ASSIGNMENTS,
+      environment.collection.ASSIGNMENTS,
       constraints,
       assignmentConverter
     );
     const assignmentUids = assignments.map((assignment) => assignment.uid);
-    await this.firebaseDeleteService.deleteDocumentsByUids(Collection.ASSIGNMENTS, assignmentUids);
+    await this.firebaseDeleteService.deleteDocumentsByUids(environment.collection.ASSIGNMENTS, assignmentUids);
 
     /* Delete image */
     const photoUrl = event.props.imageUrl;
@@ -110,6 +114,6 @@ export class EventService {
     }
 
     /* Delete event */
-    await this.firebaseDeleteService.deleteDocumentByUid(Collection.EVENTS, event.uid);
+    await this.firebaseDeleteService.deleteDocumentByUid(environment.collection.EVENTS, event.uid);
   }
 }

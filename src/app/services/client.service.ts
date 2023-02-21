@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { documentId, QueryConstraint, where } from '@angular/fire/firestore';
-import { Collection } from '../models/collection';
+import { environment } from 'src/environments/environment';
 import { clientConverter } from '../models/converter';
 import { Client } from '../models/type';
 import { FirebaseCreateService } from './firebase/firebase-crud/firebase-create.service';
@@ -19,13 +19,16 @@ export class ClientService {
 
   /* ------------------------------------------- GET ------------------------------------------- */
   public async getAllClients(): Promise<Client[]> {
-    const clients: Client[] = await this.firebaseReadService.getAllDocuments(Collection.CLIENTS, clientConverter);
+    const clients: Client[] = await this.firebaseReadService.getAllDocuments(
+      environment.collection.CLIENTS,
+      clientConverter
+    );
     return clients;
   }
 
   public async getClient(clientUid: string): Promise<Client> {
     const client: Client = await this.firebaseReadService.getDocumentByUid(
-      Collection.CLIENTS,
+      environment.collection.CLIENTS,
       clientUid,
       clientConverter
     );
@@ -41,7 +44,7 @@ export class ClientService {
       const idConstraint: QueryConstraint = where(documentId(), 'in', clientUids.slice(i, i + 10));
       const constricts: QueryConstraint[] = [idConstraint];
       const promise = this.firebaseReadService.getDocumentsByMultipleConstraints(
-        Collection.CLIENTS,
+        environment.collection.CLIENTS,
         constricts,
         clientConverter
       );
@@ -56,7 +59,7 @@ export class ClientService {
     const phoneConstraint: QueryConstraint = where('phone', '==', phone);
     const constricts: QueryConstraint[] = [phoneConstraint];
     const clients: Client[] = await this.firebaseReadService.getDocumentsByMultipleConstraints(
-      Collection.CLIENTS,
+      environment.collection.CLIENTS,
       constricts,
       clientConverter
     );
@@ -74,18 +77,18 @@ export class ClientService {
     const phoneConstraint: QueryConstraint = where('phone', '==', client.props.phone);
     const constricts: QueryConstraint[] = [phoneConstraint];
     const clients: Client[] = await this.firebaseReadService.getDocumentsByMultipleConstraints(
-      Collection.CLIENTS,
+      environment.collection.CLIENTS,
       constricts,
       clientConverter
     );
 
     if (clients.length === 0) {
-      await this.firebaseCreateService.addDocument(Collection.CLIENTS, client);
+      await this.firebaseCreateService.addDocument(environment.collection.CLIENTS, client);
     }
   }
 
   /* ------------------------------------------- DELETE ------------------------------------------- */
   public async deleteClient(clientUid: string): Promise<void> {
-    await this.firebaseDeleteService.deleteDocumentByUid(Collection.CLIENTS, clientUid);
+    await this.firebaseDeleteService.deleteDocumentByUid(environment.collection.CLIENTS, clientUid);
   }
 }

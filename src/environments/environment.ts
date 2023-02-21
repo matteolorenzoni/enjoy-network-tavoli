@@ -14,11 +14,15 @@ export const environment = {
     messagingSenderId: '682704062987',
     measurementId: 'G-4LWJ0DDBN5'
   },
-  defaultPassword: 'enjoynetwork',
-  smsHosting: {
-    username: 'SMSHTRO41JB2NB5RV2ZNF',
-    password: 'WR3NSN1BWOTVD66QRAQTWFZ3E6QHK4U5'
-  }
+  collection: {
+    EMPLOYEES: 'employees',
+    EVENTS: 'events',
+    ASSIGNMENTS: 'assignments',
+    TABLES: 'tables',
+    PARTICIPATIONS: 'participations',
+    CLIENTS: 'clients'
+  },
+  defaultPassword: 'enjoynetwork'
 };
 
 /*
