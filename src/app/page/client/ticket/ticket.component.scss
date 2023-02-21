@@ -1,0 +1,15 @@
+p {
+  text-align: center;
+
+  & span:first-child:not(.event-name) {
+    padding-right: 0.5rem;
+    font-size: 0.75rem;
+    line-height: 1rem;
+    text-transform: uppercase;
+  }
+
+  & span:last-child {
+    color: #fff;
+    font-weight: 500;
+  }
+}

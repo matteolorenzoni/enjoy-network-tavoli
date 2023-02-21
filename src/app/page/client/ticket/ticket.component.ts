@@ -23,9 +23,8 @@ export class TicketComponent implements OnInit {
   participation!: Participation;
 
   /* QrCode */
-  qrdata = 'aa';
+  qrdata = '';
   img = '../../../../assets/images/logo-dark.jpg';
-  zoom = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -42,6 +41,8 @@ export class TicketComponent implements OnInit {
       this.router.navigate(['error'], { relativeTo: this.route });
       return;
     }
+
+    this.qrdata = this.participationUid;
     this.getParticipation();
   }
 
@@ -86,9 +87,5 @@ export class TicketComponent implements OnInit {
         this.toastService.showError(error);
         this.router.navigate(['error'], { relativeTo: this.route });
       });
-  }
-
-  toggleZoom() {
-    this.zoom = !this.zoom;
   }
 }
