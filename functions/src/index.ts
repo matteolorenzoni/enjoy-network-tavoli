@@ -89,8 +89,8 @@ export const sendSms = functions.firestore
       messageClone = messageClone.replace('{{LINK}}', link);
 
       /* Headers */
-      const username = 'SMSH5CF2RGF9YALQP76PB';
-      const password = 'I0BVU9Q689OC72GGYRFEJJO45OSI7DDF';
+      const username = process.env.USERNAME;
+      const password = process.env.PASSWORD;
       const credentials = btoa(`${username}:${password}`);
       const headers = {
         'Content-Type': 'application/x-www-form-urlencoded',
@@ -107,6 +107,7 @@ export const sendSms = functions.firestore
 
       const response = await axios.post(request_urlSmsHosting, sms, { headers });
       const smsResponse = response.data as SMSResponse;
+      console.log(JSON.stringify(smsResponse));
 
       if (smsResponse.smsNotInserted > 0) {
         snap.ref.update({
@@ -120,6 +121,6 @@ export const sendSms = functions.firestore
         });
       }
     } catch (error) {
-      console.error(error);
+      console.error(JSON.stringify(error));
     }
   });
