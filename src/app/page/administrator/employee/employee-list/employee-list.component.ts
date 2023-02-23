@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { faFilter, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { Subscription } from 'rxjs';
 import { fadeInAnimation, staggeredFadeInIncrement } from 'src/app/animations/animations';
@@ -23,7 +23,12 @@ export class EmployeeListComponent {
   employeesSubscription!: Subscription;
 
   /* -------------------------------------- Constructor -------------------------------------- */
-  constructor(private router: Router, private employeeService: EmployeeService, private toastService: ToastService) {}
+  constructor(
+    private router: Router,
+    private route: ActivatedRoute,
+    private employeeService: EmployeeService,
+    private toastService: ToastService
+  ) {}
 
   /* -------------------------------------- LifeCycle -------------------------------------- */
   ngOnInit(): void {
@@ -44,6 +49,6 @@ export class EmployeeListComponent {
 
   /* -------------------------------------- Methods -------------------------------------- */
   goToCreateEmployee(): void {
-    this.router.navigate(['create-item/employee/null']);
+    this.router.navigate(['./null'], { relativeTo: this.route });
   }
 }

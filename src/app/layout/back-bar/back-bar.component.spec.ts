@@ -1,17 +1,17 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { CreateItemComponent } from './create-item.component';
+import { BackBarComponent } from './back-bar.component';
 
-describe('CreateItemComponent', () => {
-  let component: CreateItemComponent;
-  let fixture: ComponentFixture<CreateItemComponent>;
+describe('BackBarComponent', () => {
+  let component: BackBarComponent;
+  let fixture: ComponentFixture<BackBarComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [CreateItemComponent]
+      declarations: [BackBarComponent]
     }).compileComponents();
 
-    fixture = TestBed.createComponent(CreateItemComponent);
+    fixture = TestBed.createComponent(BackBarComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

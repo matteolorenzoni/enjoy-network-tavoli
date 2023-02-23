@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { CreateItemComponent } from 'src/app/layout/create-item/create-item.component';
 import { DashboardComponent } from 'src/app/layout/dashboard/dashboard.component';
 import { EmployeeGeneratorComponent } from 'src/app/page/administrator/employee/employee-generator/employee-generator.component';
 import { EmployeeListComponent } from 'src/app/page/administrator/employee/employee-list/employee-list.component';
@@ -32,19 +31,40 @@ const routes: Routes = [
       {
         path: 'administrator',
         children: [
+          /* Events */
           { path: 'events', component: EventListComponent },
+          { path: 'events/:eventUid', component: EventGeneratorComponent },
+          { path: 'events/:eventUid/tables', component: TableListComponent },
+          { path: 'events/:eventUid/tables/:tableUid', component: TableGeneratorComponent },
+          { path: 'events/:eventUid/tables/:tableUid/participations', component: ParticipationListComponent },
+          {
+            path: 'events/:eventUid/tables/:tableUid/participations/:participationUid',
+            component: ClientGeneratorComponent
+          },
+          { path: 'events/:eventUid/assignments', component: AssignmentListComponent },
+          { path: 'events/:eventUid/pr-active', component: PrActiveComponent },
+
+          /* Employees */
           { path: 'employees', component: EmployeeListComponent },
+          { path: 'employees/:employeeUid', component: EmployeeGeneratorComponent },
+
+          /* Statistics */
           { path: 'statistics', component: StatisticsComponent },
-          { path: 'setting', component: SettingComponent },
-          { path: '', redirectTo: 'events', pathMatch: 'full' }
+
+          /* Page not found */
+          { path: '**', component: PageNotFoundComponent }
         ]
       },
       {
         path: 'pr',
         children: [
           { path: 'events', component: EventActiveComponent },
-          { path: 'setting', component: SettingComponent },
-          { path: '', redirectTo: 'events', pathMatch: 'full' }
+          { path: 'events/:eventUid/tables', component: TableListComponent },
+          { path: 'events/:eventUid/tables/:tableUid', component: TableGeneratorComponent },
+          { path: 'events/:eventUid/tables/:tableUid/participations', component: ParticipationListComponent },
+
+          /* Page not found */
+          { path: '**', component: PageNotFoundComponent }
         ]
       },
       {
@@ -52,63 +72,16 @@ const routes: Routes = [
         children: [
           { path: 'participation-list', component: InspectorParticipationListComponent },
           { path: 'scanner', component: ScannerComponent },
-          { path: 'setting', component: SettingComponent }
+
+          /* Page not found */
+          { path: '**', component: PageNotFoundComponent }
         ]
       },
-      { path: '', redirectTo: 'administrator', pathMatch: 'full' }
-    ]
-  },
-  {
-    path: 'dashboard',
-    component: CreateItemComponent,
-    children: [
-      {
-        path: 'administrator',
-        children: [
-          {
-            path: ':eventUid',
-            children: [
-              { path: 'tables', component: TableListComponent },
-              { path: 'assignments', component: AssignmentListComponent },
-              { path: 'pr-active', component: PrActiveComponent },
-              {
-                path: ':tableUid',
-                children: [{ path: 'participations', component: ParticipationListComponent }]
-              }
-            ]
-          }
-        ]
-      },
-      {
-        path: 'pr',
-        children: [
-          {
-            path: ':eventUid',
-            children: [
-              {
-                path: 'tables',
-                component: TableListComponent
-              },
-              {
-                path: ':tableUid',
-                children: [{ path: 'participations', component: ParticipationListComponent }]
-              }
-            ]
-          }
-        ]
-      }
-    ]
-  },
-  {
-    path: 'create-item',
-    component: CreateItemComponent,
-    children: [
-      { path: 'event/:eventUid', component: EventGeneratorComponent },
-      { path: 'employee/:employeeUid', component: EmployeeGeneratorComponent },
-      { path: ':eventUid/table/:tableUid', component: TableGeneratorComponent },
-      { path: ':eventUid/:tableUid/client/:clientUid', component: ClientGeneratorComponent },
+      { path: 'setting', component: SettingComponent },
       { path: 'setting/update-password', component: UpdatePasswordComponent },
-      { path: '', component: PageNotFoundComponent }
+
+      /* Page not found */
+      { path: '**', component: PageNotFoundComponent }
     ]
   },
   {

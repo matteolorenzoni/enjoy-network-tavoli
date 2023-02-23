@@ -1,4 +1,4 @@
-<header [@slideInCreateItemHeader] class="theme-primary h-14 p-0 xs:h-16 xs:p-2">
+<header [@slideInCreateItemHeader] class="theme-primary h-16 pb-4">
   <nav class="flex h-full w-full items-center rounded-b bg-palette p-4 xs:rounded-xl">
     <fa-icon
       [icon]="backIcon"
@@ -6,6 +6,3 @@
       (click)="goBack()"></fa-icon>
   </nav>
 </header>
-<main [@fadeInCreateItemAnimation] class="mx-auto max-w-3xl p-4">
-  <router-outlet></router-outlet>
-</main>

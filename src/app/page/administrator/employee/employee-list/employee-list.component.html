@@ -1,23 +1,21 @@
-<div>
-  <section>
+<section>
+  <button
+    type="button"
+    class="mb-6 w-full rounded-lg border border-gray-200 bg-white py-2.5 px-5 text-sm font-medium text-gray-900 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white dark:focus:ring-gray-700">
+    <fa-icon [icon]="filterIcon" class="mr-2"></fa-icon>
+    FILTRI
+  </button>
+  <ul [@staggeredFadeInIncrement]="employees.length" class="flex flex-col divide-y divide-gray-700">
+    <en-item-employee *ngFor="let employee of employees" [employee]="employee"></en-item-employee>
+  </ul>
+</section>
+<div class="theme-primary fixed left-0 bottom-24 right-0 mx-auto flex h-12 max-w-[48rem] justify-end">
+  <div [@fadeInAnimation] class="mr-4">
     <button
       type="button"
-      class="mb-6 w-full rounded-lg border border-gray-200 bg-white py-2.5 px-5 text-sm font-medium text-gray-900 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white dark:focus:ring-gray-700">
-      <fa-icon [icon]="filterIcon" class="mr-2"></fa-icon>
-      FILTRI
+      class="h-12 w-12 rounded-full bg-palette text-palette shadow-md transition duration-150 ease-in-out hover:bg-paletteHover hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:bg-paletteActive active:shadow-lg"
+      (click)="goToCreateEmployee()">
+      <fa-icon [icon]="plusIcon"></fa-icon>
     </button>
-    <ul [@staggeredFadeInIncrement]="employees.length" class="flex flex-col divide-y divide-gray-700">
-      <en-item-employee *ngFor="let employee of employees" [employee]="employee"></en-item-employee>
-    </ul>
-  </section>
-  <div class="theme-primary fixed left-0 bottom-24 right-0 mx-auto flex h-12 max-w-[48rem] justify-end">
-    <div [@fadeInAnimation] class="mr-4">
-      <button
-        type="button"
-        class="h-12 w-12 rounded-full bg-palette text-palette shadow-md transition duration-150 ease-in-out hover:bg-paletteHover hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:bg-paletteActive active:shadow-lg"
-        (click)="goToCreateEmployee()">
-        <fa-icon [icon]="plusIcon"></fa-icon>
-      </button>
-    </div>
   </div>
 </div>

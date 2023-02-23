@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { faFilter, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { fadeInAnimation, staggeredFadeInIncrement } from 'src/app/animations/animations';
 import { EventService } from 'src/app/services/event.service';
@@ -23,7 +23,12 @@ export class EventListComponent implements OnInit {
   eventsSubscription!: Subscription;
 
   /* -------------------------------------- Constructor -------------------------------------- */
-  constructor(private router: Router, private eventService: EventService, private toastService: ToastService) {}
+  constructor(
+    private router: Router,
+    private route: ActivatedRoute,
+    private eventService: EventService,
+    private toastService: ToastService
+  ) {}
 
   /* -------------------------------------- LifeCycle -------------------------------------- */
   ngOnInit(): void {
@@ -44,6 +49,6 @@ export class EventListComponent implements OnInit {
 
   /* -------------------------------------- Methods -------------------------------------- */
   goToCreateEvent(): void {
-    this.router.navigate(['create-item/event/null']);
+    this.router.navigate(['./null'], { relativeTo: this.route });
   }
 }

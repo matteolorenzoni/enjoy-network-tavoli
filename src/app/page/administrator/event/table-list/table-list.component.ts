@@ -160,6 +160,6 @@ export class TableListComponent implements OnInit {
 
   /* ---------------------------------------- Methods ---------------------------------------- */
   goToCreateTable(): void {
-    this.router.navigate([`create-item/${this.eventUid}/table/null`]);
+    this.router.navigate(['./null'], { relativeTo: this.route });
   }
 }

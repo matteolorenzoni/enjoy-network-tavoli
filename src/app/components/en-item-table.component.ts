@@ -72,14 +72,14 @@ export class EnItemTableComponent {
   }
 
   goToClient(): void {
-    this.router.navigate([`../${this.table.uid}/participations`], {
+    this.router.navigate([`./${this.table.uid}/participations`], {
       relativeTo: this.route,
       queryParams: { canAddClient: this.canAddClient }
     });
   }
 
   updateTable(): void {
-    this.router.navigate([`create-item/${this.eventUid}/table/${this.table.uid}`]);
+    this.router.navigate([`./${this.table.uid}`], { relativeTo: this.route });
   }
 
   deleteTable(): void {

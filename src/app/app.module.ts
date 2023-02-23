@@ -24,7 +24,6 @@ import { EnCountdownComponent } from './components/en-countdown.component';
 import { EnFieldComponent } from './components/en-field.component';
 import { EnFileLoaderComponent } from './components/en-file-loader.component';
 import { EnToastComponent } from './components/en-toast.component';
-import { CreateItemComponent } from './layout/create-item/create-item.component';
 import { DashboardComponent } from './layout/dashboard/dashboard.component';
 import { EmployeeGeneratorComponent } from './page/administrator/employee/employee-generator/employee-generator.component';
 import { EventGeneratorComponent } from './page/administrator/event/event-generator/event-generator.component';
@@ -53,6 +52,7 @@ import { UpdatePasswordComponent } from './page/setting/update-password/update-p
 import { EventSelectorComponent } from './page/inspector/event-selector/event-selector.component';
 import { ScannerComponent } from './page/inspector/scanner/scanner.component';
 import { InspectorParticipationListComponent } from './page/inspector/inspector-participation-list/inspector-participation-list.component';
+import { BackBarComponent } from './layout/back-bar/back-bar.component';
 
 @NgModule({
   declarations: [
@@ -70,7 +70,6 @@ import { InspectorParticipationListComponent } from './page/inspector/inspector-
     EnBottomNavigationComponent,
     SettingComponent,
     EventGeneratorComponent,
-    CreateItemComponent,
     EnFileLoaderComponent,
     EnItemEventComponent,
     StatisticsComponent,
@@ -94,7 +93,8 @@ import { InspectorParticipationListComponent } from './page/inspector/inspector-
     UpdatePasswordComponent,
     EventSelectorComponent,
     ScannerComponent,
-    InspectorParticipationListComponent
+    InspectorParticipationListComponent,
+    BackBarComponent
   ],
   imports: [
     BrowserModule,

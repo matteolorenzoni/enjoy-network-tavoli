@@ -74,7 +74,7 @@ export class ParticipationListComponent implements OnInit {
 
   /* --------------------------------------------- Methods --------------------------------------------- */
   goToCreateClient(): void {
-    this.router.navigate([`create-item/${this.eventUid}/${this.tableUid}/client/null`]);
+    this.router.navigate(['./null'], { relativeTo: this.route });
   }
 
   onDeleteParticipation() {

@@ -36,6 +36,6 @@ export class EnItemEventAvailableComponent {
   constructor(private router: Router, private route: ActivatedRoute) {}
 
   goToSelector(): void {
-    this.router.navigate([`../${this.event.uid}/tables`], { relativeTo: this.route });
+    this.router.navigate([`./${this.event.uid}/tables`], { relativeTo: this.route });
   }
 }
