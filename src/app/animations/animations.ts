@@ -2,7 +2,8 @@ import { animate, state, style, transition, trigger, sequence, query, stagger } 
 
 /* ---------------------------- GENERAL ANIMATIONS ---------------------------- */
 export const fadeInAnimation = trigger('fadeInAnimation', [
-  transition(':enter', [style({ opacity: 0 }), animate('1000ms ease-out', style({ opacity: 1 }))])
+  transition(':enter', [style({ opacity: 0 }), animate('1000ms ease-out', style({ opacity: 1 }))]),
+  transition(':leave', [style({ opacity: 1 }), animate('1000ms ease-out', style({ opacity: 0 }))])
 ]);
 
 /* ---------------------------- SPECIFIC ANIMATIONS ---------------------------- */

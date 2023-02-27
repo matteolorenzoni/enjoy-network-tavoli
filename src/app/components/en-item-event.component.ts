@@ -4,69 +4,32 @@ import { Component, Input, SimpleChanges } from '@angular/core';
 import { faPen, faUsers, faWineBottle } from '@fortawesome/free-solid-svg-icons';
 import { Event, Table } from 'src/app/models/type';
 import { ToastService } from '../services/toast.service';
-import { expandEventItemDetailsAnimation } from '../animations/animations';
+import { expandEventItemDetailsAnimation, fadeInAnimation } from '../animations/animations';
 import { TableService } from '../services/table.service';
 import { ParticipationService } from '../services/participation.service';
 
 @Component({
   selector: 'en-item-event[event]',
   template: `
-    <li class="my-2 overflow-hidden rounded">
-      <ng-container *ngIf="!isOpen; else elseTemplate">
+    <li class=" my-2 w-full overflow-hidden rounded-lg bg-slate-900">
+      <div class="relative h-48 w-full hover:cursor-pointer" (click)="toggleOpen()">
+        <img [src]="event.props.imageUrl" [alt]="dateFormatted + '_image'" class="h-full w-full object-cover" />
         <div
-          class="group relative h-12 overflow-hidden bg-gradient-to-r from-primary-60/30 to-primary-60/0 antialiased hover:cursor-pointer xs:h-16"
-          (click)="toggleOpen()">
-          <p class="center absolute inset-0 z-10 hidden text-white group-hover:flex group-hover:backdrop-blur-[2px]">
-            APRI
+          [@fadeInAnimation]
+          *ngIf="!isOpen"
+          class="absolute inset-0 left-0 bottom-0 flex h-full flex-col items-center justify-end p-4 text-white">
+          <p
+            class="mb-2 max-w-full truncate rounded-lg bg-primary-60/70 py-1 px-4 text-center text-base font-semibold xs:text-lg">
+            {{ event.props.name }}
           </p>
-          <img
-            [src]="event.props.imageUrl"
-            [alt]="dateFormatted + '_image'"
-            class="
-              absolute
-              -top-8
-              -left-8
-              h-32
-              w-32
-              overflow-hidden
-              rounded-full
-              object-cover
-              group-hover:top-0
-              group-hover:left-0
-              group-hover:flex
-              group-hover:h-full
-              group-hover:w-full
-              group-hover:rounded-none
-              xs:-top-14
-              xs:-left-10
-              xs:h-48
-              xs:w-48" />
-          <div class="flex h-full w-full overflow-hidden pl-28 group-hover:hidden xs:pl-44">
-            <div class="flex flex-col justify-center text-white">
-              <p class="truncate text-base font-semibold xs:text-lg">{{ event.props.name }}</p>
-              <p class="truncate text-xs font-normal xs:text-sm xs:font-light">
-                {{ dateFormatted }} ({{ event.props.place }})
-              </p>
-            </div>
-            <div class="center absolute right-0 top-0 bottom-0 p-2 text-lg font-extrabold xs:text-2xl">
-              <p class="text-gray-300">{{ personMarked }}/{{ event.props.maxPerson }}</p>
-            </div>
-          </div>
+          <p class="rounded-lg bg-primary-60/70 py-1 px-2 text-center text-xs xs:text-sm">
+            {{ dateFormatted }} <br />
+            {{ event.props.place }}
+          </p>
         </div>
-      </ng-container>
-      <ng-template #elseTemplate>
-        <div
-          class="relative h-12 bg-gradient-to-r from-primary-65 to-primary-0 hover:cursor-pointer xs:h-16"
-          (click)="toggleOpen()">
-          <p class="center absolute inset-0 z-10 text-white backdrop-blur-[2px]">CHIUDI</p>
-          <img
-            [src]="event.props.imageUrl"
-            [alt]="dateFormatted + '_image'"
-            class="center relative h-full w-full object-cover" />
-        </div>
-      </ng-template>
-      <div [@expandEventItemDetailsAnimation] *ngIf="isOpen" class="overflow-hidden bg-white p-2 text-black ">
-        <ul class="divide-y divide-gray-200">
+      </div>
+      <div [@expandEventItemDetailsAnimation] *ngIf="isOpen" class="overflow-hidden bg-slate-900 p-2 text-white ">
+        <ul class="divide-y divide-slate-700">
           <li *ngFor="let info of eventInfo" class="flex items-center px-2 py-1">
             <div
               class="flex shrink-0 basis-32 items-center justify-start whitespace-normal break-all text-base font-semibold text-primary-50">
@@ -100,7 +63,7 @@ import { ParticipationService } from '../services/participation.service';
       }
     `
   ],
-  animations: [expandEventItemDetailsAnimation]
+  animations: [fadeInAnimation, expandEventItemDetailsAnimation]
 })
 export class EnItemEventComponent {
   @Input() event!: Event;
