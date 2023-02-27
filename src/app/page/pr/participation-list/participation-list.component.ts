@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { faFilter, faPlus } from '@fortawesome/free-solid-svg-icons';
+import { faFilter } from '@fortawesome/free-solid-svg-icons';
 import { fadeInAnimation, staggeredFadeInIncrement } from 'src/app/animations/animations';
 import { ToastService } from 'src/app/services/toast.service';
 import { Subscription } from 'rxjs';
@@ -16,7 +16,6 @@ import { ParticipationService } from '../../../services/participation.service';
 export class ParticipationListComponent implements OnInit {
   /* Icons */
   filterIcon = faFilter;
-  plusIcon = faPlus;
 
   /* Event */
   eventUid: string | null = null;

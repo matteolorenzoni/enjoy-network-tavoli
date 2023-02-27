@@ -3,7 +3,7 @@ import { SessionStorageService } from 'src/app/services/sessionstorage.service';
 import { ToastService } from 'src/app/services/toast.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
-import { faFilter, faPlus } from '@fortawesome/free-solid-svg-icons';
+import { faFilter } from '@fortawesome/free-solid-svg-icons';
 import { fadeInAnimation, staggeredFadeInIncrement } from 'src/app/animations/animations';
 import { Assignment, Table } from 'src/app/models/type';
 import { AssignmentService } from 'src/app/services/assignment.service';
@@ -21,7 +21,6 @@ import { EventService } from '../../../../services/event.service';
 export class TableListComponent implements OnInit {
   /* Icons */
   filterIcon = faFilter;
-  plusIcon = faPlus;
 
   /* Employee */
   employeeUid: string | null = null;

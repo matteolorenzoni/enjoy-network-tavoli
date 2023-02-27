@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { faFilter, faPlus } from '@fortawesome/free-solid-svg-icons';
+import { faFilter } from '@fortawesome/free-solid-svg-icons';
 import { Subscription } from 'rxjs';
 import { fadeInAnimation, staggeredFadeInIncrement } from 'src/app/animations/animations';
 import { Employee } from 'src/app/models/type';
@@ -15,7 +15,6 @@ import { EmployeeService } from '../../../../services/employee.service';
 })
 export class EmployeeListComponent {
   /* Icons */
-  plusIcon = faPlus;
   filterIcon = faFilter;
 
   /* Employees */
