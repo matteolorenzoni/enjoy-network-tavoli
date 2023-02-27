@@ -34,18 +34,6 @@ export const toastAnimation = trigger('toastAnimation', [
   ])
 ]);
 
-// Bottom navigation
-export const bottomNavigationAnimation = trigger('bottomNavigationAnimation', [
-  transition(':enter', [
-    style({ transform: 'translateY(100%)', opacity: 0 }),
-    animate('1000ms ease', style({ transform: 'translateY(0%)', opacity: 1 }))
-  ]),
-  transition(':leave', [
-    style({ transform: 'translateY(0%)', opacity: 1 }),
-    animate('1000ms ease', style({ transform: 'translateY(100%)', opacity: 0 }))
-  ])
-]);
-
 // Create-item main
 export const slideInCreateItemHeader = trigger('slideInCreateItemHeader', [
   transition(':enter', [
