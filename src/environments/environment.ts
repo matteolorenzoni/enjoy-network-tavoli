@@ -3,7 +3,7 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: !false,
+  production: false,
   firebase: {
     projectId: 'enjoy-network-tavoli',
     appId: '1:682704062987:web:bfebc270cfdb2fd2e3550e',
