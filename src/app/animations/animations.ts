@@ -34,7 +34,7 @@ export const toastAnimation = trigger('toastAnimation', [
   ])
 ]);
 
-// Create-item main
+// Item main
 export const slideInCreateItemHeader = trigger('slideInCreateItemHeader', [
   transition(':enter', [
     style({ transform: 'translateY(-100%)', opacity: 0 }),
@@ -46,7 +46,7 @@ export const slideInCreateItemHeader = trigger('slideInCreateItemHeader', [
   ])
 ]);
 
-// Create-item main
+// Item main
 export const fadeInCreateItemAnimation = trigger('fadeInCreateItemAnimation', [
   transition(':enter', [style({ opacity: 0 }), animate('600ms 600ms ease-out', style({ opacity: 1 }))]),
   transition(':leave', [style({ opacity: 1 }), animate('600ms 600ms ease-out', style({ opacity: 0 }))])

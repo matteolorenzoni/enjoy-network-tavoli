@@ -141,7 +141,7 @@ export class EnItemEventComponent {
       this.itemNavigationMenu = [
         { link: [`./${this.event.uid}/tables`], name: 'Tavoli', definition: faWineBottle },
         { link: [`./${this.event.uid}/assignments`], name: 'Dipendenti', definition: faUsers },
-        { link: ['/create-item/event/', this.event.uid], name: 'Modifica', definition: faPen }
+        { link: [`./${this.event.uid}`], name: 'Modifica', definition: faPen }
       ];
 
       this.getTable();

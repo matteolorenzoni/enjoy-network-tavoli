@@ -23,7 +23,7 @@ import { ToastService } from '../services/toast.service';
         <fa-icon
           [icon]="modifyIcon"
           class="mr-2 text-gray-500  hover:cursor-pointer hover:text-gray-600 active:text-gray-800"
-          [routerLink]="['/create-item/employee', employeeUid]"></fa-icon>
+          [routerLink]="['./', employeeUid]"></fa-icon>
         <fa-icon
           [icon]="deleteIcon"
           class="ml-2 text-gray-500 hover:cursor-pointer hover:text-gray-600 active:text-gray-800"
