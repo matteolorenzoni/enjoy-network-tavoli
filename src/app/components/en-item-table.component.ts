@@ -9,12 +9,12 @@ import { TableService } from '../services/table.service';
 @Component({
   selector: 'en-item-table[table][canAddClient]',
   template: `
-    <li class="group flex h-16 items-center rounded-lg p-2 hover:cursor-pointer hover:bg-primary-60 hover:text-black">
-      <div class="overflow-hidden" (click)="goToClient()">
+    <li class="group flex h-16 items-center rounded-lg p-2 hover:cursor-pointer" (click)="goToClient()">
+      <div class="overflow-hidden">
         <p class="truncate">{{ table.props.name }}</p>
       </div>
-      <div class="ml-auto flex-none shrink-0 basis-16 pl-2" (click)="goToClient()">
-        <p class="m-auto rounded-xl bg-neutral py-1 px-4 text-center group-hover:bg-gray-500">
+      <div class="ml-auto flex-none shrink-0 basis-16 pl-2">
+        <p class="m-auto rounded-xl bg-neutral py-1 px-4 text-center">
           {{ tableParticipation }}
         </p>
       </div>
