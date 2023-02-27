@@ -28,7 +28,6 @@ import { DashboardComponent } from './layout/dashboard/dashboard.component';
 import { EmployeeGeneratorComponent } from './page/administrator/employee/employee-generator/employee-generator.component';
 import { EventGeneratorComponent } from './page/administrator/event/event-generator/event-generator.component';
 import { EventListComponent } from './page/administrator/event/event-list/event-list.component';
-import { TableComponent } from './page/administrator/table/table.component';
 import { HeroComponent } from './page/hero/hero.component';
 import { SettingComponent } from './page/setting/setting.component';
 import { StatisticsComponent } from './page/statistics/statistics.component';
@@ -66,7 +65,6 @@ import { BackBarComponent } from './layout/back-bar/back-bar.component';
     HeroComponent,
     DashboardComponent,
     EventListComponent,
-    TableComponent,
     EnBottomNavigationComponent,
     SettingComponent,
     EventGeneratorComponent,
