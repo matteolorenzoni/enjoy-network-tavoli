@@ -6,19 +6,17 @@ import { Event } from 'src/app/models/type';
   selector: 'en-item-event-available',
   template: `
     <li
-      class="group my-4 h-16 rounded-xl bg-gray-900 p-2 shadow shadow-gray-800 transition-all hover:cursor-pointer hover:bg-primary-60"
+      class="group min-h-16 my-4 flex flex-col rounded-xl bg-gray-900 p-2 shadow shadow-gray-800 transition-all hover:cursor-pointer"
       (click)="goToSelector()">
-      <div class="flex group-hover:hidden">
+      <img [src]="event.props.imageUrl" alt="foto-evento" class="mb-4 h-20 w-full object-cover" />
+      <div class="flex">
         <div>
-          <p class="text-xl font-medium text-primary-60">{{ event.props.name }}</p>
+          <p class="pb-2 text-xl font-medium text-primary-60">{{ event.props.name }}</p>
           <p class="text-xs font-light">{{ event.props.place }}</p>
         </div>
         <div class="center ml-auto rounded-xl bg-gray-800 p-2 text-primary-60">
           <p>{{ event.props.date | date: 'dd/MM/YYYY' }}</p>
         </div>
-      </div>
-      <div class="hidden h-full group-hover:flex">
-        <p class="m-auto text-sm tracking-widest text-black">TAVOLI</p>
       </div>
     </li>
   `,
