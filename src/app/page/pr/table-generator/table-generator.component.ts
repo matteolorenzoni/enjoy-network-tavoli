@@ -39,7 +39,7 @@ export class TableGeneratorComponent implements OnInit {
   ) {
     this.tableForm = new FormGroup({
       name: new FormControl(null, [Validators.required, Validators.pattern(/[\S]/)]),
-      price: new FormControl(30, [Validators.required, Validators.pattern(/^[0-9]*$/)]),
+      price: new FormControl(30, [Validators.pattern(/^[0-9]*$/)]),
       hour: new FormControl(null),
       drink: new FormControl(null, [Validators.pattern(/[\S]/)])
     });
