@@ -101,13 +101,13 @@ import { BackBarComponent } from './layout/back-bar/back-bar.component';
     ReactiveFormsModule,
     QRCodeModule,
     HttpClientModule,
+    FontAwesomeModule,
     ServiceWorkerModule.register('ngsw-worker.js', {
       enabled: !isDevMode(),
       // Register the ServiceWorker as soon as the application is stable
       // or after 30 seconds (whichever comes first).
       registrationStrategy: 'registerWhenStable:30000'
     }),
-    FontAwesomeModule,
     provideFirebaseApp(() => initializeApp(environment.firebase)),
     provideAuth(() => getAuth()),
     provideFirestore(() => getFirestore()),
