@@ -65,6 +65,10 @@ const routes: Routes = [
           { path: 'events/:eventUid/tables', component: TableListComponent },
           { path: 'events/:eventUid/tables/:tableUid', component: TableGeneratorComponent },
           { path: 'events/:eventUid/tables/:tableUid/participations', component: ParticipationListComponent },
+          {
+            path: 'events/:eventUid/tables/:tableUid/participations/:participationUid',
+            component: ClientGeneratorComponent
+          },
 
           /* Page not found */
           { path: '**', component: PageNotFoundComponent }
