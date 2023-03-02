@@ -1,4 +1,4 @@
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ClientService } from 'src/app/services/client.service';
@@ -7,6 +7,7 @@ import { ParticipationService } from 'src/app/services/participation.service';
 import { SessionStorageService } from 'src/app/services/sessionstorage.service';
 import { Client } from 'src/app/models/type';
 import { UtilsService } from 'src/app/services/utils.service';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-client-generator',
@@ -33,7 +34,7 @@ export class ClientGeneratorComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private router: Router,
+    private location: Location,
     private clientService: ClientService,
     private participationService: ParticipationService,
     private sessionStorageService: SessionStorageService,
@@ -147,7 +148,7 @@ export class ClientGeneratorComponent implements OnInit {
   /* ------------------------------------------- Methods ------------------------------------------- */
   public goBack() {
     this.clientForm.reset();
-    this.router.navigate([`dashboard/pr/${this.eventUid}/tables`]);
+    this.location.back();
     this.toastService.showSuccess('Cliente creato');
   }
 }
