@@ -10,14 +10,18 @@ import { Participation } from '../models/type';
 @Component({
   selector: 'en-item-participation[participation]',
   template: `
-    <li class="flex h-12 items-center">
-      <p class="truncate ">
-        {{ participation.props.name }} {{ participation.props.lastName }}
-        <span class="ml-4 text-xs text-gray-500"
-          >{{ participation.props.createdAt | date: 'dd/MM/YYYY' }} -
-          {{ participation.props.createdAt | date: 'HH:mm' }}</span
-        >
-      </p>
+    <li
+      class="my-2 flex h-12 items-center rounded-lg px-2"
+      [ngClass]="{ 'bg-red-600/30': !participation.props.messageIsReceived }">
+      <div>
+        <p class="truncate">
+          {{ participation.props.name }} {{ participation.props.lastName }}
+          <span class="ml-4 text-xs">({{ participation.props.phone }})</span>
+        </p>
+        <p class="text-xs text-gray-500">
+          {{ participation.props.createdAt | date: 'dd/MM/YYYY' }} - {{ participation.props.createdAt | date: 'HH:mm' }}
+        </p>
+      </div>
 
       <div class="ml-auto">
         <fa-icon
