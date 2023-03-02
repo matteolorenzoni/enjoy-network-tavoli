@@ -220,6 +220,28 @@ export class ParticipationService {
     );
   }
 
+  public async scanAndGetParticipation(participationUid: string): Promise<Participation> {
+    const participation: Participation = await this.firebaseReadService.getDocumentByUid(
+      environment.collection.PARTICIPATIONS,
+      participationUid,
+      participationConverter
+    );
+
+    if (!participation.props.scannedAt && participation.props.isActive) {
+      const propsToUpdate = {
+        scannedAt: new Date()
+      };
+      await this.firebaseUpdateService.updateDocumentsProps(
+        environment.collection.PARTICIPATIONS,
+        [participation],
+        propsToUpdate
+      );
+      participation.props.scannedAt = propsToUpdate.scannedAt;
+    }
+
+    return participation;
+  }
+
   /* ------------------------------------------- DELETE ------------------------------------------- */
   public async deleteParticipation(tableUid: string, clientUid: string): Promise<void> {
     const tableUidConstraint: QueryConstraint = where('tableUid', '==', tableUid);
