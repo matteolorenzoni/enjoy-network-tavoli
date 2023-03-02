@@ -29,7 +29,7 @@ export class ClientGeneratorComponent implements OnInit {
   isLoading: boolean;
 
   /* Label */
-  lblButton = 'Crea cliente';
+  lblButton = 'Invia ticket';
 
   constructor(
     private route: ActivatedRoute,
