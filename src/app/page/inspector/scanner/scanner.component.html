@@ -1,5 +1,5 @@
-<section>
-  <!-- <div class="w-full pb-8">
+<section class="flex flex-col items-center">
+  <div class="w-full pb-8">
     <en-button
       buttonName="scan-button"
       [buttonText]="lblButton"
@@ -7,7 +7,14 @@
       [buttonIsDisabled]="false"
       palette="primary"
       [isLoading]="false"></en-button>
-  </div> -->
+  </div>
 
-  <div id="reader" width="600px"></div>
+  <div class="h-[70vh] w-full max-w-lg overflow-hidden rounded bg-emerald-400">
+    <!-- <zxing-scanner
+      [(device)]="currentDevice"
+      (scanSuccess)="onCodeResult($event)"
+      [formats]="formatsEnabled"
+      (permissionResponse)="onHasPermission($event)"
+      (camerasFound)="onCamerasFound($event)"></zxing-scanner> -->
+  </div>
 </section>

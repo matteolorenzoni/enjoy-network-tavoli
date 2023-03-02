@@ -13,6 +13,7 @@ import { provideStorage, getStorage } from '@angular/fire/storage';
 import { DatePipe } from '@angular/common';
 import { environment } from 'src/environments/environment';
 import { HttpClientModule } from '@angular/common/http';
+import { ZXingScannerModule } from '@zxing/ngx-scanner';
 import { AppRoutingModule } from '../router/app-routing.module';
 import { AppComponent } from './app.component';
 import { LoginComponent } from './page/login/login.component';
@@ -102,6 +103,7 @@ import { BackBarComponent } from './layout/back-bar/back-bar.component';
     QRCodeModule,
     HttpClientModule,
     FontAwesomeModule,
+    ZXingScannerModule,
     ServiceWorkerModule.register('ngsw-worker.js', {
       enabled: !isDevMode(),
       // Register the ServiceWorker as soon as the application is stable

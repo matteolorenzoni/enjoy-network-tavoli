@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Html5QrcodeScanner } from 'html5-qrcode';
+import { BarcodeFormat } from '@zxing/library';
 
 @Component({
   selector: 'app-scanner',
@@ -9,25 +9,33 @@ import { Html5QrcodeScanner } from 'html5-qrcode';
 export class ScannerComponent {
   /* Label */
   lblButton = 'SCAN';
-  html5QrcodeScanner!: Html5QrcodeScanner;
 
-  ngOnInit(): void {
-    this.html5QrcodeScanner = new Html5QrcodeScanner(
-      'reader',
-      { fps: 10, qrbox: { width: 250, height: 250 } },
-      false // verbose
-    );
-    this.html5QrcodeScanner.render(this.onScanSuccess, this.onScanFailure);
+  availableDevices: MediaDeviceInfo[] = [];
+  currentDevice: MediaDeviceInfo | undefined = undefined;
+
+  hasDevices = false;
+  hasPermission = false;
+
+  formatsEnabled: BarcodeFormat[] = [
+    BarcodeFormat.CODE_128,
+    BarcodeFormat.DATA_MATRIX,
+    BarcodeFormat.EAN_13,
+    BarcodeFormat.QR_CODE
+  ];
+
+  qrResultString = '';
+
+  /* ------------------------------------ Methods ------------------------------------ */
+  onCamerasFound(devices: MediaDeviceInfo[]): void {
+    this.availableDevices = devices;
+    this.hasDevices = Boolean(devices && devices.length);
   }
 
-  onScanSuccess(decodedText: any, decodedResult: any) {
-    // handle the scanned code as you like, for example:
-    console.log(`Code matched = ${decodedText}`, decodedResult);
+  onHasPermission(has: boolean) {
+    this.hasPermission = has;
   }
 
-  onScanFailure(error: any) {
-    // handle scan failure, usually better to ignore and keep scanning.
-    // for example:
-    console.warn(`Code scan error = ${error}`);
+  onCodeResult(resultString: string) {
+    this.qrResultString = resultString;
   }
 }
