@@ -78,8 +78,8 @@ const routes: Routes = [
         path: 'inspector',
         canActivate: [AuthGuard],
         children: [
-          { path: 'participation-list', component: InspectorParticipationListComponent },
           { path: 'scanner', component: ScannerComponent },
+          { path: 'participation-list', component: InspectorParticipationListComponent },
 
           /* Page not found */
           { path: '**', component: PageNotFoundComponent }
@@ -94,6 +94,7 @@ const routes: Routes = [
   },
   {
     path: 'inspector',
+    canActivate: [AuthGuard],
     children: [
       { path: 'event-selector', component: EventSelectorComponent },
       { path: '', redirectTo: 'event-selector', pathMatch: 'full' }
