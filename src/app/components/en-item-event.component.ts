@@ -50,7 +50,7 @@ import { ParticipationService } from '../services/participation.service';
         <button
           type="button"
           class="mt-2 inline-block w-full rounded bg-red-600 px-6 py-2.5 text-xs font-extrabold uppercase leading-tight text-white shadow-md transition duration-150 ease-in-out hover:bg-red-700 hover:shadow-lg"
-          (click)="deleteEvent()">
+          (click)="deleteEvent($event)">
           ELIMINA
         </button>
       </div>
@@ -112,7 +112,9 @@ export class EnItemEventComponent {
   }
 
   /* --------------------------------------- HTTP Methods --------------------------------------- */
-  deleteEvent(): void {
+  deleteEvent(e: any): void {
+    e.stopPropagation();
+
     const text = 'Sei sicuro di voler eliminare questo evento?';
     if (window.confirm(text) === true) {
       if (!this.event) {

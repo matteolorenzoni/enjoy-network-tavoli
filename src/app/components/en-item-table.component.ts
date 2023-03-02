@@ -22,11 +22,11 @@ import { TableService } from '../services/table.service';
         <fa-icon
           [icon]="updateIcon"
           class="ml-2 text-gray-500 hover:cursor-pointer hover:text-gray-300 active:text-gray-800"
-          (click)="updateTable()"></fa-icon>
+          (click)="updateTable($event)"></fa-icon>
         <fa-icon
           [icon]="deleteIcon"
           class="ml-2 text-gray-500 hover:cursor-pointer hover:text-gray-300 active:text-gray-800"
-          (click)="deleteTable()"></fa-icon>
+          (click)="deleteTable($event)"></fa-icon>
       </div>
     </li>
   `,
@@ -78,11 +78,15 @@ export class EnItemTableComponent {
     });
   }
 
-  updateTable(): void {
+  updateTable(e: Event): void {
+    e.stopPropagation();
+
     this.router.navigate([`./${this.table.uid}`], { relativeTo: this.route });
   }
 
-  deleteTable(): void {
+  deleteTable(e: Event): void {
+    e.stopPropagation();
+
     const text = 'Sei sicuro di voler rimuovere il tavolo?';
     if (window.confirm(text) === true) {
       if (!this.table) {

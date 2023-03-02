@@ -27,7 +27,7 @@ import { ToastService } from '../services/toast.service';
         <fa-icon
           [icon]="deleteIcon"
           class="ml-2 text-gray-500 hover:cursor-pointer hover:text-gray-600 active:text-gray-800"
-          (click)="deleteEmployee()"></fa-icon>
+          (click)="deleteEmployee($event)"></fa-icon>
       </div>
     </li>
   `,
@@ -62,7 +62,9 @@ export class EnItemEmployeeComponent {
     }
   }
 
-  deleteEmployee(): void {
+  deleteEmployee(e: Event): void {
+    e.stopPropagation();
+
     const text = 'Sei sicuro di voler eliminare questo dipendente?';
     if (window.confirm(text) === true) {
       if (!this.employeeUid) {
