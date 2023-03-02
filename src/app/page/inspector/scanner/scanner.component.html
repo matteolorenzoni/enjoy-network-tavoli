@@ -6,15 +6,24 @@
       buttonType="submit"
       [buttonIsDisabled]="false"
       palette="primary"
-      [isLoading]="false"></en-button>
+      [isLoading]="false"
+      (customClick)="onResetParticipation()"></en-button>
   </div>
 
-  <div class="h-[70vh] w-full max-w-lg overflow-hidden rounded bg-emerald-400">
-    <!-- <zxing-scanner
+  <div class="h-[70vh] w-full max-w-lg overflow-hidden rounded-lg bg-emerald-400">
+    <zxing-scanner
+      *ngIf="!participation"
       [(device)]="currentDevice"
-      (scanSuccess)="onCodeResult($event)"
+      (scanSuccess)="onNewParticipation($event)"
       [formats]="formatsEnabled"
       (permissionResponse)="onHasPermission($event)"
-      (camerasFound)="onCamerasFound($event)"></zxing-scanner> -->
+      (camerasFound)="onCamerasFound($event)"></zxing-scanner>
+
+    <div *ngIf="participation" class="h-full w-full bg-red-400">
+      <p>{{ participation.props.name }}</p>
+      <p>{{ participation.props.lastName }}</p>
+      <p>{{ participation.props.phone }}</p>
+      <p>{{ participation.props.isActive ? 'si' : 'no' }}</p>
+    </div>
   </div>
 </section>

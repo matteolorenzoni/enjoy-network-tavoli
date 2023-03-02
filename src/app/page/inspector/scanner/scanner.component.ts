@@ -1,5 +1,9 @@
+import { Participation } from 'src/app/models/type';
 import { Component } from '@angular/core';
 import { BarcodeFormat } from '@zxing/library';
+import { BehaviorSubject } from 'rxjs';
+import { ParticipationService } from 'src/app/services/participation.service';
+import { ToastService } from '../../../services/toast.service';
 
 @Component({
   selector: 'app-scanner',
@@ -23,9 +27,32 @@ export class ScannerComponent {
     BarcodeFormat.QR_CODE
   ];
 
-  qrResultString = '';
+  participationUid = new BehaviorSubject('');
+  participation: Participation | null = null;
+
+  /* ------------------------------------ Constructor ------------------------------------ */
+  constructor(private participationService: ParticipationService, private toastService: ToastService) {
+    this.participationUid.subscribe((newParticipation) => {
+      if (newParticipation) {
+        this.getParticipation(newParticipation);
+      }
+    });
+  }
+
+  /* ------------------------------------ HTTP Methods ------------------------------------ */
+  getParticipation(participationUid: string) {
+    this.participationService
+      .getParticipationByUid(participationUid)
+      .then((participation) => {
+        this.participation = participation;
+      })
+      .catch((error) => {
+        this.toastService.showError(error);
+      });
+  }
 
   /* ------------------------------------ Methods ------------------------------------ */
+
   onCamerasFound(devices: MediaDeviceInfo[]): void {
     this.availableDevices = devices;
     this.hasDevices = Boolean(devices && devices.length);
@@ -35,7 +62,12 @@ export class ScannerComponent {
     this.hasPermission = has;
   }
 
-  onCodeResult(resultString: string) {
-    this.qrResultString = resultString;
+  onNewParticipation(resultString: string) {
+    this.participationUid.next(resultString);
+  }
+
+  onResetParticipation() {
+    this.participationUid.next('');
+    this.participation = null;
   }
 }
