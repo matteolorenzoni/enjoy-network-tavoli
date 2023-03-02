@@ -1,3 +1,4 @@
+import { faCircleCheck, faCircleExclamation } from '@fortawesome/free-solid-svg-icons';
 import { Participation } from 'src/app/models/type';
 import { Component } from '@angular/core';
 import { BarcodeFormat } from '@zxing/library';
@@ -11,6 +12,10 @@ import { ToastService } from '../../../services/toast.service';
   styleUrls: ['./scanner.component.scss']
 })
 export class ScannerComponent {
+  /* Icon */
+  checkIcon = faCircleCheck;
+  exclamationIcon = faCircleExclamation;
+
   /* Label */
   lblButton = 'SCAN';
 
@@ -30,6 +35,9 @@ export class ScannerComponent {
   participationUid = new BehaviorSubject('');
   participation: Participation | null = null;
 
+  isInScanRange = false;
+  participationNoGoodMotivation = '';
+
   /* ------------------------------------ Constructor ------------------------------------ */
   constructor(private participationService: ParticipationService, private toastService: ToastService) {
     this.participationUid.subscribe((newParticipation) => {
@@ -42,9 +50,25 @@ export class ScannerComponent {
   /* ------------------------------------ HTTP Methods ------------------------------------ */
   getParticipation(participationUid: string) {
     this.participationService
-      .getParticipationByUid(participationUid)
+      .scanAndGetParticipation(participationUid)
       .then((participation) => {
         this.participation = participation;
+
+        const { isActive, scannedAt } = participation.props;
+
+        if (!isActive) {
+          this.isInScanRange = false;
+          this.participationNoGoodMotivation = 'Il ticket non è valido';
+          return;
+        }
+
+        if (scannedAt) {
+          this.isInScanRange = (new Date().getTime() - scannedAt.getTime()) / 1000 < 10;
+
+          if (!this.isInScanRange) {
+            this.participationNoGoodMotivation = 'Il ticket è già stato scansionato';
+          }
+        }
       })
       .catch((error) => {
         this.toastService.showError(error);
@@ -52,7 +76,6 @@ export class ScannerComponent {
   }
 
   /* ------------------------------------ Methods ------------------------------------ */
-
   onCamerasFound(devices: MediaDeviceInfo[]): void {
     this.availableDevices = devices;
     this.hasDevices = Boolean(devices && devices.length);
@@ -68,6 +91,7 @@ export class ScannerComponent {
 
   onResetParticipation() {
     this.participationUid.next('');
+    this.isInScanRange = false;
     this.participation = null;
   }
 }
