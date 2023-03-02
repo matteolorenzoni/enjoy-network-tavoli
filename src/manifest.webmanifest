@@ -1,6 +1,6 @@
 {
-  "name": "enjoy-network-tavoli",
-  "short_name": "enjoy-network-tavoli",
+  "name": "Enjoy Network",
+  "short_name": "Enjoy Network",
   "theme_color": "hsl(25, 95%, 3%)",
   "background_color": "hsl(25, 95%, 50%)",
   "display": "standalone",
