@@ -11,13 +11,13 @@ import { ParticipationService } from '../services/participation.service';
 @Component({
   selector: 'en-item-event[event]',
   template: `
-    <li class=" my-2 w-full overflow-hidden rounded-lg bg-slate-900">
-      <div class="relative h-48 w-full hover:cursor-pointer" (click)="toggleOpen()">
-        <img [src]="event.props.imageUrl" [alt]="dateFormatted + '_image'" class="h-full w-full object-cover" />
+    <li class="my-4 mx-auto w-full overflow-hidden rounded-lg bg-slate-900 sm:w-3/5">
+      <div class="relative hover:cursor-pointer" (click)="toggleOpen()">
+        <img [src]="event.props.imageUrl" [alt]="dateFormatted + '_image'" class="object-scale-down" />
         <div
           [@fadeInAnimation]
           *ngIf="!isOpen"
-          class="absolute inset-0 left-0 bottom-0 flex h-full flex-col items-center justify-end p-4 text-white">
+          class="absolute inset-0 left-0 bottom-0 flex h-full flex-col items-center justify-end p-4 text-white ">
           <p
             class="mb-2 max-w-full truncate rounded-lg bg-primary-60/70 py-1 px-4 text-center text-base font-semibold xs:text-lg">
             {{ event.props.name }}
