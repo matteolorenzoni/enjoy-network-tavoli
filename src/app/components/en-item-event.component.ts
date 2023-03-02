@@ -1,7 +1,7 @@
 import { EventService } from 'src/app/services/event.service';
 import { DatePipe } from '@angular/common';
 import { Component, Input, SimpleChanges } from '@angular/core';
-import { faPen, faUsers, faWineBottle } from '@fortawesome/free-solid-svg-icons';
+import { faPen, faPeopleGroup, faUsers } from '@fortawesome/free-solid-svg-icons';
 import { Event, Table } from 'src/app/models/type';
 import { ToastService } from '../services/toast.service';
 import { expandEventItemDetailsAnimation, fadeInAnimation } from '../animations/animations';
@@ -102,7 +102,7 @@ export class EnItemEventComponent {
       this.eventInfo.push({ label: 'Messaggio', value: this.event.props.message });
 
       this.itemNavigationMenu = [
-        { link: [`./${this.event.uid}/tables`], name: 'Tavoli', definition: faWineBottle },
+        { link: [`./${this.event.uid}/tables`], name: 'Tavoli', definition: faPeopleGroup },
         { link: [`./${this.event.uid}/assignments`], name: 'Dipendenti', definition: faUsers },
         { link: [`./${this.event.uid}`], name: 'Modifica', definition: faPen }
       ];
