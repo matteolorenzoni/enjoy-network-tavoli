@@ -31,6 +31,13 @@ export class FirebaseUpdateService {
     await updateDoc(docRef, props);
   }
 
+  public async updateDocumentProps(collectionName: string, uid: string, props: any): Promise<void> {
+    const propsUpdated = { ...props, modifiedAt: new Date() };
+    const collectionRef = collection(this.db, collectionName);
+    const docRef = doc(collectionRef, uid);
+    await updateDoc(docRef, propsUpdated);
+  }
+
   public async updateDocumentsProps(
     collectionName: string,
     data: Event[] | Assignment[] | Employee[] | Table[] | Participation[] | Client[],

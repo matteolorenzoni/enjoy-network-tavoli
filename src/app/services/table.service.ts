@@ -108,23 +108,31 @@ export class TableService {
   }
 
   /* ------------------------------------------- DELETE ------------------------------------------- */
-  public async deleteTable(uid: string): Promise<void> {
+  public async deleteTable(tableUid: string): Promise<void> {
     /* Make participations inactive */
-    const tableUidConstraint = where('tableUid', '==', uid);
+    const tableUidConstraint = where('tableUid', '==', tableUid);
     const constricts: QueryConstraint[] = [tableUidConstraint];
     const participations: Participation[] = await this.firebaseReadService.getDocumentsByMultipleConstraints(
       environment.collection.PARTICIPATIONS,
       constricts,
       participationConverter
     );
-    const propsTpUpdate = { isActive: false };
+
+    /* Delete table */
+    if (participations.length === 0) {
+      await this.firebaseDeleteService.deleteDocumentByUid(environment.collection.TABLES, tableUid);
+      return;
+    }
+
+    /* Make table and participations inactive */
+    const propsToUpdate = { isActive: false };
+
+    await this.firebaseUpdateService.updateDocumentProps(environment.collection.TABLES, tableUid, propsToUpdate);
+
     await this.firebaseUpdateService.updateDocumentsProps(
       environment.collection.PARTICIPATIONS,
       participations,
-      propsTpUpdate
+      propsToUpdate
     );
-
-    /* Delete table */
-    await this.firebaseDeleteService.deleteDocumentByUid(environment.collection.TABLES, uid);
   }
 }
