@@ -1,4 +1,4 @@
-import { faCopy, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faArrowUpFromBracket, faCopy, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
@@ -13,8 +13,8 @@ import { Participation } from '../models/type';
     <li
       class="my-2 flex h-12 items-center rounded-lg px-2"
       [ngClass]="{ 'bg-red-600/30': !participation.props.messageIsReceived }">
-      <div>
-        <p class="truncate">
+      <div class="grow truncate">
+        <p>
           {{ participation.props.name }} {{ participation.props.lastName }}
           <span class="ml-4 text-xs">({{ participation.props.phone }})</span>
         </p>
@@ -23,15 +23,19 @@ import { Participation } from '../models/type';
         </p>
       </div>
 
-      <div class="ml-auto">
+      <div class="flex shrink-0 gap-4 pl-4">
+        <fa-icon
+          *ngIf="canShare"
+          [icon]="shareIcon"
+          class="text-lg text-gray-400 hover:cursor-pointer hover:text-gray-300 active:text-gray-800"
+          (click)="shareTicketLink(participation.uid)"></fa-icon>
         <fa-icon
           [icon]="copyIcon"
-          class="ml-4 text-lg text-gray-400 hover:cursor-pointer hover:text-gray-300 active:text-gray-800"
+          class="text-lg text-gray-400 hover:cursor-pointer hover:text-gray-300 active:text-gray-800"
           (click)="copyTicketLink(participation.uid)"></fa-icon>
-
         <fa-icon
           [icon]="deleteIcon"
-          class="ml-6 text-lg text-gray-400 hover:cursor-pointer hover:text-gray-300 active:text-gray-800"
+          class="text-lg text-gray-400 hover:cursor-pointer hover:text-gray-300 active:text-gray-800"
           (click)="updateParticipationNotActive()"></fa-icon>
       </div>
     </li>
@@ -55,11 +59,15 @@ export class EnItemParticipationComponent {
   employeeUid: string | null = null;
 
   /* Icons */
+  shareIcon = faArrowUpFromBracket;
   copyIcon = faCopy;
   deleteIcon = faTrash;
 
   /* Subscriptions */
   subIsActive!: Subscription;
+
+  /* Navigator */
+  canShare = false;
 
   /* ------------------------------ Constructor ------------------------------ */
   constructor(
@@ -67,7 +75,9 @@ export class EnItemParticipationComponent {
     private participationService: ParticipationService,
     private sessionStorageService: SessionStorageService,
     private toastService: ToastService
-  ) {}
+  ) {
+    this.canShare = navigator.share !== undefined;
+  }
 
   ngOnInit(): void {
     this.eventUid = this.route.snapshot.paramMap.get('eventUid');
@@ -75,6 +85,23 @@ export class EnItemParticipationComponent {
   }
 
   /* ------------------------------ Methods ------------------------------ */
+  async shareTicketLink(participationUid: string): Promise<void> {
+    try {
+      const { origin } = window.location;
+      const link = `${origin}/ticket?participation=${participationUid}`;
+
+      const shareData = {
+        title: 'Ticket',
+        text: "Link per la partecipazione all'evento",
+        url: link
+      };
+
+      await navigator.share(shareData);
+    } catch (e: any) {
+      this.toastService.showError(e);
+    }
+  }
+
   copyTicketLink(participationUid: string): void {
     const { origin } = window.location;
     const link = `${origin}/ticket?participation=${participationUid}`;
