@@ -80,19 +80,19 @@ export class TableService {
 
   /* ------------------------------------------- ADD ------------------------------------------- */
   public async addOrUpdateTable(table: Table): Promise<void> {
-    const eventNameConstraint: QueryConstraint = where('name', '==', table.props.name);
-    const constraints: QueryConstraint[] = [eventNameConstraint];
-    const tables: Table[] = await this.firebaseReadService.getDocumentsByMultipleConstraints(
-      environment.collection.TABLES,
-      constraints,
-      tableConverter
-    );
-
-    if (tables.length > 0) {
-      throw new Error('Nome del tavolo già utilizzato');
-    }
-
     if (!table.uid) {
+      const eventNameConstraint: QueryConstraint = where('name', '==', table.props.name);
+      const constraints: QueryConstraint[] = [eventNameConstraint];
+      const tables: Table[] = await this.firebaseReadService.getDocumentsByMultipleConstraints(
+        environment.collection.TABLES,
+        constraints,
+        tableConverter
+      );
+
+      if (tables.length > 0) {
+        throw new Error('Nome del tavolo già utilizzato');
+      }
+
       /* Add new table */
       await this.firebaseCreateService.addDocument(environment.collection.TABLES, table);
     } else {
