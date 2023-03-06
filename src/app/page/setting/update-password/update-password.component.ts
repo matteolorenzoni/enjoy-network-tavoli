@@ -40,6 +40,11 @@ export class UpdatePasswordComponent {
         return;
       }
 
+      if (newPassword.length < 8) {
+        this.toastService.showErrorMessage('La password deve essere lunga almeno 8 caratteri');
+        return;
+      }
+
       if (newPassword !== repeatNewPassword) {
         this.toastService.showErrorMessage('Le password non coincidono');
         return;
