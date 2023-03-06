@@ -242,18 +242,4 @@ export class ParticipationService {
 
     return participation;
   }
-
-  /* ------------------------------------------- DELETE ------------------------------------------- */
-  public async deleteParticipation(tableUid: string, clientUid: string): Promise<void> {
-    const tableUidConstraint: QueryConstraint = where('tableUid', '==', tableUid);
-    const clientUidConstraint: QueryConstraint = where('clientUid', '==', clientUid);
-    const constraints: QueryConstraint[] = [tableUidConstraint, clientUidConstraint];
-    const participations: Participation[] = await this.firebaseReadService.getDocumentsByMultipleConstraints(
-      environment.collection.PARTICIPATIONS,
-      constraints,
-      participationConverter
-    );
-    const participationsUids: string[] = participations.map((participation) => participation.uid);
-    await this.firebaseDeleteService.deleteDocumentsByUids(environment.collection.PARTICIPATIONS, participationsUids);
-  }
 }
