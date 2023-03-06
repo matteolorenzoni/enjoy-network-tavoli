@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { environment } from '../environments/environment';
+// import { environment } from '../environments/environment';
 import { UserService } from './services/user.service';
 
 @Component({
@@ -11,6 +11,6 @@ export class AppComponent {
   constructor(private userService: UserService) {}
 
   ngOnInit(): void {
-    if (environment.production) document.addEventListener('contextmenu', (event) => event.preventDefault());
+    // if (environment.production) document.addEventListener('contextmenu', (event) => event.preventDefault());
   }
 }

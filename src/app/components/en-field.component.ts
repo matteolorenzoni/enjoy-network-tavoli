@@ -8,7 +8,7 @@ import { InputType, PaletteType } from '../models/enum';
   template: `
     <div [ngClass]="['container', 'mx-auto', 'theme-' + palette]">
       <div class="relative">
-        <div *ngIf="filedIcon" class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 ">
+        <div *ngIf="filedIcon" class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
           <fa-icon [icon]="filedIcon" class="text-palette"></fa-icon>
         </div>
         <input
