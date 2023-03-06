@@ -32,7 +32,9 @@ export class TableService {
 
   public async getTableByEventUid(eventUid: string): Promise<Table[]> {
     const eventUidConstraint: QueryConstraint = where('eventUid', '==', eventUid);
-    const constricts: QueryConstraint[] = [eventUidConstraint];
+    const isActiveConstraint: QueryConstraint = where('isActive', '==', true);
+    const constricts: QueryConstraint[] = [eventUidConstraint, isActiveConstraint];
+
     const tables: Table[] = await this.firebaseReadService.getDocumentsByMultipleConstraints(
       environment.collection.TABLES,
       constricts,
@@ -44,7 +46,9 @@ export class TableService {
   public async getTableByEventUidAndEmployeeUid(eventUid: string, employeeUid: string): Promise<Table[]> {
     const eventUidConstraint: QueryConstraint = where('eventUid', '==', eventUid);
     const employeeUidConstraint: QueryConstraint = where('employeeUid', '==', employeeUid);
-    const constricts: QueryConstraint[] = [eventUidConstraint, employeeUidConstraint];
+    const isActiveConstraint: QueryConstraint = where('isActive', '==', true);
+    const constricts: QueryConstraint[] = [eventUidConstraint, employeeUidConstraint, isActiveConstraint];
+
     const tables: Table[] = await this.firebaseReadService.getDocumentsByMultipleConstraints(
       environment.collection.TABLES,
       constricts,
@@ -55,7 +59,8 @@ export class TableService {
 
   public getRealTimeTableByEventUid(eventUid: string): Observable<Table[]> {
     const eventUidConstraint: QueryConstraint = where('eventUid', '==', eventUid);
-    const constraints: QueryConstraint[] = [eventUidConstraint];
+    const isActiveConstraint: QueryConstraint = where('isActive', '==', true);
+    const constraints: QueryConstraint[] = [eventUidConstraint, isActiveConstraint];
 
     const tables: Observable<Table[]> = this.firebaseReadService.getRealTimeDocumentsByMultipleConstraints(
       environment.collection.TABLES,
@@ -68,7 +73,8 @@ export class TableService {
   public getRealTimeTableByEventUidAndEmployeeUid(eventUid: string, employeeUid: string): Observable<Table[]> {
     const eventUidConstraint: QueryConstraint = where('eventUid', '==', eventUid);
     const employeeUidConstraint: QueryConstraint = where('employeeUid', '==', employeeUid);
-    const constraints: QueryConstraint[] = [eventUidConstraint, employeeUidConstraint];
+    const isActiveConstraint: QueryConstraint = where('isActive', '==', true);
+    const constraints: QueryConstraint[] = [eventUidConstraint, employeeUidConstraint, isActiveConstraint];
 
     const tables: Observable<Table[]> = this.firebaseReadService.getRealTimeDocumentsByMultipleConstraints(
       environment.collection.TABLES,

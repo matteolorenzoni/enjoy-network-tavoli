@@ -94,7 +94,8 @@ export class TableGeneratorComponent implements OnInit {
         name: name.trim().replace(/\s\s+/g, ' ') || '',
         price,
         hour: hour ? new Date(hour) : undefined,
-        drinkList
+        drinkList,
+        isActive: true
       }
     };
 
