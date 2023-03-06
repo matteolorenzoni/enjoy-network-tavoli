@@ -56,6 +56,7 @@ export type ParticipationDTO = {
   lastName: string;
   phone: string;
   scannedAt?: Date;
+  scannedFrom?: string;
   messageIsReceived: boolean;
   errorIfMessageIsNotReceived?: 'BADNUMBERFORMAT' | 'DUPLICATESMS' | 'BLACKLIST';
   isActive: boolean;

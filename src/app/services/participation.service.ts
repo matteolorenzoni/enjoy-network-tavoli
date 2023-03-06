@@ -220,7 +220,7 @@ export class ParticipationService {
     );
   }
 
-  public async scanAndGetParticipation(participationUid: string): Promise<Participation> {
+  public async scanAndGetParticipation(participationUid: string, employeeUid: string): Promise<Participation> {
     const participation: Participation = await this.firebaseReadService.getDocumentByUid(
       environment.collection.PARTICIPATIONS,
       participationUid,
@@ -229,7 +229,8 @@ export class ParticipationService {
 
     if (!participation.props.scannedAt && participation.props.isActive) {
       const propsToUpdate = {
-        scannedAt: new Date()
+        scannedAt: new Date(),
+        scannedFrom: employeeUid
       };
       await this.firebaseUpdateService.updateDocumentsProps(
         environment.collection.PARTICIPATIONS,

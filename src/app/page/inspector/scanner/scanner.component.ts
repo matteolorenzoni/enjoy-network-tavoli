@@ -4,6 +4,8 @@ import { Component } from '@angular/core';
 import { BarcodeFormat } from '@zxing/library';
 import { BehaviorSubject } from 'rxjs';
 import { ParticipationService } from 'src/app/services/participation.service';
+import { Auth } from '@angular/fire/auth';
+import { UserService } from 'src/app/services/user.service';
 import { ToastService } from '../../../services/toast.service';
 
 @Component({
@@ -32,14 +34,31 @@ export class ScannerComponent {
     BarcodeFormat.QR_CODE
   ];
 
+  /* Participation */
   participationUid = new BehaviorSubject('');
   participation: Participation | null = null;
-
   isInScanRange = false;
   participationNoGoodMotivation = '';
 
+  /* Employee */
+  employeeUid = '';
+
   /* ------------------------------------ Constructor ------------------------------------ */
-  constructor(private participationService: ParticipationService, private toastService: ToastService) {
+  constructor(
+    private auth: Auth,
+    private userService: UserService,
+    private participationService: ParticipationService,
+    private toastService: ToastService
+  ) {
+    this.auth.onAuthStateChanged((user) => {
+      if (!user) {
+        this.toastService.showErrorMessage('Utente non autenticato');
+        this.userService.logout();
+      } else {
+        this.employeeUid = user.uid;
+      }
+    });
+
     this.participationUid.subscribe((newParticipation) => {
       if (newParticipation) {
         this.getParticipation(newParticipation);
@@ -50,7 +69,7 @@ export class ScannerComponent {
   /* ------------------------------------ HTTP Methods ------------------------------------ */
   getParticipation(participationUid: string) {
     this.participationService
-      .scanAndGetParticipation(participationUid)
+      .scanAndGetParticipation(participationUid, this.employeeUid)
       .then((participation) => {
         this.participation = participation;
 
@@ -63,7 +82,7 @@ export class ScannerComponent {
         }
 
         if (scannedAt) {
-          this.isInScanRange = (new Date().getTime() - scannedAt.getTime()) / 1000 < 10;
+          this.isInScanRange = (new Date().getTime() - scannedAt.getTime()) / 1000 < 5;
 
           if (!this.isInScanRange) {
             this.participationNoGoodMotivation = 'Il ticket è già stato scansionato';
