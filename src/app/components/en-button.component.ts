@@ -11,24 +11,29 @@ import { ButtonType, PaletteType } from '../models/enum';
       [disabled]="buttonIsDisabled"
       (click)="triggerClickCustom()"
       class="
-        btn
+        center
+        inline-flex
+        min-h-[3rem]
         w-full
         rounded-lg
         bg-palette
         px-5
         py-2.5
+        text-center
+        text-sm
         font-bold
         text-palette
         shadow-md
         transition
         duration-300
         ease-in-out
-        enabled:hover:bg-paletteHover
-        enabled:hover:text-paletteHover
-        enabled:active:bg-paletteActive
-        enabled:active:shadow-lg
+        enabled:hover:cursor-pointer
+        enabled:active:bg-paletteHover
+        enabled:active:text-base
+        enabled:active:text-paletteHover
         disabled:bg-gray-700
-        disabled:opacity-20">
+        disabled:opacity-20
+        ">
       <ng-container *ngIf="isLoading; else elseTemplate">
         <div role="status" class="center mr-3 h-full">
           <svg
