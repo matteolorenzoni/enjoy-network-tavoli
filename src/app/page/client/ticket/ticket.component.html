@@ -1,69 +1,81 @@
-<div *ngIf="event && table && participation" class="mx-auto flex max-w-xl flex-col items-center gap-4 p-6">
-  <img src="../../../../assets/images/logo-light.png" alt="enjoy-network-logo" class="h-8" />
-  <img [src]="event.props.imageUrl" class="w-full rounded-lg" />
-
-  <br />
-
-  <section class="flex flex-col items-center gap-2">
-    <p class="text-2xl uppercase text-primary-60">Il tuo accesso</p>
-    <p>
-      <span>Nome: </span>
-      <span>{{ participation.props.name }}</span>
-    </p>
-    <p>
-      <span>Cognome: </span>
-      <span>{{ participation.props.lastName }}</span>
-    </p>
-    <p>
-      <span>Telefono: </span>
-      <span>{{ participation.props.phone }}</span>
-    </p>
-    <p>
-      <span>Tavolo: </span>
-      <span>{{ table.props.name }}</span>
-    </p>
-    <p>
-      Questo è il tuo QrCode per la serata
-      <span class="event-name italic">{{ event.props.name }}</span> del {{ event.props.date | date: 'dd/MM/yyyy' }}.
-    </p>
-    <p>Presentalo all'ingresso del locale per poter accedere.</p>
-  </section>
-
-  <br />
-
-  <div class="rounded-lg bg-white p-8">
-    <qrcode [qrdata]="qrdata" [width]="200" [errorCorrectionLevel]="'H'" [margin]="0"></qrcode>
+<ng-container *ngIf="!event || !table || !participation; then noData; else data"></ng-container>
+<ng-template #noData>
+  <div class="center mx-auto flex h-screen max-w-xl flex-col items-center gap-4 p-8">
+    <img
+      class="w-2/3 animate-bounce object-contain"
+      src="../../../../assets/images/logo-light.png"
+      alt="enjoy-network-logo" />
   </div>
+</ng-template>
+<ng-template #data>
+  <div class="mx-auto flex max-w-xl flex-col items-center gap-4 p-6">
+    <img src="../../../../assets/images/logo-light.png" alt="enjoy-network-logo" class="h-8" />
+    <img [src]="event.props.imageUrl" class="aspect-square w-full rounded-lg object-contain" />
 
-  <br />
-  <br />
+    <br />
 
-  <div class="flex flex-col items-center gap-2 rounded-lg bg-gray-900 py-6 px-12">
-    <p class="text-lg font-semibold uppercase text-white underline">ENJOY NETWORK</p>
-    <p>
-      <span>Titolare:</span>
-      <span>Eventinriviera 2.0 srls</span>
-    </p>
-    <p>
-      <span>Partita IVA:</span>
-      <span>4358450403</span>
-    </p>
-    <p>
-      <span>Indirizzo:</span>
-      <span>Via Provinciale Felisio, 106, Lugo, RA, Italia</span>
-    </p>
-    <p>
-      <span>Telefono:</span>
-      <span>3516473316</span>
-    </p>
+    <section class="flex flex-col items-center gap-2">
+      <p class="text-2xl uppercase text-primary-60">Il tuo accesso</p>
+      <p>
+        <span>Nome: </span>
+        <span>{{ participation.props.name }}</span>
+      </p>
+      <p>
+        <span>Cognome: </span>
+        <span>{{ participation.props.lastName }}</span>
+      </p>
+      <p>
+        <span>Telefono: </span>
+        <span>{{ participation.props.phone }}</span>
+      </p>
+      <p>
+        <span>Tavolo: </span>
+        <span>{{ table.props.name }}</span>
+      </p>
+      <p>
+        Questo è il tuo QrCode per la serata
+        <span class="event-name italic">{{ event.props.name }}</span> del {{ event.props.date | date: 'dd/MM/yyyy' }}.
+      </p>
+      <p>Presentalo all'ingresso del locale per poter accedere.</p>
+    </section>
+
+    <br />
+
+    <div class="rounded-lg bg-white p-8">
+      <qrcode [qrdata]="qrdata" [width]="200" [errorCorrectionLevel]="'H'" [margin]="0"></qrcode>
+    </div>
+
+    <br />
+    <br />
+
+    <div class="flex flex-col items-center gap-2 rounded-lg bg-gray-900 py-6 px-12">
+      <p class="text-lg font-semibold uppercase text-white underline">ENJOY NETWORK</p>
+      <p>
+        <span>Titolare:</span>
+        <span>Eventinriviera 2.0 srls</span>
+      </p>
+      <p>
+        <span>Partita IVA:</span>
+        <span>4358450403</span>
+      </p>
+      <p>
+        <span>Indirizzo:</span>
+        <span>Via Provinciale Felisio, 106, Lugo, RA, Italia</span>
+      </p>
+      <p>
+        <span>Telefono:</span>
+        <span>3516473316</span>
+      </p>
+    </div>
+
+    <div class="text-center">
+      <a href="https://enjoynetwork.it/privacy">privacy policy</a> -
+      <a href="https://enjoynetwork.it/cookies">cookies policy</a> -
+      <a href="">gestisci i cookies</a>
+    </div>
   </div>
+</ng-template>
 
-  <div class="text-center">
-    <a href="https://enjoynetwork.it/privacy">privacy policy</a> -
-    <a href="https://enjoynetwork.it/cookies">cookies policy</a> -
-    <a href="">gestisci i cookies</a>
-  </div>
-</div>
 <!-- <div
   *ngIf="zoom"
   class="center absolute top-0 left-0 h-full w-screen cursor-pointer overflow-hidden bg-gray-400/40 backdrop-blur-xl"
