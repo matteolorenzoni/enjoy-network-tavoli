@@ -42,9 +42,9 @@ export type TableDTO = {
   eventUid: string;
   employeeUid: string;
   name: string;
-  price: number;
+  price?: number;
   hour?: Date;
-  drink?: string;
+  drinkList?: string;
   createdAt?: Date;
   modifiedAt?: Date;
 };

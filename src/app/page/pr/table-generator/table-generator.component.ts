@@ -65,7 +65,7 @@ export class TableGeneratorComponent implements OnInit {
             name: props.name,
             price: props.price,
             hour: props.hour?.toISOString().slice(0, 16) || '',
-            drink: props.drink
+            drink: props.drinkList
           });
           this.lblButton = 'Modifica tavolo';
         })
@@ -83,7 +83,7 @@ export class TableGeneratorComponent implements OnInit {
       throw new Error('Errore: parametri non validi');
     }
 
-    const { name, price, hour, drink } = this.tableForm.value;
+    const { name, price, hour, drinkList } = this.tableForm.value;
 
     /* create the new table */
     const newTable: Table = {
@@ -94,7 +94,7 @@ export class TableGeneratorComponent implements OnInit {
         name: name.trim().replace(/\s\s+/g, ' ') || '',
         price,
         hour: hour ? new Date(hour) : undefined,
-        drink
+        drinkList
       }
     };
 
