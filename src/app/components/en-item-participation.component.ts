@@ -91,8 +91,8 @@ export class EnItemParticipationComponent {
       const link = `${origin}/ticket?participation=${participationUid}`;
 
       const shareData = {
-        title: 'Ticket',
-        text: "Link per la partecipazione all'evento",
+        title: 'Condividi ticket',
+        text: `Link per la partecipazione all'evento di ${this.participation.props.name} ${this.participation.props.lastName}`,
         url: link
       };
 
