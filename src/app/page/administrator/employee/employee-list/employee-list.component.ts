@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { faFilter } from '@fortawesome/free-solid-svg-icons';
 import { Subscription } from 'rxjs';
 import { fadeInAnimation, staggeredFadeInIncrement } from 'src/app/animations/animations';
+import { RoleType } from 'src/app/models/enum';
 import { Employee } from 'src/app/models/type';
 import { ToastService } from 'src/app/services/toast.service';
 import { EmployeeService } from '../../../../services/employee.service';
@@ -18,7 +19,9 @@ export class EmployeeListComponent {
   filterIcon = faFilter;
 
   /* Employees */
-  employees: Employee[] = [];
+  employeesAdmin: Employee[] = [];
+  employeesPr: Employee[] = [];
+  employeesInspector: Employee[] = [];
   employeesSubscription!: Subscription;
 
   /* -------------------------------------- Constructor -------------------------------------- */
@@ -34,7 +37,9 @@ export class EmployeeListComponent {
     const that = this;
     this.employeesSubscription = this.employeeService.getRealTimeAllEmployees().subscribe({
       next(data) {
-        that.employees = data;
+        that.employeesAdmin = data.filter((employee) => employee.props.role === RoleType.ADMINISTRATOR);
+        that.employeesInspector = data.filter((employee) => employee.props.role === RoleType.INSPECTOR);
+        that.employeesPr = data.filter((employee) => employee.props.role === RoleType.PR);
       },
       error(error: Error) {
         that.toastService.showError(error);
