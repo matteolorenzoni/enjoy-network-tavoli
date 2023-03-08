@@ -3,12 +3,12 @@
   <div class="mb-6 flex gap-2">
     <button
       type="button"
-      class="w-4/5 rounded-lg border border-gray-600 bg-gray-800 py-2.5 px-5 text-sm font-medium text-gray-400 hover:bg-gray-700 hover:text-white focus:z-10 focus:outline-none focus:ring-4 focus:ring-gray-700">
+      class="w-4/5 rounded-lg border border-gray-600 bg-gray-800 py-2.5 px-5 text-sm font-medium text-gray-400 active:z-10 active:bg-gray-700 active:text-white active:outline-none active:ring-4 active:ring-gray-700">
       <fa-icon [icon]="filterIcon" class="mr-2"></fa-icon>
       FILTRI
     </button>
     <button
-      class="w-1/5 rounded-lg border border-primary-50 bg-primary-60 py-2.5 px-5 text-sm font-medium text-black hover:bg-primary-50 hover:text-white focus:z-10 focus:outline-none focus:ring-4 focus:ring-primary-30"
+      class="w-1/5 rounded-lg bg-primary-60 py-2.5 px-5 text-sm font-medium text-black transition duration-150 ease-in-out focus:z-10 focus:outline-none active:scale-90 active:bg-primary-50 active:text-white"
       (click)="goToSelector()">
       <fa-icon [icon]="listIcon"></fa-icon>
     </button>

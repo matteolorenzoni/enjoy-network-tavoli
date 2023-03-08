@@ -25,11 +25,11 @@ import { ButtonType, PaletteType } from '../models/enum';
         text-palette
         shadow-md
         transition
-        duration-300
+        duration-150
         ease-in-out
         enabled:hover:cursor-pointer
+        enabled:active:scale-90
         enabled:active:bg-paletteHover
-        enabled:active:text-base
         enabled:active:text-paletteHover
         disabled:bg-gray-700
         disabled:opacity-20

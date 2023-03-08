@@ -27,15 +27,15 @@ import { Participation } from '../models/type';
         <fa-icon
           *ngIf="canShare"
           [icon]="shareIcon"
-          class="text-lg text-gray-400 hover:cursor-pointer hover:text-gray-300 active:text-gray-800"
+          class="text-lg text-gray-400 transition duration-150 ease-in-out hover:cursor-pointer active:scale-90 active:text-gray-300"
           (click)="shareTicketLink(participation.uid)"></fa-icon>
         <fa-icon
           [icon]="copyIcon"
-          class="text-lg text-gray-400 hover:cursor-pointer hover:text-gray-300 active:text-gray-800"
+          class="text-lg text-gray-400 transition duration-150 ease-in-out hover:cursor-pointer active:scale-90 active:text-gray-300"
           (click)="copyTicketLink(participation.uid)"></fa-icon>
         <fa-icon
           [icon]="deleteIcon"
-          class="text-lg text-gray-400 hover:cursor-pointer hover:text-gray-300 active:text-gray-800"
+          class="text-lg text-gray-400 transition duration-150 ease-in-out hover:cursor-pointer active:scale-90 active:text-gray-300"
           (click)="updateParticipationNotActive()"></fa-icon>
       </div>
     </li>

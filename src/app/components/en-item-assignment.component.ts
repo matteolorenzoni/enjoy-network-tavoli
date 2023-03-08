@@ -17,7 +17,7 @@ import { AssignmentAndEmployee } from '../models/type';
       <div class="center relative flex h-6 w-24 flex-row rounded-lg bg-transparent">
         <button
           data-action="decrement"
-          class="center h-full w-20 rounded-l bg-primary-60 text-black outline-none hover:bg-primary-50 active:bg-primary-40 enabled:cursor-pointer disabled:cursor-not-allowed disabled:bg-gray-200 "
+          class="center h-full w-20 rounded-l bg-primary-60 text-black outline-none  active:bg-primary-40 enabled:cursor-pointer disabled:cursor-not-allowed disabled:bg-gray-200 "
           (click)="decreasePersonAssigned()"
           [disabled]="!ae.assignment.props.isActive">
           <span class="">−</span>
@@ -25,11 +25,11 @@ import { AssignmentAndEmployee } from '../models/type';
         <input
           type="number"
           pattern="d*"
-          class="flex w-full items-center rounded-none bg-primary-65 text-center font-semibold text-black outline-none hover:bg-primary-60 focus:outline-none disabled:cursor-not-allowed disabled:bg-gray-200 "
+          class="flex w-full items-center rounded-none bg-primary-65 text-center font-semibold text-black outline-none  focus:outline-none disabled:cursor-not-allowed disabled:bg-gray-200 "
           [formControl]="formPersonAssigned" />
         <button
           data-action="increment"
-          class="center h-full w-20 cursor-pointer rounded-r bg-primary-60 text-black outline-none hover:bg-primary-50 active:bg-primary-40 active:text-white disabled:cursor-not-allowed disabled:bg-gray-200"
+          class="center h-full w-20 cursor-pointer rounded-r bg-primary-60 text-black outline-none active:bg-primary-40 active:text-white disabled:cursor-not-allowed disabled:bg-gray-200"
           (click)="incrementPersonAssigned()"
           [disabled]="!ae.assignment.props.isActive">
           <span class="m">+</span>
@@ -81,6 +81,13 @@ export class EnItemAssignmentComponent {
     this.subPersonAssigned = this.formPersonAssigned.valueChanges
       .pipe(debounceTime(1200))
       .subscribe((newPersonAssigned) => {
+        console.log(newPersonAssigned);
+        if (!newPersonAssigned) {
+          this.formPersonAssigned.setValue(this.ae.assignment.props.maxPersonMarkable);
+          this.toastService.showErrorMessage('Il valore deve essere un numero');
+          return;
+        }
+
         /* Check if the value is different from the previous one */
         if (this.ae.assignment.props.maxPersonMarkable !== newPersonAssigned) {
           /* Check if the value is less than the max person */

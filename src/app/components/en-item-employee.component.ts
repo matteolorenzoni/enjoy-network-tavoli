@@ -19,14 +19,14 @@ import { ToastService } from '../services/toast.service';
         {{ employeeProps.role | uppercase | slice: 0:5 }}
       </div>
       <div class="shrink truncate text-white">{{ employeeProps.name }} {{ employeeProps.lastName }}</div>
-      <div class="ml-auto shrink-0 px-1">
+      <div class="ml-auto flex shrink-0 gap-4 px-1">
         <fa-icon
           [icon]="modifyIcon"
-          class="mr-2 text-gray-500  hover:cursor-pointer hover:text-gray-600 active:text-gray-800"
+          class="text-gray-500 transition duration-150 ease-in-out hover:cursor-pointer active:scale-90 active:text-gray-300"
           [routerLink]="['./', employeeUid]"></fa-icon>
         <fa-icon
           [icon]="deleteIcon"
-          class="ml-2 text-gray-500 hover:cursor-pointer hover:text-gray-600 active:text-gray-800"
+          class="text-gray-500 transition duration-150 ease-in-out hover:cursor-pointer active:scale-90 active:text-gray-300"
           (click)="deleteEmployee($event)"></fa-icon>
       </div>
     </li>

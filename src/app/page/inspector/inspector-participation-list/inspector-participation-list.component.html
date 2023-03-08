@@ -8,12 +8,10 @@
   <ul [@staggeredFadeInIncrement]="tables.length" class="flex flex-col divide-y divide-gray-700">
     <li *ngFor="let table of tables" class="flex h-20 items-center">
       <div
-        class="w-full overflow-hidden rounded-lg bg-gray-800 p-4 font-bold hover:cursor-pointer hover:bg-primary-55 hover:text-black"
+        class="w-full overflow-hidden rounded-lg bg-gray-800 p-4 font-bold transition duration-150 ease-in-out hover:cursor-pointer active:bg-primary-55 active:text-black"
         (click)="goToTableParticipation(table.uid)">
         <p class="truncate">{{ table.props.name }}</p>
       </div>
     </li>
   </ul>
 </section>
-
-<!-- class="w-full overflow-hidden rounded-lg bg-primary-50 p-4 font-bold text-black hover:cursor-pointer hover:bg-gray-700 hover:text-white" -->

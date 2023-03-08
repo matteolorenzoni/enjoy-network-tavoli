@@ -9,7 +9,9 @@ import { TableService } from '../services/table.service';
 @Component({
   selector: 'en-item-table[table][canAddClient]',
   template: `
-    <li class="group flex h-16 items-center rounded-lg p-2 hover:cursor-pointer" (click)="goToClient()">
+    <li
+      class="group flex h-16 items-center rounded-lg p-2 hover:cursor-pointer active:bg-slate-900"
+      (click)="goToClient()">
       <div class="overflow-hidden">
         <p class="truncate">{{ table.props.name }}</p>
       </div>
@@ -21,11 +23,11 @@ import { TableService } from '../services/table.service';
       <div class="flex h-full flex-none shrink-0 basis-16 items-center justify-evenly hover:cursor-default">
         <fa-icon
           [icon]="updateIcon"
-          class="ml-2 text-gray-500 hover:cursor-pointer hover:text-gray-300 active:text-gray-800"
+          class="ml-2 text-gray-500 transition duration-150 ease-in-out hover:cursor-pointer active:scale-90 active:text-gray-300"
           (click)="updateTable($event)"></fa-icon>
         <fa-icon
           [icon]="deleteIcon"
-          class="ml-2 text-gray-500 hover:cursor-pointer hover:text-gray-300 active:text-gray-800"
+          class="ml-2 text-gray-500 transition duration-150 ease-in-out hover:cursor-pointer active:scale-90 active:text-gray-300"
           (click)="deleteTable($event)"></fa-icon>
       </div>
     </li>

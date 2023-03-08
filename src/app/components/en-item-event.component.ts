@@ -42,7 +42,7 @@ import { ParticipationService } from '../services/participation.service';
           <li
             *ngFor="let icon of itemNavigationMenu"
             [routerLink]="icon.link"
-            class="flex w-1/3 flex-col items-center rounded bg-primary-65 p-1 text-white hover:cursor-pointer hover:bg-paletteHover hover:text-paletteHover hover:shadow-lg">
+            class="flex w-1/3 flex-col items-center rounded bg-primary-65 p-1 text-white transition duration-150 ease-in-out hover:cursor-pointer hover:bg-primary-55 hover:shadow-lg active:scale-90 active:bg-paletteHover active:text-paletteHover">
             <a><fa-icon [icon]="icon.definition"></fa-icon></a>
             <span class="text-xs xs:text-sm">{{ icon.name }}</span>
           </li>
