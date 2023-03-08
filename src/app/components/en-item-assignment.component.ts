@@ -81,7 +81,6 @@ export class EnItemAssignmentComponent {
     this.subPersonAssigned = this.formPersonAssigned.valueChanges
       .pipe(debounceTime(1200))
       .subscribe((newPersonAssigned) => {
-        console.log(newPersonAssigned);
         if (!newPersonAssigned) {
           this.formPersonAssigned.setValue(this.ae.assignment.props.maxPersonMarkable);
           this.toastService.showErrorMessage('Il valore deve essere un numero');
