@@ -51,10 +51,7 @@ export class ScannerComponent {
     private toastService: ToastService
   ) {
     this.auth.onAuthStateChanged((user) => {
-      if (!user) {
-        this.toastService.showErrorMessage('Utente non autenticato');
-        this.userService.logout();
-      } else {
+      if (user) {
         this.employeeUid = user.uid;
       }
     });
