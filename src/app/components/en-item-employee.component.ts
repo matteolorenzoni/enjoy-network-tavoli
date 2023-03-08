@@ -26,6 +26,7 @@ import { ToastService } from '../services/toast.service';
           [routerLink]="['./', employeeUid]"></fa-icon>
         <fa-icon
           [icon]="deleteIcon"
+          role="button"
           class="text-gray-500 transition duration-150 ease-in-out hover:cursor-pointer active:scale-90 active:text-gray-300"
           (click)="deleteEmployee($event)"></fa-icon>
       </div>

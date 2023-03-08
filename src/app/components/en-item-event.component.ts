@@ -12,7 +12,7 @@ import { ParticipationService } from '../services/participation.service';
   selector: 'en-item-event[event]',
   template: `
     <li class="my-4 mx-auto w-full overflow-hidden rounded-lg bg-slate-900 sm:w-3/5">
-      <div class="relative hover:cursor-pointer" (click)="toggleOpen()">
+      <div role="button" class="relative hover:cursor-pointer" (click)="toggleOpen()">
         <img [src]="event.props.imageUrl" [alt]="dateFormatted + '_image'" class="aspect-square object-contain " />
         <div
           [@fadeInAnimation]
@@ -49,6 +49,7 @@ import { ParticipationService } from '../services/participation.service';
         </ul>
         <button
           type="button"
+          role="button"
           class="mt-2 inline-block w-full rounded bg-red-600 px-6 py-2.5 text-xs font-extrabold uppercase leading-tight text-white shadow-md transition duration-150 ease-in-out hover:bg-red-700 hover:shadow-lg"
           (click)="deleteEvent($event)">
           ELIMINA

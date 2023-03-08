@@ -6,6 +6,7 @@ import { Event } from 'src/app/models/type';
   selector: 'en-item-event-available',
   template: `
     <li
+      role="button"
       class="group relative my-4 mx-auto flex w-full flex-col rounded-xl bg-gray-900 p-2 shadow shadow-gray-800 transition-all hover:cursor-pointer sm:w-3/5"
       (click)="goToSelector()">
       <img [src]="event.props.imageUrl" alt="foto-evento" class="mb-4 aspect-square rounded-xl object-contain " />
