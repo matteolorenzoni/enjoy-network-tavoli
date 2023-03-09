@@ -10,7 +10,7 @@
           alt="Immagine " />
         <button
           type="button"
-          class="inline-block text-xs font-bold uppercase leading-tight text-white transition duration-300 ease-in-out hover:text-primary-60 focus:outline-none focus:ring-0"
+          class="inline-block text-xs font-bold uppercase leading-tight text-slate-300 transition duration-300 ease-in-out hover:text-primary-60 focus:outline-none focus:ring-0"
           (click)="removePhoto()">
           Rimuovi
         </button>
@@ -160,14 +160,13 @@
     <label
       for="description_textarea"
       class="mb-2 block text-sm font-bold text-white group-focus-within:text-primary-60">
-      Descrizione (max 200 caratteri)
+      Descrizione
     </label>
     <textarea
       id="description_textarea"
       name="description_textarea"
       rows="3"
-      maxlength="200"
-      class="block w-full resize-none rounded-lg border-2 bg-transparent p-2.5 text-sm text-white focus:border-primary-60 focus:text-primary-60 focus:outline-none"
+      class="block w-full resize-y rounded-lg border-2 bg-transparent p-2.5 text-sm text-white focus:border-primary-60 focus:text-primary-60 focus:outline-none"
       formControlName="description"></textarea>
   </div>
 
@@ -178,6 +177,7 @@
     <textarea
       id="message_textarea"
       name="message_textarea"
+      rows="6"
       class="block w-full resize-y rounded-lg border-2 bg-transparent p-2.5 text-sm text-white focus:border-primary-60 focus:text-primary-60 focus:outline-none"
       formControlName="message"></textarea>
   </div>

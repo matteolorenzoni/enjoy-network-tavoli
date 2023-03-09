@@ -11,14 +11,14 @@ import { Participation } from '../models/type';
   selector: 'en-item-participation[participation]',
   template: `
     <li
-      class="my-2 flex h-12 items-center rounded-lg px-2"
+      class="my-2 flex h-12 items-center rounded-lg px-2 text-slate-300"
       [ngClass]="{ 'bg-red-600/30': !participation.props.messageIsReceived }">
       <div class="grow truncate">
         <p>
           {{ participation.props.name }} {{ participation.props.lastName }}
           <span class="ml-4 text-xs">({{ participation.props.phone }})</span>
         </p>
-        <p class="text-xs text-gray-500">
+        <p class="text-xs text-slate-400">
           {{ participation.props.createdAt | date: 'dd/MM/YYYY' }} - {{ participation.props.createdAt | date: 'HH:mm' }}
         </p>
       </div>
@@ -28,17 +28,17 @@ import { Participation } from '../models/type';
           *ngIf="canShare"
           [icon]="shareIcon"
           role="button"
-          class="text-lg text-gray-400 transition duration-150 ease-in-out hover:cursor-pointer active:scale-90 active:text-gray-300"
+          class="text-lg text-slate-300 transition duration-150 ease-in-out hover:cursor-pointer active:scale-90 active:text-slate-500"
           (click)="shareTicketLink(participation.uid)"></fa-icon>
         <fa-icon
           [icon]="copyIcon"
           role="button"
-          class="text-lg text-gray-400 transition duration-150 ease-in-out hover:cursor-pointer active:scale-90 active:text-gray-300"
+          class="text-lg text-slate-300  transition duration-150 ease-in-out hover:cursor-pointer active:scale-90 active:text-slate-500"
           (click)="copyTicketLink(participation.uid)"></fa-icon>
         <fa-icon
           [icon]="deleteIcon"
           role="button"
-          class="text-lg text-gray-400 transition duration-150 ease-in-out hover:cursor-pointer active:scale-90 active:text-gray-300"
+          class="text-lg text-slate-300 transition duration-150 ease-in-out hover:cursor-pointer active:scale-90 active:text-slate-500"
           (click)="updateParticipationNotActive()"></fa-icon>
       </div>
     </li>

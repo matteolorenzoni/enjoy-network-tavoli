@@ -11,11 +11,13 @@ import { BottomNavigation } from '../models/type';
         <li
           *ngFor="let icon of bottomNavigation?.icons"
           [routerLink]="icon.link"
-          routerLinkActive="text-palette border-t border-current"
           [queryParamsHandling]="bottomNavigation?.role === 'inspector' ? 'preserve' : ''"
-          class="flex h-full basis-full cursor-pointer flex-col items-center justify-center gap-1 bg-gray-800 bg-opacity-10  xs:bg-opacity-40">
-          <a><fa-icon [icon]="icon.definition"></fa-icon></a>
-          <span class="text-xs xs:text-sm">{{ icon.name }}</span>
+          class="flex h-full basis-full cursor-pointer flex-col items-center justify-center gap-1 bg-gray-800 bg-opacity-10  xs:bg-opacity-40"
+          routerLinkActive=" border-t border-current"
+          #rla="routerLinkActive"
+          [ngClass]="rla.isActive ? 'text-palette' : 'text-slate-300'">
+          <a><fa-icon [icon]="icon.definition" class=""></fa-icon></a>
+          <span class="text-xs  xs:text-sm">{{ icon.name }}</span>
         </li>
       </ul>
     </nav>

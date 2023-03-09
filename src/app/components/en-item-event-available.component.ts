@@ -13,7 +13,7 @@ import { Event } from 'src/app/models/type';
       <div class="absolute left-0 bottom-0 flex p-2 backdrop-blur">
         <div>
           <p class="pb-2 text-xl font-medium text-primary-60">{{ event.props.name }}</p>
-          <p class="text-xs font-light">{{ event.props.place }}</p>
+          <p class="text-xs font-light text-slate-300">{{ event.props.place }}</p>
         </div>
         <div class="center ml-auto rounded-xl bg-gray-800 p-2 text-primary-60">
           <p>{{ event.props.date | date: 'dd/MM/YYYY' }}</p>

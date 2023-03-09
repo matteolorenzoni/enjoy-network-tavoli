@@ -8,7 +8,7 @@ import { ToastService } from '../services/toast.service';
 @Component({
   selector: 'en-item-pr-active[employee][assignments]',
   template: `
-    <li class="flex h-14 items-center gap-4">
+    <li class="flex h-14 items-center gap-4 text-slate-300">
       <input
         id="orange-checkbox"
         type="checkbox"

@@ -8,7 +8,7 @@ import { ToastService } from '../services/toast.service';
 @Component({
   selector: 'en-item-employee[employee]',
   template: `
-    <li class="flex h-14 items-center gap-2">
+    <li class="flex h-14 items-center gap-2 text-slate-300">
       <ng-container *ngIf="employeeProps.isActive; else elseTemplate">
         <fa-icon [icon]="activeIcon" class="text-emerald-600"></fa-icon>
       </ng-container>
@@ -18,16 +18,16 @@ import { ToastService } from '../services/toast.service';
       <div class="center mx-2 w-full shrink-0 basis-20 rounded bg-primary-60/70 text-white">
         {{ employeeProps.role | uppercase | slice: 0:5 }}
       </div>
-      <div class="shrink truncate text-white">{{ employeeProps.name }} {{ employeeProps.lastName }}</div>
+      <div class="shrink truncate">{{ employeeProps.name }} {{ employeeProps.lastName }}</div>
       <div class="ml-auto flex shrink-0 gap-4 px-1">
         <fa-icon
           [icon]="modifyIcon"
-          class="text-gray-500 transition duration-150 ease-in-out hover:cursor-pointer active:scale-90 active:text-gray-300"
+          class="transition duration-150 ease-in-out hover:cursor-pointer active:scale-90 active:text-slate-500"
           [routerLink]="['./', employeeUid]"></fa-icon>
         <fa-icon
           [icon]="deleteIcon"
           role="button"
-          class="text-gray-500 transition duration-150 ease-in-out hover:cursor-pointer active:scale-90 active:text-gray-300"
+          class="transition duration-150 ease-in-out hover:cursor-pointer active:scale-90 active:text-slate-500"
           (click)="deleteEmployee($event)"></fa-icon>
       </div>
     </li>

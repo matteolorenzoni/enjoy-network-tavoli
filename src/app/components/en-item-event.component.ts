@@ -22,27 +22,27 @@ import { ParticipationService } from '../services/participation.service';
             class="mb-2 max-w-full truncate rounded-lg bg-primary-60/70 py-1 px-4 text-center text-base font-semibold xs:text-lg">
             {{ event.props.name }}
           </p>
-          <p class="rounded-lg bg-primary-60/70 py-1 px-2 text-center text-xs xs:text-sm">
+          <p class="rounded-lg bg-primary-60/70 py-1 px-2 text-center text-xs xs:text-sm ">
             {{ dateFormatted }} <br />
             {{ event.props.place }}
           </p>
         </div>
       </div>
-      <div [@expandEventItemDetailsAnimation] *ngIf="isOpen" class="overflow-hidden bg-slate-900 p-2 text-white ">
+      <div [@expandEventItemDetailsAnimation] *ngIf="isOpen" class="overflow-hidden bg-slate-900 p-2 text-white">
         <ul class="divide-y divide-slate-700">
           <li *ngFor="let info of eventInfo" class="flex items-center px-2 py-1">
             <div
               class="flex shrink-0 basis-32 items-center justify-start whitespace-normal break-all text-base font-semibold text-primary-50">
               {{ info.label }}
             </div>
-            <div class="text-base font-normal">{{ info.value }}</div>
+            <div class="text-base font-normal text-slate-300">{{ info.value }}</div>
           </li>
         </ul>
         <ul class="mt-4 flex gap-4">
           <li
             *ngFor="let icon of itemNavigationMenu"
             [routerLink]="icon.link"
-            class="flex w-1/3 flex-col items-center rounded bg-primary-65 p-1 text-white transition duration-150 ease-in-out hover:cursor-pointer hover:bg-primary-55 hover:shadow-lg active:scale-90 active:bg-paletteHover active:text-paletteHover">
+            class="flex w-1/3 flex-col items-center rounded bg-primary-65 p-1 transition duration-150 ease-in-out hover:cursor-pointer hover:bg-primary-55 hover:shadow-lg active:scale-90 active:bg-paletteHover active:text-paletteHover">
             <a><fa-icon [icon]="icon.definition"></fa-icon></a>
             <span class="text-xs xs:text-sm">{{ icon.name }}</span>
           </li>
@@ -50,7 +50,7 @@ import { ParticipationService } from '../services/participation.service';
         <button
           type="button"
           role="button"
-          class="mt-2 inline-block w-full rounded bg-red-600 px-6 py-2.5 text-xs font-extrabold uppercase leading-tight text-white shadow-md transition duration-150 ease-in-out hover:bg-red-700 hover:shadow-lg"
+          class="mt-2 inline-block w-full rounded bg-red-600 px-6 py-2.5 text-xs font-extrabold uppercase leading-tight shadow-md transition duration-150 ease-in-out hover:bg-red-700 hover:shadow-lg active:scale-90"
           (click)="deleteEvent($event)">
           ELIMINA
         </button>

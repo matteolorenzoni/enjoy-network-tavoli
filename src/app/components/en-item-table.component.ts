@@ -14,10 +14,10 @@ import { TableService } from '../services/table.service';
       class="group flex h-16 items-center rounded-lg p-2 hover:cursor-pointer active:bg-slate-900"
       (click)="goToClient()">
       <div class="overflow-hidden">
-        <p class="truncate">{{ table.props.name }}</p>
+        <p class="truncate text-slate-300">{{ table.props.name }}</p>
       </div>
       <div class="ml-auto flex-none shrink-0 basis-16 pl-2">
-        <p class="m-auto rounded-xl bg-neutral py-1 px-4 text-center">
+        <p class="m-auto rounded-xl bg-neutral py-1 px-4 text-center text-slate-300">
           {{ tableParticipation }}
         </p>
       </div>
@@ -25,12 +25,12 @@ import { TableService } from '../services/table.service';
         <fa-icon
           [icon]="updateIcon"
           role="button"
-          class="ml-2 text-gray-500 transition duration-150 ease-in-out hover:cursor-pointer active:scale-90 active:text-gray-300"
+          class="ml-2 text-slate-300 transition duration-150 ease-in-out hover:cursor-pointer active:scale-90 active:text-slate-500"
           (click)="updateTable($event)"></fa-icon>
         <fa-icon
           [icon]="deleteIcon"
           role="button"
-          class="ml-2 text-gray-500 transition duration-150 ease-in-out hover:cursor-pointer active:scale-90 active:text-gray-300"
+          class="ml-2 text-slate-300 transition duration-150 ease-in-out hover:cursor-pointer active:scale-90 active:text-slate-500"
           (click)="deleteTable($event)"></fa-icon>
       </div>
     </li>

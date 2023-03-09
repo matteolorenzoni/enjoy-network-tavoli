@@ -1,7 +1,7 @@
 <section>
   <button
     type="button"
-    class="mb-4 w-full rounded-lg border border-gray-600 bg-gray-800 py-2.5 px-5 text-sm font-medium text-gray-400 active:z-10 active:bg-gray-700 active:text-white active:outline-none active:ring-4 active:ring-gray-700">
+    class="mb-4 w-full rounded-lg border border-gray-600 bg-gray-800 py-2.5 px-5 text-sm font-medium text-slate-300 active:z-10 active:bg-gray-700 active:text-white active:outline-none active:ring-4 active:ring-gray-700">
     <fa-icon [icon]="filterIcon" class="mr-2"></fa-icon>
     FILTRI
   </button>
@@ -9,7 +9,7 @@
   <div class="flex flex-col gap-16">
     <!-- Admin -->
     <article>
-      <p class="rounded bg-slate-900 py-1 text-center uppercase">Admin</p>
+      <p class="rounded bg-slate-900 py-1 text-center uppercase text-slate-300">Admin</p>
       <ul [@staggeredFadeInIncrement]="employeesAdmin.length" class="flex flex-col divide-y divide-gray-700">
         <en-item-employee *ngFor="let employee of employeesAdmin" [employee]="employee"></en-item-employee>
       </ul>
@@ -17,7 +17,7 @@
 
     <!-- Inspector -->
     <article>
-      <p class="rounded bg-slate-900 py-1 text-center uppercase">Ispettori</p>
+      <p class="rounded bg-slate-900 py-1 text-center uppercase text-slate-300">Ispettori</p>
       <ul [@staggeredFadeInIncrement]="employeesInspector.length" class="flex flex-col divide-y divide-gray-700">
         <en-item-employee *ngFor="let employee of employeesInspector" [employee]="employee"></en-item-employee>
       </ul>
@@ -25,7 +25,7 @@
 
     <!-- Pr -->
     <article>
-      <p class="rounded bg-slate-900 py-1 text-center uppercase">Pr</p>
+      <p class="rounded bg-slate-900 py-1 text-center uppercase text-slate-300">Pr</p>
       <ul [@staggeredFadeInIncrement]="employeesPr.length" class="flex flex-col divide-y divide-gray-700">
         <en-item-employee *ngFor="let employee of employeesPr" [employee]="employee"></en-item-employee>
       </ul>
@@ -37,7 +37,7 @@
   <div [@fadeInAnimation] class="mr-4">
     <button
       type="button"
-      class="rounded-full bg-palette py-3 px-3 text-sm font-medium uppercase text-palette shadow-md transition duration-150 ease-in-out active:scale-90 active:bg-paletteActive active:shadow-lg"
+      class="rounded-full bg-palette py-3 px-3 text-sm font-medium uppercase text-black text-palette shadow-md transition duration-150 ease-in-out active:scale-90 active:bg-paletteActive active:shadow-lg"
       (click)="goToCreateEmployee()">
       Crea dipendente
     </button>

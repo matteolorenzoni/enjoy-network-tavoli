@@ -1,20 +1,20 @@
 <app-back-bar></app-back-bar>
 <form class="flex flex-col gap-12 xs:gap-16" [formGroup]="clientForm" (ngSubmit)="onSubmit()">
   <div class="group relative z-0 mt-8 w-full">
-    <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pr-4 pl-2">+ 39</div>
+    <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pr-4 pl-2 text-slate-200">+ 39</div>
     <input
       type="tel"
       pattern="[0-9]{10}"
       name="tel_input"
       id="tel_input"
-      class="block w-full rounded-lg border border-gray-600 bg-gray-700 p-4 pl-12 text-sm text-white placeholder-gray-400 focus:outline-none focus:ring-0"
+      class="block w-full rounded-lg border border-gray-600 bg-gray-700 p-4 pl-12 text-sm text-slate-200 placeholder-slate-400 focus:outline-none focus:ring-0"
       formControlName="phone"
       autocomplete="off"
       placeholder="Numero di telefono"
       required />
     <button
       type="button"
-      class="text-whitefocus:outline-none absolute right-2.5 bottom-2.5 rounded-lg bg-primary-60 px-4 py-2 text-sm font-medium text-black hover:bg-white hover:text-primary-50"
+      class="absolute right-2.5 bottom-2.5 rounded-lg bg-primary-60 px-4 py-2 text-sm font-medium text-black hover:bg-white hover:text-primary-50 focus:outline-none"
       (click)="checkIfClientAlreadyExists()">
       Cerca
     </button>

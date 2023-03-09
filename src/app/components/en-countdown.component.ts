@@ -5,19 +5,19 @@ import { Subscription } from 'rxjs';
   selector: 'en-countdown[date]',
   template: `
     <div *ngIf="date" class="center grid auto-cols-max grid-flow-col gap-5 text-center">
-      <div class="rounded-box flex w-20 flex-col items-center bg-neutral p-2 text-neutral-content">
+      <div class="rounded-box flex w-20 flex-col items-center bg-neutral p-2 text-slate-300">
         <span class="font-mono countdown text-5xl">
           {{ days }}
         </span>
         GIORNI
       </div>
-      <div class="rounded-box flex w-20 flex-col  items-center bg-neutral p-2 text-neutral-content">
+      <div class="rounded-box flex w-20 flex-col  items-center bg-neutral p-2 text-slate-300">
         <span class="font-mono countdown text-5xl">
           {{ hours }}
         </span>
         ORE
       </div>
-      <div class="rounded-box flex w-20 flex-col  items-center bg-neutral p-2 text-neutral-content">
+      <div class="rounded-box flex w-20 flex-col  items-center bg-neutral p-2 text-slate-300">
         <span class="font-mono countdown text-5xl">
           {{ minutes }}
         </span>
