@@ -10,7 +10,7 @@ import {
   doc,
   setDoc
 } from '@angular/fire/firestore';
-import { Assignment, Client, Employee, Event, Table } from 'src/app/models/type';
+import { Assignment, Client, CustomError, Employee, Event, Table } from 'src/app/models/type';
 import { Participation } from '../../../models/type';
 
 @Injectable({
@@ -26,7 +26,7 @@ export class FirebaseCreateService {
 
   public async addDocument(
     collectionName: string,
-    data: Event | Assignment | Employee | Table | Participation | Client
+    data: Event | Assignment | Employee | Table | Participation | Client | CustomError
   ): Promise<DocumentReference<DocumentData>> {
     const { props } = data;
 
@@ -44,7 +44,7 @@ export class FirebaseCreateService {
 
   public async addDocumentWithUid(
     collectionName: string,
-    data: Event | Assignment | Employee | Table | Participation | Client
+    data: Event | Assignment | Employee | Table | Participation | Client | CustomError
   ): Promise<DocumentReference<DocumentData>> {
     const { uid, props } = data;
 
@@ -63,11 +63,11 @@ export class FirebaseCreateService {
 
   public async addDocuments(
     collectionName: string,
-    data: (Event | Assignment | Employee | Table | Participation | Client)[]
+    data: (Event | Assignment | Employee | Table | Participation | Client | CustomError)[]
   ): Promise<void> {
     const batch = writeBatch(this.db);
     const collectionRef = collection(this.db, collectionName);
-    data.forEach((document: Event | Assignment | Employee | Table | Participation | Client) => {
+    data.forEach((document: Event | Assignment | Employee | Table | Participation | Client | CustomError) => {
       const { props } = document;
 
       /* Sanitize props */

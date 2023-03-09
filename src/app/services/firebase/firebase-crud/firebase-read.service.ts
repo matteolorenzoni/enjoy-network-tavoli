@@ -39,7 +39,7 @@ export class FirebaseReadService {
     const docSnap = await getDoc(docRef);
 
     /* If the document does not exist, throw an error */
-    if (!docSnap.exists()) throw new Error('No such document!');
+    if (!docSnap.exists()) throw new Error('Documento non trovato!');
 
     /* Return the document */
     return docSnap.data() as T;

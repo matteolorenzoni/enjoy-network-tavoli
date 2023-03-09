@@ -1,6 +1,14 @@
 import { IconDefinition } from '@fortawesome/fontawesome-common-types';
 import { RoleType, ToastType } from './enum';
-import { AssignmentDTO, ClientDTO, EmployeeDTO, EventDTO, ParticipationDTO, TableDTO } from './collection';
+import {
+  AssignmentDTO,
+  ClientDTO,
+  CustomErrorDTO,
+  EmployeeDTO,
+  EventDTO,
+  ParticipationDTO,
+  TableDTO
+} from './collection';
 
 export type UserBaseInfo = {
   displayName: string | null;
@@ -55,6 +63,11 @@ export type Participation = {
 export type Client = {
   readonly uid: string;
   props: ClientDTO;
+};
+
+export type CustomError = {
+  readonly uid: string;
+  props: CustomErrorDTO;
 };
 
 export type AssignmentAndEmployee = {

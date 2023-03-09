@@ -1,5 +1,7 @@
+import { Auth } from '@angular/fire/auth';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
+import { CustomErrorService } from './custom-error.service';
 import { ToastType } from '../models/enum';
 import { Toast } from '../models/type';
 
@@ -7,11 +9,21 @@ import { Toast } from '../models/type';
   providedIn: 'root'
 })
 export class ToastService {
+  employeeUid = '';
+
   toast$ = new BehaviorSubject<Toast>({
     type: null,
     message: null,
     isVisible: false
   });
+
+  constructor(private auth: Auth, private customErrorService: CustomErrorService) {
+    this.auth.onAuthStateChanged((user) => {
+      if (user) {
+        this.employeeUid = user.uid;
+      }
+    });
+  }
 
   /* Success */
   public showSuccess(message: string): void {
@@ -20,11 +32,13 @@ export class ToastService {
 
   /* Error */
   public showError(err: Error): void {
-    console.error(err);
+    this.customErrorService.createCustomError(err.message, this.employeeUid);
+    console.error(err.message);
     this.show(ToastType.ERROR, err.message);
   }
 
   public showErrorMessage(message: string): void {
+    this.customErrorService.createCustomError(message, this.employeeUid);
     console.error(message);
     this.show(ToastType.ERROR, message);
   }

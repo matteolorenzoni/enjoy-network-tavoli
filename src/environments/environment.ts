@@ -20,7 +20,8 @@ export const environment = {
     ASSIGNMENTS: 'assignments',
     TABLES: 'tables',
     PARTICIPATIONS: 'participations',
-    CLIENTS: 'clients'
+    CLIENTS: 'clients',
+    ERRORS: 'errors'
   },
   defaultPassword: 'enjoynetwork'
 };

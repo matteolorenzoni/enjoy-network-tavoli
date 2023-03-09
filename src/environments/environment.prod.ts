@@ -16,7 +16,8 @@ export const environment = {
     ASSIGNMENTS: 'PROD_assignments',
     TABLES: 'PROD_tables',
     PARTICIPATIONS: 'PROD_participations',
-    CLIENTS: 'PROD_clients'
+    CLIENTS: 'PROD_clients',
+    ERRORS: 'PROD_errors'
   },
   defaultPassword: 'enjoynetwork'
 };

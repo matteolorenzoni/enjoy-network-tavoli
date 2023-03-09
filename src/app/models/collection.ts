@@ -72,3 +72,10 @@ export type ClientDTO = {
   createdAt?: Date;
   modifiedAt?: Date;
 };
+
+export type CustomErrorDTO = {
+  message: string;
+  from: string;
+  createdAt?: Date;
+  modifiedAt?: Date;
+};
