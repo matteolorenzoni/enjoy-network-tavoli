@@ -71,6 +71,11 @@ export class ClientGeneratorComponent implements OnInit {
 
   /* ------------------------------------------- Http Methods ------------------------------------------- */
   public async onSubmit() {
+    if (this.clientForm.invalid) {
+      this.toastService.showInfo('Inserire i dati correttamente');
+      return;
+    }
+
     try {
       this.isLoading = true;
 
