@@ -29,6 +29,7 @@ export class TableListComponent implements OnInit {
   /* Event */
   eventUid: string | null = null;
   eventDate: Date | null = null;
+  eventStart: Date | null = null;
   eventPersonMarked = 0;
   eventMaxPersonAssigned = 0;
 
@@ -77,6 +78,7 @@ export class TableListComponent implements OnInit {
       .getEvent(this.eventUid)
       .then((event) => {
         this.eventDate = event.props.date;
+        this.eventStart = event.props.timeStart;
       })
       .catch((error: Error) => {
         this.toastService.showError(error);

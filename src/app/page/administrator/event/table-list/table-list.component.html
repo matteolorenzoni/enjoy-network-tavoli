@@ -6,7 +6,7 @@
     <fa-icon [icon]="filterIcon" class="mr-2"></fa-icon>
     FILTRI
   </button>
-  <en-countdown [date]="eventDate"></en-countdown>
+  <en-countdown [date]="eventDate" [time]="eventStart"></en-countdown>
   <div class="m-4 flex">
     <p class="m-auto text-xl text-slate-300">{{ eventPersonMarked }}/{{ eventMaxPersonAssigned }}</p>
   </div>

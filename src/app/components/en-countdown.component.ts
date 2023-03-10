@@ -35,6 +35,8 @@ import { Subscription } from 'rxjs';
 })
 export class EnCountdownComponent implements OnChanges {
   @Input() date!: Date | null;
+  @Input() time!: Date | null;
+  // TODO: sistemare questo null che fa schifo
 
   /* Values */
   days = 0;
@@ -45,9 +47,16 @@ export class EnCountdownComponent implements OnChanges {
   countdownSubscription: Subscription | null = null;
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['date']) {
-      const currentValue = changes['date'].currentValue as Date;
-      const diff = new Date(currentValue).getTime() - new Date().getTime();
+    if (changes['date'] && changes['date'].currentValue && changes['time'] && changes['time'].currentValue) {
+      /* Time */
+      const time = changes['time'].currentValue as string;
+      const timeHour = Number(time.split(':')[0]);
+      const timeMinute = Number(time.split(':')[1]);
+
+      /* Date */
+      const date = changes['date'].currentValue as Date;
+      date.setHours(timeHour, timeMinute, 0, 0);
+      const diff = new Date(date).getTime() - new Date().getTime();
       const days = Math.floor(diff / (1000 * 60 * 60 * 24));
       const hours = Math.floor(diff / (1000 * 60 * 60));
       const minutes = Math.floor(diff / (1000 * 60));
