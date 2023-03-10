@@ -75,6 +75,7 @@ export type ClientDTO = {
 
 export type CustomErrorDTO = {
   message: string;
+  trace: string;
   from: string;
   createdAt?: Date;
   modifiedAt?: Date;

@@ -32,13 +32,18 @@ export class ToastService {
 
   /* Error */
   public showError(err: Error): void {
-    this.customErrorService.createCustomError(err.message, this.employeeUid);
+    this.customErrorService.createCustomError(err.message, err.stack || '', this.employeeUid);
     console.error(err.message);
     this.show(ToastType.ERROR, err.message);
   }
 
   public showErrorMessage(message: string): void {
-    this.customErrorService.createCustomError(message, this.employeeUid);
+    function stackTrace() {
+      const err = new Error();
+      return err.stack;
+    }
+
+    this.customErrorService.createCustomError(message, stackTrace() || '', this.employeeUid);
     console.error(message);
     this.show(ToastType.ERROR, message);
   }

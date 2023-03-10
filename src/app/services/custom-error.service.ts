@@ -9,11 +9,12 @@ import { FirebaseCreateService } from './firebase/firebase-crud/firebase-create.
 export class CustomErrorService {
   constructor(private firebaseCreateService: FirebaseCreateService) {}
 
-  public async createCustomError(message: string, employeeUid: string): Promise<void> {
+  public async createCustomError(message: string, trace: string, employeeUid: string): Promise<void> {
     const customError: CustomError = {
       uid: '',
       props: {
         message,
+        trace,
         from: employeeUid
       }
     };
