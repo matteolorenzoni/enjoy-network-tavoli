@@ -1,6 +1,6 @@
 /* eslint-disable operator-linebreak */
 import { Injectable } from '@angular/core';
-import { QueryConstraint, where } from '@angular/fire/firestore';
+import { orderBy, QueryConstraint, where } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { Assignment, Client, Participation } from '../models/type';
@@ -106,8 +106,10 @@ export class ParticipationService {
 
   public getRealTimeParticipationsByTableUid(tableUid: string): Observable<Participation[]> {
     const idConstraint: QueryConstraint = where('tableUid', '==', tableUid);
-    const isActiveConstraint = where('isActive', '==', true);
-    const constraints: QueryConstraint[] = [idConstraint, isActiveConstraint];
+    const isActiveOrderBy = orderBy('isActive', 'desc');
+    const messageIsReceivedOrderBy = orderBy('messageIsReceived');
+    const modifiedAtOrderBy = orderBy('modifiedAt');
+    const constraints: QueryConstraint[] = [idConstraint, isActiveOrderBy, messageIsReceivedOrderBy, modifiedAtOrderBy];
     const participations: Observable<Participation[]> =
       this.firebaseReadService.getRealTimeDocumentsByMultipleConstraints(
         environment.collection.PARTICIPATIONS,

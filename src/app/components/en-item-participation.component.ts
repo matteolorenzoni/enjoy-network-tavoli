@@ -12,15 +12,30 @@ import { Participation } from '../models/type';
   template: `
     <li
       class="my-2 flex h-12 items-center rounded-lg px-2 text-slate-300"
-      [ngClass]="{ 'bg-red-600/30': !participation.props.messageIsReceived }">
+      [ngClass]="{
+        'bg-emerald-400/50': participation.props.scannedAt && participation.props.isActive,
+        'bg-red-700': !participation.props.messageIsReceived && participation.props.isActive,
+        'bg-slate-800 opacity-20': !participation.props.isActive
+      }">
       <div class="grow truncate">
         <p>
           {{ participation.props.name }} {{ participation.props.lastName }}
-          <span class="ml-4 text-xs">({{ participation.props.phone }})</span>
+          <span class="ml-4 truncate text-xs">({{ participation.props.phone }})</span>
         </p>
-        <p class="text-xs text-slate-400">
-          {{ participation.props.createdAt | date: 'dd/MM/YYYY' }} - {{ participation.props.createdAt | date: 'HH:mm' }}
-        </p>
+
+        <ng-container *ngIf="participation.props.scannedAt; else elseTemplate">
+          <p class="text-xs text-slate-400">
+            ENTRATO IL:
+            {{ participation.props.scannedAt | date: 'dd/MM/YYYY' }} -
+            {{ participation.props.scannedAt | date: 'HH:mm' }}
+          </p>
+        </ng-container>
+        <ng-template #elseTemplate>
+          <p class="text-xs text-slate-400">
+            {{ participation.props.modifiedAt | date: 'dd/MM/YYYY' }} -
+            {{ participation.props.modifiedAt | date: 'HH:mm' }}
+          </p>
+        </ng-template>
       </div>
 
       <div class="flex shrink-0 gap-4 pl-4">
