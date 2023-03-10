@@ -31,6 +31,7 @@ import { Participation } from '../models/type';
           class="text-lg text-slate-300 transition duration-150 ease-in-out hover:cursor-pointer active:scale-90 active:text-slate-500"
           (click)="shareTicketLink(participation.uid)"></fa-icon>
         <fa-icon
+          *ngIf="!canShare"
           [icon]="copyIcon"
           role="button"
           class="text-lg text-slate-300  transition duration-150 ease-in-out hover:cursor-pointer active:scale-90 active:text-slate-500"
@@ -89,19 +90,17 @@ export class EnItemParticipationComponent {
 
   /* ------------------------------ Methods ------------------------------ */
   async shareTicketLink(participationUid: string): Promise<void> {
-    try {
-      const { origin } = window.location;
-      const link = `${origin}/ticket?participation=${participationUid}`;
+    const { origin } = window.location;
+    const link = `${origin}/ticket?participation=${participationUid}`;
 
-      const shareData = {
-        title: 'Condividi ticket',
-        text: `Link per la partecipazione all'evento di ${this.participation.props.name} ${this.participation.props.lastName}`,
-        url: link
-      };
+    const shareData = {
+      title: 'Condividi ticket',
+      text: `Link per la partecipazione all'evento di ${this.participation.props.name} ${this.participation.props.lastName}`,
+      url: link
+    };
 
+    if (navigator.canShare(shareData)) {
       await navigator.share(shareData);
-    } catch (e: any) {
-      this.toastService.showError(e);
     }
   }
 
