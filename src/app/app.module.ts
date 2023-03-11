@@ -53,6 +53,7 @@ import { EventSelectorComponent } from './page/inspector/event-selector/event-se
 import { ScannerComponent } from './page/inspector/scanner/scanner.component';
 import { InspectorParticipationListComponent } from './page/inspector/inspector-participation-list/inspector-participation-list.component';
 import { BackBarComponent } from './layout/back-bar/back-bar.component';
+import { TicketManualValidationComponent } from './page/inspector/ticket-manual-validation/ticket-manual-validation.component';
 
 @NgModule({
   declarations: [
@@ -93,7 +94,8 @@ import { BackBarComponent } from './layout/back-bar/back-bar.component';
     EventSelectorComponent,
     ScannerComponent,
     InspectorParticipationListComponent,
-    BackBarComponent
+    BackBarComponent,
+    TicketManualValidationComponent
   ],
   imports: [
     BrowserModule,

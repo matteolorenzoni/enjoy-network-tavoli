@@ -1,0 +1,101 @@
+<section class="flex flex-col gap-8">
+  <!-- Phone form -->
+  <form class="group relative z-0 w-full" [formGroup]="phoneForm" (ngSubmit)="onSubmitByPhone()">
+    <input
+      type="tel"
+      pattern="[0-9]{10}"
+      name="tel_input"
+      id="tel_input"
+      class="block w-full rounded-lg border border-gray-600 bg-gray-700 p-4 text-sm text-slate-200 placeholder-slate-400 focus:outline-none focus:ring-0"
+      formControlName="phone"
+      autocomplete="off"
+      placeholder="Numero di telefono"
+      required />
+    <button
+      type="submit"
+      class="absolute right-4 bottom-2.5 rounded-lg bg-primary-60 px-4 py-2 text-sm font-medium text-black focus:outline-none active:bg-white active:text-primary-50">
+      Cerca
+    </button>
+  </form>
+
+  <!-- Name and last name form -->
+  <form class="group relative z-0 w-full" [formGroup]="nameAndLastNameForm" (ngSubmit)="onSubmitByNameAndLastName()">
+    <input
+      name="name_input"
+      id="name_input"
+      class="block w-full rounded-t-lg border border-gray-600 bg-gray-700 p-4 text-sm text-slate-200 placeholder-slate-400 focus:outline-none focus:ring-0"
+      formControlName="name"
+      autocomplete="off"
+      placeholder="Nome"
+      required />
+    <input
+      name="lastName_input"
+      id="lastName_input"
+      class="block w-full rounded-b-lg border border-gray-600 bg-gray-700 p-4 text-sm text-slate-200 placeholder-slate-400 focus:outline-none focus:ring-0"
+      formControlName="lastName"
+      autocomplete="off"
+      placeholder="Cognome"
+      required />
+    <div class="center bordere-r absolute right-0 bottom-0 top-0 w-24 rounded-lg border-y border-gray-600 bg-gray-700">
+      <button
+        type="submit"
+        class="rounded-lg bg-primary-60 p-4 text-sm font-medium text-black focus:outline-none active:bg-white active:text-primary-50">
+        Cerca
+      </button>
+    </div>
+  </form>
+
+  <div class="flex w-full flex-col gap-2">
+    <!-- Placeholder -->
+    <ng-container *ngIf="!participation; else elseTemplate">
+      <div class="center h-52 w-full rounded-lg bg-slate-800 p-8 text-center">
+        <p class="uppercase text-slate-300">Selezionare uno dei due parametri di ricerca</p>
+      </div>
+    </ng-container>
+
+    <ng-template #elseTemplate>
+      <!-- Info section -->
+      <div
+        class="center flex h-full w-full flex-col items-center gap-12 rounded-lg p-4"
+        [ngClass]="{
+          'bg-red-500': participation && !canGoToTheEvent,
+          'bg-slate-800': !participation || canGoToTheEvent,
+          'bg-emerald-500': buttonDecision === 'ACCEPTED'
+        }">
+        <div>
+          <p class="text-center text-lg text-white">{{ participation?.props?.name }}</p>
+          <p class="text-center text-lg text-white">{{ participation?.props?.lastName }}</p>
+          <p class="text-center text-lg text-white">{{ participation?.props?.phone }}</p>
+        </div>
+
+        <p class="text-center text-lg text-white">
+          <span class="font-bold uppercase underline">Tavolo</span>
+          <br />
+          <span>{{ table?.props?.name }}</span>
+        </p>
+
+        <p *ngIf="!canGoToTheEvent" class="text-center text-lg text-white">
+          <span class="font-bold uppercase underline">Motivazione</span>
+          <br />
+          {{ participationNoGoodMotivation }}
+        </p>
+      </div>
+
+      <!-- Buttons -->
+      <div class="flex gap-4">
+        <button
+          [disabled]="!canGoToTheEvent || buttonDecision !== ''"
+          class="grow-1 rounded bg-emerald-500 p-2 text-lg font-bold text-white transition duration-150 ease-in-out active:scale-90 active:bg-emerald-700 disabled:cursor-not-allowed disabled:bg-emerald-500/20 disabled:text-slate-500"
+          (click)="acceptParticipation()">
+          ACCETTA
+        </button>
+        <button
+          [disabled]="!canGoToTheEvent || buttonDecision !== ''"
+          class="grow-1 rounded bg-red-500 p-2 text-lg font-bold text-white transition duration-150 ease-in-out active:scale-90 active:bg-red-700 disabled:cursor-not-allowed disabled:bg-red-500/20 disabled:text-slate-500"
+          (click)="rejectParticipation()">
+          RIFIUTA
+        </button>
+      </div>
+    </ng-template>
+  </div>
+</section>
