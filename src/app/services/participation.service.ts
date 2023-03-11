@@ -104,6 +104,41 @@ export class ParticipationService {
     return participation;
   }
 
+  public async getParticipationByPhone(eventUid: string, phone: string): Promise<Participation> {
+    const eventUidConstraint: QueryConstraint = where('eventUid', '==', eventUid);
+    const phoneConstraint: QueryConstraint = where('phone', '==', phone);
+    const constraints: QueryConstraint[] = [eventUidConstraint, phoneConstraint];
+    const participations: Participation[] = await this.firebaseReadService.getDocumentsByMultipleConstraints(
+      environment.collection.PARTICIPATIONS,
+      constraints,
+      participationConverter
+    );
+    if (participations.length <= 0) {
+      throw new Error('Partecipazione non trovata');
+    }
+    return participations[0];
+  }
+
+  public async getParticipationByNameAndLastName(
+    eventUid: string,
+    name: string,
+    lastName: string
+  ): Promise<Participation> {
+    const eventUidConstraint: QueryConstraint = where('eventUid', '==', eventUid);
+    const nameConstraint: QueryConstraint = where('name', '==', name);
+    const lastNameConstraint: QueryConstraint = where('lastName', '==', lastName);
+    const constraints: QueryConstraint[] = [eventUidConstraint, nameConstraint, lastNameConstraint];
+    const participations: Participation[] = await this.firebaseReadService.getDocumentsByMultipleConstraints(
+      environment.collection.PARTICIPATIONS,
+      constraints,
+      participationConverter
+    );
+    if (participations.length <= 0) {
+      throw new Error('Partecipazione non trovata');
+    }
+    return participations[0];
+  }
+
   public getRealTimeParticipationsByTableUid(tableUid: string): Observable<Participation[]> {
     const idConstraint: QueryConstraint = where('tableUid', '==', tableUid);
     const isActiveOrderBy = orderBy('isActive', 'desc');
