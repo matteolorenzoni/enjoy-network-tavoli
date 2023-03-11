@@ -57,9 +57,9 @@ export class EnCountdownComponent implements OnChanges {
       const date = changes['date'].currentValue as Date;
       date.setHours(timeHour, timeMinute, 0, 0);
       const diff = new Date(date).getTime() - new Date().getTime();
-      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-      const hours = Math.floor(diff / (1000 * 60 * 60));
-      const minutes = Math.floor(diff / (1000 * 60));
+      const days = diff > 0 ? Math.floor(diff / (1000 * 60 * 60 * 24)) : 0;
+      const hours = diff > 0 ? Math.floor(diff / (1000 * 60 * 60)) : 0;
+      const minutes = diff > 0 ? Math.floor(diff / (1000 * 60)) : 0;
       this.days = days;
       this.hours = hours - this.days * 24;
       this.minutes = minutes - this.hours * 60 - this.days * 24 * 60;
