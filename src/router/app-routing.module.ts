@@ -17,7 +17,7 @@ import { ParticipationListComponent } from 'src/app/page/pr/participation-list/p
 import { TicketComponent } from 'src/app/page/client/ticket/ticket.component';
 import { EventSelectorComponent } from 'src/app/page/inspector/event-selector/event-selector.component';
 import { AuthGuard } from 'src/app/guards/auth.guard';
-import { InspectorParticipationListComponent } from '../app/page/inspector/inspector-participation-list/inspector-participation-list.component';
+import { TicketManualValidationComponent } from 'src/app/page/inspector/ticket-manual-validation/ticket-manual-validation.component';
 import { ScannerComponent } from '../app/page/inspector/scanner/scanner.component';
 import { UpdatePasswordComponent } from '../app/page/setting/update-password/update-password.component';
 import { ClientGeneratorComponent } from '../app/page/pr/client-generator/client-generator.component';
@@ -79,7 +79,8 @@ const routes: Routes = [
         canActivate: [AuthGuard],
         children: [
           { path: 'scanner', component: ScannerComponent },
-          { path: 'participation-list', component: InspectorParticipationListComponent },
+          { path: 'ticket-manual-validation', component: TicketManualValidationComponent },
+          // { path: 'participation-list', component: InspectorParticipationListComponent },
 
           /* Page not found */
           { path: '**', component: PageNotFoundComponent }
