@@ -139,18 +139,31 @@ export class ParticipationService {
     return participations[0];
   }
 
-  public getRealTimeParticipationsByTableUid(tableUid: string): Observable<Participation[]> {
-    const idConstraint: QueryConstraint = where('tableUid', '==', tableUid);
-    const isActiveOrderBy = orderBy('isActive', 'desc');
-    const messageIsReceivedOrderBy = orderBy('messageIsReceived');
-    const modifiedAtOrderBy = orderBy('modifiedAt');
-    const constraints: QueryConstraint[] = [idConstraint, isActiveOrderBy, messageIsReceivedOrderBy, modifiedAtOrderBy];
-    const participations: Observable<Participation[]> =
-      this.firebaseReadService.getRealTimeDocumentsByMultipleConstraints(
-        environment.collection.PARTICIPATIONS,
-        constraints,
-        participationConverter
-      );
+  public async getParticipationsByEventUid(eventUid: string): Promise<Participation[]> {
+    const eventUidConstraint: QueryConstraint = where('eventUid', '==', eventUid);
+    const isActive: QueryConstraint = where('isActive', '==', true);
+    const nameOrderBy = orderBy('name');
+    const lastNameOrderBy = orderBy('lastName');
+    const constraints = [eventUidConstraint, isActive, nameOrderBy, lastNameOrderBy];
+    const participations: Participation[] = await this.firebaseReadService.getDocumentsByMultipleConstraints(
+      environment.collection.PARTICIPATIONS,
+      constraints,
+      participationConverter
+    );
+    return participations;
+  }
+
+  public async getParticipationsByTableUid(tableUid: string): Promise<Participation[]> {
+    const eventUidConstraint: QueryConstraint = where('tableUid', '==', tableUid);
+    const isActive: QueryConstraint = where('isActive', '==', true);
+    const nameOrderBy = orderBy('name');
+    const lastNameOrderBy = orderBy('lastName');
+    const constraints = [eventUidConstraint, isActive, nameOrderBy, lastNameOrderBy];
+    const participations: Participation[] = await this.firebaseReadService.getDocumentsByMultipleConstraints(
+      environment.collection.PARTICIPATIONS,
+      constraints,
+      participationConverter
+    );
     return participations;
   }
 
@@ -184,6 +197,21 @@ export class ParticipationService {
     const countSnapshots = await Promise.all(countPromises);
     const count = countSnapshots.reduce((acc, curr) => acc + curr.data().count, 0);
     return count;
+  }
+
+  public getRealTimeParticipationsByTableUid(tableUid: string): Observable<Participation[]> {
+    const idConstraint: QueryConstraint = where('tableUid', '==', tableUid);
+    const isActiveOrderBy = orderBy('isActive', 'desc');
+    const messageIsReceivedOrderBy = orderBy('messageIsReceived');
+    const modifiedAtOrderBy = orderBy('modifiedAt');
+    const constraints: QueryConstraint[] = [idConstraint, isActiveOrderBy, messageIsReceivedOrderBy, modifiedAtOrderBy];
+    const participations: Observable<Participation[]> =
+      this.firebaseReadService.getRealTimeDocumentsByMultipleConstraints(
+        environment.collection.PARTICIPATIONS,
+        constraints,
+        participationConverter
+      );
+    return participations;
   }
 
   /* ------------------------------------------- UPDATE ------------------------------------------- */

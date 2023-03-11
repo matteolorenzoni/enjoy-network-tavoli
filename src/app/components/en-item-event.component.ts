@@ -3,6 +3,8 @@ import { DatePipe } from '@angular/common';
 import { Component, Input, SimpleChanges } from '@angular/core';
 import { faPen, faPeopleGroup, faUsers } from '@fortawesome/free-solid-svg-icons';
 import { Event, Table } from 'src/app/models/type';
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
 import { ToastService } from '../services/toast.service';
 import { expandEventItemDetailsAnimation, fadeInAnimation } from '../animations/animations';
 import { TableService } from '../services/table.service';
@@ -47,6 +49,22 @@ import { ParticipationService } from '../services/participation.service';
             <span class="text-xs xs:text-sm">{{ icon.name }}</span>
           </li>
         </ul>
+        <div class="flex gap-4">
+          <button
+            type="button"
+            role="button"
+            class="mt-2 inline-block w-full rounded bg-teal-600 px-6 py-2.5 text-xs font-extrabold uppercase leading-tight shadow-md transition duration-150 ease-in-out hover:bg-teal-700 hover:shadow-lg active:scale-90"
+            (click)="downloadPDFTables()">
+            PDF Tavoli
+          </button>
+          <button
+            type="button"
+            role="button"
+            class="mt-2 inline-block w-full rounded bg-teal-600 px-6 py-2.5 text-xs font-extrabold uppercase leading-tight shadow-md transition duration-150 ease-in-out hover:bg-teal-700 hover:shadow-lg active:scale-90"
+            (click)="downloadPDFParticipants()">
+            PDF Partecipanti
+          </button>
+        </div>
         <button
           type="button"
           role="button"
@@ -161,5 +179,57 @@ export class EnItemEventComponent {
   /* --------------------------------------- Methods --------------------------------------- */
   toggleOpen(): void {
     this.isOpen = !this.isOpen;
+  }
+
+  downloadPDFTables() {
+    // eslint-disable-next-line new-cap
+    const doc = new jsPDF({ orientation: 'p', unit: 'pt', format: 'a4' });
+
+    try {
+      this.table.forEach(async (table: Table) => {
+        const participations = await this.participationService.getParticipationsByTableUid(table.uid);
+
+        autoTable(doc, {
+          head: [[{ content: `TAVOLO:  ${table.props.name}`, colSpan: 10 }], ['Numero', 'Nome', 'Cognome', 'Telefono']],
+          body: participations.map((participation, index) => [
+            index + 1,
+            participation.props.name,
+            participation.props.lastName,
+            participation.props.phone
+          ]),
+          headStyles: { fillColor: [250, 137, 56] }
+        });
+
+        const eventName = this.event.props.name.replace(/\s/g, '_');
+        doc.save(`tavoli_${eventName}.pdf`);
+      });
+    } catch (error: any) {
+      this.toastService.showError(error);
+    }
+  }
+
+  async downloadPDFParticipants() {
+    // eslint-disable-next-line new-cap
+    const doc = new jsPDF({ orientation: 'p', unit: 'pt', format: 'a4' });
+
+    try {
+      const participations = await this.participationService.getParticipationsByEventUid(this.event.uid);
+
+      autoTable(doc, {
+        head: [['Numero', 'Nome', 'Cognome', 'Telefono']],
+        body: participations.map((participation, index) => [
+          index + 1,
+          participation.props.name,
+          participation.props.lastName,
+          participation.props.phone
+        ]),
+        headStyles: { fillColor: [250, 137, 56] }
+      });
+
+      const eventName = this.event.props.name.replace(/\s/g, '_');
+      doc.save(`partecipanti_${eventName}.pdf`);
+    } catch (error: any) {
+      this.toastService.showError(error);
+    }
   }
 }
