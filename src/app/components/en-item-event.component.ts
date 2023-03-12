@@ -89,7 +89,6 @@ export class EnItemEventComponent {
 
   /* Event */
   isOpen = false;
-  personMarked = 0;
   eventInfo: { label: string; value: string | number }[] = [];
   dateFormatted = '';
 
@@ -110,10 +109,11 @@ export class EnItemEventComponent {
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['event']) {
       this.dateFormatted = this.datePipe.transform(this.event.props.date, 'dd/MM/yyyy') || '';
+
       this.eventInfo.push({ label: 'Codice evento', value: this.event.props.code });
       this.eventInfo.push({ label: 'Nome', value: this.event.props.name });
       this.eventInfo.push({ label: 'Data', value: this.dateFormatted });
-      this.eventInfo.push({ label: 'Paganti', value: this.personMarked });
+      this.eventInfo.push({ label: 'Limite tickets', value: this.event.props.maxPerson });
       this.eventInfo.push({ label: 'Orario', value: `${this.event.props.timeStart} - ${this.event.props.timeEnd}` });
       this.eventInfo.push({ label: 'Luogo', value: this.event.props.place });
       this.eventInfo.push({ label: 'Ospite/i', value: this.event.props?.guest || '' });
@@ -157,19 +157,6 @@ export class EnItemEventComponent {
       .getTableByEventUid(this.event.uid)
       .then((table: Table[]) => {
         this.table = table;
-        this.getAllParticipations();
-      })
-      .catch((err: Error) => {
-        this.toastService.showError(err);
-      });
-  }
-
-  getAllParticipations(): void {
-    const tableUids = this.table.map((table: Table) => table.uid);
-    this.participationService
-      .getParticipationsCountByMultiTableUid(tableUids)
-      .then((count) => {
-        this.personMarked = count;
       })
       .catch((err: Error) => {
         this.toastService.showError(err);

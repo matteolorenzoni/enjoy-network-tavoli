@@ -10,9 +10,6 @@ import {
   QueryConstraint,
   QueryDocumentSnapshot,
   FirestoreDataConverter,
-  getCountFromServer,
-  AggregateField,
-  AggregateQuerySnapshot,
   onSnapshot
 } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
@@ -120,13 +117,13 @@ export class FirebaseReadService {
   }
 
   /* Get the count of all documents in a collection that match the constraints */
-  public async getDocumentsByMultipleConstraintsCount(
-    collectionName: string,
-    constraints: QueryConstraint[]
-  ): Promise<AggregateQuerySnapshot<{ count: AggregateField<number> }>> {
-    const collectionRef = collection(this.db, collectionName);
-    const q = query(collectionRef, ...constraints);
-    const aggregateField = await getCountFromServer(q);
-    return aggregateField;
-  }
+  // public async getDocumentsByMultipleConstraintsCount(
+  //   collectionName: string,
+  //   constraints: QueryConstraint[]
+  // ): Promise<AggregateQuerySnapshot<{ count: AggregateField<number> }>> {
+  //   const collectionRef = collection(this.db, collectionName);
+  //   const q = query(collectionRef, ...constraints);
+  //   const aggregateField = await getCountFromServer(q);
+  //   return aggregateField;
+  // }
 }

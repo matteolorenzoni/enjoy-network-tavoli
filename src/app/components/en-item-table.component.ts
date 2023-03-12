@@ -1,4 +1,4 @@
-import { Component, Input, SimpleChanges } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { faUserPlus, faPen, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { ToastService } from '../services/toast.service';
@@ -18,7 +18,7 @@ import { TableService } from '../services/table.service';
       </div>
       <div class="ml-auto flex-none shrink-0 basis-16 pl-2">
         <p class="m-auto rounded-xl bg-neutral py-1 px-4 text-center text-slate-300">
-          {{ tableParticipation }}
+          {{ table.props.personsActive }}
         </p>
       </div>
       <div class="flex h-full flex-none shrink-0 basis-16 items-center justify-evenly hover:cursor-default">
@@ -50,9 +50,6 @@ export class EnItemTableComponent {
   /* Event */
   eventUid: string | null = null;
 
-  /* Participation */
-  tableParticipation = 0;
-
   /* Icons */
   addIcon = faUserPlus;
   updateIcon = faPen;
@@ -68,12 +65,6 @@ export class EnItemTableComponent {
 
   ngOnInit(): void {
     this.eventUid = this.route.snapshot.paramMap.get('eventUid');
-  }
-
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes['table']) {
-      this.getTablePersonMarked();
-    }
   }
 
   goToClient(): void {
@@ -107,16 +98,5 @@ export class EnItemTableComponent {
           this.toastService.showError(error);
         });
     }
-  }
-
-  getTablePersonMarked(): void {
-    this.participationService
-      .getParticipationsCountByTableUid(this.table.uid)
-      .then((count) => {
-        this.tableParticipation = count;
-      })
-      .catch((error) => {
-        this.toastService.showError(error);
-      });
   }
 }

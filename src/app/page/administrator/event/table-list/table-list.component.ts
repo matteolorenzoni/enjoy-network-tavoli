@@ -1,4 +1,4 @@
-import { ParticipationService } from 'src/app/services/participation.service';
+import { TableService } from 'src/app/services/table.service';
 import { SessionStorageService } from 'src/app/services/sessionstorage.service';
 import { ToastService } from 'src/app/services/toast.service';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -9,7 +9,6 @@ import { Assignment, Table } from 'src/app/models/type';
 import { AssignmentService } from 'src/app/services/assignment.service';
 import { Subscription } from 'rxjs';
 import { RoleType } from '../../../../models/enum';
-import { TableService } from '../../../../services/table.service';
 import { EventService } from '../../../../services/event.service';
 
 @Component({
@@ -46,7 +45,6 @@ export class TableListComponent implements OnInit {
     private eventService: EventService,
     private assignmentService: AssignmentService,
     private tableService: TableService,
-    private participationService: ParticipationService,
     private toastService: ToastService,
     private sessionStorage: SessionStorageService
   ) {}
@@ -95,6 +93,7 @@ export class TableListComponent implements OnInit {
       this.assignmentService
         .getAssignmentByEventUidAndEmployeeUid(this.eventUid, this.employeeUid)
         .then((assignment) => {
+          this.eventPersonMarked = assignment ? assignment.props.personMarked : 0;
           this.eventMaxPersonAssigned = assignment ? assignment.props.maxPersonMarkable : 0;
         })
         .catch((error: Error) => {
@@ -104,6 +103,7 @@ export class TableListComponent implements OnInit {
       this.assignmentService
         .getAssignmentsByEventUid(this.eventUid)
         .then((assignments: Assignment[]) => {
+          this.eventPersonMarked = assignments.reduce((acc, cur) => acc + cur.props.personMarked, 0);
           this.eventMaxPersonAssigned = assignments.reduce((acc, cur) => acc + cur.props.maxPersonMarkable, 0);
         })
         .catch((error: Error) => {
@@ -126,8 +126,6 @@ export class TableListComponent implements OnInit {
         .subscribe({
           next(data: Table[]) {
             that.tables = data;
-            const tableUids = data.map((table) => table.uid);
-            that.getAllTableParticipation(tableUids);
           },
           error(error: Error) {
             that.toastService.showError(error);
@@ -137,26 +135,12 @@ export class TableListComponent implements OnInit {
       this.tablesSubscription = this.tableService.getRealTimeTableByEventUid(this.eventUid).subscribe({
         next(data: Table[]) {
           that.tables = data;
-          const tableUids = data.map((table) => table.uid);
-          that.getAllTableParticipation(tableUids);
         },
         error(error: Error) {
           that.toastService.showError(error);
         }
       });
     }
-  }
-
-  /* To get the number of person marked for each table */
-  getAllTableParticipation(tableUids: string[]): void {
-    this.participationService
-      .getParticipationsCountByMultiTableUid(tableUids)
-      .then((count) => {
-        this.eventPersonMarked = count;
-      })
-      .catch((error: Error) => {
-        this.toastService.showError(error);
-      });
   }
 
   /* ---------------------------------------- Methods ---------------------------------------- */

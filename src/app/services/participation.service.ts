@@ -167,38 +167,6 @@ export class ParticipationService {
     return participations;
   }
 
-  public async getParticipationsCountByTableUid(tableUid: string): Promise<number> {
-    const tableUidConstraint = where('tableUid', '==', tableUid);
-    const isActiveConstraint = where('isActive', '==', true);
-    const constricts: QueryConstraint[] = [tableUidConstraint, isActiveConstraint];
-    const aggregate = await this.firebaseReadService.getDocumentsByMultipleConstraintsCount(
-      environment.collection.PARTICIPATIONS,
-      constricts
-    );
-    return aggregate.data().count;
-  }
-
-  public async getParticipationsCountByMultiTableUid(tableUids: string[]): Promise<number> {
-    if (!tableUids || tableUids.length === 0) return 0;
-
-    const countPromises = [];
-
-    for (let i = 0; i < tableUids.length; i += 10) {
-      const idConstraint: QueryConstraint = where('tableUid', 'in', tableUids.slice(i, i + 10));
-      const isActiveConstraint = where('isActive', '==', true);
-      const constraints: QueryConstraint[] = [idConstraint, isActiveConstraint];
-      const promise = this.firebaseReadService.getDocumentsByMultipleConstraintsCount(
-        environment.collection.PARTICIPATIONS,
-        constraints
-      );
-      countPromises.push(promise);
-    }
-
-    const countSnapshots = await Promise.all(countPromises);
-    const count = countSnapshots.reduce((acc, curr) => acc + curr.data().count, 0);
-    return count;
-  }
-
   public getRealTimeParticipationsByTableUid(tableUid: string): Observable<Participation[]> {
     const idConstraint: QueryConstraint = where('tableUid', '==', tableUid);
     const isActiveOrderBy = orderBy('isActive', 'desc');
