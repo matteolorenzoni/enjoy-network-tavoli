@@ -40,7 +40,7 @@ import { ParticipationService } from '../services/participation.service';
             <div class="text-base font-normal text-slate-300">{{ info.value }}</div>
           </li>
         </ul>
-        <ul class="mt-4 flex gap-4">
+        <ul class="mt-4 flex gap-2">
           <li
             *ngFor="let icon of itemNavigationMenu"
             [routerLink]="icon.link"
@@ -49,7 +49,7 @@ import { ParticipationService } from '../services/participation.service';
             <span class="text-xs xs:text-sm">{{ icon.name }}</span>
           </li>
         </ul>
-        <div class="flex gap-4">
+        <div class="flex gap-2">
           <button
             type="button"
             role="button"
