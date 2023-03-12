@@ -16,7 +16,15 @@ import { employeeConverter } from '../models/converter';
   providedIn: 'root'
 })
 export class UserService {
-  constructor(private auth: Auth, private router: Router, private firebaseReadService: FirebaseReadService) {}
+  userUid = '';
+
+  constructor(private auth: Auth, private router: Router, private firebaseReadService: FirebaseReadService) {
+    this.auth.onAuthStateChanged((user) => {
+      if (user) {
+        this.userUid = user.uid;
+      }
+    });
+  }
 
   public async getRole(user: User): Promise<string> {
     try {
@@ -42,6 +50,10 @@ export class UserService {
         reject();
       }, reject);
     });
+  }
+
+  public getUserUid(): string {
+    return this.userUid;
   }
 
   public register(email: string, password: string): Promise<UserCredential> {
