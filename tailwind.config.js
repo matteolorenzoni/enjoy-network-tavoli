@@ -61,7 +61,8 @@ module.exports = {
     },
     screens: {
       xs: '420px',
-      sm: '576px'
+      sm: '576px',
+      md: '768px'
     },
     fontFamily: {
       gruppo: ['Gruppo'],

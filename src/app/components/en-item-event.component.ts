@@ -13,7 +13,7 @@ import { ParticipationService } from '../services/participation.service';
 @Component({
   selector: 'en-item-event[event]',
   template: `
-    <li class="my-4 mx-auto w-full overflow-hidden rounded-lg bg-slate-900 sm:w-3/5">
+    <li class="my-4 mx-auto w-full overflow-hidden rounded-lg bg-slate-900 md:w-3/5">
       <div role="button" class="relative hover:cursor-pointer" (click)="toggleOpen()">
         <img [src]="event.props.imageUrl" [alt]="dateFormatted + '_image'" class="aspect-square object-contain " />
         <div
