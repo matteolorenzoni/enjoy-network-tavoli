@@ -23,7 +23,8 @@ export const environment = {
     CLIENTS: 'clients',
     ERRORS: 'errors'
   },
-  defaultPassword: 'enjoynetwork'
+  defaultPassword: 'enjoynetwork',
+  administratorUids: ['ehEkhUjgMWSr3kKyREniV4SvmXD3']
 };
 
 /*
