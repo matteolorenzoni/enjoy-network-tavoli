@@ -1,10 +1,10 @@
+import { RoleType } from 'src/app/models/enum';
 import { Injectable } from '@angular/core';
 import {
   Auth,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   signOut,
-  User,
   UserCredential
 } from '@angular/fire/auth';
 import { Router } from '@angular/router';
@@ -17,43 +17,33 @@ import { employeeConverter } from '../models/converter';
 })
 export class UserService {
   userUid = '';
+  userRole: RoleType = RoleType.PR;
 
   constructor(private auth: Auth, private router: Router, private firebaseReadService: FirebaseReadService) {
-    this.auth.onAuthStateChanged((user) => {
+    this.auth.onAuthStateChanged(async (user) => {
       if (user) {
-        this.userUid = user.uid;
-      }
-    });
-  }
-
-  public async getRole(user: User): Promise<string> {
-    try {
-      const { uid } = user;
-      const employee = await this.firebaseReadService.getDocumentByUid(
-        environment.collection.EMPLOYEES,
-        uid,
-        employeeConverter
-      );
-      return employee.props.role;
-    } catch (error) {
-      return '';
-    }
-  }
-
-  public async getCurrentUserRole(): Promise<string> {
-    return new Promise((resolve, reject) => {
-      this.auth.onAuthStateChanged((user) => {
-        if (user) {
-          const role = this.getRole(user);
-          resolve(role);
+        try {
+          this.userUid = user.uid;
+          const employee = await this.firebaseReadService.getDocumentByUid(
+            environment.collection.EMPLOYEES,
+            user.uid,
+            employeeConverter
+          );
+          this.userRole = employee.props.role;
+        } catch (error: any) {
+          this.logout();
+          throw new Error(error);
         }
-        reject();
-      }, reject);
+      }
     });
   }
 
   public getUserUid(): string {
     return this.userUid;
+  }
+
+  public getUserRole(): RoleType {
+    return this.userRole;
   }
 
   public register(email: string, password: string): Promise<UserCredential> {
