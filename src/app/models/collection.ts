@@ -45,6 +45,9 @@ export type TableDTO = {
   price?: number;
   hour?: Date;
   drinkList?: string;
+  personsTotal: number;
+  personsActive: number;
+  personsScanned: number;
   isActive: boolean;
   createdAt?: Date;
   modifiedAt?: Date;

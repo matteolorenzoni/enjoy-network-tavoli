@@ -95,6 +95,9 @@ export class TableGeneratorComponent implements OnInit {
         price,
         hour: hour ? new Date(hour) : undefined,
         drinkList,
+        personsTotal: 0,
+        personsActive: 0,
+        personsScanned: 0,
         isActive: true
       }
     };
