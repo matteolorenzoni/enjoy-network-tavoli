@@ -4,7 +4,6 @@ import { Component } from '@angular/core';
 import { BarcodeFormat } from '@zxing/library';
 import { BehaviorSubject } from 'rxjs';
 import { ParticipationService } from 'src/app/services/participation.service';
-import { Auth } from '@angular/fire/auth';
 import { UserService } from 'src/app/services/user.service';
 import { ToastService } from '../../../services/toast.service';
 
@@ -45,16 +44,11 @@ export class ScannerComponent {
 
   /* ------------------------------------ Constructor ------------------------------------ */
   constructor(
-    private auth: Auth,
     private userService: UserService,
     private participationService: ParticipationService,
     private toastService: ToastService
   ) {
-    this.auth.onAuthStateChanged((user) => {
-      if (user) {
-        this.employeeUid = user.uid;
-      }
-    });
+    this.employeeUid = this.userService.getUserUid();
 
     this.participationUid.subscribe((newParticipation) => {
       if (newParticipation) {

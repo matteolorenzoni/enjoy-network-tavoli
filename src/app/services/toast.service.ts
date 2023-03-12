@@ -1,4 +1,4 @@
-import { Auth } from '@angular/fire/auth';
+import { UserService } from 'src/app/services/user.service';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { CustomErrorService } from './custom-error.service';
@@ -17,12 +17,8 @@ export class ToastService {
     isVisible: false
   });
 
-  constructor(private auth: Auth, private customErrorService: CustomErrorService) {
-    this.auth.onAuthStateChanged((user) => {
-      if (user) {
-        this.employeeUid = user.uid;
-      }
-    });
+  constructor(private userService: UserService, private customErrorService: CustomErrorService) {
+    this.employeeUid = this.userService.getUserUid();
   }
 
   /* Success */

@@ -7,7 +7,6 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ParticipationService } from 'src/app/services/participation.service';
 import { ToastService } from 'src/app/services/toast.service';
 import { TableService } from 'src/app/services/table.service';
-import { Auth } from '@angular/fire/auth';
 
 @Component({
   selector: 'app-ticket-manual-validation',
@@ -23,7 +22,7 @@ export class TicketManualValidationComponent {
   eventUid?: string;
 
   /* Employee */
-  employeeUid?: string;
+  employeeUid = '';
 
   /* Table */
   table?: Table;
@@ -35,7 +34,6 @@ export class TicketManualValidationComponent {
   buttonDecision: 'ACCEPTED' | 'REJECTED' | '' = '';
 
   constructor(
-    private auth: Auth,
     private route: ActivatedRoute,
     private datePipe: DatePipe,
     private userService: UserService,
@@ -43,11 +41,7 @@ export class TicketManualValidationComponent {
     private participationService: ParticipationService,
     private toastService: ToastService
   ) {
-    this.auth.onAuthStateChanged((user) => {
-      if (user) {
-        this.employeeUid = user.uid;
-      }
-    });
+    this.employeeUid = this.userService.getUserUid();
 
     this.phoneForm = new FormGroup({
       phone: new FormControl(null, [Validators.required, Validators.pattern(/^\d{9,10}$/)])
@@ -131,7 +125,7 @@ export class TicketManualValidationComponent {
   }
 
   acceptParticipation() {
-    if (!this.employeeUid || !this.participation) {
+    if (!this.participation || !this.employeeUid) {
       this.userService.logout();
       return;
     }
