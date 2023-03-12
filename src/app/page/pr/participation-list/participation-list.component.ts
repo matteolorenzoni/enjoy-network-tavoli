@@ -1,9 +1,11 @@
+import { UserService } from 'src/app/services/user.service';
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { faFilter } from '@fortawesome/free-solid-svg-icons';
 import { fadeInAnimation, staggeredFadeInIncrement } from 'src/app/animations/animations';
 import { ToastService } from 'src/app/services/toast.service';
 import { Subscription } from 'rxjs';
+import { environment } from 'src/environments/environment';
 import { Participation } from '../../../models/type';
 import { ParticipationService } from '../../../services/participation.service';
 
@@ -16,6 +18,11 @@ import { ParticipationService } from '../../../services/participation.service';
 export class ParticipationListComponent implements OnInit {
   /* Icons */
   filterIcon = faFilter;
+
+  /* Employee */
+  employeeUid = '';
+  administratorUids: string[] = [];
+  employeeIsAdministrator = false;
 
   /* Event */
   eventUid: string | null = null;
@@ -32,9 +39,14 @@ export class ParticipationListComponent implements OnInit {
   constructor(
     private router: Router,
     private route: ActivatedRoute,
+    private userService: UserService,
     private participationService: ParticipationService,
     private toastService: ToastService
-  ) {}
+  ) {
+    this.employeeUid = this.userService.getUserUid();
+    this.administratorUids = environment.administratorUids;
+    this.employeeIsAdministrator = this.administratorUids.includes(this.employeeUid);
+  }
 
   /* --------------------------------------------- Lifecycle --------------------------------------------- */
   ngOnInit(): void {
