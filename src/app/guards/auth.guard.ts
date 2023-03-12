@@ -9,8 +9,13 @@ export class AuthGuard implements CanActivate {
   constructor(private userService: UserService) {}
 
   async canActivate(route: ActivatedRouteSnapshot): Promise<boolean> {
-    const role = this.userService.getUserRole();
+    const role = await this.userService.getCurrentUserRole();
     const path = route.routeConfig?.path;
-    return role === path;
+    if (role === path) {
+      return true;
+    }
+
+    this.userService.logout();
+    return false;
   }
 }

@@ -25,6 +25,7 @@ export class LoginComponent implements OnInit {
   }
 
   goToDashboard() {
+    this.section = 3;
     const employeeRole = this.sessionStorageService.getEmployeeRole();
     if (employeeRole) {
       this.router.navigate([

@@ -1,9 +1,11 @@
 <main class="block h-screen overflow-hidden">
-  <app-hero class="flex h-full flex-col items-center" (setSectionEvent)="incrementSection()"></app-hero>
-  <app-login-form
-    class="flex h-[160%] flex-col"
-    [@loginFormAnimation]="section === 0 ? 'bottom' : section === 1 ? 'center' : 'top'"
-    [@loginFormAnimation2]="section === 0 ? 'bottom' : section === 1 ? 'center' : 'top'"
-    (@loginFormAnimation2.done)="section === 2 && goToDashboard()"
-    (setSectionEvent)="incrementSection()"></app-login-form>
+  <div *ngIf="section !== 3" class="h-full w-full">
+    <app-hero class="flex h-full flex-col items-center" (setSectionEvent)="incrementSection()"></app-hero>
+    <app-login-form
+      class="flex h-[160%] flex-col"
+      [@loginFormAnimation]="section === 0 ? 'bottom' : section === 1 ? 'center' : 'top'"
+      [@loginFormAnimation2]="section === 0 ? 'bottom' : section === 1 ? 'center' : 'top'"
+      (@loginFormAnimation2.done)="section === 2 && goToDashboard()"
+      (setSectionEvent)="incrementSection()"></app-login-form>
+  </div>
 </main>
