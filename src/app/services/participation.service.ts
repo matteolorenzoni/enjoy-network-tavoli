@@ -51,7 +51,6 @@ export class ParticipationService {
       const participation: Participation = {
         uid: '',
         props: {
-          eventUid,
           tableUid,
           name: client.props.name,
           lastName: client.props.lastName,

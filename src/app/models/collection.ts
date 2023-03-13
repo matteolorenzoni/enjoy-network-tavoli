@@ -54,7 +54,6 @@ export type TableDTO = {
 };
 
 export type ParticipationDTO = {
-  eventUid: string;
   tableUid: string;
   name: string;
   lastName: string;

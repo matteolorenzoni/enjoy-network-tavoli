@@ -52,12 +52,24 @@ export class TicketComponent implements OnInit {
       .then((participation) => {
         this.participation = participation;
 
-        this.getEvent(this.participation.props.eventUid);
         this.getTable(this.participation.props.tableUid);
       })
       .catch((error: Error) => {
         this.toastService.showError(error);
         this.router.navigate(['errore'], { relativeTo: this.route });
+      });
+  }
+
+  getTable(tableUid: string) {
+    this.tableService
+      .getTable(tableUid)
+      .then((table) => {
+        this.table = table;
+        this.getEvent(this.table.props.eventUid);
+      })
+      .catch((error: Error) => {
+        this.toastService.showError(error);
+        this.router.navigate(['error'], { relativeTo: this.route });
       });
   }
 
@@ -69,23 +81,10 @@ export class TicketComponent implements OnInit {
           this.router.navigate(['error'], { relativeTo: this.route });
           return;
         }
-
         this.event = event;
       })
       .catch((error: Error) => {
         this.toastService.showError(error);
-      });
-  }
-
-  getTable(tableUid: string) {
-    this.tableService
-      .getTable(tableUid)
-      .then((table) => {
-        this.table = table;
-      })
-      .catch((error: Error) => {
-        this.toastService.showError(error);
-        this.router.navigate(['error'], { relativeTo: this.route });
       });
   }
 }
