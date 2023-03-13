@@ -2,76 +2,74 @@ import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
 import axios from 'axios';
 import { DocumentData } from 'firebase-admin/firestore';
+import { ParticipationDTO, EventDTO, TableDTO } from './collection';
+import { ShorterUrlResponse, SMS, SMSResponse } from './type';
 
 admin.initializeApp();
 
-type ShorterUrlResponse = {
-  ok: boolean;
-  result: {
-    full_short_link: string;
-  };
-};
+/* -------------------------------------------------------------------------------------------------------------------------------
+-------------------------------------------------------- TEST --------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------- */
+export const testIncrementPersonsMarked = functions.firestore
+  .document('participations/{participationId}')
+  .onCreate(async (snap, context) => {
+    const participationDTO = snap.data() as ParticipationDTO;
 
-type SMS = {
-  to: string;
-  text: string;
-  sandbox: boolean;
-};
+    try {
+      /* -------------------------------------------------------- Get table -------------------------------------------------------- */
+      const table = await admin.firestore().doc(`tables/${participationDTO.tableUid}`).get();
+      const tableDTO = table.data() as TableDTO;
+      const { eventUid, employeeUid } = tableDTO;
 
-type SMSResponse = {
-  from: string;
-  text: string;
-  transactionId: string;
-  smsInserted: number;
-  smsNotInserted: number;
-  sms: SMSInfo[];
-};
+      /* -------------------------------------------------------- Get assignment -------------------------------------------------------- */
+      const assignmentDocument = await admin
+        .firestore()
+        .collection('assignments')
+        .where('eventUid', '==', eventUid)
+        .where('employeeUid', '==', employeeUid)
+        .get();
 
-type SMSInfo = {
-  id: number;
-  to: string;
-  status: 'INSERTED' | 'NOT_INSERTED';
-  statusDetail?: 'BADNUMBERFORMAT' | 'DUPLICATESMS' | 'BLACKLIST';
-};
+      /* -------------------------------------------------------- Increment personsMarked in assignment -------------------------------------------------------- */
+      const assignmentUid = assignmentDocument.docs[0].id as string;
+      await admin
+        .firestore()
+        .doc(`assignments/${assignmentUid}`)
+        .update({
+          personMarked: admin.firestore.FieldValue.increment(1),
+          modifiedAt: new Date()
+        });
 
-type EventDTO = {
-  imageUrl: string;
-  code: string;
-  name: string;
-  date: Date;
-  timeStart: Date;
-  timeEnd: Date;
-  maxPerson: number;
-  place: string;
-  guest?: string;
-  description?: string;
-  message: string;
-  createdAt?: Date;
-  modifiedAt?: Date;
-};
+      /* -------------------------------------------------------- Increment personsTotal e personsActive in table -------------------------------------------------------- */
+      const { tableUid } = participationDTO;
+      await admin
+        .firestore()
+        .doc(`tables/${tableUid}`)
+        .update({
+          personsTotal: admin.firestore.FieldValue.increment(1),
+          personsActive: admin.firestore.FieldValue.increment(1),
+          modifiedAt: new Date()
+        });
+    } catch (error) {
+      console.error(JSON.stringify(error));
+    }
+  });
 
-type ParticipationDTO = {
-  eventUid: string;
-  tableUid: string;
-  name: string;
-  lastName: string;
-  phone: string;
-  isScanned: boolean;
-  messageIsReceived: boolean;
-  errorIfMessageIsNotReceived?: 'BADNUMBERFORMAT' | 'DUPLICATESMS' | 'BLACKLIST';
-  isActive: boolean;
-  createdAt?: Date;
-  modifiedAt?: Date;
-};
-
+/* -------------------------------------------------------------------------------------------------------------------------------
+-------------------------------------------------------- TEST --------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------- */
 export const sendSms = functions.firestore
   .document('PROD_participations/{participationId}')
   .onCreate(async (snap, context) => {
     const participationUid = context.params.participationId;
     const participationDTO = snap.data() as ParticipationDTO;
-    const { eventUid, name, phone } = participationDTO;
+    const { name, phone } = participationDTO;
 
     try {
+      /* -------------------------------------------------------- Get table -------------------------------------------------------- */
+      const table = await admin.firestore().doc(`PROD_tables/${participationDTO.tableUid}`).get();
+      const tableDTO = table.data() as TableDTO;
+      const { eventUid } = tableDTO;
+
       /* -------------------------------------------------------- Get event -------------------------------------------------------- */
       const document: DocumentData = await admin.firestore().doc(`PROD_events/${eventUid}`).get();
       const eventDTO = document.data() as EventDTO;
@@ -102,12 +100,11 @@ export const sendSms = functions.firestore
       const sms: SMS = {
         to: `39${phone}`,
         text: messageClone,
-        sandbox: false
+        sandbox: true
       };
 
       const response = await axios.post(request_urlSmsHosting, sms, { headers });
       const smsResponse = response.data as SMSResponse;
-      console.log(JSON.stringify(smsResponse));
 
       if (smsResponse.smsNotInserted > 0) {
         snap.ref.update({
@@ -120,6 +117,50 @@ export const sendSms = functions.firestore
           modifiedAt: new Date()
         });
       }
+    } catch (error) {
+      console.error(JSON.stringify(error));
+    }
+  });
+
+export const incrementPersonsMarked = functions.firestore
+  .document('PROD_participations/{participationId}')
+  .onCreate(async (snap, context) => {
+    const participationDTO = snap.data() as ParticipationDTO;
+
+    try {
+      /* -------------------------------------------------------- Get table -------------------------------------------------------- */
+      const table = await admin.firestore().doc(`PROD_tables/${participationDTO.tableUid}`).get();
+      const tableDTO = table.data() as TableDTO;
+      const { eventUid, employeeUid } = tableDTO;
+
+      /* -------------------------------------------------------- Get assignment -------------------------------------------------------- */
+      const assignmentDocument = await admin
+        .firestore()
+        .collection('PROD_assignments')
+        .where('eventUid', '==', eventUid)
+        .where('employeeUid', '==', employeeUid)
+        .get();
+
+      /* -------------------------------------------------------- Increment personsMarked in assignment -------------------------------------------------------- */
+      const assignmentUid = assignmentDocument.docs[0].id as string;
+      await admin
+        .firestore()
+        .doc(`PROD_assignments/${assignmentUid}`)
+        .update({
+          personMarked: admin.firestore.FieldValue.increment(1),
+          modifiedAt: new Date()
+        });
+
+      /* -------------------------------------------------------- Increment personsTotal e personsActive in table -------------------------------------------------------- */
+      const { tableUid } = participationDTO;
+      await admin
+        .firestore()
+        .doc(`PROD_tables/${tableUid}`)
+        .update({
+          personsTotal: admin.firestore.FieldValue.increment(1),
+          personsActive: admin.firestore.FieldValue.increment(1),
+          modifiedAt: new Date()
+        });
     } catch (error) {
       console.error(JSON.stringify(error));
     }
