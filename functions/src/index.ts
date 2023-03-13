@@ -10,7 +10,7 @@ admin.initializeApp();
 /* -------------------------------------------------------------------------------------------------------------------------------
 -------------------------------------------------------- TEST --------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------------- */
-export const testIncrementPersonsMarked = functions.firestore
+export const testOnParticipationCreate = functions.firestore
   .document('participations/{participationId}')
   .onCreate(async (snap, context) => {
     const participationDTO = snap.data() as ParticipationDTO;
@@ -54,8 +54,56 @@ export const testIncrementPersonsMarked = functions.firestore
     }
   });
 
+export const testOnParticipationUpdate = functions.firestore
+  .document('participations/{participationId}')
+  .onUpdate(async (change) => {
+    try {
+      const data = change.after.data() as ParticipationDTO;
+      const previousData = change.before.data() as ParticipationDTO;
+
+      if (data.isActive === previousData.isActive) {
+        return;
+      }
+
+      const { isActive, tableUid } = data;
+      const value = isActive ? 1 : -1;
+
+      /* -------------------------------------------------------- Update assignment -------------------------------------------------------- */
+      const table = await admin.firestore().doc(`tables/${tableUid}`).get();
+      const tableDTO = table.data() as TableDTO;
+      const { eventUid, employeeUid } = tableDTO;
+
+      const assignmentDocument = await admin
+        .firestore()
+        .collection('assignments')
+        .where('eventUid', '==', eventUid)
+        .where('employeeUid', '==', employeeUid)
+        .get();
+
+      const assignmentUid = assignmentDocument.docs[0].id as string;
+      await admin
+        .firestore()
+        .doc(`assignments/${assignmentUid}`)
+        .update({
+          personMarked: admin.firestore.FieldValue.increment(value),
+          modifiedAt: new Date()
+        });
+
+      /* -------------------------------------------------------- Update table -------------------------------------------------------- */
+      await admin
+        .firestore()
+        .doc(`tables/${tableUid}`)
+        .update({
+          personsActive: admin.firestore.FieldValue.increment(value),
+          modifiedAt: new Date()
+        });
+    } catch (error) {
+      console.error(JSON.stringify(error));
+    }
+  });
+
 /* -------------------------------------------------------------------------------------------------------------------------------
--------------------------------------------------------- TEST --------------------------------------------------------------------
+-------------------------------------------------------- PRO --------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------------- */
 export const sendSms = functions.firestore
   .document('PROD_participations/{participationId}')
@@ -122,7 +170,7 @@ export const sendSms = functions.firestore
     }
   });
 
-export const incrementPersonsMarked = functions.firestore
+export const onParticipationCreate = functions.firestore
   .document('PROD_participations/{participationId}')
   .onCreate(async (snap, context) => {
     const participationDTO = snap.data() as ParticipationDTO;
@@ -159,6 +207,54 @@ export const incrementPersonsMarked = functions.firestore
         .update({
           personsTotal: admin.firestore.FieldValue.increment(1),
           personsActive: admin.firestore.FieldValue.increment(1),
+          modifiedAt: new Date()
+        });
+    } catch (error) {
+      console.error(JSON.stringify(error));
+    }
+  });
+
+export const onParticipationUpdate = functions.firestore
+  .document('PROD_participations/{participationId}')
+  .onUpdate(async (change) => {
+    try {
+      const data = change.after.data() as ParticipationDTO;
+      const previousData = change.before.data() as ParticipationDTO;
+
+      if (data.isActive === previousData.isActive) {
+        return;
+      }
+
+      const { isActive, tableUid } = data;
+      const value = isActive ? 1 : -1;
+
+      /* -------------------------------------------------------- Update assignment -------------------------------------------------------- */
+      const table = await admin.firestore().doc(`PROD_tables/${tableUid}`).get();
+      const tableDTO = table.data() as TableDTO;
+      const { eventUid, employeeUid } = tableDTO;
+
+      const assignmentDocument = await admin
+        .firestore()
+        .collection('PROD_assignments')
+        .where('eventUid', '==', eventUid)
+        .where('employeeUid', '==', employeeUid)
+        .get();
+
+      const assignmentUid = assignmentDocument.docs[0].id as string;
+      await admin
+        .firestore()
+        .doc(`PROD_assignments/${assignmentUid}`)
+        .update({
+          personMarked: admin.firestore.FieldValue.increment(value),
+          modifiedAt: new Date()
+        });
+
+      /* -------------------------------------------------------- Update table -------------------------------------------------------- */
+      await admin
+        .firestore()
+        .doc(`PROD_tables/${tableUid}`)
+        .update({
+          personsActive: admin.firestore.FieldValue.increment(value),
           modifiedAt: new Date()
         });
     } catch (error) {
