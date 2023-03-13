@@ -158,7 +158,7 @@ export class TicketManualValidationComponent {
     this.nameAndLastNameForm.disable();
 
     this.participationService
-      .updateParticipationNotActive(this.eventUid, this.table.props.employeeUid, this.participation.uid)
+      .updateParticipationNotActive(this.participation.uid)
       .then(() => {
         this.participationNoGoodMotivation = 'Partecipazione rifiutata';
         this.buttonDecision = 'REJECTED';

@@ -6,7 +6,6 @@ import { environment } from 'src/environments/environment';
 import { Assignment, Client, Participation } from '../models/type';
 import { assignmentConverter, participationConverter } from '../models/converter';
 import { FirebaseCreateService } from './firebase/firebase-crud/firebase-create.service';
-import { FirebaseDeleteService } from './firebase/firebase-crud/firebase-delete.service';
 import { FirebaseReadService } from './firebase/firebase-crud/firebase-read.service';
 import { FirebaseUpdateService } from './firebase/firebase-crud/firebase-update.service';
 import { SessionStorageService } from './sessionstorage.service';
@@ -20,7 +19,6 @@ export class ParticipationService {
     private firebaseCreateService: FirebaseCreateService,
     private firebaseReadService: FirebaseReadService,
     private firebaseUpdateService: FirebaseUpdateService,
-    private firebaseDeleteService: FirebaseDeleteService,
     private sessionStorageService: SessionStorageService
   ) {}
 
@@ -163,26 +161,11 @@ export class ParticipationService {
   }
 
   /* ------------------------------------------- UPDATE ------------------------------------------- */
-  public async updateParticipationNotActive(
-    eventUid: string,
-    employeeUid: string,
-    participationUid: string
-  ): Promise<void> {
-    /* Decrease the number of marked people */
-    await this.updateAssignmentMarkedPerson(eventUid, employeeUid, -1);
-
-    /* If the operation was successful, update the participation */
-    const participation: Participation = await this.firebaseReadService.getDocumentByUid(
+  public async updateParticipationNotActive(participationUid: string): Promise<void> {
+    const propsToUpdate = { isActive: false };
+    await this.firebaseUpdateService.updateDocumentProps(
       environment.collection.PARTICIPATIONS,
       participationUid,
-      participationConverter
-    );
-    const propsToUpdate = {
-      isActive: false
-    };
-    await this.firebaseUpdateService.updateDocumentsProps(
-      environment.collection.PARTICIPATIONS,
-      [participation],
       propsToUpdate
     );
   }

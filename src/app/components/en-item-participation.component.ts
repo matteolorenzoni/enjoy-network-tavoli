@@ -134,7 +134,7 @@ export class EnItemParticipationComponent {
       }
 
       this.participationService
-        .updateParticipationNotActive(this.eventUid, this.employeeUid, this.participation.uid)
+        .updateParticipationNotActive(this.participation.uid)
         .then(() => {
           this.participationNotActiveEvent.emit();
           this.toastService.showSuccess('Partecipazione rimossa');
