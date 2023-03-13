@@ -37,7 +37,7 @@ export class AssignmentListComponent {
   personMarked = 0;
   personMarkedFromEmployeeDeleted = 0;
   maxPersonMarkable = 0;
-  maxPerson = 0;
+  eventMaxPerson = 0;
 
   /* -------------------------------------- Constructor -------------------------------------- */
   constructor(
@@ -58,8 +58,9 @@ export class AssignmentListComponent {
       throw new Error('Parametri non validi');
     }
 
+    this.getEventMaxPerson(this.eventUid);
+
     const that = this;
-    this.getEvent(this.eventUid);
     this.assignmentSubscription = this.assignmentService.getRealTimeAssignmentsByEventUid(this.eventUid).subscribe({
       next(data: Assignment[]) {
         that.maxPersonMarkable = data.reduce((acc, item) => acc + item.props.maxPersonMarkable, 0);
@@ -80,11 +81,11 @@ export class AssignmentListComponent {
   }
 
   /* -------------------------------------- HTTP Methods -------------------------------------- */
-  getEvent(eventUid: string): void {
+  getEventMaxPerson(eventUid: string): void {
     this.eventService
       .getEvent(eventUid)
       .then((event) => {
-        this.maxPerson = event.props.maxPerson;
+        this.eventMaxPerson = event.props.maxPerson;
       })
       .catch((err: Error) => {
         this.toastService.showError(err);

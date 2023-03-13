@@ -13,7 +13,9 @@
       <fa-icon [icon]="listIcon"></fa-icon>
     </button>
   </div>
-  <div class="py-4 text-center text-3xl text-slate-300">{{ personMarked }}/{{ maxPersonMarkable }}/{{ maxPerson }}</div>
+  <div class="py-4 text-center text-3xl text-slate-300">
+    {{ personMarked }}/{{ maxPersonMarkable }}/{{ eventMaxPerson }}
+  </div>
   <!-- <div *ngIf="personMarkedFromEmployeeDeleted > 0" class="py-1 text-center text-sm">
     <p>DA DIPENDENTI ELIMINATI: {{ personMarkedFromEmployeeDeleted }}</p>
   </div> -->
@@ -21,6 +23,6 @@
     <en-item-assignment
       *ngFor="let item of assignmentsAndEmployeeArray"
       [ae]="item"
-      [maxPerson]="maxPerson"></en-item-assignment>
+      [eventMaxPerson]="eventMaxPerson"></en-item-assignment>
   </ul>
 </section>

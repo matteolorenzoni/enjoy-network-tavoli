@@ -8,7 +8,7 @@ import { AssignmentService } from '../services/assignment.service';
 import { AssignmentAndEmployee } from '../models/type';
 
 @Component({
-  selector: 'en-item-assignment[ae][maxPerson]',
+  selector: 'en-item-assignment[ae][eventMaxPerson]',
   template: ` <li class="my-2 flex h-12 flex-nowrap items-center text-slate-300">
     <div class="grow-2 basis-40 truncate sm:w-max">{{ ae.employee.props.name }} {{ ae.employee.props.lastName }}</div>
     <div class="hidden grow basis-20 text-sm sm:flex sm:basis-24">{{ ae.employee.props.zone | uppercase }}</div>
@@ -58,7 +58,7 @@ import { AssignmentAndEmployee } from '../models/type';
 })
 export class EnItemAssignmentComponent {
   @Input() ae!: AssignmentAndEmployee;
-  @Input() maxPerson!: number;
+  @Input() eventMaxPerson!: number;
 
   /* Icons */
   incrementIcon = faCirclePlus;
@@ -92,7 +92,7 @@ export class EnItemAssignmentComponent {
           /* Check if the value is less than the max person */
           const hypotheticalPersonAssigned =
             this.ae.assignment.props.maxPersonMarkable + newPersonAssigned - this.ae.assignment.props.maxPersonMarkable;
-          if (hypotheticalPersonAssigned <= this.maxPerson) {
+          if (hypotheticalPersonAssigned <= this.eventMaxPerson) {
             /* Update the value */
             this.assignmentService
               .updateAssignmentPersonAssignedProp(this.ae.assignment.uid, newPersonAssigned)
