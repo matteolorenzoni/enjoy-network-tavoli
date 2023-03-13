@@ -43,24 +43,17 @@ export class TableService {
     return tables;
   }
 
-  public getRealTimeTableByEventUid(eventUid: string): Observable<Table[]> {
-    const eventUidConstraint: QueryConstraint = where('eventUid', '==', eventUid);
-    const isActiveConstraint: QueryConstraint = where('isActive', '==', true);
-    const constraints: QueryConstraint[] = [eventUidConstraint, isActiveConstraint];
-
-    const tables: Observable<Table[]> = this.firebaseReadService.getRealTimeDocumentsByMultipleConstraints(
-      environment.collection.TABLES,
-      constraints,
-      tableConverter
-    );
-    return tables;
-  }
-
-  public getRealTimeTableByEventUidAndEmployeeUid(eventUid: string, employeeUid: string): Observable<Table[]> {
+  public getRealTimeTablesByEventUidAndEmployeeUid(
+    eventUid: string,
+    employeeUid: string | undefined
+  ): Observable<Table[]> {
     const eventUidConstraint: QueryConstraint = where('eventUid', '==', eventUid);
     const employeeUidConstraint: QueryConstraint = where('employeeUid', '==', employeeUid);
     const isActiveConstraint: QueryConstraint = where('isActive', '==', true);
-    const constraints: QueryConstraint[] = [eventUidConstraint, employeeUidConstraint, isActiveConstraint];
+    const constraints: QueryConstraint[] = [eventUidConstraint, isActiveConstraint];
+    if (employeeUid) {
+      constraints.push(employeeUidConstraint);
+    }
 
     const tables: Observable<Table[]> = this.firebaseReadService.getRealTimeDocumentsByMultipleConstraints(
       environment.collection.TABLES,
