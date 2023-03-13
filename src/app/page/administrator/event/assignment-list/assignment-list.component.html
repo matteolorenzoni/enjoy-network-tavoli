@@ -14,9 +14,9 @@
     </button>
   </div>
   <div class="py-4 text-center text-3xl text-slate-300">{{ personMarked }}/{{ maxPersonMarkable }}/{{ maxPerson }}</div>
-  <div *ngIf="personMarkedFromEmployeeDeleted > 0" class="py-1 text-center text-sm">
+  <!-- <div *ngIf="personMarkedFromEmployeeDeleted > 0" class="py-1 text-center text-sm">
     <p>DA DIPENDENTI ELIMINATI: {{ personMarkedFromEmployeeDeleted }}</p>
-  </div>
+  </div> -->
   <ul [@staggeredFadeInIncrement]="assignmentsAndEmployeeArray.length" class="flex flex-col divide-y divide-gray-700">
     <en-item-assignment
       *ngFor="let item of assignmentsAndEmployeeArray"
