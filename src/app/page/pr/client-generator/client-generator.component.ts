@@ -102,31 +102,33 @@ export class ClientGeneratorComponent implements OnInit {
   }
 
   public async checkIfClientAlreadyExists() {
-    if (this.clientForm.value.phone) {
-      try {
-        const client = await this.clientService.getClientByPhone(this.clientForm.value.phone);
-
-        if (!client) {
-          this.toastService.showInfo('Cliente non ancora registrato, inserire i dati');
-          this.phoneIsChecked = true;
-          this.clientForm.controls['name'].enable();
-          this.clientForm.controls['lastName'].enable();
-          return;
-        }
-
-        const text = `Questo numero appartiene a: ${client.props.name} ${client.props.lastName}, lo vuoi aggiungere al tavolo?`;
-        if (window.confirm(text) === true) {
-          this.isLoading = true;
-          await this.addParticipation(client);
-          this.isLoading = false;
-
-          this.goBack();
-        }
-      } catch (err) {
-        this.toastService.showError(err as Error);
-      }
-    } else {
+    if (!this.clientForm.value.phone) {
       this.toastService.showInfo('Inserire un numero di telefono');
+      return;
+    }
+
+    try {
+      this.isLoading = true;
+
+      const client = await this.clientService.getClientByPhone(this.clientForm.value.phone);
+
+      if (!client) {
+        this.toastService.showInfo('Cliente non ancora registrato, inserire i dati');
+        this.phoneIsChecked = true;
+        this.clientForm.controls['name'].enable();
+        this.clientForm.controls['lastName'].enable();
+        this.isLoading = false;
+        return;
+      }
+
+      const text = `Questo numero appartiene a: ${client.props.name} ${client.props.lastName}, lo vuoi aggiungere al tavolo?`;
+      if (window.confirm(text) === true) {
+        await this.addParticipation(client);
+        this.isLoading = false;
+        this.goBack();
+      }
+    } catch (err) {
+      this.toastService.showError(err as Error);
     }
   }
 
@@ -144,7 +146,7 @@ export class ClientGeneratorComponent implements OnInit {
     }
 
     try {
-      await this.participationService.addParticipation(this.eventUid, this.employeeUid, this.tableUid, client);
+      await this.participationService.addParticipation(this.eventUid, this.tableUid, client);
     } catch (err) {
       throw err as Error;
     }
@@ -154,6 +156,6 @@ export class ClientGeneratorComponent implements OnInit {
   public goBack() {
     this.clientForm.reset();
     this.location.back();
-    this.toastService.showSuccess('Cliente creato');
+    this.toastService.showSuccess('Ticket inviato');
   }
 }

@@ -25,12 +25,7 @@ export class ParticipationService {
   ) {}
 
   /* ------------------------------------------- CREATE ------------------------------------------- */
-  public async addParticipation(
-    eventUid: string,
-    employeeUid: string,
-    tableUid: string,
-    client: Client
-  ): Promise<void> {
+  public async addParticipation(eventUid: string, tableUid: string, client: Client): Promise<void> {
     /* Check if the client has already a participation */
     const eventUidConstraint: QueryConstraint = where('eventUid', '==', eventUid);
     const phoneConstraint: QueryConstraint = where('phone', '==', client.props.phone);
@@ -44,13 +39,10 @@ export class ParticipationService {
     /* 1 */
     /* If the client has 0 participations, create a new one */
     if (participations.length <= 0) {
-      /* Increase the number of marked people if it is possible */
-      const updateAssignmentPromise = this.updateAssignmentMarkedPerson(eventUid, employeeUid, 1);
-
-      /* Add participation */
       const participation: Participation = {
         uid: '',
         props: {
+          eventUid,
           tableUid,
           name: client.props.name,
           lastName: client.props.lastName,
@@ -59,32 +51,21 @@ export class ParticipationService {
           messageIsReceived: false
         }
       };
-      const addParticipationPromise = this.firebaseCreateService.addDocument(
-        environment.collection.PARTICIPATIONS,
-        participation
-      );
 
-      const promises = [updateAssignmentPromise, addParticipationPromise];
-      await Promise.all(promises);
+      await this.firebaseCreateService.addDocument(environment.collection.PARTICIPATIONS, participation);
       return;
     }
 
     /* 2 */
     /* If the participation is not active switch it in active */
     if (participations.every((x) => !x.props.isActive)) {
-      /* Increase the number of marked people if it is possible */
-      const updateAssignmentPromise = await this.updateAssignmentMarkedPerson(eventUid, employeeUid, 1);
-
       /* Make the old participation active */
       const propsToUpdate = { tableUid, isActive: true };
-      const updateParticipationPromise = await this.firebaseUpdateService.updateDocumentsProps(
+      await this.firebaseUpdateService.updateDocumentsProps(
         environment.collection.PARTICIPATIONS,
         participations,
         propsToUpdate
       );
-
-      const promises = [updateAssignmentPromise, updateParticipationPromise];
-      await Promise.all(promises);
       return;
     }
 
