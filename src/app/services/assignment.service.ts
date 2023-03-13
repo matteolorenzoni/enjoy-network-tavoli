@@ -32,17 +32,6 @@ export class AssignmentService {
     return assignments;
   }
 
-  public getRealTimeAssignmentsByEventUid(eventUid: string): Observable<Assignment[]> {
-    const idConstraint: QueryConstraint = where('eventUid', '==', eventUid);
-    const constraints: QueryConstraint[] = [idConstraint];
-    const assignments: Observable<Assignment[]> = this.firebaseReadService.getRealTimeDocumentsByMultipleConstraints(
-      environment.collection.ASSIGNMENTS,
-      constraints,
-      assignmentConverter
-    );
-    return assignments;
-  }
-
   public async getAssignmentsByEmployeeUid(employeeUid: string): Promise<Assignment[]> {
     const idConstraint: QueryConstraint = where('employeeUid', '==', employeeUid);
     const constraints: QueryConstraint[] = [idConstraint];
@@ -54,30 +43,23 @@ export class AssignmentService {
     return assignments;
   }
 
-  public async getAssignmentByEventUid(eventUid: string): Promise<Assignment | null> {
-    const eventUidConstraint: QueryConstraint = where('eventUid', '==', eventUid);
-    const constraints: QueryConstraint[] = [eventUidConstraint];
-    const assignments: Assignment[] = await this.firebaseReadService.getDocumentsByMultipleConstraints(
-      environment.collection.ASSIGNMENTS,
-      constraints,
-      assignmentConverter
-    );
-    return assignments && assignments.length > 0 ? assignments[0] : null;
-  }
-
-  public async getAssignmentByEventUidAndEmployeeUid(
+  public getRealTimeAssignmentsByEventUidAndEmployeeUid(
     eventUid: string,
-    employeeUid: string
-  ): Promise<Assignment | null> {
+    employeeUid: string | undefined
+  ): Observable<Assignment[]> {
     const eventUidConstraint: QueryConstraint = where('eventUid', '==', eventUid);
     const employeeUidConstraint: QueryConstraint = where('employeeUid', '==', employeeUid);
-    const constraints: QueryConstraint[] = [eventUidConstraint, employeeUidConstraint];
-    const assignments: Assignment[] = await this.firebaseReadService.getDocumentsByMultipleConstraints(
+    const constraints: QueryConstraint[] = [eventUidConstraint];
+    if (employeeUid) {
+      constraints.push(employeeUidConstraint);
+    }
+
+    const assignments: Observable<Assignment[]> = this.firebaseReadService.getRealTimeDocumentsByMultipleConstraints(
       environment.collection.ASSIGNMENTS,
       constraints,
       assignmentConverter
     );
-    return assignments && assignments.length > 0 ? assignments[0] : null;
+    return assignments;
   }
 
   /* ------------------------------------------- ADD ------------------------------------------- */
