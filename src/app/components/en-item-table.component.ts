@@ -7,7 +7,7 @@ import { ParticipationService } from '../services/participation.service';
 import { TableService } from '../services/table.service';
 
 @Component({
-  selector: 'en-item-table[table][canAddClient]',
+  selector: 'en-item-table[table]',
   template: `
     <li
       role="button"
@@ -45,7 +45,6 @@ import { TableService } from '../services/table.service';
 })
 export class EnItemTableComponent {
   @Input() table!: Table;
-  @Input() canAddClient!: boolean;
 
   /* Event */
   eventUid: string | null = null;
@@ -68,10 +67,7 @@ export class EnItemTableComponent {
   }
 
   goToClient(): void {
-    this.router.navigate([`./${this.table.uid}/participations`], {
-      relativeTo: this.route,
-      queryParams: { canAddClient: this.canAddClient }
-    });
+    this.router.navigate([`./${this.table.uid}/participations`], { relativeTo: this.route });
   }
 
   updateTable(e: Event): void {

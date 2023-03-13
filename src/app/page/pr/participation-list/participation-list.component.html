@@ -7,10 +7,7 @@
     FILTRI
   </button>
   <ul [@staggeredFadeInIncrement]="participations.length" class="flex flex-col divide-y divide-gray-700">
-    <en-item-participation
-      *ngFor="let item of participations"
-      [participation]="item"
-      (participationNotActiveEvent)="onDeleteParticipation()"></en-item-participation>
+    <en-item-participation *ngFor="let item of participations" [participation]="item"></en-item-participation>
   </ul>
   <div
     *ngIf="canAddClient"

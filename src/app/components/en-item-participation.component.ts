@@ -1,5 +1,5 @@
 import { faArrowUpFromBracket, faCopy, faTrash } from '@fortawesome/free-solid-svg-icons';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 import { SessionStorageService } from '../services/sessionstorage.service';
@@ -69,7 +69,6 @@ import { Participation } from '../models/type';
 })
 export class EnItemParticipationComponent {
   @Input() participation!: Participation;
-  @Output() participationNotActiveEvent = new EventEmitter<any>();
 
   /* Event */
   eventUid: string | null = null;
@@ -136,7 +135,6 @@ export class EnItemParticipationComponent {
       this.participationService
         .updateParticipationNotActive(this.participation.uid)
         .then(() => {
-          this.participationNotActiveEvent.emit();
           this.toastService.showSuccess('Partecipazione rimossa');
         })
         .catch((error) => {
