@@ -1,5 +1,4 @@
 import { TableService } from 'src/app/services/table.service';
-import { SessionStorageService } from 'src/app/services/sessionstorage.service';
 import { ToastService } from 'src/app/services/toast.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
@@ -8,7 +7,8 @@ import { fadeInAnimation, staggeredFadeInIncrement } from 'src/app/animations/an
 import { Assignment, Table } from 'src/app/models/type';
 import { AssignmentService } from 'src/app/services/assignment.service';
 import { Subscription } from 'rxjs';
-import { RoleType } from '../../../../models/enum';
+import { UserService } from 'src/app/services/user.service';
+import { environment } from 'src/environments/environment';
 import { EventService } from '../../../../services/event.service';
 
 @Component({
@@ -22,8 +22,9 @@ export class TableListComponent implements OnInit {
   filterIcon = faFilter;
 
   /* Employee */
-  employeeUid: string | null = null;
-  employeeRole: RoleType | null = null;
+  employeeUid = '';
+  administratorUids: string[] = [];
+  employeeIsAdministrator = false;
 
   /* Event */
   eventUid: string | null = null;
@@ -31,6 +32,9 @@ export class TableListComponent implements OnInit {
   eventStart: Date | null = null;
   eventPersonMarked = 0;
   eventMaxPersonAssigned = 0;
+
+  /* Assignment */
+  assignmentSubscription!: Subscription;
 
   /* Table */
   tables: Table[] = [];
@@ -42,27 +46,34 @@ export class TableListComponent implements OnInit {
   constructor(
     private router: Router,
     private route: ActivatedRoute,
+    private userService: UserService,
     private eventService: EventService,
     private assignmentService: AssignmentService,
     private tableService: TableService,
-    private toastService: ToastService,
-    private sessionStorage: SessionStorageService
-  ) {}
+    private toastService: ToastService
+  ) {
+    this.employeeUid = this.userService.getUserUid();
+    this.administratorUids = environment.administratorUids;
+    this.employeeIsAdministrator = this.administratorUids.includes(this.employeeUid);
+  }
 
   /* ---------------------------------------- LifeCycle ---------------------------------------- */
   ngOnInit(): void {
     this.eventUid = this.route.snapshot.paramMap.get('eventUid');
-    this.employeeUid = this.sessionStorage.getEmployeeUid();
-    this.employeeRole = this.sessionStorage.getEmployeeRole();
 
     this.getEventDate();
-    this.getEventMaxPersonAssigned();
+    this.getAssignments();
+
     this.getTables();
   }
 
   ngOnDestroy(): void {
     if (this.tablesSubscription) {
       this.tablesSubscription.unsubscribe();
+    }
+
+    if (this.assignmentSubscription) {
+      this.assignmentSubscription.unsubscribe();
     }
   }
 
@@ -72,6 +83,7 @@ export class TableListComponent implements OnInit {
     if (!this.eventUid) {
       throw new Error('Errore: parametri non validi');
     }
+
     this.eventService
       .getEvent(this.eventUid)
       .then((event) => {
@@ -83,35 +95,6 @@ export class TableListComponent implements OnInit {
       });
   }
 
-  /* To get the max person assigned for the event */
-  getEventMaxPersonAssigned(): void {
-    if (!this.eventUid || !this.employeeUid) {
-      throw new Error('Errore: parametri non validi');
-    }
-
-    if (this.employeeRole !== RoleType.ADMINISTRATOR) {
-      this.assignmentService
-        .getAssignmentByEventUidAndEmployeeUid(this.eventUid, this.employeeUid)
-        .then((assignment) => {
-          this.eventPersonMarked = assignment ? assignment.props.personMarked : 0;
-          this.eventMaxPersonAssigned = assignment ? assignment.props.maxPersonMarkable : 0;
-        })
-        .catch((error: Error) => {
-          this.toastService.showError(error);
-        });
-    } else {
-      this.assignmentService
-        .getAssignmentsByEventUid(this.eventUid)
-        .then((assignments: Assignment[]) => {
-          this.eventPersonMarked = assignments.reduce((acc, cur) => acc + cur.props.personMarked, 0);
-          this.eventMaxPersonAssigned = assignments.reduce((acc, cur) => acc + cur.props.maxPersonMarkable, 0);
-        })
-        .catch((error: Error) => {
-          this.toastService.showError(error);
-        });
-    }
-  }
-
   /* To get the list of tables */
   getTables(): void {
     if (!this.eventUid || !this.employeeUid) {
@@ -119,20 +102,12 @@ export class TableListComponent implements OnInit {
     }
 
     const that = this;
-
-    if (this.employeeRole !== RoleType.ADMINISTRATOR) {
-      this.tablesSubscription = this.tableService
-        .getRealTimeTableByEventUidAndEmployeeUid(this.eventUid, this.employeeUid)
-        .subscribe({
-          next(data: Table[]) {
-            that.tables = data;
-          },
-          error(error: Error) {
-            that.toastService.showError(error);
-          }
-        });
-    } else {
-      this.tablesSubscription = this.tableService.getRealTimeTableByEventUid(this.eventUid).subscribe({
+    this.tablesSubscription = this.tableService
+      .getRealTimeTablesByEventUidAndEmployeeUid(
+        this.eventUid,
+        !this.employeeIsAdministrator ? this.employeeUid : undefined
+      )
+      .subscribe({
         next(data: Table[]) {
           that.tables = data;
         },
@@ -140,7 +115,28 @@ export class TableListComponent implements OnInit {
           that.toastService.showError(error);
         }
       });
+  }
+
+  getAssignments(): void {
+    if (!this.eventUid) {
+      throw new Error('Errore: parametri non validi');
     }
+
+    const that = this;
+    this.assignmentSubscription = this.assignmentService
+      .getRealTimeAssignmentsByEventUidAndEmployeeUid(
+        this.eventUid,
+        !this.employeeIsAdministrator ? this.employeeUid : ''
+      )
+      .subscribe({
+        next(data: Assignment[]) {
+          that.eventPersonMarked = data.reduce((acc, item) => acc + item.props.personMarked, 0);
+          that.eventMaxPersonAssigned = data.reduce((acc, item) => acc + item.props.maxPersonMarkable, 0);
+        },
+        error(error: Error) {
+          that.toastService.showError(error);
+        }
+      });
   }
 
   /* ---------------------------------------- Methods ---------------------------------------- */

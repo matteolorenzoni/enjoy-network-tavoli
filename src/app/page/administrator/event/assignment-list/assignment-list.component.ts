@@ -13,6 +13,8 @@ import {
   staggeredFadeInIncrement
 } from 'src/app/animations/animations';
 import { AssignmentService } from 'src/app/services/assignment.service';
+import { UserService } from 'src/app/services/user.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-assignment-list',
@@ -25,6 +27,11 @@ export class AssignmentListComponent {
   backIcon = faArrowLeft;
   filterIcon = faFilter;
   listIcon = faList;
+
+  /* Employee */
+  employeeUid = '';
+  administratorUids: string[] = [];
+  employeeIsAdministrator = false;
 
   /* Event */
   eventUid: string | null = null;
@@ -44,36 +51,23 @@ export class AssignmentListComponent {
     private router: Router,
     private location: Location,
     private route: ActivatedRoute,
+    private userService: UserService,
     private eventService: EventService,
     private employeeService: EmployeeService,
     private assignmentService: AssignmentService,
     private toastService: ToastService
-  ) {}
+  ) {
+    this.employeeUid = this.userService.getUserUid();
+    this.administratorUids = environment.administratorUids;
+    this.employeeIsAdministrator = this.administratorUids.includes(this.employeeUid);
+  }
 
   /* -------------------------------------- LifeCycle -------------------------------------- */
   ngOnInit(): void {
     this.eventUid = this.route.snapshot.paramMap.get('eventUid');
 
-    if (!this.eventUid) {
-      throw new Error('Parametri non validi');
-    }
-
-    this.getEventMaxPerson(this.eventUid);
-
-    const that = this;
-    this.assignmentSubscription = this.assignmentService.getRealTimeAssignmentsByEventUid(this.eventUid).subscribe({
-      next(data: Assignment[]) {
-        that.maxPersonMarkable = data.reduce((acc, item) => acc + item.props.maxPersonMarkable, 0);
-        that.personMarked = data.reduce((acc, item) => acc + item.props.personMarked, 0);
-        that.personMarkedFromEmployeeDeleted = data
-          .filter((x) => x.props.isActive === false)
-          .reduce((acc, item) => acc + item.props.personMarked, 0);
-        that.getEmployee(data);
-      },
-      error(error: Error) {
-        that.toastService.showError(error);
-      }
-    });
+    this.getEventMaxPerson();
+    this.getAssignments();
   }
 
   ngOnDestroy(): void {
@@ -81,14 +75,46 @@ export class AssignmentListComponent {
   }
 
   /* -------------------------------------- HTTP Methods -------------------------------------- */
-  getEventMaxPerson(eventUid: string): void {
+  getEventMaxPerson(): void {
+    if (!this.eventUid) {
+      throw new Error('Errore: parametri non validi');
+    }
+
     this.eventService
-      .getEvent(eventUid)
+      .getEvent(this.eventUid)
       .then((event) => {
         this.eventMaxPerson = event.props.maxPerson;
       })
       .catch((err: Error) => {
         this.toastService.showError(err);
+      });
+  }
+
+  getAssignments(): void {
+    if (!this.eventUid) {
+      throw new Error('Parametri non validi');
+    }
+
+    const that = this;
+    this.assignmentSubscription = this.assignmentService
+      .getRealTimeAssignmentsByEventUidAndEmployeeUid(
+        this.eventUid,
+        !this.employeeIsAdministrator ? this.employeeUid : undefined
+      )
+      .subscribe({
+        next(assignments: Assignment[]) {
+          that.maxPersonMarkable = assignments.reduce((acc, item) => acc + item.props.maxPersonMarkable, 0);
+          that.personMarked = assignments.reduce((acc, item) => acc + item.props.personMarked, 0);
+
+          that.getEmployee(assignments);
+
+          // that.personMarkedFromEmployeeDeleted = data
+          //   .filter((x) => x.props.isActive === false)
+          //   .reduce((acc, item) => acc + item.props.personMarked, 0);
+        },
+        error(error: Error) {
+          that.toastService.showError(error);
+        }
       });
   }
 

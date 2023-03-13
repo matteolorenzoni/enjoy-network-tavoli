@@ -6,7 +6,8 @@ import { fadeInAnimation, staggeredFadeInIncrement } from 'src/app/animations/an
 import { ToastService } from 'src/app/services/toast.service';
 import { Subscription } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { Participation } from '../../../models/type';
+import { AssignmentService } from 'src/app/services/assignment.service';
+import { Assignment, Participation } from '../../../models/type';
 import { ParticipationService } from '../../../services/participation.service';
 
 @Component({
@@ -28,6 +29,9 @@ export class ParticipationListComponent implements OnInit {
   eventUid: string | null = null;
   canAddClient = false;
 
+  /* Assignment */
+  assignmentSubscription!: Subscription;
+
   /* Table */
   tableUid: string | null = null;
 
@@ -40,6 +44,7 @@ export class ParticipationListComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private userService: UserService,
+    private assignmentService: AssignmentService,
     private participationService: ParticipationService,
     private toastService: ToastService
   ) {
@@ -52,24 +57,51 @@ export class ParticipationListComponent implements OnInit {
   ngOnInit(): void {
     this.eventUid = this.route.snapshot.paramMap.get('eventUid');
     this.tableUid = this.route.snapshot.paramMap.get('tableUid');
-    this.canAddClient = this.route.snapshot.queryParams['canAddClient'] === 'true';
 
-    this.getData();
+    this.getAssignment();
+    this.getParticipations();
   }
 
   ngOnDestroy(): void {
     if (this.participationsSubscription) {
       this.participationsSubscription.unsubscribe();
     }
+
+    if (this.assignmentSubscription) {
+      this.assignmentSubscription.unsubscribe();
+    }
   }
 
   /* --------------------------------------------- HTTP Methods --------------------------------------------- */
-  getData(): void {
+  getAssignment(): void {
     /* Check if the parameters are valid */
-    if (!this.tableUid) {
+    if (!this.eventUid || !this.tableUid) {
       throw new Error('Errore: parametri non validi');
     }
 
+    const that = this;
+    this.assignmentSubscription = this.assignmentService
+      .getRealTimeAssignmentsByEventUidAndEmployeeUid(this.eventUid, this.employeeUid)
+      .subscribe({
+        next(data: Assignment[]) {
+          if (data.length <= 0) {
+            that.canAddClient = false;
+            return;
+          }
+
+          that.canAddClient = data[0].props.maxPersonMarkable > data[0].props.personMarked;
+        },
+        error(error: Error) {
+          that.toastService.showError(error);
+        }
+      });
+  }
+
+  getParticipations(): void {
+    /* Check if the parameters are valid */
+    if (!this.eventUid || !this.tableUid) {
+      throw new Error('Errore: parametri non validi');
+    }
     const that = this;
     this.participationsSubscription = this.participationService
       .getRealTimeParticipationsByTableUid(this.tableUid)
@@ -86,9 +118,5 @@ export class ParticipationListComponent implements OnInit {
   /* --------------------------------------------- Methods --------------------------------------------- */
   goToCreateClient(): void {
     this.router.navigate(['./null'], { relativeTo: this.route });
-  }
-
-  onDeleteParticipation() {
-    this.canAddClient = true;
   }
 }
