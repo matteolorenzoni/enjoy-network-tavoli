@@ -6,7 +6,7 @@ import {
   staggeredFadeInIncrement
 } from 'src/app/animations/animations';
 import { Location } from '@angular/common';
-import { AssignmentAndEmployee } from 'src/app/models/type';
+import { EmployeeAssignment } from 'src/app/models/type';
 import { AssignmentService } from 'src/app/services/assignment.service';
 import { EmployeeService } from '../../../../services/employee.service';
 import { ToastService } from '../../../../services/toast.service';
@@ -22,8 +22,8 @@ export class PrActiveComponent implements OnInit {
   backIcon = faArrowLeft;
   filterIcon = faFilter;
 
-  /* AssignmentAndEmployee */
-  assignmentsAndEmployees: AssignmentAndEmployee[] = [];
+  /* EmployeeAssignment */
+  employeesAssignments: EmployeeAssignment[] = [];
 
   constructor(
     private location: Location,
@@ -45,10 +45,9 @@ export class PrActiveComponent implements OnInit {
       prActive.forEach(async (employee) => {
         const assignments = await this.assignmentService.getAssignmentsByEmployeeUid(employee.uid);
         if (assignments.length > 0) {
-          this.assignmentsAndEmployees.push({
-            employee,
-            assignment: assignments[0]
-          });
+          this.employeesAssignments.push({ employee, assignment: assignments[0] });
+        } else {
+          this.employeesAssignments.push({ employee });
         }
       });
     } catch (error: any) {

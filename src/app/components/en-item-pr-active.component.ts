@@ -1,6 +1,6 @@
 import { ActivatedRoute } from '@angular/router';
 import { Component, ElementRef, Input, ViewChild } from '@angular/core';
-import { AssignmentAndEmployee } from '../models/type';
+import { EmployeeAssignment } from '../models/type';
 import { AssignmentService } from '../services/assignment.service';
 import { ToastService } from '../services/toast.service';
 
@@ -13,8 +13,8 @@ import { ToastService } from '../services/toast.service';
         id="orange-checkbox"
         type="checkbox"
         class="h-4 w-4 rounded border-primary-50 bg-primary-50 text-black accent-primary-50 ring-offset-primary-40 hover:cursor-pointer focus:ring-2 focus:ring-orange-600 disabled:cursor-not-allowed xs:mr-8"
-        [checked]="ae.assignment.props.isActive"
-        [disabled]="ae.assignment.props.personMarked > 0"
+        [checked]="ae.assignment"
+        [disabled]="ae.assignment && ae.assignment.props.personMarked > 0"
         (change)="onChangeCheck($event)" />
       <div class="shrink-0 basis-40 truncate xs:basis-48">
         {{ ae.employee.props.name }} {{ ae.employee.props.lastName }}
@@ -31,7 +31,7 @@ import { ToastService } from '../services/toast.service';
   ]
 })
 export class EnItemPrActiveComponent {
-  @Input() ae!: AssignmentAndEmployee;
+  @Input() ae!: EmployeeAssignment;
   @ViewChild('checkBoxInput') checkBoxInput!: ElementRef<HTMLInputElement>;
 
   /* Event */
@@ -58,7 +58,7 @@ export class EnItemPrActiveComponent {
     const { checked } = event.target as HTMLInputElement;
     if (checked) {
       this.addAssignment(this.eventUid, this.ae.employee.uid);
-    } else {
+    } else if (this.ae.assignment) {
       this.deleteAssignment(this.ae.assignment.uid);
     }
   }
@@ -76,8 +76,8 @@ export class EnItemPrActiveComponent {
     try {
       const text = "Sei sicuro di voler rimuovere l'assegnazione?";
       if (window.confirm(text) === true) {
-        await this.assignmentService.deleteAssignment(assignmentUid);
-        this.toastService.showSuccess(`Ora ${this.ae.employee.props.name}  non può più inviare tickets`);
+        await this.assignmentService.updateAssignmentIsActive(assignmentUid, false);
+        this.toastService.showSuccess(`Ora ${this.ae.employee.props.name} non può più inviare tickets`);
       } else {
         this.checkBoxInput.nativeElement.checked = true;
       }
