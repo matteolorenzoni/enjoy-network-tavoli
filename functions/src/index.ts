@@ -2,7 +2,7 @@ import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
 import axios from 'axios';
 import { DocumentData } from 'firebase-admin/firestore';
-import { ParticipationDTO, EventDTO, TableDTO } from './collection';
+import { ParticipationDTO, EventDTO, TableDTO, AssignmentDTO } from './collection';
 import { ShorterUrlResponse, SMS, SMSResponse } from './type';
 
 admin.initializeApp();
@@ -10,7 +10,7 @@ admin.initializeApp();
 /* -------------------------------------------------------------------------------------------------------------------------------
 -------------------------------------------------------- TEST --------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------------- */
-export const testOnParticipationCreate = functions.firestore
+export const testParticipatiOnCreate = functions.firestore
   .document('participations/{participationId}')
   .onCreate(async (snap, context) => {
     const participationDTO = snap.data() as ParticipationDTO;
@@ -54,7 +54,7 @@ export const testOnParticipationCreate = functions.firestore
     }
   });
 
-export const testOnParticipationUpdate = functions.firestore
+export const testParticipatiOnUpdate = functions.firestore
   .document('participations/{participationId}')
   .onUpdate(async (change) => {
     try {
@@ -101,6 +101,36 @@ export const testOnParticipationUpdate = functions.firestore
       console.error(JSON.stringify(error));
     }
   });
+
+export const testAssignmentOnUpdate = functions.firestore.document('assignments/{assignmentId}').onUpdate((change) => {
+  try {
+    const data = change.after.data() as AssignmentDTO;
+    const previousData = change.before.data() as AssignmentDTO;
+
+    if (data.isActive === previousData.isActive) {
+      return;
+    }
+
+    const { isActive, personMarked } = data;
+
+    if (!isActive) {
+      if (personMarked > 0) {
+        const propsToUpdate = {
+          maxPersonMarkable: personMarked,
+          modifiedAt: new Date()
+        };
+        return change.after.ref.set(propsToUpdate, { merge: true });
+      } else {
+        return change.after.ref.delete();
+      }
+    } else {
+      return change.after.ref;
+    }
+  } catch (error) {
+    console.error(JSON.stringify(error));
+    return null;
+  }
+});
 
 /* -------------------------------------------------------------------------------------------------------------------------------
 -------------------------------------------------------- PRO --------------------------------------------------------------------
@@ -170,7 +200,7 @@ export const sendSms = functions.firestore
     }
   });
 
-export const onParticipationCreate = functions.firestore
+export const participatiOnCreate = functions.firestore
   .document('PROD_participations/{participationId}')
   .onCreate(async (snap, context) => {
     const participationDTO = snap.data() as ParticipationDTO;
@@ -214,7 +244,7 @@ export const onParticipationCreate = functions.firestore
     }
   });
 
-export const onParticipationUpdate = functions.firestore
+export const participatiOnUpdate = functions.firestore
   .document('PROD_participations/{participationId}')
   .onUpdate(async (change) => {
     try {
@@ -261,3 +291,33 @@ export const onParticipationUpdate = functions.firestore
       console.error(JSON.stringify(error));
     }
   });
+
+export const assignmentOnUpdate = functions.firestore.document('PROD_assignments/{assignmentId}').onUpdate((change) => {
+  try {
+    const data = change.after.data() as AssignmentDTO;
+    const previousData = change.before.data() as AssignmentDTO;
+
+    if (data.isActive === previousData.isActive) {
+      return;
+    }
+
+    const { isActive, personMarked } = data;
+
+    if (!isActive) {
+      if (personMarked > 0) {
+        const propsToUpdate = {
+          maxPersonMarkable: personMarked,
+          modifiedAt: new Date()
+        };
+        return change.after.ref.set(propsToUpdate, { merge: true });
+      } else {
+        return change.after.ref.delete();
+      }
+    } else {
+      return change.after.ref;
+    }
+  } catch (error) {
+    console.error(JSON.stringify(error));
+    return null;
+  }
+});
