@@ -91,6 +91,14 @@ export class EnItemAssignmentComponent {
           return;
         }
 
+        if (newPersonAssigned < this.ea.assignment.props.personMarked) {
+          this.formPersonAssigned.setValue(this.ea.assignment.props.maxPersonMarkable);
+          this.toastService.showErrorMessage(
+            'Il valore non può essere inferiore al numero di persone che hanno già ricevuto il ticket'
+          );
+          return;
+        }
+
         /* Check if the value is different from the previous one */
         if (this.ea.assignment.props.maxPersonMarkable !== newPersonAssigned) {
           /* Check if the value is less than the max person */
