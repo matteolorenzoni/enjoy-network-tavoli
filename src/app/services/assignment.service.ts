@@ -4,7 +4,6 @@ import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { FirebaseReadService } from './firebase/firebase-crud/firebase-read.service';
 import { FirebaseCreateService } from './firebase/firebase-crud/firebase-create.service';
-import { FirebaseDeleteService } from './firebase/firebase-crud/firebase-delete.service';
 import { FirebaseUpdateService } from './firebase/firebase-crud/firebase-update.service';
 import { Assignment } from '../models/type';
 import { assignmentConverter } from '../models/converter';
@@ -16,12 +15,11 @@ export class AssignmentService {
   constructor(
     private firebaseCreateService: FirebaseCreateService,
     private firebaseReadService: FirebaseReadService,
-    private firebaseUpdateService: FirebaseUpdateService,
-    private firebaseDeleteService: FirebaseDeleteService
+    private firebaseUpdateService: FirebaseUpdateService
   ) {}
 
   /* ------------------------------------------- GET ------------------------------------------- */
-  public async getAssignmentsByByEventUidAndEmployeeUid(eventUid: string, employeeUid: string): Promise<Assignment[]> {
+  public async getAssignmentsByEventUidAndEmployeeUid(eventUid: string, employeeUid: string): Promise<Assignment[]> {
     const eventUidConstraint: QueryConstraint = where('eventUid', '==', eventUid);
     const employeeUidConstraint: QueryConstraint = where('employeeUid', '==', employeeUid);
     const constraints: QueryConstraint[] = [eventUidConstraint, employeeUidConstraint];
@@ -34,7 +32,7 @@ export class AssignmentService {
     return assignments;
   }
 
-  public async getActiveAssignmentsByByEventUidAndEmployeeUid(
+  public async getActiveAssignmentsByEventUidAndEmployeeUid(
     eventUid: string,
     employeeUid: string
   ): Promise<Assignment[]> {

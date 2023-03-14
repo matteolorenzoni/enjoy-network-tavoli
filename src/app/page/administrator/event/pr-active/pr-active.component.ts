@@ -8,6 +8,7 @@ import {
 import { Location } from '@angular/common';
 import { EmployeeAssignment } from 'src/app/models/type';
 import { AssignmentService } from 'src/app/services/assignment.service';
+import { ActivatedRoute } from '@angular/router';
 import { EmployeeService } from '../../../../services/employee.service';
 import { ToastService } from '../../../../services/toast.service';
 
@@ -22,17 +23,23 @@ export class PrActiveComponent implements OnInit {
   backIcon = faArrowLeft;
   filterIcon = faFilter;
 
+  /* Event */
+  eventUid?: string;
+
   /* EmployeeAssignment */
   employeesAssignments: EmployeeAssignment[] = [];
 
   constructor(
     private location: Location,
+    private route: ActivatedRoute,
     private assignmentService: AssignmentService,
     private employeeService: EmployeeService,
     private toastService: ToastService
   ) {}
 
   ngOnInit(): void {
+    this.eventUid = this.route.snapshot.paramMap.get('eventUid') || undefined;
+
     this.getData();
   }
 
@@ -43,7 +50,14 @@ export class PrActiveComponent implements OnInit {
 
       /* Get all the assignments of the employees */
       prActive.forEach(async (employee) => {
-        const assignments = await this.assignmentService.getAssignmentsByEmployeeUid(employee.uid);
+        if (!this.eventUid) {
+          throw new Error('Parametri non validi');
+        }
+
+        const assignments = await this.assignmentService.getAssignmentsByEventUidAndEmployeeUid(
+          this.eventUid,
+          employee.uid
+        );
         if (assignments.length > 0) {
           this.employeesAssignments.push({ employee, assignment: assignments[0] });
         } else {
