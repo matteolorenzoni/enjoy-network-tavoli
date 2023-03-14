@@ -1,5 +1,5 @@
 import { ActivatedRoute } from '@angular/router';
-import { Component, Input } from '@angular/core';
+import { Component, ElementRef, Input, ViewChild } from '@angular/core';
 import { AssignmentAndEmployee } from '../models/type';
 import { AssignmentService } from '../services/assignment.service';
 import { ToastService } from '../services/toast.service';
@@ -9,6 +9,7 @@ import { ToastService } from '../services/toast.service';
   template: `
     <li class="flex items-center gap-4 rounded py-4 px-4 text-slate-300">
       <input
+        #checkBoxInput
         id="orange-checkbox"
         type="checkbox"
         class="h-4 w-4 rounded border-primary-50 bg-primary-50 text-black accent-primary-50 ring-offset-primary-40 hover:cursor-pointer focus:ring-2 focus:ring-orange-600 disabled:cursor-not-allowed xs:mr-8"
@@ -31,6 +32,7 @@ import { ToastService } from '../services/toast.service';
 })
 export class EnItemPrActiveComponent {
   @Input() ae!: AssignmentAndEmployee;
+  @ViewChild('checkBoxInput') checkBoxInput!: ElementRef<HTMLInputElement>;
 
   /* Event */
   eventUid: string | null = null;
@@ -57,38 +59,30 @@ export class EnItemPrActiveComponent {
     if (checked) {
       this.addAssignment(this.eventUid, this.ae.employee.uid);
     } else {
-      this.deleteAssignment(this.eventUid, this.ae.employee.uid);
+      this.deleteAssignment(this.ae.assignment.uid);
     }
   }
 
   public async addAssignment(eventUid: string, employeeUid: string) {
-    await this.assignmentService
-      .addAssignment(eventUid, employeeUid)
-      .then(() => {
-        this.toastService.showSuccess(
-          `Ora ${this.ae.employee.props.name} ${this.ae.employee.props.lastName} può inviare tickets`
-        );
-      })
-      .catch((err: Error) => {
-        this.toastService.showError(err);
-      });
+    try {
+      await this.assignmentService.addAssignment(eventUid, employeeUid);
+      this.toastService.showSuccess(`Ora ${this.ae.employee.props.name} può inviare tickets`);
+    } catch (error: any) {
+      this.toastService.showError(error);
+    }
   }
 
-  public async deleteAssignment(eventUid: string, employeeUid: string) {
-    const text = "Sei sicuro di voler rimuovere l'assegnazione?";
-    if (window.confirm(text) === true) {
-      if (!eventUid || !employeeUid) {
-        throw new Error('Errore: parametri non validi');
+  public async deleteAssignment(assignmentUid: string) {
+    try {
+      const text = "Sei sicuro di voler rimuovere l'assegnazione?";
+      if (window.confirm(text) === true) {
+        await this.assignmentService.deleteAssignment(assignmentUid);
+        this.toastService.showSuccess(`Ora ${this.ae.employee.props.name}  non può più inviare tickets`);
+      } else {
+        this.checkBoxInput.nativeElement.checked = true;
       }
-
-      await this.assignmentService
-        .deleteAssignment(eventUid, employeeUid)
-        .then(() => {
-          this.toastService.showSuccess('Dipendente rimosso');
-        })
-        .catch((err: Error) => {
-          this.toastService.showError(err);
-        });
+    } catch (error: any) {
+      this.toastService.showError(error);
     }
   }
 }
