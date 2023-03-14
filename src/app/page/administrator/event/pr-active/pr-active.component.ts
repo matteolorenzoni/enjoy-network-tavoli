@@ -6,7 +6,7 @@ import {
   staggeredFadeInIncrement
 } from 'src/app/animations/animations';
 import { Location } from '@angular/common';
-import { AssignmentAndEmployee, Employee } from 'src/app/models/type';
+import { AssignmentAndEmployee } from 'src/app/models/type';
 import { AssignmentService } from 'src/app/services/assignment.service';
 import { EmployeeService } from '../../../../services/employee.service';
 import { ToastService } from '../../../../services/toast.service';
@@ -36,33 +36,24 @@ export class PrActiveComponent implements OnInit {
     this.getData();
   }
 
-  getData() {
-    this.employeeService
-      .getEmployeesPrAndActive()
-      .then((employees) => {
-        employees.forEach((employee) => {
-          this.createAssignmentAndEmployeeArray(employee);
-        });
-      })
-      .catch((err: Error) => {
-        this.toastService.showError(err);
-      });
-  }
+  async getData() {
+    try {
+      /* Get all the employees that are pr and active */
+      const prActive = await this.employeeService.getEmployeesPrAndActive();
 
-  createAssignmentAndEmployeeArray(employee: Employee): void {
-    this.assignmentService
-      .getAssignmentsByEmployeeUid(employee.uid)
-      .then((assignments) => {
+      /* Get all the assignments of the employees */
+      prActive.forEach(async (employee) => {
+        const assignments = await this.assignmentService.getAssignmentsByEmployeeUid(employee.uid);
         if (assignments.length > 0) {
           this.assignmentsAndEmployees.push({
             employee,
             assignment: assignments[0]
           });
         }
-      })
-      .catch((err: Error) => {
-        this.toastService.showError(err);
       });
+    } catch (error: any) {
+      this.toastService.showError(error);
+    }
   }
 
   goBack(): void {
