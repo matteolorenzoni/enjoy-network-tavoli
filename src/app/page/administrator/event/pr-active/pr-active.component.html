@@ -8,10 +8,7 @@
       FILTRI
     </button>
   </div>
-  <ul [@staggeredFadeInIncrement]="activePrs.length" class="flex flex-col divide-y divide-gray-700">
-    <en-item-pr-active
-      *ngFor="let employee of activePrs"
-      [employee]="employee"
-      [assignments]="assignments"></en-item-pr-active>
+  <ul [@staggeredFadeInIncrement]="assignmentsAndEmployees.length" class="flex flex-col gap-2 divide-y divide-gray-700">
+    <en-item-pr-active *ngFor="let ae of assignmentsAndEmployees" [ae]="ae"></en-item-pr-active>
   </ul>
 </section>

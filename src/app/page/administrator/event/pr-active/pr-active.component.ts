@@ -6,9 +6,8 @@ import {
   staggeredFadeInIncrement
 } from 'src/app/animations/animations';
 import { Location } from '@angular/common';
-import { Assignment, Employee } from 'src/app/models/type';
+import { AssignmentAndEmployee, Employee } from 'src/app/models/type';
 import { AssignmentService } from 'src/app/services/assignment.service';
-import { ActivatedRoute } from '@angular/router';
 import { EmployeeService } from '../../../../services/employee.service';
 import { ToastService } from '../../../../services/toast.service';
 
@@ -23,17 +22,10 @@ export class PrActiveComponent implements OnInit {
   backIcon = faArrowLeft;
   filterIcon = faFilter;
 
-  /* Event */
-  eventUid: string | null = null;
-
-  /* Employee */
-  activePrs: Employee[] = [];
-
-  /* Assignment */
-  assignments: Assignment[] = [];
+  /* AssignmentAndEmployee */
+  assignmentsAndEmployees: AssignmentAndEmployee[] = [];
 
   constructor(
-    private route: ActivatedRoute,
     private location: Location,
     private assignmentService: AssignmentService,
     private employeeService: EmployeeService,
@@ -41,25 +33,32 @@ export class PrActiveComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.eventUid = this.route.snapshot.paramMap.get('eventUid');
+    this.getData();
+  }
 
-    if (!this.eventUid) {
-      throw new Error('Parametri non validi');
-    }
-
-    this.assignmentService
-      .getAssignmentsByEventUid(this.eventUid)
-      .then((assignments) => {
-        this.assignments = assignments;
+  getData() {
+    this.employeeService
+      .getEmployeesPrAndActive()
+      .then((employees) => {
+        employees.forEach((employee) => {
+          this.createAssignmentAndEmployeeArray(employee);
+        });
       })
       .catch((err: Error) => {
         this.toastService.showError(err);
       });
+  }
 
-    this.employeeService
-      .getEmployeesPrAndActive()
-      .then((employees) => {
-        this.activePrs = employees;
+  createAssignmentAndEmployeeArray(employee: Employee): void {
+    this.assignmentService
+      .getAssignmentsByEmployeeUid(employee.uid)
+      .then((assignments) => {
+        if (assignments.length > 0) {
+          this.assignmentsAndEmployees.push({
+            employee,
+            assignment: assignments[0]
+          });
+        }
       })
       .catch((err: Error) => {
         this.toastService.showError(err);

@@ -1,23 +1,24 @@
-import { Assignment } from 'src/app/models/type';
 import { ActivatedRoute } from '@angular/router';
 import { Component, Input } from '@angular/core';
-import { Employee } from '../models/type';
+import { AssignmentAndEmployee } from '../models/type';
 import { AssignmentService } from '../services/assignment.service';
 import { ToastService } from '../services/toast.service';
 
 @Component({
-  selector: 'en-item-pr-active[employee][assignments]',
+  selector: 'en-item-pr-active[ae]',
   template: `
-    <li class="flex h-14 items-center gap-4 text-slate-300">
+    <li class="flex items-center gap-4 rounded py-4 px-4 text-slate-300">
       <input
         id="orange-checkbox"
         type="checkbox"
         class="h-4 w-4 rounded border-primary-50 bg-primary-50 text-black accent-primary-50 ring-offset-primary-40 hover:cursor-pointer focus:ring-2 focus:ring-orange-600 disabled:cursor-not-allowed xs:mr-8"
-        [checked]="isChecked()"
-        [disabled]="isDisabled()"
+        [checked]="ae.assignment.props.isActive"
+        [disabled]="ae.assignment.props.personMarked > 0"
         (change)="onChangeCheck($event)" />
-      <div class="shrink-0 basis-40 truncate xs:basis-48">{{ employee.props.name }} {{ employee.props.lastName }}</div>
-      <div class="grow truncate">{{ employee.props.zone }}</div>
+      <div class="shrink-0 basis-40 truncate xs:basis-48">
+        {{ ae.employee.props.name }} {{ ae.employee.props.lastName }}
+      </div>
+      <div class="grow truncate">{{ ae.employee.props.zone }}</div>
     </li>
   `,
   styles: [
@@ -29,8 +30,7 @@ import { ToastService } from '../services/toast.service';
   ]
 })
 export class EnItemPrActiveComponent {
-  @Input() employee!: Employee;
-  @Input() assignments!: Assignment[];
+  @Input() ae!: AssignmentAndEmployee;
 
   /* Event */
   eventUid: string | null = null;
@@ -55,9 +55,9 @@ export class EnItemPrActiveComponent {
 
     const { checked } = event.target as HTMLInputElement;
     if (checked) {
-      this.addAssignment(this.eventUid, this.employee.uid);
+      this.addAssignment(this.eventUid, this.ae.employee.uid);
     } else {
-      this.deleteAssignment(this.eventUid, this.employee.uid);
+      this.deleteAssignment(this.eventUid, this.ae.employee.uid);
     }
   }
 
@@ -65,7 +65,9 @@ export class EnItemPrActiveComponent {
     await this.assignmentService
       .addAssignment(eventUid, employeeUid)
       .then(() => {
-        this.toastService.showSuccess('Dipendente aggiunto');
+        this.toastService.showSuccess(
+          `Ora ${this.ae.employee.props.name} ${this.ae.employee.props.lastName} può inviare tickets`
+        );
       })
       .catch((err: Error) => {
         this.toastService.showError(err);
@@ -88,14 +90,5 @@ export class EnItemPrActiveComponent {
           this.toastService.showError(err);
         });
     }
-  }
-
-  isChecked(): boolean {
-    return this.assignments.some((assignment) => assignment.props.employeeUid === this.employee.uid);
-  }
-
-  isDisabled(): boolean {
-    const assignment = this.assignments.find((item) => item.props.employeeUid === this.employee.uid);
-    return !!(assignment && assignment.props.personMarked > 0);
   }
 }
