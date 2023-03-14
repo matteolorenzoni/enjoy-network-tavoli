@@ -97,39 +97,8 @@ export class AssignmentService {
     }
   }
 
-  public async updateAssignmentIsActive(assignmentUid: string, personMarked: number, isActive: boolean): Promise<void> {
-    const assignment: Assignment = await this.firebaseReadService.getDocumentByUid(
-      environment.collection.ASSIGNMENTS,
-      assignmentUid,
-      assignmentConverter
-    );
-    if (assignment) {
-      if (personMarked === 0) {
-        this.firebaseDeleteService.deleteDocumentByUid(environment.collection.ASSIGNMENTS, assignmentUid);
-      } else {
-        /** If the person is not active for the event, are removed as many as person assigned as possible  */
-        const propsToUpdate = isActive ? { isActive: true } : { maxPersonMarkable: personMarked, isActive: false };
-        await this.firebaseUpdateService.updateDocumentsProps(
-          environment.collection.ASSIGNMENTS,
-          [assignment],
-          propsToUpdate
-        );
-      }
-    }
-  }
-
-  /* ------------------------------------------- DELETE ------------------------------------------- */
-  public async deleteAssignment(eventUid: string, employeeUid: string): Promise<void> {
-    const eventUidConstraint: QueryConstraint = where('eventUid', '==', eventUid);
-    const employeeUidConstraint: QueryConstraint = where('employeeUid', '==', employeeUid);
-    const constraints: QueryConstraint[] = [eventUidConstraint, employeeUidConstraint];
-
-    const assignments: Assignment[] = await this.firebaseReadService.getDocumentsByMultipleConstraints(
-      environment.collection.ASSIGNMENTS,
-      constraints,
-      assignmentConverter
-    );
-    const assignmentsUids: string[] = assignments.map((assignment) => assignment.uid);
-    await this.firebaseDeleteService.deleteDocumentsByUids(environment.collection.ASSIGNMENTS, assignmentsUids);
+  public async updateAssignmentIsActive(assignmentUid: string, isActive: boolean): Promise<void> {
+    const propsToUpdate = { isActive };
+    this.firebaseUpdateService.updateDocumentProps(environment.collection.ASSIGNMENTS, assignmentUid, propsToUpdate);
   }
 }
