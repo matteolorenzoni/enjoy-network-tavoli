@@ -48,7 +48,7 @@ export class AssignmentService {
     return assignments.length > 0 ? assignments[0] : undefined;
   }
 
-  public getRealTimeAssignmentByEventUidAndEmployeeUid(
+  public getRealTimeAssignmentsByEventUidAndEmployeeUid(
     eventUid: string,
     employeeUid: string | undefined
   ): Observable<Assignment[]> {
