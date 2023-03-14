@@ -32,14 +32,10 @@ export class AssignmentService {
     return assignments;
   }
 
-  public async getActiveAssignmentsByEventUidAndEmployeeUid(
-    eventUid: string,
-    employeeUid: string
-  ): Promise<Assignment[]> {
-    const eventUidConstraint: QueryConstraint = where('eventUid', '==', eventUid);
+  public async getActiveAssignmentsByEmployeeUid(employeeUid: string): Promise<Assignment[]> {
     const employeeUidConstraint: QueryConstraint = where('employeeUid', '==', employeeUid);
     const isActiveConstraint: QueryConstraint = where('isActive', '==', true);
-    const constraints: QueryConstraint[] = [eventUidConstraint, employeeUidConstraint, isActiveConstraint];
+    const constraints: QueryConstraint[] = [employeeUidConstraint, isActiveConstraint];
 
     const assignments: Assignment[] = await this.firebaseReadService.getDocumentsByMultipleConstraints(
       environment.collection.ASSIGNMENTS,

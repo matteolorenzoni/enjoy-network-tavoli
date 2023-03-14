@@ -5,7 +5,6 @@ import { EventService } from 'src/app/services/event.service';
 import { Event } from 'src/app/models/type';
 import { ToastService } from 'src/app/services/toast.service';
 import { staggeredFadeInIncrement } from 'src/app/animations/animations';
-import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-event-active',
@@ -18,11 +17,9 @@ export class EventActiveComponent implements OnInit {
   employeeUid = '';
 
   /* Events */
-  eventUid?: string;
   eventsAvailable: Event[] = [];
 
   constructor(
-    private route: ActivatedRoute,
     private userService: UserService,
     private assignmentService: AssignmentService,
     private eventService: EventService,
@@ -32,21 +29,12 @@ export class EventActiveComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.eventUid = this.route.snapshot.paramMap.get('eventUid') || undefined;
-
     this.getData();
   }
 
   async getData() {
-    if (!this.eventUid) {
-      throw new Error('Parametri non validi');
-    }
-
     try {
-      const assignments = await this.assignmentService.getActiveAssignmentsByEventUidAndEmployeeUid(
-        this.eventUid,
-        this.employeeUid
-      );
+      const assignments = await this.assignmentService.getActiveAssignmentsByEmployeeUid(this.employeeUid);
       const eventUids = assignments.map((assignment) => assignment.props.eventUid);
       this.eventsAvailable = await this.eventService.getEventsByUids(eventUids);
     } catch (error: any) {
