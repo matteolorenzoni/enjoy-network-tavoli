@@ -70,7 +70,7 @@ export type CustomError = {
   props: CustomErrorDTO;
 };
 
-export type AssignmentAndEmployee = {
-  assignment: Assignment;
+export type EmployeeAssignment = {
   employee: Employee;
+  assignment?: Assignment;
 };
