@@ -29,25 +29,16 @@ export class EventActiveComponent implements OnInit {
   }
 
   ngOnInit() {
-    if (!this.employeeUid) {
-      throw new Error('Errore: parametri non validi');
-    }
+    this.getData();
+  }
 
-    this.assignmentService
-      .getAssignmentsByEmployeeUid(this.employeeUid)
-      .then((assignments) => {
-        const eventUids = assignments.map((assignment) => assignment.props.eventUid);
-        this.eventService
-          .getEventsByUids(eventUids)
-          .then((events) => {
-            this.eventsAvailable = events;
-          })
-          .catch((error) => {
-            this.toastService.showError(error);
-          });
-      })
-      .catch((error) => {
-        this.toastService.showError(error);
-      });
+  async getData() {
+    try {
+      const assignments = await this.assignmentService.getActiveAssignmentsByEmployeeUid(this.employeeUid);
+      const eventUids = assignments.map((assignment) => assignment.props.eventUid);
+      this.eventsAvailable = await this.eventService.getEventsByUids(eventUids);
+    } catch (error: any) {
+      this.toastService.showError(error);
+    }
   }
 }
