@@ -54,12 +54,12 @@ export class PrActiveComponent implements OnInit {
           throw new Error('Parametri non validi');
         }
 
-        const assignments = await this.assignmentService.getAssignmentsByEventUidAndEmployeeUid(
+        const assignment = await this.assignmentService.getAssignmentByEventUidAndEmployeeUid(
           this.eventUid,
           employee.uid
         );
-        if (assignments.length > 0) {
-          this.employeesAssignments.push({ employee, assignment: assignments[0] });
+        if (assignment) {
+          this.employeesAssignments.push({ employee, assignment });
         } else {
           this.employeesAssignments.push({ employee });
         }
