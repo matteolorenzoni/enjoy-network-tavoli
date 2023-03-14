@@ -21,9 +21,10 @@ export class AssignmentService {
   ) {}
 
   /* ------------------------------------------- GET ------------------------------------------- */
-  public async getAssignmentsByEmployeeUid(employeeUid: string): Promise<Assignment[]> {
-    const idConstraint: QueryConstraint = where('employeeUid', '==', employeeUid);
-    const constraints: QueryConstraint[] = [idConstraint];
+  public async getAssignmentsByByEventUidAndEmployeeUid(eventUid: string, employeeUid: string): Promise<Assignment[]> {
+    const eventUidConstraint: QueryConstraint = where('eventUid', '==', eventUid);
+    const employeeUidConstraint: QueryConstraint = where('employeeUid', '==', employeeUid);
+    const constraints: QueryConstraint[] = [eventUidConstraint, employeeUidConstraint];
 
     const assignments: Assignment[] = await this.firebaseReadService.getDocumentsByMultipleConstraints(
       environment.collection.ASSIGNMENTS,
@@ -33,10 +34,14 @@ export class AssignmentService {
     return assignments;
   }
 
-  public async getActiveAssignmentsByEmployeeUid(employeeUid: string): Promise<Assignment[]> {
-    const idConstraint: QueryConstraint = where('employeeUid', '==', employeeUid);
+  public async getActiveAssignmentsByByEventUidAndEmployeeUid(
+    eventUid: string,
+    employeeUid: string
+  ): Promise<Assignment[]> {
+    const eventUidConstraint: QueryConstraint = where('eventUid', '==', eventUid);
+    const employeeUidConstraint: QueryConstraint = where('employeeUid', '==', employeeUid);
     const isActiveConstraint: QueryConstraint = where('isActive', '==', true);
-    const constraints: QueryConstraint[] = [idConstraint, isActiveConstraint];
+    const constraints: QueryConstraint[] = [eventUidConstraint, employeeUidConstraint, isActiveConstraint];
 
     const assignments: Assignment[] = await this.firebaseReadService.getDocumentsByMultipleConstraints(
       environment.collection.ASSIGNMENTS,
