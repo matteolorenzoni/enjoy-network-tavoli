@@ -19,10 +19,10 @@
   <!-- <div *ngIf="personMarkedFromEmployeeDeleted > 0" class="py-1 text-center text-sm">
     <p>DA DIPENDENTI ELIMINATI: {{ personMarkedFromEmployeeDeleted }}</p>
   </div> -->
-  <ul [@staggeredFadeInIncrement]="assignmentsAndEmployeeArray.length" class="flex flex-col divide-y divide-gray-700">
+  <ul [@staggeredFadeInIncrement]="employeesAssignments.length" class="flex flex-col divide-y divide-gray-700">
     <en-item-assignment
-      *ngFor="let item of assignmentsAndEmployeeArray"
-      [ae]="item"
+      *ngFor="let ea of employeesAssignments"
+      [ea]="ea"
       [eventMaxPerson]="eventMaxPerson"></en-item-assignment>
   </ul>
 </section>

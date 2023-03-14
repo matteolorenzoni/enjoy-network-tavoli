@@ -2,7 +2,7 @@ import { Subscription } from 'rxjs';
 import { EventService } from 'src/app/services/event.service';
 import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Assignment, AssignmentAndEmployee } from 'src/app/models/type';
+import { Assignment, EmployeeAssignment } from 'src/app/models/type';
 import { ToastService } from 'src/app/services/toast.service';
 import { faArrowLeft, faFilter, faList } from '@fortawesome/free-solid-svg-icons';
 import { Location } from '@angular/common';
@@ -40,7 +40,7 @@ export class AssignmentListComponent {
   assignmentSubscription!: Subscription;
 
   /* Assignment and Employee */
-  assignmentsAndEmployeeArray: AssignmentAndEmployee[] = [];
+  employeesAssignments: EmployeeAssignment[] = [];
   personMarked = 0;
   personMarkedFromEmployeeDeleted = 0;
   maxPersonMarkable = 0;
@@ -123,11 +123,11 @@ export class AssignmentListComponent {
     this.employeeService
       .getEmployeesByUids(employeeUids)
       .then((employees) => {
-        this.assignmentsAndEmployeeArray = [];
+        this.employeesAssignments = [];
         employees.forEach((employee) => {
           const assignment = assignments.find((item) => item.props.employeeUid === employee.uid);
           if (assignment) {
-            this.assignmentsAndEmployeeArray.push({ assignment, employee });
+            this.employeesAssignments.push({ assignment, employee });
           }
         });
       })

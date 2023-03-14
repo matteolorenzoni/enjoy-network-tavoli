@@ -5,21 +5,23 @@ import { faCircleMinus, faCirclePlus } from '@fortawesome/free-solid-svg-icons';
 import { debounceTime, Subscription } from 'rxjs';
 import { ToastService } from '../services/toast.service';
 import { AssignmentService } from '../services/assignment.service';
-import { AssignmentAndEmployee } from '../models/type';
+import { EmployeeAssignment } from '../models/type';
 
 @Component({
-  selector: 'en-item-assignment[ae][eventMaxPerson]',
+  selector: 'en-item-assignment[ea][eventMaxPerson]',
   template: ` <li class="my-2 flex h-12 flex-nowrap items-center text-slate-300">
-    <div class="grow-2 basis-40 truncate sm:w-max">{{ ae.employee.props.name }} {{ ae.employee.props.lastName }}</div>
-    <div class="hidden grow basis-20 text-sm sm:flex sm:basis-24">{{ ae.employee.props.zone | uppercase }}</div>
+    <div class="grow-2 basis-40 truncate sm:w-max">{{ ea.employee.props.name }} {{ ea.employee.props.lastName }}</div>
+    <div class="hidden grow basis-20 text-sm sm:flex sm:basis-24">{{ ea.employee.props.zone | uppercase }}</div>
     <div class="flex basis-36 justify-end gap-1 ">
-      <div class="center mr-1">{{ ae.assignment.props.personMarked }}/{{ ae.assignment.props.maxPersonMarkable }}</div>
+      <div class="center mr-1">
+        {{ ea.assignment?.props?.personMarked }}/{{ ea.assignment?.props?.maxPersonMarkable }}
+      </div>
       <div class="center relative flex h-6 w-24 flex-row rounded-lg bg-transparent text-black">
         <button
           data-action="decrement"
           class="center h-full w-20 rounded-l bg-primary-60 outline-none  active:bg-primary-40 enabled:cursor-pointer disabled:cursor-not-allowed disabled:bg-gray-200 "
           (click)="decreasePersonAssigned()"
-          [disabled]="!ae.assignment.props.isActive">
+          [disabled]="ea.assignment && !ea.assignment.props.isActive">
           <span class="">−</span>
         </button>
         <input
@@ -31,7 +33,7 @@ import { AssignmentAndEmployee } from '../models/type';
           data-action="increment"
           class="center h-full w-20 cursor-pointer rounded-r bg-primary-60 outline-none active:bg-primary-40 disabled:cursor-not-allowed disabled:bg-gray-200"
           (click)="incrementPersonAssigned()"
-          [disabled]="!ae.assignment.props.isActive">
+          [disabled]="ea.assignment && !ea.assignment.props.isActive">
           <span class="m">+</span>
         </button>
       </div>
@@ -57,7 +59,7 @@ import { AssignmentAndEmployee } from '../models/type';
   ]
 })
 export class EnItemAssignmentComponent {
-  @Input() ae!: AssignmentAndEmployee;
+  @Input() ea!: EmployeeAssignment;
   @Input() eventMaxPerson!: number;
 
   /* Icons */
@@ -70,7 +72,7 @@ export class EnItemAssignmentComponent {
 
   /* Subscriptions */
   subPersonAssigned!: Subscription;
-  subIsActive!: Subscription;
+  assignmentIsActive!: Subscription;
 
   constructor(private assignmentService: AssignmentService, private toastService: ToastService) {}
 
@@ -81,21 +83,23 @@ export class EnItemAssignmentComponent {
     this.subPersonAssigned = this.formPersonAssigned.valueChanges
       .pipe(debounceTime(1200))
       .subscribe((newPersonAssigned) => {
+        if (!this.ea.assignment) return;
+
         if (!newPersonAssigned) {
-          this.formPersonAssigned.setValue(this.ae.assignment.props.maxPersonMarkable);
+          this.formPersonAssigned.setValue(this.ea.assignment.props.maxPersonMarkable);
           this.toastService.showErrorMessage('Il valore deve essere un numero');
           return;
         }
 
         /* Check if the value is different from the previous one */
-        if (this.ae.assignment.props.maxPersonMarkable !== newPersonAssigned) {
+        if (this.ea.assignment.props.maxPersonMarkable !== newPersonAssigned) {
           /* Check if the value is less than the max person */
           const hypotheticalPersonAssigned =
-            this.ae.assignment.props.maxPersonMarkable + newPersonAssigned - this.ae.assignment.props.maxPersonMarkable;
+            this.ea.assignment.props.maxPersonMarkable + newPersonAssigned - this.ea.assignment.props.maxPersonMarkable;
           if (hypotheticalPersonAssigned <= this.eventMaxPerson) {
             /* Update the value */
             this.assignmentService
-              .updateAssignmentPersonAssignedProp(this.ae.assignment.uid, newPersonAssigned)
+              .updateAssignmentPersonAssignedProp(this.ea.assignment.uid, newPersonAssigned)
               .then(() => {
                 this.toastService.showSuccess('Elemento modificato');
               })
@@ -104,43 +108,45 @@ export class EnItemAssignmentComponent {
               });
           } else {
             /* Reset the value */
-            this.formPersonAssigned.setValue(this.ae.assignment.props.maxPersonMarkable);
+            this.formPersonAssigned.setValue(this.ea.assignment.props.maxPersonMarkable);
             this.toastService.showErrorMessage('Non puoi assegnare più persone di quelle disponibili');
           }
         }
       });
 
     /* Form IsActive */
-    this.subIsActive = this.formIsActive.valueChanges.subscribe((value) => {
-      this.assignmentService
-        .updateAssignmentIsActive(this.ae.assignment.uid, this.ae.assignment.props.personMarked, value)
-        .then(() => {
-          this.toastService.showSuccess(
-            this.ae.assignment.props.personMarked > 0 ? 'Elemento modificato' : 'Elemento eliminato'
-          );
-        })
-        .catch((err: Error) => {
-          this.toastService.showError(err);
-        });
+    this.assignmentIsActive = this.formIsActive.valueChanges.subscribe(async (value) => {
+      try {
+        if (!this.ea.assignment) return;
+
+        await this.assignmentService.updateAssignmentIsActive(this.ea.assignment.uid, value);
+        this.toastService.showSuccess(
+          this.ea.assignment.props.personMarked > 0 ? 'Assegnamento modificato' : 'Assegnamento eliminato'
+        );
+      } catch (error: any) {
+        this.toastService.showError(error);
+      }
     });
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['ae']) {
-      /* Form PersonAssigned */
-      this.formPersonAssigned.setValue(this.ae.assignment.props.maxPersonMarkable);
-      if (!this.ae.assignment.props.isActive) {
-        this.formPersonAssigned.disable();
-      }
+    if (changes['ea']) {
+      if (this.ea.assignment) {
+        /* Form PersonAssigned */
+        this.formPersonAssigned.setValue(this.ea.assignment.props.maxPersonMarkable);
+        if (!this.ea.assignment.props.isActive) {
+          this.formPersonAssigned.disable();
+        }
 
-      /* Form IsActive */
-      this.formIsActive.setValue(this.ae.assignment.props.isActive);
+        /* Form IsActive */
+        this.formIsActive.setValue(this.ea.assignment.props.isActive);
+      }
     }
   }
 
   ngOnDestroy(): void {
     if (this.subPersonAssigned) this.subPersonAssigned.unsubscribe();
-    if (this.subIsActive) this.subIsActive.unsubscribe();
+    if (this.assignmentIsActive) this.assignmentIsActive.unsubscribe();
   }
 
   /* ----------------------------------------------------- methods ----------------------------------------------------- */
