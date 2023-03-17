@@ -6,8 +6,7 @@ import {
   staggeredFadeInIncrement
 } from 'src/app/animations/animations';
 import { Location } from '@angular/common';
-import { EmployeeAssignment } from 'src/app/models/type';
-import { AssignmentService } from 'src/app/services/assignment.service';
+import { Employee } from 'src/app/models/type';
 import { ActivatedRoute } from '@angular/router';
 import { EmployeeService } from '../../../../services/employee.service';
 import { ToastService } from '../../../../services/toast.service';
@@ -26,16 +25,19 @@ export class PrActiveComponent implements OnInit {
   /* Event */
   eventUid?: string;
 
-  /* EmployeeAssignment */
-  employeesAssignments: EmployeeAssignment[] = [];
+  /* Employee */
+  employees: Employee[] = [];
+
+  /* ------------------------------ Constructor ------------------------------ */
 
   constructor(
     private location: Location,
     private route: ActivatedRoute,
-    private assignmentService: AssignmentService,
     private employeeService: EmployeeService,
     private toastService: ToastService
   ) {}
+
+  /* ------------------------------ Lifecycle Hooks ------------------------------ */
 
   ngOnInit(): void {
     this.eventUid = this.route.snapshot.paramMap.get('eventUid') || undefined;
@@ -43,30 +45,25 @@ export class PrActiveComponent implements OnInit {
     this.getData();
   }
 
+  /* ------------------------------ HTTP Methods ------------------------------ */
+
   async getData() {
+    if (!this.eventUid) {
+      this.toastService.showErrorMessage("Errore, parametri dell'evento non validi");
+      return;
+    }
+
     try {
-      /* Get all the employees that are pr and active */
-      const prActive = await this.employeeService.getEmployeesPrAndActive();
-
-      /* Get all the assignments of the employees */
-      prActive.forEach(async (employee) => {
-        if (!this.eventUid) {
-          throw new Error('Parametri non validi');
-        }
-
-        const assignment = await this.assignmentService.getAssignmentByEventUidAndEmployeeUid(
-          this.eventUid,
-          employee.uid
-        );
-        if (assignment) {
-          this.employeesAssignments.push({ employee, assignment });
-        } else {
-          this.employeesAssignments.push({ employee });
-        }
-      });
+      this.employees = await this.employeeService.getEmployeePrAndActiveWithNoAssignment(this.eventUid);
     } catch (error: any) {
       this.toastService.showError(error);
     }
+  }
+
+  /* ------------------------------ Methods ------------------------------ */
+
+  removeEmployeeDeleted(employeeUid: string) {
+    this.employees = this.employees.filter((employee) => employee.uid !== employeeUid);
   }
 
   goBack(): void {

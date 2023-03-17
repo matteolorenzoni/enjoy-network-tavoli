@@ -35,15 +35,7 @@ export class EmployeeService {
     return employee;
   }
 
-  public getRealTimeAllEmployees(): Observable<Employee[]> {
-    const employees: Observable<Employee[]> = this.firebaseReadService.getRealTimeAllDocuments(
-      environment.collection.EMPLOYEES,
-      employeeConverter
-    );
-    return employees;
-  }
-
-  public async getEmployeesPrAndActive(): Promise<Employee[]> {
+  public async getEmployeePrAndActiveWithNoAssignment(eventUid: string): Promise<Employee[]> {
     const activeConstraint: QueryConstraint = where('isActive', '==', true);
     const prConstraint: QueryConstraint = where('role', '==', RoleType.PR);
     const constricts: QueryConstraint[] = [activeConstraint, prConstraint];
@@ -52,7 +44,31 @@ export class EmployeeService {
       constricts,
       employeeConverter
     );
-    return employees;
+
+    const employeeUids: string[] = employees.map((employee) => employee.uid);
+    const assignmentPromises: Promise<Assignment[]>[] = [];
+    for (let i = 0; i < employeeUids.length; i += 10) {
+      const employeeUidConstraint: QueryConstraint = where('employeeUid', 'in', employeeUids.slice(i, i + 10));
+      const eventUidConstraint: QueryConstraint = where('eventUid', '==', eventUid);
+      const constraints: QueryConstraint[] = [employeeUidConstraint, eventUidConstraint];
+
+      const promise = this.firebaseReadService.getDocumentsByMultipleConstraints(
+        environment.collection.ASSIGNMENTS,
+        constraints,
+        assignmentConverter
+      );
+      assignmentPromises.push(promise);
+    }
+
+    const assignments: Assignment[][] = await Promise.all(assignmentPromises);
+    const assignmentsFlat: Assignment[] = assignments.flat();
+    const employeesUidsWithAssignment: string[] = assignmentsFlat.map((assignment) => assignment.props.employeeUid);
+
+    const employeesUidsWithNoAssignment: Employee[] = employees.filter(
+      (employee) => !employeesUidsWithAssignment.includes(employee.uid)
+    );
+
+    return employeesUidsWithNoAssignment;
   }
 
   public async getEmployeesByUids(employeeUids: string[]): Promise<Employee[]> {
@@ -74,6 +90,14 @@ export class EmployeeService {
     const employees: Employee[][] = await Promise.all(employeePromises);
 
     return employees.flat();
+  }
+
+  public getRealTimeAllEmployees(): Observable<Employee[]> {
+    const employees: Observable<Employee[]> = this.firebaseReadService.getRealTimeAllDocuments(
+      environment.collection.EMPLOYEES,
+      employeeConverter
+    );
+    return employees;
   }
 
   /* ------------------------------------------- ADD ------------------------------------------- */

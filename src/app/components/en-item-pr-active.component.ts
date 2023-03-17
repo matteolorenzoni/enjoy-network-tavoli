@@ -1,25 +1,21 @@
+import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { ActivatedRoute } from '@angular/router';
-import { Component, ElementRef, Input, ViewChild } from '@angular/core';
-import { EmployeeAssignment } from '../models/type';
+import { Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@angular/core';
+import { Employee } from '../models/type';
 import { AssignmentService } from '../services/assignment.service';
 import { ToastService } from '../services/toast.service';
 
 @Component({
-  selector: 'en-item-pr-active[ae]',
+  selector: 'en-item-pr-active[employee]',
   template: `
     <li class="flex items-center gap-4 rounded py-4 px-4 text-slate-300">
-      <input
-        #checkBoxInput
-        id="orange-checkbox"
-        type="checkbox"
-        class="h-4 w-4 rounded border-primary-50 bg-primary-50 text-black accent-primary-50 ring-offset-primary-40 hover:cursor-pointer focus:ring-2 focus:ring-orange-600 disabled:cursor-not-allowed xs:mr-8"
-        [checked]="ae.assignment"
-        [disabled]="ae.assignment && ae.assignment.props.personMarked > 0"
-        (change)="onChangeCheck($event)" />
-      <div class="shrink-0 basis-40 truncate xs:basis-48">
-        {{ ae.employee.props.name }} {{ ae.employee.props.lastName }}
-      </div>
-      <div class="grow truncate">{{ ae.employee.props.zone }}</div>
+      <div class="shrink-0 basis-40 truncate xs:basis-48">{{ employee.props.name }} {{ employee.props.lastName }}</div>
+      <div class="grow truncate">{{ employee.props.zone }}</div>
+      <fa-icon
+        [icon]="addIcon"
+        role="button"
+        class="text-xl transition duration-150 ease-in-out hover:cursor-pointer active:scale-90 active:text-slate-500"
+        (click)="addAssignment(employee.uid)"></fa-icon>
     </li>
   `,
   styles: [
@@ -31,11 +27,15 @@ import { ToastService } from '../services/toast.service';
   ]
 })
 export class EnItemPrActiveComponent {
-  @Input() ae!: EmployeeAssignment;
+  @Input() employee!: Employee;
+  @Output() removeEmployeeDeletedEvent = new EventEmitter<string>();
   @ViewChild('checkBoxInput') checkBoxInput!: ElementRef<HTMLInputElement>;
 
+  /* Icon */
+  addIcon = faPlus;
+
   /* Event */
-  eventUid: string | null = null;
+  eventUid?: string;
 
   /* ------------------------------ Constructor ------------------------------ */
   constructor(
@@ -46,41 +46,20 @@ export class EnItemPrActiveComponent {
 
   /* ------------------------------ Lifecycle Hooks ------------------------------ */
   ngOnInit(): void {
-    this.eventUid = this.route.snapshot.paramMap.get('eventUid');
+    this.eventUid = this.route.snapshot.paramMap.get('eventUid') || undefined;
   }
 
-  /* ------------------------------ Methods ------------------------------ */
-  onChangeCheck(event: Event): void {
+  /* ------------------------------ HTTP Methods ------------------------------ */
+  public async addAssignment(employeeUid: string) {
     if (!this.eventUid) {
-      throw new Error('Errore: parametri non validi');
+      this.toastService.showErrorMessage("Errore, parametri dell'evento non validi");
+      return;
     }
 
-    const { checked } = event.target as HTMLInputElement;
-    if (checked) {
-      this.addAssignment(this.eventUid, this.ae.employee.uid);
-    } else if (this.ae.assignment) {
-      this.deleteAssignment(this.ae.assignment.uid);
-    }
-  }
-
-  public async addAssignment(eventUid: string, employeeUid: string) {
     try {
-      await this.assignmentService.addAssignment(eventUid, employeeUid);
-      this.toastService.showSuccess(`Ora ${this.ae.employee.props.name} può inviare tickets`);
-    } catch (error: any) {
-      this.toastService.showError(error);
-    }
-  }
-
-  public async deleteAssignment(assignmentUid: string) {
-    try {
-      const text = "Sei sicuro di voler rimuovere l'assegnazione?";
-      if (window.confirm(text) === true) {
-        await this.assignmentService.updateAssignmentIsActive(assignmentUid, false);
-        this.toastService.showSuccess(`Ora ${this.ae.employee.props.name} non può più inviare tickets`);
-      } else {
-        this.checkBoxInput.nativeElement.checked = true;
-      }
+      await this.assignmentService.addAssignment(this.eventUid, employeeUid);
+      this.removeEmployeeDeletedEvent.emit(employeeUid);
+      this.toastService.showSuccess(`Ora ${this.employee.props.name} può inviare tickets`);
     } catch (error: any) {
       this.toastService.showError(error);
     }
