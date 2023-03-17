@@ -17,8 +17,8 @@ import { ButtonType, PaletteType } from '../models/enum';
         w-full
         rounded-lg
         bg-palette
-        px-5
-        py-2.5
+        px-6
+        py-2
         text-center
         text-sm
         font-bold
@@ -35,9 +35,9 @@ import { ButtonType, PaletteType } from '../models/enum';
         disabled:opacity-20
         ">
       <ng-container *ngIf="isLoading; else elseTemplate">
-        <div role="status" class="center mr-3 h-full">
+        <div role="status" class="w-8">
           <svg
-            class=" h-3/5 animate-spin fill-white text-black"
+            class="h-full animate-spin fill-white text-black"
             aria-hidden="true"
             viewBox="0 0 100 101"
             fill="none"
