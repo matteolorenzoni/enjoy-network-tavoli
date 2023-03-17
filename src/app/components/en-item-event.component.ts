@@ -18,7 +18,7 @@ import { ParticipationService } from '../services/participation.service';
         <img [src]="event.props.imageUrl" [alt]="dateFormatted + '_image'" class="aspect-square object-contain " />
         <div
           [@fadeInAnimation]
-          *ngIf="!isOpen"
+          *ngIf="false"
           class="absolute inset-0 left-0 bottom-0 flex h-full flex-col items-center justify-end p-4 text-white ">
           <p
             class="mb-2 max-w-full truncate rounded-lg bg-primary-60/70 py-1 px-4 text-center text-base font-semibold xs:text-lg">
