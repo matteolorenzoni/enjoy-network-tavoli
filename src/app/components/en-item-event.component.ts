@@ -44,7 +44,7 @@ import { ParticipationService } from '../services/participation.service';
           <li
             *ngFor="let icon of itemNavigationMenu"
             [routerLink]="icon.link"
-            class="flex w-1/3 flex-col items-center rounded bg-primary-65 p-1 transition duration-150 ease-in-out hover:cursor-pointer hover:bg-primary-55 hover:shadow-lg active:scale-90 active:bg-paletteHover active:text-paletteHover">
+            class="flex w-1/3 flex-col items-center rounded bg-primary-65 p-1 transition duration-150 ease-in-out hover:cursor-pointer active:scale-90 active:bg-primary-50 active:shadow-lg">
             <a><fa-icon [icon]="icon.definition"></fa-icon></a>
             <span class="text-xs xs:text-sm">{{ icon.name }}</span>
           </li>
@@ -53,14 +53,14 @@ import { ParticipationService } from '../services/participation.service';
           <button
             type="button"
             role="button"
-            class="mt-2 inline-block w-full rounded bg-teal-600 px-6 py-2.5 text-xs font-extrabold uppercase leading-tight shadow-md transition duration-150 ease-in-out hover:bg-teal-700 hover:shadow-lg active:scale-90"
+            class="mt-2 inline-block w-full rounded bg-teal-600 px-6 py-2.5 text-xs font-extrabold uppercase shadow-md transition duration-150 ease-in-out hover:cursor-pointer active:scale-90 active:bg-teal-800"
             (click)="downloadPDFTables()">
             PDF Tavoli
           </button>
           <button
             type="button"
             role="button"
-            class="mt-2 inline-block w-full rounded bg-teal-600 px-6 py-2.5 text-xs font-extrabold uppercase leading-tight shadow-md transition duration-150 ease-in-out hover:bg-teal-700 hover:shadow-lg active:scale-90"
+            class="mt-2 inline-block w-full rounded bg-teal-600 px-6 py-2.5 text-xs font-extrabold uppercase shadow-md transition duration-150 ease-in-out hover:cursor-pointer active:scale-90 active:bg-teal-800"
             (click)="downloadPDFParticipants()">
             PDF Partecipanti
           </button>
@@ -68,7 +68,7 @@ import { ParticipationService } from '../services/participation.service';
         <button
           type="button"
           role="button"
-          class="mt-2 inline-block w-full rounded bg-red-600 px-6 py-2.5 text-xs font-extrabold uppercase leading-tight shadow-md transition duration-150 ease-in-out hover:bg-red-700 hover:shadow-lg active:scale-90"
+          class="mt-2 inline-block w-full rounded bg-red-600 px-6 py-2.5 text-xs font-extrabold uppercase shadow-md transition duration-150 ease-in-out hover:cursor-pointer active:scale-90 active:bg-red-800"
           (click)="deleteEvent($event)">
           ELIMINA
         </button>
