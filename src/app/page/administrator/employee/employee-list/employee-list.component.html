@@ -9,7 +9,7 @@
   <div class="flex flex-col gap-16">
     <!-- Admin -->
     <article>
-      <p class="rounded bg-slate-900 py-1 text-center uppercase text-slate-300">Admin</p>
+      <p class="rounded bg-slate-900/70 py-1 text-center uppercase text-slate-300">Admin</p>
       <ul [@staggeredFadeInIncrement]="employeesAdmin.length" class="flex flex-col divide-y divide-gray-700">
         <en-item-employee *ngFor="let employee of employeesAdmin" [employee]="employee"></en-item-employee>
       </ul>
@@ -17,7 +17,7 @@
 
     <!-- Inspector -->
     <article>
-      <p class="rounded bg-slate-900 py-1 text-center uppercase text-slate-300">Ispettori</p>
+      <p class="rounded bg-slate-900/70 py-1 text-center uppercase text-slate-300">Ispettori</p>
       <ul [@staggeredFadeInIncrement]="employeesInspector.length" class="flex flex-col divide-y divide-gray-700">
         <en-item-employee *ngFor="let employee of employeesInspector" [employee]="employee"></en-item-employee>
       </ul>
@@ -25,7 +25,7 @@
 
     <!-- Pr -->
     <article>
-      <p class="rounded bg-slate-900 py-1 text-center uppercase text-slate-300">Pr</p>
+      <p class="rounded bg-slate-900/70 py-1 text-center uppercase text-slate-300">Pr</p>
       <ul [@staggeredFadeInIncrement]="employeesPr.length" class="flex flex-col divide-y divide-gray-700">
         <en-item-employee *ngFor="let employee of employeesPr" [employee]="employee"></en-item-employee>
       </ul>
