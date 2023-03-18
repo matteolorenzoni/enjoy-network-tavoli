@@ -3,7 +3,6 @@ import { ButtonType, PaletteType } from '../models/enum';
 
 @Component({
   selector: 'en-button[buttonName][buttonText]',
-  // eslint-disable-next-line prettier/prettier
   template: ` <div [ngClass]="['container', 'mx-auto', 'theme-' + palette]">
     <button
       [name]="buttonName"
@@ -37,7 +36,7 @@ import { ButtonType, PaletteType } from '../models/enum';
       <ng-container *ngIf="isLoading; else elseTemplate">
         <div role="status" class="w-8">
           <svg
-            class="h-full animate-spin fill-white text-black"
+            class="h-full animate-spin fill-black"
             aria-hidden="true"
             viewBox="0 0 100 101"
             fill="none"
