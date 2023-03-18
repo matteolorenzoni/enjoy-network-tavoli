@@ -34,10 +34,10 @@ import { ParticipationService } from '../services/participation.service';
         <ul class="divide-y divide-slate-700">
           <li *ngFor="let info of eventInfo" class="flex items-center px-2 py-1">
             <div
-              class="flex shrink-0 basis-32 items-center justify-start whitespace-normal break-all text-base font-semibold text-primary-50">
+              class="flex shrink-0 basis-32 items-center justify-start whitespace-normal break-all text-sm font-semibold uppercase text-primary-50">
               {{ info.label }}
             </div>
-            <div class="text-base font-normal text-slate-300">{{ info.value }}</div>
+            <div class="whitespace-pre-wrap text-base font-normal text-slate-300 ">{{ info.value }}</div>
           </li>
         </ul>
         <ul class="mt-4 flex gap-2">
@@ -53,14 +53,14 @@ import { ParticipationService } from '../services/participation.service';
           <button
             type="button"
             role="button"
-            class="mt-2 inline-block w-full rounded bg-teal-600 px-6 py-2.5 text-xs font-extrabold uppercase shadow-md transition duration-150 ease-in-out hover:cursor-pointer active:scale-90 active:bg-teal-800"
+            class="mt-2 inline-block w-full rounded bg-cyan-600 px-6 py-2.5 text-xs font-extrabold uppercase shadow-md transition duration-150 ease-in-out hover:cursor-pointer active:scale-90 active:bg-cyan-800"
             (click)="downloadPDFTables()">
             PDF Tavoli
           </button>
           <button
             type="button"
             role="button"
-            class="mt-2 inline-block w-full rounded bg-teal-600 px-6 py-2.5 text-xs font-extrabold uppercase shadow-md transition duration-150 ease-in-out hover:cursor-pointer active:scale-90 active:bg-teal-800"
+            class="mt-2 inline-block w-full rounded bg-cyan-600 px-6 py-2.5 text-xs font-extrabold uppercase shadow-md transition duration-150 ease-in-out hover:cursor-pointer active:scale-90 active:bg-cyan-800"
             (click)="downloadPDFParticipants()">
             PDF Partecipanti
           </button>
