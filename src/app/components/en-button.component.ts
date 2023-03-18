@@ -36,7 +36,7 @@ import { ButtonType, PaletteType } from '../models/enum';
       <ng-container *ngIf="isLoading; else elseTemplate">
         <div role="status" class="w-8">
           <svg
-            class="h-full animate-spin fill-black"
+            class="h-full animate-spin fill-white"
             aria-hidden="true"
             viewBox="0 0 100 101"
             fill="none"
