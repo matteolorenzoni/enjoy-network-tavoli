@@ -110,6 +110,7 @@ export class TableListComponent implements OnInit {
       .subscribe({
         next(data: Table[]) {
           that.tables = data;
+          that.tables.sort((a, b) => a.props.name.localeCompare(b.props.name));
         },
         error(error: Error) {
           that.toastService.showError(error);
