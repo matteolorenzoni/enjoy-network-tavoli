@@ -1,3 +1,4 @@
+import { UtilsService } from 'src/app/services/utils.service';
 import { DatePipe } from '@angular/common';
 import { UserService } from 'src/app/services/user.service';
 import { ActivatedRoute } from '@angular/router';
@@ -39,7 +40,8 @@ export class TicketManualValidationComponent {
     private userService: UserService,
     private tableService: TableService,
     private participationService: ParticipationService,
-    private toastService: ToastService
+    private toastService: ToastService,
+    private utilService: UtilsService
   ) {
     this.employeeUid = this.userService.getUserUid();
 
@@ -96,11 +98,13 @@ export class TicketManualValidationComponent {
       return;
     }
 
+    const { name, lastName } = this.nameAndLastNameForm.value;
+
     this.participationService
       .getParticipationByNameAndLastName(
         this.eventUid,
-        this.nameAndLastNameForm.value.name,
-        this.nameAndLastNameForm.value.lastName
+        this.utilService.capitalize(name.trim().replace(/\s\s+/g, ' ')),
+        this.utilService.capitalize(lastName.trim().replace(/\s\s+/g, ' '))
       )
       .then((participation) => {
         this.nameAndLastNameForm.reset();
