@@ -149,8 +149,15 @@ export class ParticipationService {
     const idConstraint: QueryConstraint = where('tableUid', '==', tableUid);
     const isActiveOrderBy = orderBy('isActive', 'desc');
     const messageIsReceivedOrderBy = orderBy('messageIsReceived');
-    const modifiedAtOrderBy = orderBy('modifiedAt');
-    const constraints: QueryConstraint[] = [idConstraint, isActiveOrderBy, messageIsReceivedOrderBy, modifiedAtOrderBy];
+    const nameOrderBy = orderBy('name');
+    const lastNameOrderBy = orderBy('lastName');
+    const constraints: QueryConstraint[] = [
+      idConstraint,
+      isActiveOrderBy,
+      messageIsReceivedOrderBy,
+      nameOrderBy,
+      lastNameOrderBy
+    ];
     const participations: Observable<Participation[]> =
       this.firebaseReadService.getRealTimeDocumentsByMultipleConstraints(
         environment.collection.PARTICIPATIONS,
