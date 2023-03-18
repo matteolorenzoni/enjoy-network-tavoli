@@ -84,8 +84,8 @@ export class ClientGeneratorComponent implements OnInit {
       const client: Client = {
         uid: '',
         props: {
-          name: this.utilsService.capitalize(name),
-          lastName: this.utilsService.capitalize(lastName),
+          name: this.utilsService.capitalize(name.trim().replace(/\s\s+/g, ' ')),
+          lastName: this.utilsService.capitalize(lastName.trim().replace(/\s\s+/g, ' ')),
           phone
         }
       };
