@@ -1,10 +1,13 @@
+import { Employee } from 'src/app/models/type';
 import { Component, Input } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { faUserPlus, faPen, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { environment } from 'src/environments/environment';
+import { EmployeeService } from '../services/employee.service';
 import { ToastService } from '../services/toast.service';
 import { Table } from '../models/type';
-import { ParticipationService } from '../services/participation.service';
 import { TableService } from '../services/table.service';
+import { UserService } from '../services/user.service';
 
 @Component({
   selector: 'en-item-table[table]',
@@ -14,7 +17,12 @@ import { TableService } from '../services/table.service';
       class="group flex h-16 items-center rounded-lg p-2 hover:cursor-pointer active:bg-slate-900"
       (click)="goToClient()">
       <div class="overflow-hidden">
-        <p class="truncate text-slate-300">{{ table.props.name }}</p>
+        <p class="truncate text-slate-300">
+          {{ table.props.name }}
+          <span *ngIf="employeeIsAdministrator && tableEmployee" class="ml-4 text-xs text-slate-400">
+            {{ tableEmployee.props.name }} {{ tableEmployee.props.lastName }}</span
+          >
+        </p>
       </div>
       <div class="ml-auto flex-none shrink-0 basis-16 pl-2">
         <p class="m-auto rounded-xl bg-neutral py-1 px-4 text-center text-slate-300">
@@ -46,8 +54,16 @@ import { TableService } from '../services/table.service';
 export class EnItemTableComponent {
   @Input() table!: Table;
 
+  /* Employee */
+  employeeUid = '';
+  administratorUids: string[] = [];
+  employeeIsAdministrator = false;
+
   /* Event */
   eventUid: string | null = null;
+
+  /* Table */
+  tableEmployee?: Employee;
 
   /* Icons */
   addIcon = faUserPlus;
@@ -57,13 +73,29 @@ export class EnItemTableComponent {
   constructor(
     private router: Router,
     private route: ActivatedRoute,
+    private userService: UserService,
+    private employeeService: EmployeeService,
     private tableService: TableService,
-    private participationService: ParticipationService,
     private toastService: ToastService
-  ) {}
+  ) {
+    this.employeeUid = this.userService.getUserUid();
+    this.administratorUids = environment.administratorUids;
+    this.employeeIsAdministrator = this.administratorUids.includes(this.employeeUid);
+  }
 
   ngOnInit(): void {
     this.eventUid = this.route.snapshot.paramMap.get('eventUid');
+
+    if (this.employeeIsAdministrator) {
+      this.employeeService
+        .getEmployee(this.table.props.employeeUid)
+        .then((employee) => {
+          this.tableEmployee = employee;
+        })
+        .catch((error: Error) => {
+          this.toastService.showError(error);
+        });
+    }
   }
 
   goToClient(): void {
