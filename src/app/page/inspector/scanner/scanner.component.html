@@ -16,7 +16,6 @@
       [(device)]="currentDevice"
       (scanSuccess)="onNewParticipation($event)"
       [formats]="formatsEnabled"
-      (permissionResponse)="onHasPermission($event)"
       (camerasFound)="onCamerasFound($event)"></zxing-scanner>
 
     <div

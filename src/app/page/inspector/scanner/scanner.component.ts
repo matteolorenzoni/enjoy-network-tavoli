@@ -48,6 +48,27 @@ export class ScannerComponent {
     private participationService: ParticipationService,
     private toastService: ToastService
   ) {
+    if ('mediaDevices' in navigator && 'getUserMedia' in navigator.mediaDevices) {
+      navigator.mediaDevices
+        .getUserMedia({ video: true })
+        .then((stream) => {
+          this.hasPermission = true;
+          stream.getTracks().forEach((track) => {
+            track.stop();
+          });
+        })
+        .catch(() => {
+          this.toastService.showErrorMessage(
+            "Devi prima autorizzare l'accesso alla fotocamera dalle impostazione del tuo browser "
+          );
+          this.hasPermission = false;
+          this.userService.logout();
+        });
+    } else {
+      this.toastService.showErrorMessage('Il tuo browser non supporta la fotocamera');
+      this.userService.logout();
+    }
+
     this.employeeUid = this.userService.getUserUid();
 
     this.participationUid.subscribe((newParticipation) => {
@@ -89,10 +110,6 @@ export class ScannerComponent {
   onCamerasFound(devices: MediaDeviceInfo[]): void {
     this.availableDevices = devices;
     this.hasDevices = Boolean(devices && devices.length);
-  }
-
-  onHasPermission(has: boolean) {
-    this.hasPermission = has;
   }
 
   onNewParticipation(resultString: string) {
