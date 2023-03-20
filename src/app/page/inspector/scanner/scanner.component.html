@@ -10,10 +10,20 @@
       (customClick)="onResetParticipation()"></en-button>
   </div>
 
-  <div class="h-[70vh] w-full max-w-lg overflow-hidden rounded-lg">
+  <select
+    id="countries"
+    class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
+    (change)="onDeviceSelectChange($event)">
+    <option value="" [selected]="!currentDevice">Nessuna camera</option>
+    <option *ngFor="let device of availableDevices" [value]="device.deviceId">{{ device.label }}</option>
+  </select>
+
+  <div class="w-full max-w-lg overflow-hidden rounded-lg">
     <zxing-scanner
       *ngIf="!participation"
       [(device)]="currentDevice"
+      (camerasFound)="onCamerasFound($event)"
+      (permissionResponse)="onHasPermission($event)"
       (scanSuccess)="onNewParticipation($event)"
       [formats]="formatsEnabled"
       (camerasFound)="onCamerasFound($event)"></zxing-scanner>

@@ -21,10 +21,9 @@ export class ScannerComponent {
   lblButton = 'SCAN';
 
   availableDevices: MediaDeviceInfo[] = [];
-  currentDevice: MediaDeviceInfo | undefined = undefined;
-
-  hasDevices = false;
-  hasPermission = false;
+  currentDevice?: MediaDeviceInfo;
+  hasDevices?: boolean;
+  hasPermission?: boolean;
 
   formatsEnabled: BarcodeFormat[] = [
     BarcodeFormat.CODE_128,
@@ -35,7 +34,7 @@ export class ScannerComponent {
 
   /* Participation */
   participationUid = new BehaviorSubject('');
-  participation: Participation | null = null;
+  participation?: Participation;
   isInScanRange = false;
   participationNoGoodMotivation = '';
 
@@ -48,27 +47,6 @@ export class ScannerComponent {
     private participationService: ParticipationService,
     private toastService: ToastService
   ) {
-    if ('mediaDevices' in navigator && 'getUserMedia' in navigator.mediaDevices) {
-      navigator.mediaDevices
-        .getUserMedia({ video: true })
-        .then((stream) => {
-          this.hasPermission = true;
-          stream.getTracks().forEach((track) => {
-            track.stop();
-          });
-        })
-        .catch(() => {
-          this.toastService.showErrorMessage(
-            "Devi prima autorizzare l'accesso alla fotocamera dalle impostazione del tuo browser "
-          );
-          this.hasPermission = false;
-          this.userService.logout();
-        });
-    } else {
-      this.toastService.showErrorMessage('Il tuo browser non supporta la fotocamera');
-      this.userService.logout();
-    }
-
     this.employeeUid = this.userService.getUserUid();
 
     this.participationUid.subscribe((newParticipation) => {
@@ -112,6 +90,16 @@ export class ScannerComponent {
     this.hasDevices = Boolean(devices && devices.length);
   }
 
+  onDeviceSelectChange(event: Event) {
+    const { value } = event.target as HTMLSelectElement;
+    const device = this.availableDevices.find((x) => x.deviceId === value);
+    this.currentDevice = device;
+  }
+
+  onHasPermission(has: boolean) {
+    this.hasPermission = has;
+  }
+
   onNewParticipation(resultString: string) {
     this.participationUid.next(resultString);
   }
@@ -119,6 +107,6 @@ export class ScannerComponent {
   onResetParticipation() {
     this.participationUid.next('');
     this.isInScanRange = false;
-    this.participation = null;
+    this.participation = undefined;
   }
 }
