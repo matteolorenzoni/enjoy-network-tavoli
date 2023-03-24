@@ -1,5 +1,5 @@
 <section class="flex flex-col items-center">
-  <div class="w-full pb-8">
+  <div class="mb-8 w-full">
     <en-button
       buttonName="scan-button"
       [buttonText]="lblButton"
@@ -12,41 +12,53 @@
 
   <select
     id="countries"
-    class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
+    class="text-smplaceholder-gray-400 mb-8 block w-full rounded-lg border border-slate-700 bg-slate-800 p-2.5 text-white"
     (change)="onDeviceSelectChange($event)">
     <option value="" [selected]="!currentDevice">Nessuna camera</option>
     <option *ngFor="let device of availableDevices" [value]="device.deviceId">{{ device.label }}</option>
   </select>
 
-  <div class="w-full max-w-lg overflow-hidden rounded-lg">
+  <div *ngIf="!availableDevicesChecked" class="scanner-container w-full overflow-hidden rounded-lg">
     <zxing-scanner
       *ngIf="!participation"
-      [(device)]="currentDevice"
+      [enable]="enabled"
+      [device]="currentDevice"
+      [formats]="formatsEnabled"
       (camerasFound)="onCamerasFound($event)"
       (permissionResponse)="onHasPermission($event)"
-      (scanSuccess)="onNewParticipation($event)"
-      [formats]="formatsEnabled"
-      (camerasFound)="onCamerasFound($event)"></zxing-scanner>
+      (camerasFound)="onCamerasFound($event)"
+      (camerasNotFound)="onCamerasNotFound()"
+      (scanSuccess)="onScanSuccess($event)"
+      (scanError)="onScanNoSuccess()"
+      (scanFailure)="onScanNoSuccess()">
+    </zxing-scanner>
+  </div>
 
-    <div
-      *ngIf="participation"
-      class="flex h-full min-h-fit w-full flex-col items-center justify-evenly overflow-scroll p-4 text-center text-white"
-      [ngClass]="{ 'bg-red-500': !isInScanRange, 'bg-emerald-600': isInScanRange }">
-      <fa-icon [icon]="isInScanRange ? checkIcon : exclamationIcon" class="pb-4 text-8xl"></fa-icon>
-      <p class="max-w-full truncate text-4xl">{{ participation.props.name }}</p>
-      <p class="max-w-full truncate text-4xl">{{ participation.props.lastName }}</p>
-      <br />
-      <p class="max-w-full truncate text-2xl">{{ participation.props.phone }}</p>
-      <br />
-      <br />
-      <p *ngIf="participation.props.scannedAt">
-        <span class="font-bold underline">Ora entrata</span> <br />
-        {{ participation.props.scannedAt | date: 'HH:mm:ss' }}
-      </p>
-      <p *ngIf="!isInScanRange">
-        <span class="font-bold underline">Motivazione</span> <br />
-        {{ participationNoGoodMotivation }}
-      </p>
-    </div>
+  <div
+    *ngIf="availableDevicesChecked && !participation"
+    class="center aspect-square w-full max-w-lg flex-col gap-4 rounded-lg bg-slate-800">
+    <fa-icon [icon]="banIcon" class="pb-4 text-8xl text-slate-300"></fa-icon>
+    <p class="text-slate-300">{{ lblCameraInfo }}</p>
+  </div>
+
+  <div
+    *ngIf="participation"
+    class="flex h-full min-h-fit w-full flex-col items-center justify-evenly overflow-auto rounded-lg p-4 text-center text-white"
+    [ngClass]="{ 'bg-red-500': !isInScanRange, 'bg-emerald-600': isInScanRange }">
+    <fa-icon [icon]="isInScanRange ? checkIcon : exclamationIcon" class="pb-4 text-8xl"></fa-icon>
+    <p class="max-w-full truncate text-4xl">{{ participation.props.name }}</p>
+    <p class="max-w-full truncate text-4xl">{{ participation.props.lastName }}</p>
+    <br />
+    <p class="max-w-full truncate text-2xl">{{ participation.props.phone }}</p>
+    <br />
+    <br />
+    <p *ngIf="participation.props.scannedAt">
+      <span class="font-bold underline">Ora entrata</span> <br />
+      {{ participation.props.scannedAt | date: 'HH:mm:ss' }}
+    </p>
+    <p *ngIf="!isInScanRange">
+      <span class="font-bold underline">Motivazione</span> <br />
+      {{ participationNoGoodMotivation }}
+    </p>
   </div>
 </section>

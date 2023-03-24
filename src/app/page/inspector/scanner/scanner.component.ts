@@ -1,4 +1,4 @@
-import { faCircleCheck, faCircleExclamation } from '@fortawesome/free-solid-svg-icons';
+import { faBan, faCircleCheck, faCircleExclamation } from '@fortawesome/free-solid-svg-icons';
 import { Participation } from 'src/app/models/type';
 import { Component } from '@angular/core';
 import { BarcodeFormat } from '@zxing/library';
@@ -16,21 +16,19 @@ export class ScannerComponent {
   /* Icon */
   checkIcon = faCircleCheck;
   exclamationIcon = faCircleExclamation;
+  banIcon = faBan;
 
   /* Label */
   lblButton = 'SCAN';
+  lblCameraInfo = 'Nessuna camera selezionata';
 
   availableDevices: MediaDeviceInfo[] = [];
+  availableDevicesChecked = false;
   currentDevice?: MediaDeviceInfo;
   hasDevices?: boolean;
   hasPermission?: boolean;
-
-  formatsEnabled: BarcodeFormat[] = [
-    BarcodeFormat.CODE_128,
-    BarcodeFormat.DATA_MATRIX,
-    BarcodeFormat.EAN_13,
-    BarcodeFormat.QR_CODE
-  ];
+  formatsEnabled: BarcodeFormat[] = [BarcodeFormat.QR_CODE];
+  enabled = false;
 
   /* Participation */
   participationUid = new BehaviorSubject('');
@@ -47,6 +45,16 @@ export class ScannerComponent {
     private participationService: ParticipationService,
     private toastService: ToastService
   ) {
+    // navigator.mediaDevices
+    //   .getUserMedia({ video: true })
+    //   .then((stream) => {
+    //     this.hasPermission = true;
+    //     stream.getTracks().forEach((track) => track.stop());
+    //   })
+    //   .catch(() => {
+    //     this.hasPermission = false;
+    //   });
+
     this.employeeUid = this.userService.getUserUid();
 
     this.participationUid.subscribe((newParticipation) => {
@@ -54,6 +62,10 @@ export class ScannerComponent {
         this.getParticipation(newParticipation);
       }
     });
+
+    setTimeout(() => {
+      this.onScanSuccess('qkV4Ya1tZkooCIDO0g1D');
+    }, 3000);
   }
 
   /* ------------------------------------ HTTP Methods ------------------------------------ */
@@ -86,22 +98,36 @@ export class ScannerComponent {
 
   /* ------------------------------------ Methods ------------------------------------ */
   onCamerasFound(devices: MediaDeviceInfo[]): void {
+    this.availableDevicesChecked = true;
     this.availableDevices = devices;
     this.hasDevices = Boolean(devices && devices.length);
+  }
+
+  onCamerasNotFound(): void {
+    this.availableDevicesChecked = true;
+    this.lblCameraInfo = 'Nessuna camera trovata';
+    this.toastService.showErrorMessage('Nessuna camera trovata');
   }
 
   onDeviceSelectChange(event: Event) {
     const { value } = event.target as HTMLSelectElement;
     const device = this.availableDevices.find((x) => x.deviceId === value);
     this.currentDevice = device;
+    this.enabled = Boolean(device);
+    this.availableDevicesChecked = Boolean(device);
   }
 
   onHasPermission(has: boolean) {
     this.hasPermission = has;
   }
 
-  onNewParticipation(resultString: string) {
+  onScanSuccess(resultString: string) {
     this.participationUid.next(resultString);
+  }
+
+  onScanNoSuccess() {
+    this.participationUid.next('');
+    this.toastService.showErrorMessage('Si è verificato un errore durante la scansione, riprovare');
   }
 
   onResetParticipation() {
