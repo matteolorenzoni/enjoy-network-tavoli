@@ -18,7 +18,7 @@
     <option *ngFor="let device of availableDevices" [value]="device.deviceId">{{ device.label }}</option>
   </select>
 
-  <div *ngIf="!availableDevicesChecked || currentDevice" class="scanner-container w-full overflow-hidden rounded-lg">
+  <div #cameraContainer class="scanner-container w-full overflow-hidden rounded-lg">
     <zxing-scanner
       [enable]="enabled"
       [device]="currentDevice"
@@ -31,9 +31,7 @@
     </zxing-scanner>
   </div>
 
-  <div
-    *ngIf="availableDevicesChecked && !currentDevice"
-    class="center hidden aspect-square w-full max-w-lg flex-col gap-4 rounded-lg bg-slate-800">
+  <div #errorContainer class="center hidden aspect-square w-full max-w-lg flex-col gap-4 rounded-lg bg-slate-800">
     <fa-icon [icon]="banIcon" class="pb-4 text-8xl text-slate-300"></fa-icon>
     <p class="text-slate-300">{{ lblCameraInfo }}</p>
   </div>

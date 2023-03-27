@@ -1,6 +1,6 @@
 import { faBan, faCircleCheck, faCircleExclamation } from '@fortawesome/free-solid-svg-icons';
 import { Participation } from 'src/app/models/type';
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { BarcodeFormat } from '@zxing/library';
 import { BehaviorSubject } from 'rxjs';
 import { ParticipationService } from 'src/app/services/participation.service';
@@ -13,6 +13,10 @@ import { ToastService } from '../../../services/toast.service';
   styleUrls: ['./scanner.component.scss']
 })
 export class ScannerComponent {
+  // get reference of a div
+  @ViewChild('cameraContainer') cameraContainer: any;
+  @ViewChild('errorContainer') errorContainer: any;
+
   /* Icon */
   checkIcon = faCircleCheck;
   exclamationIcon = faCircleExclamation;
@@ -100,6 +104,8 @@ export class ScannerComponent {
   onCamerasFound(devices: MediaDeviceInfo[]): void {
     if (!this.availableDevicesChecked) {
       this.availableDevicesChecked = true;
+      this.cameraContainer.nativeElement.style.display = 'none';
+      this.errorContainer.nativeElement.style.display = 'flex';
       this.availableDevices = devices;
       this.hasDevices = Boolean(devices && devices.length);
     }
@@ -108,6 +114,8 @@ export class ScannerComponent {
   onCamerasNotFound(): void {
     if (!this.availableDevicesChecked) {
       this.availableDevicesChecked = true;
+      this.cameraContainer.nativeElement.style.display = 'none';
+      this.errorContainer.nativeElement.style.display = 'flex';
       this.lblCameraInfo = 'Nessuna camera trovata';
       this.toastService.showErrorMessage('Nessuna camera trovata');
     }
@@ -116,6 +124,8 @@ export class ScannerComponent {
   onDeviceSelectChange(event: Event) {
     const { value } = event.target as HTMLSelectElement;
     const device = this.availableDevices.find((x) => x.deviceId === value);
+    this.cameraContainer.nativeElement.style.display = 'none';
+    if (!device) this.errorContainer.nativeElement.style.display = 'flex';
     this.enabled = Boolean(device);
     this.currentDevice = device;
   }
