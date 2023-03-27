@@ -63,9 +63,9 @@ export class ScannerComponent {
       }
     });
 
-    setTimeout(() => {
-      this.onScanSuccess('qkV4Ya1tZkooCIDO0g1D');
-    }, 3000);
+    // setTimeout(() => {
+    //   this.onScanSuccess('qkV4Ya1tZkooCIDO0g1D');
+    // }, 3000);
   }
 
   /* ------------------------------------ HTTP Methods ------------------------------------ */
@@ -98,23 +98,26 @@ export class ScannerComponent {
 
   /* ------------------------------------ Methods ------------------------------------ */
   onCamerasFound(devices: MediaDeviceInfo[]): void {
-    this.availableDevicesChecked = true;
-    this.availableDevices = devices;
-    this.hasDevices = Boolean(devices && devices.length);
+    if (!this.availableDevicesChecked) {
+      this.availableDevicesChecked = true;
+      this.availableDevices = devices;
+      this.hasDevices = Boolean(devices && devices.length);
+    }
   }
 
   onCamerasNotFound(): void {
-    this.availableDevicesChecked = true;
-    this.lblCameraInfo = 'Nessuna camera trovata';
-    this.toastService.showErrorMessage('Nessuna camera trovata');
+    if (!this.availableDevicesChecked) {
+      this.availableDevicesChecked = true;
+      this.lblCameraInfo = 'Nessuna camera trovata';
+      this.toastService.showErrorMessage('Nessuna camera trovata');
+    }
   }
 
   onDeviceSelectChange(event: Event) {
     const { value } = event.target as HTMLSelectElement;
     const device = this.availableDevices.find((x) => x.deviceId === value);
-    this.currentDevice = device;
     this.enabled = Boolean(device);
-    this.availableDevicesChecked = Boolean(device);
+    this.currentDevice = device;
   }
 
   onHasPermission(has: boolean) {

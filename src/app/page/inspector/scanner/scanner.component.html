@@ -18,9 +18,8 @@
     <option *ngFor="let device of availableDevices" [value]="device.deviceId">{{ device.label }}</option>
   </select>
 
-  <div *ngIf="!availableDevicesChecked" class="scanner-container w-full overflow-hidden rounded-lg">
+  <div *ngIf="!availableDevicesChecked || currentDevice" class="scanner-container w-full overflow-hidden rounded-lg">
     <zxing-scanner
-      *ngIf="!participation"
       [enable]="enabled"
       [device]="currentDevice"
       [formats]="formatsEnabled"
@@ -28,15 +27,13 @@
       (permissionResponse)="onHasPermission($event)"
       (camerasFound)="onCamerasFound($event)"
       (camerasNotFound)="onCamerasNotFound()"
-      (scanSuccess)="onScanSuccess($event)"
-      (scanError)="onScanNoSuccess()"
-      (scanFailure)="onScanNoSuccess()">
+      (scanSuccess)="onScanSuccess($event)">
     </zxing-scanner>
   </div>
 
   <div
-    *ngIf="availableDevicesChecked && !participation"
-    class="center aspect-square w-full max-w-lg flex-col gap-4 rounded-lg bg-slate-800">
+    *ngIf="availableDevicesChecked && !currentDevice"
+    class="center hidden aspect-square w-full max-w-lg flex-col gap-4 rounded-lg bg-slate-800">
     <fa-icon [icon]="banIcon" class="pb-4 text-8xl text-slate-300"></fa-icon>
     <p class="text-slate-300">{{ lblCameraInfo }}</p>
   </div>

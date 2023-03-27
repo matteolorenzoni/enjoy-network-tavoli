@@ -33,8 +33,9 @@ zxing-scanner {
   overflow: hidden;
 }
 
-zxing-scanner video {
+zxing-scanner::ng-deep video {
   height: 100%;
   width: 100%;
   object-fit: cover;
+  border-radius: 0.5rem;
 }
