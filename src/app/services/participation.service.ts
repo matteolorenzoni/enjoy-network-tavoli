@@ -45,6 +45,7 @@ export class ParticipationService {
           name: client.props.name,
           lastName: client.props.lastName,
           phone: client.props.phone,
+          isScanned: false,
           isActive: true,
           messageIsReceived: false
         }
@@ -215,8 +216,9 @@ export class ParticipationService {
       participationConverter
     );
 
-    if (!participation.props.scannedAt && participation.props.isActive) {
+    if (!participation.props.isScanned && participation.props.isActive) {
       const propsToUpdate = {
+        isScanned: true,
         scannedAt: new Date(),
         scannedFrom: employeeUid
       };

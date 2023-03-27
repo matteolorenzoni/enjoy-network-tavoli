@@ -58,6 +58,7 @@ export type ParticipationDTO = {
   name: string;
   lastName: string;
   phone: string;
+  isScanned: boolean;
   scannedAt?: Date;
   scannedFrom?: string;
   messageIsReceived: boolean;
