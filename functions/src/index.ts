@@ -178,7 +178,7 @@ export const sendSms = functions.firestore
       const sms: SMS = {
         to: `39${phone}`,
         text: messageClone,
-        sandbox: true
+        sandbox: false
       };
 
       const response = await axios.post(request_urlSmsHosting, sms, { headers });
