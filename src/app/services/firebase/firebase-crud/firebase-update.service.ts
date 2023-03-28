@@ -31,6 +31,27 @@ export class FirebaseUpdateService {
     await updateDoc(docRef, props);
   }
 
+  public async updateDocuments(
+    collectionName: string,
+    data: Event[] | Assignment[] | Employee[] | Table[] | Participation[] | Client[]
+  ): Promise<void> {
+    const batch = writeBatch(this.db);
+    const collectionRef = collection(this.db, collectionName);
+    data.forEach((item) => {
+      const { uid, props } = item;
+
+      /* Sanitize props */
+      Object.entries(props).forEach(([key, value]) => {
+        if (value === null || value === undefined) (props as any)[key] = deleteField();
+      });
+      props.modifiedAt = new Date();
+
+      const docRef = doc(collectionRef, uid);
+      batch.update(docRef, props);
+    });
+    await batch.commit();
+  }
+
   public async updateDocumentProps(collectionName: string, uid: string, props: any): Promise<void> {
     const propsUpdated = { ...props, modifiedAt: new Date() };
     const collectionRef = collection(this.db, collectionName);
