@@ -132,6 +132,19 @@ export class ParticipationService {
     return participations;
   }
 
+  public async getParticipationsNotScannedByEventUid(eventUid: string): Promise<Participation[]> {
+    const eventUidConstraint: QueryConstraint = where('eventUid', '==', eventUid);
+    const isScanned: QueryConstraint = where('isScanned', '==', false);
+    const isActive: QueryConstraint = where('isActive', '==', true);
+    const constraints = [eventUidConstraint, isScanned, isActive];
+    const participations: Participation[] = await this.firebaseReadService.getDocumentsByMultipleConstraints(
+      environment.collection.PARTICIPATIONS,
+      constraints,
+      participationConverter
+    );
+    return participations;
+  }
+
   public async getParticipationsByTableUid(tableUid: string): Promise<Participation[]> {
     const eventUidConstraint: QueryConstraint = where('tableUid', '==', tableUid);
     const isActive: QueryConstraint = where('isActive', '==', true);
@@ -231,5 +244,9 @@ export class ParticipationService {
     }
 
     return participation;
+  }
+
+  public async scanMultipleParticipations(participations: Participation[]): Promise<void> {
+    await this.firebaseUpdateService.updateDocuments(environment.collection.PARTICIPATIONS, participations);
   }
 }
