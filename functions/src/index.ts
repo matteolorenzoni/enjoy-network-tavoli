@@ -56,17 +56,19 @@ export const testParticipatiOnCreate = functions.firestore
 
 export const testParticipatiOnUpdate = functions.firestore
   .document('participations/{participationId}')
-  .onUpdate(async (change) => {
+  .onUpdate(async (change, context) => {
     try {
+      const participationUid = context.params.participationId;
       const data = change.after.data() as ParticipationDTO;
       const previousData = change.before.data() as ParticipationDTO;
 
-      if (data.isActive === previousData.isActive) {
+      if (data.isActive === previousData.isActive && data.isScanned === previousData.isScanned) {
         return;
       }
 
-      const { isActive, tableUid } = data;
-      const value = isActive ? 1 : -1;
+      const { tableUid, isScanned, isActive } = data;
+      const valueIsScanned = isScanned ? 1 : -1;
+      const valueIsActive = isActive ? 1 : -1;
 
       /* -------------------------------------------------------- Update assignment -------------------------------------------------------- */
       const table = await admin.firestore().doc(`tables/${tableUid}`).get();
@@ -85,18 +87,35 @@ export const testParticipatiOnUpdate = functions.firestore
         .firestore()
         .doc(`assignments/${assignmentUid}`)
         .update({
-          personMarked: admin.firestore.FieldValue.increment(value),
+          personMarked: admin.firestore.FieldValue.increment(valueIsActive),
           modifiedAt: new Date()
         });
 
       /* -------------------------------------------------------- Update table -------------------------------------------------------- */
-      await admin
-        .firestore()
-        .doc(`tables/${tableUid}`)
-        .update({
-          personsActive: admin.firestore.FieldValue.increment(value),
-          modifiedAt: new Date()
-        });
+      if (data.isActive !== previousData.isActive) {
+        await admin
+          .firestore()
+          .doc(`tables/${tableUid}`)
+          .update({
+            personsActive: admin.firestore.FieldValue.increment(valueIsActive),
+            modifiedAt: new Date()
+          });
+      } else if (data.isScanned !== previousData.isScanned) {
+        await admin
+          .firestore()
+          .doc(`tables/${tableUid}`)
+          .update({
+            personsScanned: admin.firestore.FieldValue.increment(valueIsScanned),
+            modifiedAt: new Date()
+          });
+
+        if (!data.messageIsReceived) {
+          await admin.firestore().doc(`participations/${participationUid}`).update({
+            messageIsReceived: true,
+            modifiedAt: new Date()
+          });
+        }
+      }
     } catch (error) {
       console.error(JSON.stringify(error));
     }
@@ -246,17 +265,19 @@ export const participatiOnCreate = functions.firestore
 
 export const participatiOnUpdate = functions.firestore
   .document('PROD_participations/{participationId}')
-  .onUpdate(async (change) => {
+  .onUpdate(async (change, context) => {
     try {
+      const participationUid = context.params.participationId;
       const data = change.after.data() as ParticipationDTO;
       const previousData = change.before.data() as ParticipationDTO;
 
-      if (data.isActive === previousData.isActive) {
+      if (data.isActive === previousData.isActive && data.isScanned === previousData.isScanned) {
         return;
       }
 
-      const { isActive, tableUid } = data;
-      const value = isActive ? 1 : -1;
+      const { tableUid, isScanned, isActive } = data;
+      const valueIsScanned = isScanned ? 1 : -1;
+      const valueIsActive = isActive ? 1 : -1;
 
       /* -------------------------------------------------------- Update assignment -------------------------------------------------------- */
       const table = await admin.firestore().doc(`PROD_tables/${tableUid}`).get();
@@ -275,18 +296,35 @@ export const participatiOnUpdate = functions.firestore
         .firestore()
         .doc(`PROD_assignments/${assignmentUid}`)
         .update({
-          personMarked: admin.firestore.FieldValue.increment(value),
+          personMarked: admin.firestore.FieldValue.increment(valueIsActive),
           modifiedAt: new Date()
         });
 
       /* -------------------------------------------------------- Update table -------------------------------------------------------- */
-      await admin
-        .firestore()
-        .doc(`PROD_tables/${tableUid}`)
-        .update({
-          personsActive: admin.firestore.FieldValue.increment(value),
-          modifiedAt: new Date()
-        });
+      if (data.isActive !== previousData.isActive) {
+        await admin
+          .firestore()
+          .doc(`PROD_tables/${tableUid}`)
+          .update({
+            personsActive: admin.firestore.FieldValue.increment(valueIsActive),
+            modifiedAt: new Date()
+          });
+      } else if (data.isScanned !== previousData.isScanned) {
+        await admin
+          .firestore()
+          .doc(`PROD_tables/${tableUid}`)
+          .update({
+            personsScanned: admin.firestore.FieldValue.increment(valueIsScanned),
+            modifiedAt: new Date()
+          });
+
+        if (!data.messageIsReceived) {
+          await admin.firestore().doc(`PROD_participations/${participationUid}`).update({
+            messageIsReceived: true,
+            modifiedAt: new Date()
+          });
+        }
+      }
     } catch (error) {
       console.error(JSON.stringify(error));
     }
