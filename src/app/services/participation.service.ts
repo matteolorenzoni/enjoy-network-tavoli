@@ -3,13 +3,11 @@ import { Injectable } from '@angular/core';
 import { orderBy, QueryConstraint, where } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { Assignment, Client, Participation } from '../models/type';
-import { assignmentConverter, participationConverter } from '../models/converter';
+import { Client, Participation } from '../models/type';
+import { participationConverter } from '../models/converter';
 import { FirebaseCreateService } from './firebase/firebase-crud/firebase-create.service';
 import { FirebaseReadService } from './firebase/firebase-crud/firebase-read.service';
 import { FirebaseUpdateService } from './firebase/firebase-crud/firebase-update.service';
-import { SessionStorageService } from './sessionstorage.service';
-import { RoleType } from '../models/enum';
 
 @Injectable({
   providedIn: 'root'
@@ -18,8 +16,7 @@ export class ParticipationService {
   constructor(
     private firebaseCreateService: FirebaseCreateService,
     private firebaseReadService: FirebaseReadService,
-    private firebaseUpdateService: FirebaseUpdateService,
-    private sessionStorageService: SessionStorageService
+    private firebaseUpdateService: FirebaseUpdateService
   ) {}
 
   /* ------------------------------------------- CREATE ------------------------------------------- */
@@ -187,37 +184,6 @@ export class ParticipationService {
     await this.firebaseUpdateService.updateDocumentProps(
       environment.collection.PARTICIPATIONS,
       participationUid,
-      propsToUpdate
-    );
-  }
-
-  public async updateAssignmentMarkedPerson(eventUid: string, employeeUid: string, value: 1 | -1) {
-    const eventUidConstraint: QueryConstraint = where('eventUid', '==', eventUid);
-    const employeeUidConstraint: QueryConstraint = where('employeeUid', '==', employeeUid);
-    const constraints: QueryConstraint[] = [eventUidConstraint, employeeUidConstraint];
-    const assignments: Assignment[] = await this.firebaseReadService.getDocumentsByMultipleConstraints(
-      environment.collection.ASSIGNMENTS,
-      constraints,
-      assignmentConverter
-    );
-
-    /* If there is no assignment, return false */
-    const employeeRole = this.sessionStorageService.getEmployeeRole();
-    if (assignments.length <= 0) {
-      if (employeeRole === RoleType.ADMINISTRATOR) return;
-      throw new Error('Si è verificato un errore, contatta uno staffer');
-    }
-
-    const assignment: Assignment = assignments[0];
-
-    if (assignment.props.personMarked + value > assignment.props.maxPersonMarkable) {
-      throw new Error('Hai raggiunto il limite massimo per questo evento, contatta uno staffer');
-    }
-
-    const propsToUpdate = { personMarked: assignment.props.personMarked + value };
-    await this.firebaseUpdateService.updateDocumentsProps(
-      environment.collection.ASSIGNMENTS,
-      [assignment],
       propsToUpdate
     );
   }

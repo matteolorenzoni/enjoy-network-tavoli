@@ -21,7 +21,6 @@ export class TableGeneratorComponent implements OnInit {
 
   /* Table */
   tableUid: string | null = '';
-  personMarked = 0;
 
   /* Form */
   tableForm: FormGroup;
