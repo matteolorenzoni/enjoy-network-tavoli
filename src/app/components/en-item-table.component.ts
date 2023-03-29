@@ -19,7 +19,10 @@ import { UserService } from '../services/user.service';
       <div class="overflow-hidden">
         <p class="truncate text-slate-300">
           {{ table.props.name }}
-          <span *ngIf="employeeIsAdministrator && tableEmployee" class="ml-4 text-xs text-slate-400">
+          <br class="sm:hidden" />
+          <span
+            *ngIf="employeeIsAdministrator && tableEmployee"
+            class="ml-0 text-[10px] text-slate-400 sm:ml-4 sm:text-sm">
             {{ tableEmployee.props.name }} {{ tableEmployee.props.lastName }}</span
           >
         </p>
