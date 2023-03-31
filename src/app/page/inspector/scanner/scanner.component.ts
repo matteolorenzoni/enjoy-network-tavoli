@@ -1,14 +1,12 @@
 import { faBan, faCircleCheck, faCircleExclamation } from '@fortawesome/free-solid-svg-icons';
 import { Participation } from 'src/app/models/type';
-import { Component, ViewChild } from '@angular/core';
+import { Component, HostListener, ViewChild } from '@angular/core';
 import { BarcodeFormat } from '@zxing/library';
 import { BehaviorSubject, Subscription } from 'rxjs';
 import { ParticipationService } from 'src/app/services/participation.service';
 import { UserService } from 'src/app/services/user.service';
 import { ActivatedRoute } from '@angular/router';
 import { ToastService } from '../../../services/toast.service';
-
-const PARTICIPATION_COUNT = 5;
 
 @Component({
   selector: 'app-scanner',
@@ -42,10 +40,12 @@ export class ScannerComponent {
   /* Participation */
   participationUid = new BehaviorSubject('');
   participation?: Participation;
-  participationScannedBefore = false;
+  participationAlreadyScanned = false;
+  participationsAlreadyScannedCount = 0;
+  participationsToScanInterval = 5;
+  participationsToScan: { participation: Participation; time: number }[] = [];
   participationNoGoodMotivation?: string;
   participationsActive: Participation[] = [];
-  participationsToScan: { participation: Participation; time: number }[] = [];
   participationSubscription?: Subscription;
 
   /* Employee */
@@ -85,6 +85,24 @@ export class ScannerComponent {
     this.scanParticipations();
   }
 
+  /* ------------------------------------ Hot listener ------------------------------------ */
+  @HostListener('window:visibilitychange')
+  visibilityChangeScanParticipations() {
+    // const url = 'https://us-central1-enjoy-network-tavoli.cloudfunctions.net/testBeforeUnload';
+    // const formData = new FormData();
+    // formData.append('participations', JSON.stringify(this.participationsToScan));
+    // formData.append('test', 'sium');
+    // navigator.sendBeacon(url, formData);
+
+    this.participationsToScan.forEach((participation) => {
+      const url = `https://us-central1-enjoy-network-tavoli.cloudfunctions.net/testBeforeUnload?participation=${participation.participation.uid}&scannedFrom=${this.employeeUid}`;
+      navigator.sendBeacon(url);
+      this.participationsToScan = this.participationsToScan.filter(
+        (x) => x.participation.uid !== participation.participation.uid
+      );
+    });
+  }
+
   /* ------------------------------------ HTTP Methods ------------------------------------ */
   getParticipationsActive() {
     if (!this.eventUid) {
@@ -114,7 +132,7 @@ export class ScannerComponent {
           return;
         }
         if (isScanned) {
-          this.participationScannedBefore = true;
+          this.participationAlreadyScanned = true;
           this.participationNoGoodMotivation = 'Il ticket è già stato scansionato';
         }
       })
@@ -206,13 +224,15 @@ export class ScannerComponent {
     }
 
     this.getParticipationFromList(participationNotScannedYet);
+
+    this.participationsAlreadyScannedCount += 1;
   }
   getParticipationFromList(participation: Participation) {
     this.participation = participation;
 
     /* If participation is already scanned, show error */
     if (this.participation.props.isScanned) {
-      this.participationScannedBefore = true;
+      this.participationAlreadyScanned = true;
       this.participationNoGoodMotivation = 'Il ticket è già stato scansionato';
       return;
     }
@@ -227,7 +247,7 @@ export class ScannerComponent {
     });
 
     /* If the list of participations to scan is full, scan them */
-    if (this.participationsToScan.length === PARTICIPATION_COUNT) {
+    if (this.participationsToScan.length === this.participationsToScanInterval) {
       this.scanParticipations();
     }
   }
@@ -235,7 +255,7 @@ export class ScannerComponent {
   onResetParticipation() {
     this.participationUid.next('');
     this.participation = undefined;
-    this.participationScannedBefore = false;
+    this.participationAlreadyScanned = false;
     this.participationNoGoodMotivation = undefined;
   }
 }
