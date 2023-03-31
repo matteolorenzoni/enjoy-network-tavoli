@@ -1,3 +1,5 @@
+import { ParticipationDTO } from './collection';
+
 export type ShorterUrlResponse = {
   ok: boolean;
   result: {
@@ -25,4 +27,9 @@ export type SMSInfo = {
   to: string;
   status: 'INSERTED' | 'NOT_INSERTED';
   statusDetail?: 'BADNUMBERFORMAT' | 'DUPLICATESMS' | 'BLACKLIST';
+};
+
+export type Participation = {
+  readonly uid: string;
+  props: ParticipationDTO;
 };

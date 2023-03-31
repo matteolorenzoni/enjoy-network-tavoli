@@ -1,7 +1,7 @@
 import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
 import axios from 'axios';
-import { DocumentData } from 'firebase-admin/firestore';
+import { DocumentData, DocumentSnapshot } from 'firebase-admin/firestore';
 import { ParticipationDTO, EventDTO, TableDTO, AssignmentDTO } from './collection';
 import { ShorterUrlResponse, SMS, SMSResponse } from './type';
 
@@ -148,6 +148,56 @@ export const testAssignmentOnUpdate = functions.firestore.document('assignments/
   } catch (error) {
     console.error(JSON.stringify(error));
     return null;
+  }
+});
+
+export const testVisibilityChange = functions.https.onRequest(async (request, response) => {
+  // try {
+  //   const participations = request.body.participations as Participation[];
+
+  //   const batch = admin.firestore().batch();
+
+  //   participations.forEach(async (participation) => {
+  //     const document: DocumentReference<DocumentData> = admin.firestore().doc(`participations/${participation.uid}`);
+
+  //     batch.update(document, participation.props);
+  //   });
+
+  //   await batch.commit();
+
+  //   response.send('ok');
+  // } catch (error) {
+  //   console.log(error);
+  //   console.log(JSON.stringify(error));
+  // }
+  try {
+    const participation = request.query.participation as string;
+    const scannedFrom = request.query.scannedFrom as string;
+
+    const document: DocumentSnapshot<DocumentData> = await admin
+      .firestore()
+      .doc(`participations/${participation}`)
+      .get();
+
+    if (!document.exists) {
+      response.send('not found');
+      return;
+    }
+
+    const participationDTO = document.data() as ParticipationDTO;
+    participationDTO.isScanned = true;
+    participationDTO.scannedAt = new Date();
+    participationDTO.scannedFrom = scannedFrom;
+    participationDTO.modifiedAt = new Date();
+
+    await admin.firestore().doc(`participations/${participation}`).update(participationDTO);
+
+    // res send 200
+    response.send('Partecipazioni scannerizzate');
+  } catch (error) {
+    console.log(error);
+    console.log(JSON.stringify(error));
+    response.send('Errore');
   }
 });
 
@@ -357,5 +407,55 @@ export const assignmentOnUpdate = functions.firestore.document('PROD_assignments
   } catch (error) {
     console.error(JSON.stringify(error));
     return null;
+  }
+});
+
+export const visibilityChange = functions.https.onRequest(async (request, response) => {
+  // try {
+  //   const participations = request.body.participations as Participation[];
+
+  //   const batch = admin.firestore().batch();
+
+  //   participations.forEach(async (participation) => {
+  //     const document: DocumentReference<DocumentData> = admin.firestore().doc(`participations/${participation.uid}`);
+
+  //     batch.update(document, participation.props);
+  //   });
+
+  //   await batch.commit();
+
+  //   response.send('ok');
+  // } catch (error) {
+  //   console.log(error);
+  //   console.log(JSON.stringify(error));
+  // }
+  try {
+    const participation = request.query.participation as string;
+    const scannedFrom = request.query.scannedFrom as string;
+
+    const document: DocumentSnapshot<DocumentData> = await admin
+      .firestore()
+      .doc(`PROD_participations/${participation}`)
+      .get();
+
+    if (!document.exists) {
+      response.send('not found');
+      return;
+    }
+
+    const participationDTO = document.data() as ParticipationDTO;
+    participationDTO.isScanned = true;
+    participationDTO.scannedAt = new Date();
+    participationDTO.scannedFrom = scannedFrom;
+    participationDTO.modifiedAt = new Date();
+
+    await admin.firestore().doc(`PROD_participations/${participation}`).update(participationDTO);
+
+    // res send 200
+    response.send('Partecipazioni scannerizzate');
+  } catch (error) {
+    console.log(error);
+    console.log(JSON.stringify(error));
+    response.send('Errore');
   }
 });
