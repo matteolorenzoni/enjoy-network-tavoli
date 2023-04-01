@@ -156,6 +156,19 @@ export class ParticipationService {
     return participations;
   }
 
+  public async getParticipationsWithNoMessageByEventUid(eventUid: string): Promise<Participation[]> {
+    const eventUidConstraint: QueryConstraint = where('eventUid', '==', eventUid);
+    const messageIsReceived: QueryConstraint = where('messageIsReceived', '==', false);
+    const isActive: QueryConstraint = where('isActive', '==', true);
+    const constraints = [eventUidConstraint, messageIsReceived, isActive];
+    const participations: Participation[] = await this.firebaseReadService.getDocumentsByMultipleConstraints(
+      environment.collection.PARTICIPATIONS,
+      constraints,
+      participationConverter
+    );
+    return participations;
+  }
+
   public getRealTimeParticipationsByTableUid(tableUid: string): Observable<Participation[]> {
     const idConstraint: QueryConstraint = where('tableUid', '==', tableUid);
     const isActiveOrderBy = orderBy('isActive', 'desc');

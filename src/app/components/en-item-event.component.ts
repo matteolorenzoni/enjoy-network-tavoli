@@ -2,7 +2,7 @@ import { EventService } from 'src/app/services/event.service';
 import { DatePipe } from '@angular/common';
 import { Component, Input, SimpleChanges } from '@angular/core';
 import { faPen, faPeopleGroup, faUsers } from '@fortawesome/free-solid-svg-icons';
-import { Event, Table } from 'src/app/models/type';
+import { Event, Participation, Table } from 'src/app/models/type';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import { ToastService } from '../services/toast.service';
@@ -65,6 +65,13 @@ import { ParticipationService } from '../services/participation.service';
             PDF Partecipanti
           </button>
         </div>
+        <button
+          type="button"
+          role="button"
+          class="mt-2 inline-block w-full rounded bg-indigo-600 px-6 py-2.5 text-xs font-extrabold uppercase shadow-md transition duration-150 ease-in-out hover:cursor-pointer active:scale-90 active:bg-indigo-800"
+          (click)="showMessageNotSend()">
+          Messaggi non inviati
+        </button>
         <button
           type="button"
           role="button"
@@ -218,5 +225,21 @@ export class EnItemEventComponent {
     } catch (error: any) {
       this.toastService.showError(error);
     }
+  }
+
+  showMessageNotSend() {
+    this.participationService
+      .getParticipationsWithNoMessageByEventUid(this.event.uid)
+      .then((participations: Participation[]) => {
+        const forAlert = participations.map(
+          (item) => `${item.props.name} ${item.props.lastName} - ${item.props.phone}`
+        );
+
+        const msg = forAlert && forAlert.length > 0 ? forAlert.join('\n') : 'Tutti i messaggi sono stati inviati';
+        alert(msg);
+      })
+      .catch((err: Error) => {
+        this.toastService.showError(err);
+      });
   }
 }
