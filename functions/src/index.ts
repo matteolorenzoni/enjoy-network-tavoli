@@ -75,21 +75,23 @@ export const testParticipatiOnUpdate = functions.firestore
       const tableDTO = table.data() as TableDTO;
       const { eventUid, employeeUid } = tableDTO;
 
-      const assignmentDocument = await admin
-        .firestore()
-        .collection('assignments')
-        .where('eventUid', '==', eventUid)
-        .where('employeeUid', '==', employeeUid)
-        .get();
+      if (data.isActive !== previousData.isActive) {
+        const assignmentDocument = await admin
+          .firestore()
+          .collection('assignments')
+          .where('eventUid', '==', eventUid)
+          .where('employeeUid', '==', employeeUid)
+          .get();
 
-      const assignmentUid = assignmentDocument.docs[0].id as string;
-      await admin
-        .firestore()
-        .doc(`assignments/${assignmentUid}`)
-        .update({
-          personMarked: admin.firestore.FieldValue.increment(valueIsActive),
-          modifiedAt: new Date()
-        });
+        const assignmentUid = assignmentDocument.docs[0].id as string;
+        await admin
+          .firestore()
+          .doc(`assignments/${assignmentUid}`)
+          .update({
+            personMarked: admin.firestore.FieldValue.increment(valueIsActive),
+            modifiedAt: new Date()
+          });
+      }
 
       /* -------------------------------------------------------- Update table -------------------------------------------------------- */
       if (data.isActive !== previousData.isActive) {
@@ -334,21 +336,23 @@ export const participatiOnUpdate = functions.firestore
       const tableDTO = table.data() as TableDTO;
       const { eventUid, employeeUid } = tableDTO;
 
-      const assignmentDocument = await admin
-        .firestore()
-        .collection('PROD_assignments')
-        .where('eventUid', '==', eventUid)
-        .where('employeeUid', '==', employeeUid)
-        .get();
+      if (data.isActive !== previousData.isActive) {
+        const assignmentDocument = await admin
+          .firestore()
+          .collection('PROD_assignments')
+          .where('eventUid', '==', eventUid)
+          .where('employeeUid', '==', employeeUid)
+          .get();
 
-      const assignmentUid = assignmentDocument.docs[0].id as string;
-      await admin
-        .firestore()
-        .doc(`PROD_assignments/${assignmentUid}`)
-        .update({
-          personMarked: admin.firestore.FieldValue.increment(valueIsActive),
-          modifiedAt: new Date()
-        });
+        const assignmentUid = assignmentDocument.docs[0].id as string;
+        await admin
+          .firestore()
+          .doc(`PROD_assignments/${assignmentUid}`)
+          .update({
+            personMarked: admin.firestore.FieldValue.increment(valueIsActive),
+            modifiedAt: new Date()
+          });
+      }
 
       /* -------------------------------------------------------- Update table -------------------------------------------------------- */
       if (data.isActive !== previousData.isActive) {
