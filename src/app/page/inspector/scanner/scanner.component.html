@@ -1,18 +1,7 @@
-<section class="flex flex-col items-center">
-  <div class="mb-8 w-full">
-    <en-button
-      buttonName="scan-button"
-      [buttonText]="lblButton"
-      buttonType="submit"
-      [buttonIsDisabled]="false"
-      palette="primary"
-      [isLoading]="false"
-      (customClick)="onResetParticipation()"></en-button>
-  </div>
-
+<section class="flex flex-col items-center gap-4">
   <select
     id="countries"
-    class="text-smplaceholder-gray-400 mb-8 block w-full rounded-lg border border-slate-700 bg-slate-800 p-2.5 text-white"
+    class="text-smplaceholder-gray-400 block w-full rounded-lg border border-slate-700 bg-slate-800 p-2.5 text-white"
     (change)="onDeviceSelectChange($event)">
     <option value="" [selected]="!currentDevice">Nessuna camera</option>
     <option *ngFor="let device of availableDevices" [value]="device.deviceId">{{ device.label }}</option>
@@ -31,14 +20,14 @@
     </zxing-scanner>
   </div>
 
-  <div #infoContainer class="center hidden aspect-square w-full flex-col gap-4 rounded-lg bg-slate-800 p-8">
+  <div #infoContainer class="center hidden aspect-square w-full max-w-3xl flex-col gap-4 rounded-lg bg-slate-800 p-8">
     <fa-icon [icon]="banIcon" class="pb-4 text-8xl text-slate-300"></fa-icon>
     <p class="text-center text-slate-300">{{ lblCameraInfo }}</p>
   </div>
 
   <div
     *ngIf="participation"
-    class="flex h-full min-h-fit w-full flex-col items-center justify-evenly gap-8 overflow-auto rounded-lg p-4 text-center text-white"
+    class="flex w-full flex-col items-center justify-evenly gap-8 overflow-auto rounded-lg p-4 text-center text-white"
     [ngClass]="{
       'bg-red-500': !participation.props.isActive || (participation.props.isScanned && participationAlreadyScanned),
       'bg-emerald-600': participation.props.isActive && !participationAlreadyScanned
@@ -46,7 +35,7 @@
     <fa-icon
       [icon]="participation.props.isActive && !participation.props.isScanned ? checkIcon : exclamationIcon"
       class="text-8xl"></fa-icon>
-    <p class="max-w-full truncate text-4xl">
+    <p class="max-w-full text-4xl">
       <span>{{ participation.props.name }}</span>
       <br />
       <span>{{ participation.props.lastName }}</span>
@@ -68,13 +57,26 @@
     </p>
   </div>
 
-  <p class="mt-4 text-center text-slate-300">
-    Counter:
-    <span class="rounded bg-slate-800 p-1">{{ participationsToScan.length }}/{{ participationsToScanInterval }}</span>
-  </p>
+  <div class="w-full">
+    <en-button
+      buttonName="scan-button"
+      [buttonText]="lblButton"
+      buttonType="submit"
+      [buttonIsDisabled]="false"
+      palette="primary"
+      [isLoading]="false"
+      (customClick)="onResetParticipation()"></en-button>
+  </div>
 
-  <p class="mt-4 text-center text-slate-300">
-    QrCode rimasti:
-    <span class="rounded bg-slate-800 p-1">{{ participationsActive.length - participationsAlreadyScannedCount }}</span>
-  </p>
+  <div>
+    <p class="mt-4 text-center text-slate-300">
+      Counter:
+      <span class="rounded bg-slate-800 p-1">{{ participationsToScan.length }}/{{ participationsToScanInterval }}</span>
+    </p>
+
+    <p class="mt-4 text-center text-slate-300">
+      QrCode rimasti:
+      <span class="rounded bg-slate-800 p-1">{{ participationsActive.length - participationsToScan.length }}</span>
+    </p>
+  </div>
 </section>

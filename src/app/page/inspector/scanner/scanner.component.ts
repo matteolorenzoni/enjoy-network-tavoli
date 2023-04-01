@@ -2,10 +2,11 @@ import { faBan, faCircleCheck, faCircleExclamation } from '@fortawesome/free-sol
 import { Participation } from 'src/app/models/type';
 import { Component, HostListener, ViewChild } from '@angular/core';
 import { BarcodeFormat } from '@zxing/library';
-import { BehaviorSubject, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { ParticipationService } from 'src/app/services/participation.service';
 import { UserService } from 'src/app/services/user.service';
 import { ActivatedRoute } from '@angular/router';
+import { environment } from 'src/environments/environment';
 import { ToastService } from '../../../services/toast.service';
 
 @Component({
@@ -26,6 +27,7 @@ export class ScannerComponent {
   lblButton = 'SCAN';
   lblCameraInfo = 'Nessuna camera selezionata';
 
+  /* Camera */
   availableDevices: MediaDeviceInfo[] = [];
   availableDevicesChecked = false;
   currentDevice?: MediaDeviceInfo;
@@ -38,15 +40,15 @@ export class ScannerComponent {
   eventUid?: string;
 
   /* Participation */
-  participationUid = new BehaviorSubject('');
   participation?: Participation;
   participationAlreadyScanned = false;
-  participationsAlreadyScannedCount = 0;
-  participationsToScanInterval = 5;
   participationsToScan: { participation: Participation; time: number }[] = [];
   participationNoGoodMotivation?: string;
   participationsActive: Participation[] = [];
   participationSubscription?: Subscription;
+
+  readonly participationsToScanInterval = 10;
+  lastParticipationUid?: string;
 
   /* Employee */
   employeeUid = '';
@@ -60,19 +62,6 @@ export class ScannerComponent {
   ) {
     this.employeeUid = this.userService.getUserUid();
     this.eventUid = this.route.snapshot.queryParams['event'] || undefined;
-
-    this.participationUid.subscribe((newParticipation) => {
-      if (newParticipation) {
-        this.getParticipation(newParticipation);
-      } else if (this.currentDevice) {
-        this.cameraContainer.nativeElement.style.display = 'flex';
-        this.infoContainer.nativeElement.style.display = 'none';
-      } else {
-        if (!this.cameraContainer || !this.infoContainer) return;
-        this.cameraContainer.nativeElement.style.display = 'none';
-        this.infoContainer.nativeElement.style.display = 'flex';
-      }
-    });
   }
 
   /* ------------------------------------ Lifecycle Hooks ------------------------------------ */
@@ -88,14 +77,9 @@ export class ScannerComponent {
   /* ------------------------------------ Hot listener ------------------------------------ */
   @HostListener('window:visibilitychange')
   visibilityChangeScanParticipations() {
-    // const url = 'https://us-central1-enjoy-network-tavoli.cloudfunctions.net/testBeforeUnload';
-    // const formData = new FormData();
-    // formData.append('participations', JSON.stringify(this.participationsToScan));
-    // formData.append('test', 'sium');
-    // navigator.sendBeacon(url, formData);
-
+    const path = environment.production ? 'visibilityChange' : 'testVisibilityChange';
     this.participationsToScan.forEach((participation) => {
-      const url = `https://us-central1-enjoy-network-tavoli.cloudfunctions.net/testBeforeUnload?participation=${participation.participation.uid}&scannedFrom=${this.employeeUid}`;
+      const url = `https://us-central1-enjoy-network-tavoli.cloudfunctions.net/${path}?participation=${participation.participation.uid}&scannedFrom=${this.employeeUid}`;
       navigator.sendBeacon(url);
       this.participationsToScan = this.participationsToScan.filter(
         (x) => x.participation.uid !== participation.participation.uid
@@ -124,6 +108,8 @@ export class ScannerComponent {
     this.participationService
       .getParticipationByUid(participationUid)
       .then((participation) => {
+        this.cameraContainer.nativeElement.style.display = 'none';
+        this.infoContainer.nativeElement.style.display = 'none';
         this.participation = participation;
 
         const { isActive, isScanned } = participation.props;
@@ -188,8 +174,10 @@ export class ScannerComponent {
   onDeviceSelectChange(event: Event) {
     const { value } = event.target as HTMLSelectElement;
     const device = this.availableDevices.find((x) => x.deviceId === value);
-    this.cameraContainer.nativeElement.style.display = 'none';
-    if (!device) this.infoContainer.nativeElement.style.display = 'flex';
+    if (!this.participation) {
+      this.cameraContainer.nativeElement.style.display = device ? 'flex' : 'none';
+      this.infoContainer.nativeElement.style.display = device ? 'none' : 'flex';
+    }
     this.enabled = Boolean(device);
     this.currentDevice = device;
   }
@@ -199,19 +187,16 @@ export class ScannerComponent {
   }
 
   onScanSuccess(resultString: string) {
-    this.participationUid.next(resultString);
+    if (this.participation || this.lastParticipationUid === resultString) return;
+    this.getParticipation(resultString);
   }
 
   onScanNoSuccess() {
-    this.participationUid.next('');
     this.toastService.showErrorMessage('Si è verificato un errore durante la scansione, riprovare');
   }
 
   /* ------------------------------------ Methods ------------------------------------ */
   getParticipation(participationUid: string) {
-    this.cameraContainer.nativeElement.style.display = 'none';
-    this.infoContainer.nativeElement.style.display = 'none';
-
     const participationNotScannedYet = this.participationsActive.find(
       (participation) => participation.uid === participationUid
     );
@@ -219,15 +204,16 @@ export class ScannerComponent {
     // Participation active and not scanned
     if (!participationNotScannedYet) {
       this.getParticipationFromNoList(participationUid);
-
       return;
     }
 
     this.getParticipationFromList(participationNotScannedYet);
-
-    this.participationsAlreadyScannedCount += 1;
+    this.lastParticipationUid = participationUid;
   }
+
   getParticipationFromList(participation: Participation) {
+    this.cameraContainer.nativeElement.style.display = 'none';
+    this.infoContainer.nativeElement.style.display = 'none';
     this.participation = participation;
 
     /* If participation is already scanned, show error */
@@ -253,7 +239,14 @@ export class ScannerComponent {
   }
 
   onResetParticipation() {
-    this.participationUid.next('');
+    if (this.currentDevice) {
+      this.cameraContainer.nativeElement.style.display = 'flex';
+      this.infoContainer.nativeElement.style.display = 'none';
+    } else {
+      if (!this.cameraContainer || !this.infoContainer) return;
+      this.cameraContainer.nativeElement.style.display = 'none';
+      this.infoContainer.nativeElement.style.display = 'flex';
+    }
     this.participation = undefined;
     this.participationAlreadyScanned = false;
     this.participationNoGoodMotivation = undefined;
