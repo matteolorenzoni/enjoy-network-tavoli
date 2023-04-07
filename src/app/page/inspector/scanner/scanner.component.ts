@@ -197,8 +197,6 @@ export class ScannerComponent {
 
   /* ------------------------------------ Methods ------------------------------------ */
   getParticipation(participationUid: string) {
-    this.enabled = false;
-
     const participationNotScannedYet = this.participationsActive.find(
       (participation) => participation.uid === participationUid
     );
@@ -241,8 +239,6 @@ export class ScannerComponent {
   }
 
   onResetParticipation() {
-    this.enabled = Boolean(this.currentDevice);
-
     if (this.currentDevice) {
       this.cameraContainer.nativeElement.style.display = 'flex';
       this.infoContainer.nativeElement.style.display = 'none';
