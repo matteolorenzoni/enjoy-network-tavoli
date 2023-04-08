@@ -9,6 +9,7 @@ import { ToastService } from '../services/toast.service';
 import { expandEventItemDetailsAnimation, fadeInAnimation } from '../animations/animations';
 import { TableService } from '../services/table.service';
 import { ParticipationService } from '../services/participation.service';
+import { FileGeneratorService } from '../services/file-generator.service';
 
 @Component({
   selector: 'en-item-event[event]',
@@ -110,6 +111,7 @@ export class EnItemEventComponent {
     private eventService: EventService,
     private tableService: TableService,
     private participationService: ParticipationService,
+    private fileGeneratorService: FileGeneratorService,
     private toastService: ToastService
   ) {}
 
@@ -170,6 +172,22 @@ export class EnItemEventComponent {
       });
   }
 
+  showMessageNotSend() {
+    this.participationService
+      .getParticipationsWithNoMessageByEventUid(this.event.uid)
+      .then((participations: Participation[]) => {
+        const forAlert = participations.map(
+          (item) => `${item.props.name} ${item.props.lastName} - ${item.props.phone}`
+        );
+
+        const msg = forAlert && forAlert.length > 0 ? forAlert.join('\n') : 'Tutti i messaggi sono stati inviati';
+        alert(msg);
+      })
+      .catch((err: Error) => {
+        this.toastService.showError(err);
+      });
+  }
+
   /* --------------------------------------- Methods --------------------------------------- */
   toggleOpen(): void {
     this.isOpen = !this.isOpen;
@@ -203,43 +221,16 @@ export class EnItemEventComponent {
   }
 
   async downloadPDFParticipants() {
-    // eslint-disable-next-line new-cap
-    const doc = new jsPDF({ orientation: 'p', unit: 'pt', format: 'a4' });
-
     try {
       const participations = await this.participationService.getParticipationsByEventUid(this.event.uid);
-
-      autoTable(doc, {
-        head: [['Numero', 'Nome', 'Cognome', 'Telefono']],
-        body: participations.map((participation, index) => [
-          index + 1,
-          participation.props.name,
-          participation.props.lastName,
-          participation.props.phone
-        ]),
-        headStyles: { fillColor: [250, 137, 56] }
-      });
-
+      const headerNames = ['Numero', 'Nome', 'Cognome', 'Telefono'];
+      const keys = ['name', 'lastName', 'phone'];
       const eventName = this.event.props.name.replace(/\s/g, '_');
-      doc.save(`partecipanti_${eventName}.pdf`);
+      const fileName = `partecipanti_${eventName}`;
+
+      this.fileGeneratorService.downloadPDF(participations, headerNames, keys, fileName);
     } catch (error: any) {
       this.toastService.showError(error);
     }
-  }
-
-  showMessageNotSend() {
-    this.participationService
-      .getParticipationsWithNoMessageByEventUid(this.event.uid)
-      .then((participations: Participation[]) => {
-        const forAlert = participations.map(
-          (item) => `${item.props.name} ${item.props.lastName} - ${item.props.phone}`
-        );
-
-        const msg = forAlert && forAlert.length > 0 ? forAlert.join('\n') : 'Tutti i messaggi sono stati inviati';
-        alert(msg);
-      })
-      .catch((err: Error) => {
-        this.toastService.showError(err);
-      });
   }
 }
