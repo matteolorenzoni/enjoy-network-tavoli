@@ -35,7 +35,7 @@ export class EventListComponent implements OnInit {
     this.eventsSubscription = this.eventService.getRealTimeAllEvents().subscribe({
       next(data) {
         that.events = data;
-        that.events.sort((a, b) => (a.props.date.getTime() > b.props.date.getTime() ? 1 : -1));
+        that.events.sort((a, b) => (a.props.date.getTime() < b.props.date.getTime() ? 1 : -1));
       },
       error(error: Error) {
         that.toastService.showError(error);

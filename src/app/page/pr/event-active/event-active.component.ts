@@ -37,7 +37,7 @@ export class EventActiveComponent implements OnInit {
       const assignments = await this.assignmentService.getActiveAssignmentsByEmployeeUid(this.employeeUid);
       const eventUids = assignments.map((assignment) => assignment.props.eventUid);
       this.eventsAvailable = await this.eventService.getEventsByUids(eventUids);
-      this.eventsAvailable.sort((a, b) => (a.props.date.getTime() > b.props.date.getTime() ? 1 : -1));
+      this.eventsAvailable.sort((a, b) => (a.props.date.getTime() < b.props.date.getTime() ? 1 : -1));
     } catch (error: any) {
       this.toastService.showError(error);
     }
