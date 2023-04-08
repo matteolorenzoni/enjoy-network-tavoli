@@ -1,8 +1,8 @@
 import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
 import axios from 'axios';
-import { DocumentData, DocumentSnapshot } from 'firebase-admin/firestore';
-import { ParticipationDTO, EventDTO, TableDTO, AssignmentDTO } from './collection';
+import { DocumentData, DocumentReference, DocumentSnapshot } from 'firebase-admin/firestore';
+import { ParticipationDTO, EventDTO, TableDTO, AssignmentDTO, ClientDTO } from './collection';
 import { ShorterUrlResponse, SMS, SMSResponse } from './type';
 
 admin.initializeApp();
@@ -150,6 +150,42 @@ export const testAssignmentOnUpdate = functions.firestore.document('assignments/
   } catch (error) {
     console.error(JSON.stringify(error));
     return null;
+  }
+});
+
+export const testClientOnUpdate = functions.firestore.document('clients/{clientId}').onUpdate(async (change) => {
+  try {
+    const data = change.after.data() as ClientDTO;
+    const { name, lastName, phone } = data;
+
+    const participations = await admin.firestore().collection('participations').where('phone', '==', phone).get();
+
+    const batch = admin.firestore().batch();
+    participations.forEach((participation) => {
+      const document: DocumentReference<DocumentData> = admin.firestore().doc(`participations/${participation.id}`);
+      batch.update(document, { name: name, lastName: lastName, modifiedAt: new Date() });
+    });
+    await batch.commit();
+  } catch (error) {
+    console.error(JSON.stringify(error));
+  }
+});
+
+export const testClientOnDelete = functions.firestore.document('clients/{clientId}').onDelete(async (snapshot) => {
+  try {
+    const data = snapshot.data() as ClientDTO;
+    const { phone } = data;
+
+    const participations = await admin.firestore().collection('participations').where('phone', '==', phone).get();
+
+    const batch = admin.firestore().batch();
+    participations.forEach((participation) => {
+      const document: DocumentReference<DocumentData> = admin.firestore().doc(`participations/${participation.id}`);
+      batch.update(document, { isActive: false, modifiedAt: new Date() });
+    });
+    await batch.commit();
+  } catch (error) {
+    console.error(JSON.stringify(error));
   }
 });
 
@@ -411,6 +447,46 @@ export const assignmentOnUpdate = functions.firestore.document('PROD_assignments
   } catch (error) {
     console.error(JSON.stringify(error));
     return null;
+  }
+});
+
+export const clientOnUpdate = functions.firestore.document('PROD_clients/{clientId}').onUpdate(async (change) => {
+  try {
+    const data = change.after.data() as ClientDTO;
+    const { name, lastName, phone } = data;
+
+    const participations = await admin.firestore().collection('PROD_participations').where('phone', '==', phone).get();
+
+    const batch = admin.firestore().batch();
+    participations.forEach((participation) => {
+      const document: DocumentReference<DocumentData> = admin
+        .firestore()
+        .doc(`PROD_participations/${participation.id}`);
+      batch.update(document, { name: name, lastName: lastName, modifiedAt: new Date() });
+    });
+    await batch.commit();
+  } catch (error) {
+    console.error(JSON.stringify(error));
+  }
+});
+
+export const clientOnDelete = functions.firestore.document('PROD_clients/{clientId}').onDelete(async (snapshot) => {
+  try {
+    const data = snapshot.data() as ClientDTO;
+    const { phone } = data;
+
+    const participations = await admin.firestore().collection('PROD_participations').where('phone', '==', phone).get();
+
+    const batch = admin.firestore().batch();
+    participations.forEach((participation) => {
+      const document: DocumentReference<DocumentData> = admin
+        .firestore()
+        .doc(`PROD_participations/${participation.id}`);
+      batch.update(document, { isActive: false, modifiedAt: new Date() });
+    });
+    await batch.commit();
+  } catch (error) {
+    console.error(JSON.stringify(error));
   }
 });
 
