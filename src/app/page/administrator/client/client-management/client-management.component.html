@@ -1,0 +1,77 @@
+<form class="flex flex-col gap-12 xs:gap-16" [formGroup]="clientForm" (ngSubmit)="onSubmit()">
+  <div class="group relative z-0 mt-8 w-full">
+    <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pr-4 pl-2 text-slate-200">+ 39</div>
+    <input
+      type="tel"
+      pattern="[0-9]{10}"
+      name="tel_input"
+      id="tel_input"
+      class="block w-full rounded-lg border border-gray-600 bg-gray-700 p-4 pl-12 text-sm text-slate-200 placeholder-slate-400 focus:outline-none focus:ring-0"
+      formControlName="phone"
+      autocomplete="off"
+      placeholder="Numero di telefono"
+      required />
+    <button
+      type="button"
+      class="absolute right-2.5 bottom-2.5 rounded-lg bg-primary-60 px-4 py-2 text-sm font-medium text-black hover:bg-white hover:text-primary-50 focus:outline-none"
+      (click)="searchClient()">
+      Cerca
+    </button>
+  </div>
+
+  <ng-container *ngIf="client">
+    <div class="group relative z-0 w-full">
+      <input
+        type="text"
+        name="name_input"
+        id="name_input"
+        class="peer block w-full appearance-none bg-transparent py-2.5 px-0 text-base text-primary-100 focus:text-primary-60 focus:outline-none focus:ring-0 disabled:cursor-not-allowed disabled:bg-neutral"
+        formControlName="name"
+        autocomplete="off"
+        placeholder=" "
+        required />
+      <label
+        for="name_input"
+        class="absolute top-3 -z-10 origin-[0] -translate-y-6 scale-75 transform text-base text-primary-100 duration-300 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100 peer-focus:left-0 peer-focus:-translate-y-6 peer-focus:scale-75 peer-focus:font-medium peer-focus:text-primary-60">
+        Nome
+      </label>
+      <hr class="border-primary-100 peer-focus:border-primary-60" />
+    </div>
+
+    <div class="group relative z-0 w-full">
+      <input
+        type="text"
+        name="last_name_input"
+        id="last_name_input"
+        class="peer block w-full appearance-none bg-transparent py-2.5 px-0 text-base text-primary-100 focus:text-primary-60 focus:outline-none focus:ring-0 disabled:cursor-not-allowed disabled:bg-neutral"
+        formControlName="lastName"
+        autocomplete="off"
+        placeholder=" "
+        required />
+      <label
+        for="last_name_input"
+        class="absolute top-3 -z-10 origin-[0] -translate-y-6 scale-75 transform text-base text-primary-100 duration-300 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100 peer-focus:left-0 peer-focus:-translate-y-6 peer-focus:scale-75 peer-focus:font-medium peer-focus:text-primary-60">
+        Cognome
+      </label>
+      <hr class="border-primary-100 peer-focus:border-primary-60" />
+    </div>
+
+    <div class="flex w-full flex-col gap-2 text-slate-100">
+      <button
+        type="submit"
+        role="button"
+        class="mt-2 inline-block w-full rounded bg-primary-60 px-6 py-2.5 text-xs font-extrabold uppercase shadow-md enabled:transition enabled:duration-150 enabled:ease-in-out enabled:hover:cursor-pointer enabled:active:scale-90 enabled:active:bg-primary-40 disabled:bg-primary-60/10 disabled:text-slate-800"
+        [disabled]="!clientForm.valid">
+        Aggiorna
+      </button>
+
+      <button
+        type="button"
+        role="button"
+        class="mt-2 inline-block w-full rounded bg-red-600 px-6 py-2.5 text-xs font-extrabold uppercase shadow-md transition duration-150 ease-in-out hover:cursor-pointer active:scale-90 active:bg-red-800"
+        (click)="deleteClient()">
+        Elimina
+      </button>
+    </div>
+  </ng-container>
+</form>

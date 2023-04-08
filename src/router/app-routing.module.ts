@@ -18,6 +18,7 @@ import { TicketComponent } from 'src/app/page/client/ticket/ticket.component';
 import { EventSelectorComponent } from 'src/app/page/inspector/event-selector/event-selector.component';
 import { AuthGuard } from 'src/app/guards/auth.guard';
 import { TicketManualValidationComponent } from 'src/app/page/inspector/ticket-manual-validation/ticket-manual-validation.component';
+import { ClientManagementComponent } from '../app/page/administrator/client/client-management/client-management.component';
 import { ScannerComponent } from '../app/page/inspector/scanner/scanner.component';
 import { UpdatePasswordComponent } from '../app/page/setting/update-password/update-password.component';
 import { ClientGeneratorComponent } from '../app/page/pr/client-generator/client-generator.component';
@@ -49,6 +50,9 @@ const routes: Routes = [
           /* Employees */
           { path: 'employees', component: EmployeeListComponent },
           { path: 'employees/:employeeUid', component: EmployeeGeneratorComponent },
+
+          /* Client */
+          { path: 'client', component: ClientManagementComponent },
 
           /* Statistics */
           { path: 'statistics', component: StatisticsComponent },

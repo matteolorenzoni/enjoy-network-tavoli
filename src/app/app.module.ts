@@ -54,6 +54,7 @@ import { ScannerComponent } from './page/inspector/scanner/scanner.component';
 import { InspectorParticipationListComponent } from './page/inspector/inspector-participation-list/inspector-participation-list.component';
 import { BackBarComponent } from './layout/back-bar/back-bar.component';
 import { TicketManualValidationComponent } from './page/inspector/ticket-manual-validation/ticket-manual-validation.component';
+import { ClientManagementComponent } from './page/administrator/client/client-management/client-management.component';
 
 @NgModule({
   declarations: [
@@ -95,7 +96,8 @@ import { TicketManualValidationComponent } from './page/inspector/ticket-manual-
     ScannerComponent,
     InspectorParticipationListComponent,
     BackBarComponent,
-    TicketManualValidationComponent
+    TicketManualValidationComponent,
+    ClientManagementComponent
   ],
   imports: [
     BrowserModule,

@@ -1,6 +1,14 @@
 import { UserService } from 'src/app/services/user.service';
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { faCalendarDay, faChartPie, faGear, faQrcode, faTicket, faUsers } from '@fortawesome/free-solid-svg-icons';
+import {
+  faCalendarDay,
+  faChartPie,
+  faGear,
+  faQrcode,
+  faTicket,
+  faUsers,
+  faUserTie
+} from '@fortawesome/free-solid-svg-icons';
 import { BottomNavigation } from 'src/app/models/type';
 import { SessionStorageService } from '../../services/sessionstorage.service';
 import { RoleType } from '../../models/enum';
@@ -17,7 +25,8 @@ export class DashboardComponent implements OnInit {
       role: RoleType.ADMINISTRATOR,
       icons: [
         { link: '/dashboard/administrator/events', name: 'Eventi', definition: faCalendarDay },
-        { link: '/dashboard/administrator/employees', name: 'Dipendenti', definition: faUsers },
+        { link: '/dashboard/administrator/employees', name: 'Dipendenti', definition: faUserTie },
+        { link: '/dashboard/administrator/client', name: 'Clienti', definition: faUsers },
         { link: '/dashboard/administrator/statistics', name: 'Statistiche', definition: faChartPie },
         { link: '/dashboard/setting', name: 'Impostazioni', definition: faGear }
       ]
