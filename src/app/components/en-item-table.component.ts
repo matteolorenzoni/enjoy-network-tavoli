@@ -14,34 +14,29 @@ import { UserService } from '../services/user.service';
   template: `
     <li
       role="button"
-      class="group flex h-16 items-center rounded-lg p-2 hover:cursor-pointer active:bg-slate-900"
+      class="group flex h-16 w-full items-center justify-between gap-4 overflow-hidden rounded-lg p-2 hover:cursor-pointer active:bg-slate-900"
       (click)="goToClient()">
-      <div class="overflow-hidden">
-        <p class="truncate text-slate-300">
-          {{ table.props.name }}
-          <br class="sm:hidden" />
-          <span
-            *ngIf="employeeIsAdministrator && tableEmployee"
-            class="ml-0 text-[10px] text-slate-400 sm:ml-4 sm:text-sm">
-            {{ tableEmployee.props.name }} {{ tableEmployee.props.lastName }}</span
-          >
+      <div class="flex grow flex-col truncate sm:flex-row sm:items-center sm:gap-4">
+        <p class="truncate text-slate-300">{{ table.props.name }}</p>
+        <p *ngIf="employeeIsAdministrator && tableEmployee" class="text-[10px] text-slate-400 sm:text-sm">
+          {{ tableEmployee.props.name }} {{ tableEmployee.props.lastName }}
         </p>
       </div>
-      <div class="ml-auto flex-none shrink-0 basis-16 pl-2">
-        <p class="m-auto rounded-xl bg-neutral py-1 px-4 text-center text-slate-300">
+      <div class="h-full shrink-0">
+        <p class="center m-auto h-full rounded-lg bg-neutral px-6 text-center text-slate-300">
           {{ table.props.personsActive }}
         </p>
       </div>
-      <div class="flex h-full flex-none shrink-0 basis-16 items-center justify-evenly hover:cursor-default">
+      <div class="flex h-full shrink-0 items-center justify-center gap-4">
         <fa-icon
           [icon]="updateIcon"
           role="button"
-          class="ml-2 text-slate-300 transition duration-150 ease-in-out hover:cursor-pointer active:scale-90 active:text-slate-500"
+          class="text-slate-300 transition duration-150 ease-in-out hover:cursor-pointer active:scale-90 active:text-slate-500"
           (click)="updateTable($event)"></fa-icon>
         <fa-icon
           [icon]="deleteIcon"
           role="button"
-          class="ml-2 text-slate-300 transition duration-150 ease-in-out hover:cursor-pointer active:scale-90 active:text-slate-500"
+          class="text-slate-300 transition duration-150 ease-in-out hover:cursor-pointer active:scale-90 active:text-slate-500"
           (click)="deleteTable($event)"></fa-icon>
       </div>
     </li>
