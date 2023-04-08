@@ -21,6 +21,7 @@ export class TableGeneratorComponent implements OnInit {
 
   /* Table */
   tableUid: string | null = '';
+  table?: Table;
 
   /* Form */
   tableForm: FormGroup;
@@ -59,13 +60,15 @@ export class TableGeneratorComponent implements OnInit {
       this.tableService
         .getTable(this.tableUid)
         .then((table) => {
-          const { props } = table;
+          this.table = table;
+
           this.tableForm.patchValue({
-            name: props.name,
-            price: props.price,
-            hour: props.hour?.toISOString().slice(0, 16) || '',
-            drink: props.drinkList
+            name: this.table.props.name,
+            price: this.table.props.price,
+            hour: this.table.props.hour?.toISOString().slice(0, 16) || '',
+            drink: this.table.props.drinkList
           });
+
           this.lblButton = 'Modifica tavolo';
         })
         .catch((err: Error) => {
@@ -86,18 +89,18 @@ export class TableGeneratorComponent implements OnInit {
 
     /* create the new table */
     const newTable: Table = {
-      uid: this.tableUid ?? '',
+      uid: this.table?.uid || '',
       props: {
-        eventUid: this.eventUid,
-        employeeUid: this.employeeUid,
+        eventUid: this.table?.props.eventUid || this.eventUid,
+        employeeUid: this.table?.props.employeeUid || this.employeeUid,
         name: name.trim().replace(/\s\s+/g, ' ') || '',
-        price,
-        hour: hour ? new Date(hour) : undefined,
-        drinkList,
-        personsTotal: 0,
-        personsActive: 0,
-        personsScanned: 0,
-        isActive: true
+        price: this.table?.props.price || price,
+        hour: this.table?.props.hour ?? (hour ? new Date(hour) : undefined),
+        drinkList: this.table?.props?.drinkList || drinkList,
+        personsTotal: this.table?.props.personsTotal || 0,
+        personsActive: this.table?.props.personsActive || 0,
+        personsScanned: this.table?.props.personsScanned || 0,
+        isActive: this.table?.props.isActive || true
       }
     };
 
