@@ -89,7 +89,7 @@ export class ClientManagementComponent {
       }
 
       this.clientService
-        .deleteClientByUid(this.client.uid)
+        .deleteClient(this.client)
         .then(() => {
           this.client = undefined;
           this.clientForm.reset();

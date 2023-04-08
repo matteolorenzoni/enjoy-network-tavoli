@@ -6,6 +6,7 @@ import { Client } from '../models/type';
 import { FirebaseCreateService } from './firebase/firebase-crud/firebase-create.service';
 import { FirebaseDeleteService } from './firebase/firebase-crud/firebase-delete.service';
 import { FirebaseReadService } from './firebase/firebase-crud/firebase-read.service';
+import { FirebaseUpdateService } from './firebase/firebase-crud/firebase-update.service';
 
 @Injectable({
   providedIn: 'root'
@@ -14,6 +15,7 @@ export class ClientService {
   constructor(
     private firebaseCreateService: FirebaseCreateService,
     private firebaseReadService: FirebaseReadService,
+    private firebaseUpdateService: FirebaseUpdateService,
     private firebaseDeleteService: FirebaseDeleteService
   ) {}
 
@@ -69,9 +71,6 @@ export class ClientService {
   }
 
   /* ------------------------------------------- CREATE ------------------------------------------- */
-  /**
-   * Check if the client already exists. If not add it, otherwise add the new client
-   */
   public async addClient(client: Client): Promise<void> {
     /* Check if client already exists */
     const phoneConstraint: QueryConstraint = where('phone', '==', client.props.phone);
@@ -87,8 +86,13 @@ export class ClientService {
     }
   }
 
+  /* ------------------------------------------- CREATE ------------------------------------------- */
+  public async updateClient(client: Client): Promise<void> {
+    await this.firebaseUpdateService.updateDocument(environment.collection.CLIENTS, client);
+  }
+
   /* ------------------------------------------- DELETE ------------------------------------------- */
-  public async deleteClient(clientUid: string): Promise<void> {
-    await this.firebaseDeleteService.deleteDocumentByUid(environment.collection.CLIENTS, clientUid);
+  public async deleteClient(client: Client): Promise<void> {
+    await this.firebaseDeleteService.deleteDocumentByUid(environment.collection.CLIENTS, client.uid);
   }
 }
