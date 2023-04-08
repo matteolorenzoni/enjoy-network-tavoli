@@ -25,7 +25,9 @@ export class ClientService {
       environment.collection.CLIENTS,
       clientConverter
     );
-    return clients;
+    return clients.sort(
+      (a, b) => a.props.name.localeCompare(b.props.name) && a.props.lastName.localeCompare(b.props.lastName)
+    );
   }
 
   public async getClient(clientUid: string): Promise<Client> {
