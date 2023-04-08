@@ -3,6 +3,8 @@ import { ClientService } from 'src/app/services/client.service';
 import { Component } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Client } from 'src/app/models/type';
+import { faFileCsv, faFilePdf } from '@fortawesome/free-solid-svg-icons';
+import { FileGeneratorService } from '../../../../services/file-generator.service';
 
 @Component({
   selector: 'app-client-management',
@@ -10,6 +12,10 @@ import { Client } from 'src/app/models/type';
   styleUrls: ['./client-management.component.scss']
 })
 export class ClientManagementComponent {
+  /* Icons */
+  pdfIcon = faFilePdf;
+  csvIcon = faFileCsv;
+
   /* Client */
   client?: Client;
 
@@ -17,7 +23,11 @@ export class ClientManagementComponent {
   clientForm: FormGroup;
   isLoading = false;
 
-  constructor(private clientService: ClientService, private toastService: ToastService) {
+  constructor(
+    private clientService: ClientService,
+    private fileGeneratorService: FileGeneratorService,
+    private toastService: ToastService
+  ) {
     /* Init form */
     this.clientForm = new FormGroup({
       name: new FormControl(null, [Validators.required, Validators.pattern(/[\S]/)]),
@@ -98,6 +108,33 @@ export class ClientManagementComponent {
         .catch((error) => {
           this.toastService.showError(error);
         });
+    }
+  }
+
+  /* ------------------------------------------- Methods ------------------------------------------- */
+  async downloadPDF() {
+    try {
+      const clients = await this.clientService.getAllClients();
+      const headerNames = ['Numero', 'Nome', 'Cognome', 'Telefono'];
+      const keys = ['name', 'lastName', 'phone'];
+      const fileName = 'clienti';
+
+      this.fileGeneratorService.downloadPDF(clients, headerNames, keys, fileName);
+    } catch (error: any) {
+      this.toastService.showError(error);
+    }
+  }
+
+  async downloadCSV() {
+    try {
+      const clients = await this.clientService.getAllClients();
+      const headerNames = ['Numero', 'Nome', 'Cognome', 'Telefono'];
+      const keys = ['name', 'lastName', 'phone'];
+      const fileName = 'clienti';
+
+      this.fileGeneratorService.downloadCSV(clients, headerNames, keys, fileName);
+    } catch (error: any) {
+      this.toastService.showError(error);
     }
   }
 }
