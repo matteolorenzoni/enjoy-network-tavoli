@@ -64,3 +64,14 @@ export enum PlaceType {
   INDIE = 'Indie',
   CUPOLE = 'Cupole'
 }
+
+export enum ParticipationType {
+  TABLE = 'Table',
+  FIDELITY = 'Fidelity'
+}
+
+export enum SMSErrorType {
+  BADNUMBERFORMAT = 'BADNUMBERFORMAT',
+  DUPLICATESMS = 'DUPLICATESMS',
+  BLACKLIST = 'BLACKLIST'
+}

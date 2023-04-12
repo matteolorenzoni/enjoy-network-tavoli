@@ -1,4 +1,4 @@
-import { RoleType } from './enum';
+import { ParticipationType, RoleType, SMSErrorType } from './enum';
 
 export type EventDTO = {
   imageUrl: string;
@@ -55,6 +55,7 @@ export type TableDTO = {
 
 export type ParticipationDTO = {
   eventUid: string;
+  type: ParticipationType;
   tableUid: string;
   name: string;
   lastName: string;
@@ -63,7 +64,7 @@ export type ParticipationDTO = {
   scannedAt?: Date;
   scannedFrom?: string;
   messageIsReceived: boolean;
-  errorIfMessageIsNotReceived?: 'BADNUMBERFORMAT' | 'DUPLICATESMS' | 'BLACKLIST';
+  errorIfMessageIsNotReceived?: SMSErrorType;
   isActive: boolean;
   createdAt?: Date;
   modifiedAt?: Date;
