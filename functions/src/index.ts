@@ -247,18 +247,25 @@ export const sendSms = functions.firestore
   .onCreate(async (snap, context) => {
     const participationUid = context.params.participationId;
     const participationDTO = snap.data() as ParticipationDTO;
-    const { name, phone } = participationDTO;
+    const clientName = participationDTO.name;
+    const clientPhone = participationDTO.phone;
 
     try {
       /* -------------------------------------------------------- Get table -------------------------------------------------------- */
       const table = await admin.firestore().doc(`PROD_tables/${participationDTO.tableUid}`).get();
       const tableDTO = table.data() as TableDTO;
-      const { eventUid } = tableDTO;
+      const { eventUid, employeeUid } = tableDTO;
+      const tableName = tableDTO.name;
 
       /* -------------------------------------------------------- Get event -------------------------------------------------------- */
       const document: DocumentData = await admin.firestore().doc(`PROD_events/${eventUid}`).get();
       const eventDTO = document.data() as EventDTO;
       const { message } = eventDTO;
+
+      /* --------------------------------------------------- Message for fidelity --------------------------------------------------- */
+      const tableForFidelity = 'OMAGGIO - FIDELITY CARD';
+      const messageForFidelity =
+        'Ciao {{CLIENT}}\nGrazie per aver completato la tua fidelity card, ecco il tuo ticket per Lunedì 24 Aprile.\n\n{{LINK}}';
 
       /* -------------------------------------------------------- Shorter url -------------------------------------------------------- */
       const urlToReduce = `https://enjoy-network-tavoli.web.app/ticket?participation=${participationUid}`;
@@ -268,7 +275,9 @@ export const sendSms = functions.firestore
 
       /* -------------------------------------------------------- Send sms -------------------------------------------------------- */
       /* Replace params */
-      let messageClone = message.replace('{{CLIENT}}', name);
+      const messageToSend =
+        tableName === tableForFidelity && employeeUid === process.env.ADMINUID ? messageForFidelity : message;
+      let messageClone = messageToSend.replace('{{CLIENT}}', clientName);
       messageClone = messageClone.replace('{{LINK}}', link);
 
       /* Headers */
@@ -283,7 +292,7 @@ export const sendSms = functions.firestore
       /* Create sms */
       const request_urlSmsHosting = 'https://api.smshosting.it/rest/api/sms/send';
       const sms: SMS = {
-        to: `39${phone}`,
+        to: `39${clientPhone}`,
         text: messageClone,
         sandbox: false
       };
