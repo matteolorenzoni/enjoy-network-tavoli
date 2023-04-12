@@ -247,23 +247,15 @@ export const sendSms = functions.firestore
   .onCreate(async (snap, context) => {
     const participationUid = context.params.participationId;
     const participationDTO = snap.data() as ParticipationDTO;
-    const eventUid = participationDTO.eventUid;
-    const clientName = participationDTO.name;
-    const clientPhone = participationDTO.phone;
+    const { eventUid, tableUid, name, phone } = participationDTO;
 
     try {
-      /* -------------------------------------------------------- Get table -------------------------------------------------------- */
-      const table = await admin.firestore().doc(`PROD_tables/${participationDTO.tableUid}`).get();
-      const tableDTO = table.data() as TableDTO;
-      const tableName = tableDTO.name;
-
       /* -------------------------------------------------------- Get event -------------------------------------------------------- */
       const document: DocumentData = await admin.firestore().doc(`PROD_events/${eventUid}`).get();
       const eventDTO = document.data() as EventDTO;
       const { message } = eventDTO;
 
-      /* --------------------------------------------------- Message for fidelity --------------------------------------------------- */
-      const FIDELITY_TABLE = 'OMAGGIO - FIDELITY CARD';
+      /* --------------------------------------------------- Fidelity --------------------------------------------------- */
       const FIDELITY_MESSAGE =
         'Ciao {{CLIENT}}\nGrazie per aver completato la tua fidelity card, ecco il tuo ticket per Lunedì 24 Aprile.\n\n{{LINK}}';
 
@@ -275,8 +267,9 @@ export const sendSms = functions.firestore
 
       /* -------------------------------------------------------- Send sms -------------------------------------------------------- */
       /* Replace params */
-      const messageToSend = tableName === FIDELITY_TABLE ? FIDELITY_MESSAGE : message;
-      let messageClone = messageToSend.replace('{{CLIENT}}', clientName);
+      const fidelityTables = process.env.FIDELITY_TABLES_UIDS?.split(',') || [];
+      const messageToSend = fidelityTables.includes(tableUid) ? FIDELITY_MESSAGE : message;
+      let messageClone = messageToSend.replace('{{CLIENT}}', name);
       messageClone = messageClone.replace('{{LINK}}', link);
 
       /* Headers */
@@ -292,7 +285,7 @@ export const sendSms = functions.firestore
       const request_urlSmsHosting = 'https://api.smshosting.it/rest/api/sms/send';
       const sms: SMS = {
         from: 'Enjoy N.',
-        to: `39${clientPhone}`,
+        to: `39${phone}`,
         transactionId: eventUid,
         text: messageClone,
         sandbox: false
