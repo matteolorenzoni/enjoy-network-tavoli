@@ -247,6 +247,7 @@ export const sendSms = functions.firestore
   .onCreate(async (snap, context) => {
     const participationUid = context.params.participationId;
     const participationDTO = snap.data() as ParticipationDTO;
+    const eventUid = participationDTO.eventUid;
     const clientName = participationDTO.name;
     const clientPhone = participationDTO.phone;
 
@@ -254,7 +255,6 @@ export const sendSms = functions.firestore
       /* -------------------------------------------------------- Get table -------------------------------------------------------- */
       const table = await admin.firestore().doc(`PROD_tables/${participationDTO.tableUid}`).get();
       const tableDTO = table.data() as TableDTO;
-      const { eventUid, employeeUid } = tableDTO;
       const tableName = tableDTO.name;
 
       /* -------------------------------------------------------- Get event -------------------------------------------------------- */
@@ -263,8 +263,8 @@ export const sendSms = functions.firestore
       const { message } = eventDTO;
 
       /* --------------------------------------------------- Message for fidelity --------------------------------------------------- */
-      const tableForFidelity = 'OMAGGIO - FIDELITY CARD';
-      const messageForFidelity =
+      const FIDELITY_TABLE = 'OMAGGIO - FIDELITY CARD';
+      const FIDELITY_MESSAGE =
         'Ciao {{CLIENT}}\nGrazie per aver completato la tua fidelity card, ecco il tuo ticket per Lunedì 24 Aprile.\n\n{{LINK}}';
 
       /* -------------------------------------------------------- Shorter url -------------------------------------------------------- */
@@ -275,8 +275,7 @@ export const sendSms = functions.firestore
 
       /* -------------------------------------------------------- Send sms -------------------------------------------------------- */
       /* Replace params */
-      const messageToSend =
-        tableName === tableForFidelity && employeeUid === process.env.ADMINUID ? messageForFidelity : message;
+      const messageToSend = tableName === FIDELITY_TABLE ? FIDELITY_MESSAGE : message;
       let messageClone = messageToSend.replace('{{CLIENT}}', clientName);
       messageClone = messageClone.replace('{{LINK}}', link);
 
