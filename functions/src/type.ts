@@ -8,6 +8,7 @@ export type ShorterUrlResponse = {
 };
 
 export type SMS = {
+  from: string;
   to: string;
   text: string;
   sandbox: boolean;

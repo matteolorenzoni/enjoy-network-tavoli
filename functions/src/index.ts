@@ -292,6 +292,7 @@ export const sendSms = functions.firestore
       /* Create sms */
       const request_urlSmsHosting = 'https://api.smshosting.it/rest/api/sms/send';
       const sms: SMS = {
+        from: 'Enjoy N.',
         to: `39${clientPhone}`,
         text: messageClone,
         sandbox: false
