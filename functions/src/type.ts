@@ -11,6 +11,7 @@ export type SMS = {
   from: string;
   to: string;
   text: string;
+  transactionId: string;
   sandbox: boolean;
 };
 

@@ -294,6 +294,7 @@ export const sendSms = functions.firestore
       const sms: SMS = {
         from: 'Enjoy N.',
         to: `39${clientPhone}`,
+        transactionId: eventUid,
         text: messageClone,
         sandbox: false
       };
