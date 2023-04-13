@@ -8,6 +8,7 @@ import { SessionStorageService } from 'src/app/services/sessionstorage.service';
 import { Client } from 'src/app/models/type';
 import { UtilsService } from 'src/app/services/utils.service';
 import { Location } from '@angular/common';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-client-generator',
@@ -146,7 +147,8 @@ export class ClientGeneratorComponent implements OnInit {
     }
 
     try {
-      await this.participationService.addParticipation(this.eventUid, this.tableUid, client);
+      const isTableFidelity = environment.fidelityTables.includes(this.tableUid);
+      await this.participationService.addParticipation(this.eventUid, this.tableUid, client, isTableFidelity);
     } catch (err) {
       throw err as Error;
     }

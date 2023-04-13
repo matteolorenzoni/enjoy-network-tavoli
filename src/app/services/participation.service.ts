@@ -8,6 +8,7 @@ import { participationConverter } from '../models/converter';
 import { FirebaseCreateService } from './firebase/firebase-crud/firebase-create.service';
 import { FirebaseReadService } from './firebase/firebase-crud/firebase-read.service';
 import { FirebaseUpdateService } from './firebase/firebase-crud/firebase-update.service';
+import { ParticipationType } from '../models/enum';
 
 @Injectable({
   providedIn: 'root'
@@ -20,7 +21,12 @@ export class ParticipationService {
   ) {}
 
   /* ------------------------------------------- CREATE ------------------------------------------- */
-  public async addParticipation(eventUid: string, tableUid: string, client: Client): Promise<void> {
+  public async addParticipation(
+    eventUid: string,
+    tableUid: string,
+    client: Client,
+    isForFidelity: boolean
+  ): Promise<void> {
     /* Check if the client has already a participation */
     const eventUidConstraint: QueryConstraint = where('eventUid', '==', eventUid);
     const phoneConstraint: QueryConstraint = where('phone', '==', client.props.phone);
@@ -38,6 +44,7 @@ export class ParticipationService {
         uid: '',
         props: {
           eventUid,
+          type: isForFidelity ? ParticipationType.FIDELITY : ParticipationType.TABLE,
           tableUid,
           name: client.props.name,
           lastName: client.props.lastName,

@@ -20,5 +20,6 @@ export const environment = {
     ERRORS: 'PROD_errors'
   },
   defaultPassword: 'enjoynetwork',
-  administratorUids: ['B7klRRmUCvQ236cj2cQFGq7hV802', 'iYLbgzEyvDPUieXLRUQaTGdzuca2']
+  administratorUids: ['B7klRRmUCvQ236cj2cQFGq7hV802', 'iYLbgzEyvDPUieXLRUQaTGdzuca2'],
+  fidelityTables: ['vAp6RcSkk5Df5A6jtFtH']
 };
