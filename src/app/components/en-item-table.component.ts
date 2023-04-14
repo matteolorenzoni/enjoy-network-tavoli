@@ -1,7 +1,7 @@
 import { Employee } from 'src/app/models/type';
-import { Component, Input } from '@angular/core';
+import { Component, Input, SimpleChanges } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { faUserPlus, faPen, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faUserPlus, faPen, faTrash, faCrown } from '@fortawesome/free-solid-svg-icons';
 import { environment } from 'src/environments/environment';
 import { EmployeeService } from '../services/employee.service';
 import { ToastService } from '../services/toast.service';
@@ -17,9 +17,10 @@ import { UserService } from '../services/user.service';
       class="group flex h-16 w-full items-center justify-between gap-4 overflow-hidden rounded-lg p-2 hover:cursor-pointer active:bg-slate-900"
       (click)="goToClient()">
       <div class="flex grow flex-col truncate sm:flex-row sm:items-center sm:gap-4">
+        <fa-icon *ngIf="isFidelityTable" class="text-yellow-500" [icon]="crownIcon"></fa-icon>
         <p class="truncate text-slate-300">{{ table.props.name }}</p>
-        <p *ngIf="employeeIsAdministrator && tableEmployee" class="text-[10px] text-slate-400 sm:text-sm">
-          {{ tableEmployee.props.name }} {{ tableEmployee.props.lastName }}
+        <p *ngIf="employeeIsAdmin" class="text-[10px] text-slate-400 sm:text-sm">
+          {{ employeeOwnTable?.props?.name }} {{ employeeOwnTable?.props?.lastName }}
         </p>
       </div>
       <div class="h-full shrink-0">
@@ -54,19 +55,20 @@ export class EnItemTableComponent {
 
   /* Employee */
   employeeUid = '';
-  administratorUids: string[] = [];
-  employeeIsAdministrator = false;
+  employeeIsAdmin = false;
 
   /* Event */
-  eventUid: string | null = null;
+  eventUid? = '';
 
   /* Table */
-  tableEmployee?: Employee;
+  employeeOwnTable?: Employee;
+  isFidelityTable = false;
 
   /* Icons */
   addIcon = faUserPlus;
   updateIcon = faPen;
   deleteIcon = faTrash;
+  crownIcon = faCrown;
 
   constructor(
     private router: Router,
@@ -77,18 +79,23 @@ export class EnItemTableComponent {
     private toastService: ToastService
   ) {
     this.employeeUid = this.userService.getUserUid();
-    this.administratorUids = environment.administratorUids;
-    this.employeeIsAdministrator = this.administratorUids.includes(this.employeeUid);
+    this.employeeIsAdmin = environment.administratorUids.includes(this.employeeUid);
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['table']) {
+      this.isFidelityTable = environment.fidelityTables.includes(this.table.uid);
+    }
   }
 
   ngOnInit(): void {
-    this.eventUid = this.route.snapshot.paramMap.get('eventUid');
+    this.eventUid = this.route.snapshot.paramMap.get('eventUid') || undefined;
 
-    if (this.employeeIsAdministrator) {
+    if (this.employeeIsAdmin) {
       this.employeeService
         .getEmployee(this.table.props.employeeUid)
         .then((employee) => {
-          this.tableEmployee = employee;
+          this.employeeOwnTable = employee;
         })
         .catch((error: Error) => {
           this.toastService.showError(error);
