@@ -36,7 +36,7 @@ export class FirebaseReadService {
     const docSnap = await getDoc(docRef);
 
     /* If the document does not exist, throw an error */
-    if (!docSnap.exists()) throw new Error('Documento non trovato!');
+    if (!docSnap.exists()) throw new Error(`Documento non trovato DEBUG: ${collectionName} - ${documentUid}`);
 
     /* Return the document */
     return docSnap.data() as T;
@@ -67,7 +67,7 @@ export class FirebaseReadService {
           observer.next(documents);
         },
         (error) => {
-          throw new Error(error.message);
+          throw new Error(`${error.message} DEBUG: ${collectionName}`);
         }
       );
     });
@@ -109,7 +109,7 @@ export class FirebaseReadService {
           observer.next(documents);
         },
         (error) => {
-          throw new Error(error.message);
+          throw new Error(`${error.message} DEBUG: ${collectionName} - ${JSON.stringify(constraints)}`);
         }
       );
     });

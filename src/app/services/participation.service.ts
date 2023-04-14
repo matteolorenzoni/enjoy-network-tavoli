@@ -98,7 +98,7 @@ export class ParticipationService {
       participationConverter
     );
     if (participations.length <= 0) {
-      throw new Error('Partecipazione non trovata');
+      throw new Error(`Partecipazione non trovata DEBUG: ${eventUid} - ${phone}`);
     }
     return participations[0];
   }
@@ -118,7 +118,7 @@ export class ParticipationService {
       participationConverter
     );
     if (participations.length <= 0) {
-      throw new Error('Partecipazione non trovata');
+      throw new Error(`Partecipazione non trovata DEBUG: ${eventUid} - ${name} - ${lastName}`);
     }
     return participations[0];
   }

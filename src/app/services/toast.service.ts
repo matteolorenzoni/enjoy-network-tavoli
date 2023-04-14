@@ -30,7 +30,7 @@ export class ToastService {
   public showError(err: Error): void {
     this.customErrorService.createCustomError(err.message, err.stack || '', this.employeeUid);
     console.error(err.message);
-    this.show(ToastType.ERROR, err.message);
+    this.show(ToastType.ERROR, err.message.split('DEBUG:')[0]);
   }
 
   public showErrorMessage(message: string): void {
@@ -41,7 +41,7 @@ export class ToastService {
 
     this.customErrorService.createCustomError(message, stackTrace() || '', this.employeeUid);
     console.error(message);
-    this.show(ToastType.ERROR, message);
+    this.show(ToastType.ERROR, message.split('DEBUG:')[0]);
   }
 
   /* Warning */
