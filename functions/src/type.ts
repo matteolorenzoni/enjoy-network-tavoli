@@ -12,6 +12,7 @@ export type SMS = {
   to: string;
   text: string;
   transactionId: string;
+  statusCallback: string;
   sandbox: boolean;
 };
 

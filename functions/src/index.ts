@@ -4,6 +4,7 @@ import axios from 'axios';
 import { DocumentData, DocumentReference, DocumentSnapshot } from 'firebase-admin/firestore';
 import { ParticipationDTO, EventDTO, TableDTO, AssignmentDTO, ClientDTO } from './collection';
 import { ShorterUrlResponse, SMS, SMSResponse } from './type';
+import { SMSStatusType } from './enum';
 
 admin.initializeApp();
 
@@ -235,7 +236,7 @@ export const testVisibilityChange = functions.https.onRequest(async (request, re
   } catch (error) {
     console.log(error);
     console.log(JSON.stringify(error));
-    response.send('Errore');
+    response.send('Error');
   }
 });
 
@@ -288,6 +289,7 @@ export const sendSms = functions.firestore
         to: `39${phone}`,
         transactionId: eventUid,
         text: messageClone,
+        statusCallback: 'https://us-central1-enjoy-network-tavoli.cloudfunctions.net/receiveSms',
         sandbox: false
       };
 
@@ -296,12 +298,7 @@ export const sendSms = functions.firestore
 
       if (smsResponse.smsNotInserted > 0) {
         snap.ref.update({
-          errorIfMessageIsNotReceived: smsResponse.sms[0].statusDetail,
-          modifiedAt: new Date()
-        });
-      } else {
-        snap.ref.update({
-          messageIsReceived: true,
+          statusSMS: smsResponse.sms[0].statusDetail,
           modifiedAt: new Date()
         });
       }
@@ -309,6 +306,40 @@ export const sendSms = functions.firestore
       console.error(JSON.stringify(error));
     }
   });
+
+export const receiveSms = functions.https.onRequest(async (request, response) => {
+  try {
+    const { transactionId, to, status } = request.body;
+
+    const phoneWithNoPrefix = (to as string).startsWith('39') ? (to as string).substring(2) : to;
+
+    if (status === SMSStatusType.DELIVERED) {
+      const document: DocumentData = await admin
+        .firestore()
+        .collection('PROD_participations')
+        .where('eventUid', '==', transactionId)
+        .where('phone', '==', phoneWithNoPrefix)
+        .get();
+
+      if (document.empty) {
+        response.send('Not found');
+        return;
+      }
+
+      document.docs[0].ref.update({
+        messageIsReceived: true,
+        statusSMS: SMSStatusType.DELIVERED,
+        modifiedAt: new Date()
+      });
+    }
+
+    response.send('ok');
+  } catch (error) {
+    console.log(error);
+    console.log(JSON.stringify(error));
+    response.send('Error');
+  }
+});
 
 export const participatiOnCreate = functions.firestore
   .document('PROD_participations/{participationId}')
@@ -539,6 +570,6 @@ export const visibilityChange = functions.https.onRequest(async (request, respon
   } catch (error) {
     console.log(error);
     console.log(JSON.stringify(error));
-    response.send('Errore');
+    response.send('Error');
   }
 });
