@@ -59,7 +59,7 @@ export class TicketManualValidationComponent {
   ngOnInit(): void {
     this.eventUid = this.route.snapshot.queryParams['event'];
     if (!this.eventUid) {
-      this.toastService.showErrorMessage('Errore: parametri non validi');
+      this.toastService.showErrorMessage('Parametri non validi');
       this.userService.logout();
     }
   }

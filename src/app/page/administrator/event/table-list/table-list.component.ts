@@ -81,7 +81,7 @@ export class TableListComponent implements OnInit {
   /* To get the event date */
   getEventDate(): void {
     if (!this.eventUid) {
-      throw new Error('Errore: parametri non validi');
+      throw new Error('Parametri non validi');
     }
 
     this.eventService
@@ -98,7 +98,7 @@ export class TableListComponent implements OnInit {
   /* To get the list of tables */
   getTables(): void {
     if (!this.eventUid || !this.employeeUid) {
-      throw new Error('Errore: parametri non validi');
+      throw new Error('Parametri non validi');
     }
 
     const that = this;
@@ -120,7 +120,7 @@ export class TableListComponent implements OnInit {
 
   getAssignments(): void {
     if (!this.eventUid) {
-      throw new Error('Errore: parametri non validi');
+      throw new Error('Parametri non validi');
     }
 
     const that = this;

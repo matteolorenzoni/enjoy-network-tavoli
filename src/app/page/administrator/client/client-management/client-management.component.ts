@@ -95,7 +95,7 @@ export class ClientManagementComponent {
     const text = 'Sei sicuro di voler rimuovere il cliente?';
     if (window.confirm(text) === true) {
       if (!this.client) {
-        throw new Error('Errore: parametri non validi');
+        throw new Error('Parametri non validi');
       }
 
       this.clientService

@@ -146,7 +146,7 @@ export class EnItemEventComponent {
     const text = 'Sei sicuro di voler eliminare questo evento?';
     if (window.confirm(text) === true) {
       if (!this.event) {
-        throw new Error('Errore: parametri non validi');
+        throw new Error('Parametri non validi');
       }
 
       this.eventService

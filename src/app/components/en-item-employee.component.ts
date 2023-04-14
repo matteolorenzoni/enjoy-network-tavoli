@@ -69,7 +69,7 @@ export class EnItemEmployeeComponent {
     const text = 'Sei sicuro di voler eliminare questo dipendente?';
     if (window.confirm(text) === true) {
       if (!this.employeeUid) {
-        throw new Error('Errore: parametri non validi');
+        throw new Error('Parametri non validi');
       }
 
       this.employeeService

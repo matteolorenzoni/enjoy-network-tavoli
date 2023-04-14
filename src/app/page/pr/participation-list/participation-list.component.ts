@@ -76,7 +76,7 @@ export class ParticipationListComponent implements OnInit {
   getAssignment(): void {
     /* Check if the parameters are valid */
     if (!this.eventUid || !this.tableUid) {
-      throw new Error('Errore: parametri non validi');
+      throw new Error('Parametri non validi');
     }
 
     const that = this;
@@ -100,7 +100,7 @@ export class ParticipationListComponent implements OnInit {
   getParticipations(): void {
     /* Check if the parameters are valid */
     if (!this.eventUid || !this.tableUid) {
-      throw new Error('Errore: parametri non validi');
+      throw new Error('Parametri non validi');
     }
     const that = this;
     this.participationsSubscription = this.participationService

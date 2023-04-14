@@ -77,7 +77,7 @@ export class AssignmentListComponent {
   /* -------------------------------------- HTTP Methods -------------------------------------- */
   getEventMaxPerson(): void {
     if (!this.eventUid) {
-      throw new Error('Errore: parametri non validi');
+      throw new Error('Parametri non validi');
     }
 
     this.eventService

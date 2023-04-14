@@ -129,7 +129,7 @@ export class EnItemParticipationComponent {
     const text = 'Sei sicuro di voler rimuovere la partecipazione?';
     if (window.confirm(text) === true) {
       if (!this.eventUid || !this.employeeUid || !this.participation.uid) {
-        throw new Error('Errore: parametri non validi');
+        throw new Error('Parametri non validi');
       }
 
       this.participationService

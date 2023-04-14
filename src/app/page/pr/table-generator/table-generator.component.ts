@@ -53,7 +53,7 @@ export class TableGeneratorComponent implements OnInit {
     this.tableUid = this.tableUid === 'null' ? null : this.tableUid;
 
     if (!this.eventUid || !this.employeeUid || !this.tableUid) {
-      throw new Error('Errore: parametri non validi');
+      throw new Error('Parametri non validi');
     }
 
     if (this.tableUid) {
@@ -82,7 +82,7 @@ export class TableGeneratorComponent implements OnInit {
 
     /* Check if the uids are valid */
     if (!this.eventUid || !this.employeeUid) {
-      throw new Error('Errore: parametri non validi');
+      throw new Error('Parametri non validi');
     }
 
     const { name, price, hour, drinkList } = this.tableForm.value;

@@ -143,7 +143,7 @@ export class ClientGeneratorComponent implements OnInit {
 
   public async addParticipation(client: Client): Promise<void> {
     if (!this.eventUid || !this.employeeUid || !this.tableUid) {
-      throw new Error('Errore: parametri non validi');
+      throw new Error('Parametri non validi');
     }
 
     try {

@@ -119,7 +119,7 @@ export class EnItemTableComponent {
     const text = 'Sei sicuro di voler rimuovere il tavolo?';
     if (window.confirm(text) === true) {
       if (!this.table) {
-        throw new Error('Errore: parametri non validi');
+        throw new Error('Parametri non validi');
       }
 
       this.tableService
