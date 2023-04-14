@@ -1,4 +1,4 @@
-import { ParticipationType, RoleType, SMSErrorType } from './enum';
+import { ParticipationType, RoleType, SMSErrorType, SMSStatusType } from './enum';
 
 export type EventDTO = {
   imageUrl: string;
@@ -64,7 +64,7 @@ export type ParticipationDTO = {
   scannedAt?: Date;
   scannedFrom?: string;
   messageIsReceived: boolean;
-  errorIfMessageIsNotReceived?: SMSErrorType;
+  statusSMS: SMSErrorType | SMSStatusType;
   isActive: boolean;
   createdAt?: Date;
   modifiedAt?: Date;

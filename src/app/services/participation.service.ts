@@ -3,12 +3,12 @@ import { Injectable } from '@angular/core';
 import { orderBy, QueryConstraint, where } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
+import { SMSStatusType, ParticipationType } from '../models/enum';
 import { Client, Participation } from '../models/type';
 import { participationConverter } from '../models/converter';
 import { FirebaseCreateService } from './firebase/firebase-crud/firebase-create.service';
 import { FirebaseReadService } from './firebase/firebase-crud/firebase-read.service';
 import { FirebaseUpdateService } from './firebase/firebase-crud/firebase-update.service';
-import { ParticipationType } from '../models/enum';
 
 @Injectable({
   providedIn: 'root'
@@ -51,7 +51,8 @@ export class ParticipationService {
           phone: client.props.phone,
           isScanned: false,
           isActive: true,
-          messageIsReceived: false
+          messageIsReceived: false,
+          statusSMS: SMSStatusType.NOTDELIVERED
         }
       };
 
