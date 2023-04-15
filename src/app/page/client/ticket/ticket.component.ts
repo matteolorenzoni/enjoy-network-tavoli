@@ -5,7 +5,6 @@ import { EventService } from 'src/app/services/event.service';
 import { TableService } from 'src/app/services/table.service';
 import { ToastService } from 'src/app/services/toast.service';
 import { Event, Participation, Table } from 'src/app/models/type';
-import { ParticipationType } from 'src/app/models/enum';
 
 @Component({
   selector: 'app-ticket',
@@ -22,7 +21,6 @@ export class TicketComponent implements OnInit {
   /* Participation */
   participationUid?: string;
   participation!: Participation;
-  isFidelity = false;
 
   /* QrCode */
   qrdata = '';
@@ -53,7 +51,6 @@ export class TicketComponent implements OnInit {
       .getParticipationByUid(this.participationUid as string)
       .then((participation) => {
         this.participation = participation;
-        this.isFidelity = this.participation.props.type === ParticipationType.FIDELITY;
 
         this.getEvent(this.participation.props.eventUid);
         this.getTable(this.participation.props.tableUid);

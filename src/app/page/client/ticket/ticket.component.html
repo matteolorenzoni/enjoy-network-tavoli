@@ -28,12 +28,8 @@
         <span>Telefono: </span>
         <span>{{ participation.props.phone }}</span>
       </p>
-      <p
-        [ngClass]="{ 'my-2 animate-pulse rounded px-4': isFidelity }"
-        class="py-4 text-center text-xl uppercase text-white">
-        <span *ngIf="isFidelity" class="event-name">🎉</span>
+      <p class="py-4 text-center text-xl uppercase text-white">
         {{ table.props.name }}
-        <span *ngIf="isFidelity">🎉</span>
       </p>
       <p class="text-slate-400">
         Questo è il tuo QrCode per la serata
