@@ -26,6 +26,14 @@ export class EmployeeService {
   ) {}
 
   /* ------------------------------------------- GET ------------------------------------------- */
+  public async getEmployees(): Promise<Employee[]> {
+    const employees: Employee[] = await this.firebaseReadService.getAllDocuments(
+      environment.collection.EMPLOYEES,
+      employeeConverter
+    );
+    return employees;
+  }
+
   public async getEmployee(employeeUid: string): Promise<Employee> {
     const employee: Employee = await this.firebaseReadService.getDocumentByUid(
       environment.collection.EMPLOYEES,

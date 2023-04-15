@@ -23,6 +23,14 @@ export class EventService {
   ) {}
 
   /* ------------------------------------------- GET ------------------------------------------- */
+  public async getEvents(): Promise<Event[]> {
+    const events: Event[] = await this.firebaseReadService.getAllDocuments(
+      environment.collection.EVENTS,
+      eventConverter
+    );
+    return events;
+  }
+
   public async getEvent(eventUid: string): Promise<Event> {
     const event = await this.firebaseReadService.getDocumentByUid(
       environment.collection.EVENTS,

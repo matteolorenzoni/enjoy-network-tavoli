@@ -19,6 +19,14 @@ export class AssignmentService {
   ) {}
 
   /* ------------------------------------------- GET ------------------------------------------- */
+  public async getAssignments(): Promise<Assignment[]> {
+    const assignments: Assignment[] = await this.firebaseReadService.getAllDocuments(
+      environment.collection.ASSIGNMENTS,
+      assignmentConverter
+    );
+    return assignments;
+  }
+
   public async getActiveAssignmentsByEmployeeUid(employeeUid: string): Promise<Assignment[]> {
     const employeeUidConstraint: QueryConstraint = where('employeeUid', '==', employeeUid);
     const isActiveConstraint: QueryConstraint = where('isActive', '==', true);
