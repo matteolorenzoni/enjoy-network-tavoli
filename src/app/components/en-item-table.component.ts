@@ -17,8 +17,10 @@ import { UserService } from '../services/user.service';
       class="group flex h-16 w-full items-center justify-between gap-4 overflow-hidden rounded-lg p-2 hover:cursor-pointer active:bg-slate-900"
       (click)="goToClient()">
       <div class="flex grow flex-col truncate sm:flex-row sm:items-center sm:gap-4">
-        <fa-icon *ngIf="isFidelityTable" class="text-yellow-500" [icon]="crownIcon"></fa-icon>
-        <p class="truncate text-slate-300">{{ table.props.name }}</p>
+        <p class="truncate text-slate-300">
+          <fa-icon *ngIf="isFidelityTable" class="mr-1 text-yellow-500" [icon]="crownIcon"></fa-icon>
+          {{ table.props.name }}
+        </p>
         <p *ngIf="employeeIsAdmin" class="text-[10px] text-slate-400 sm:text-sm">
           {{ employeeOwnTable?.props?.name }} {{ employeeOwnTable?.props?.lastName }}
         </p>
