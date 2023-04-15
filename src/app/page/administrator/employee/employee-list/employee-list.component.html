@@ -10,7 +10,7 @@
     <!-- Admin -->
     <article class="rounded-lg bg-slate-900 p-2">
       <p class="rounded text-center uppercase text-slate-300">Admin</p>
-      <ul [@staggeredFadeInIncrement]="employeesAdmin.length" class="flex flex-col divide-y divide-gray-700">
+      <ul [@staggeredFadeInIncrement]="employeesAdmin.length" class="flex flex-col">
         <en-item-employee *ngFor="let employee of employeesAdmin" [employee]="employee"></en-item-employee>
       </ul>
     </article>
@@ -18,7 +18,7 @@
     <!-- Inspector -->
     <article class="rounded-lg bg-slate-900 p-2">
       <p class="rounded text-center uppercase text-slate-300">Ispettori</p>
-      <ul [@staggeredFadeInIncrement]="employeesInspector.length" class="flex flex-col divide-y divide-gray-700">
+      <ul [@staggeredFadeInIncrement]="employeesInspector.length" class="flex flex-col">
         <en-item-employee *ngFor="let employee of employeesInspector" [employee]="employee"></en-item-employee>
       </ul>
     </article>
@@ -26,7 +26,7 @@
     <!-- Pr -->
     <article class="rounded-lg bg-slate-900 p-2">
       <p class="rounded text-center uppercase text-slate-300">Pr</p>
-      <ul [@staggeredFadeInIncrement]="employeesPr.length" class="flex flex-col divide-y divide-gray-700">
+      <ul [@staggeredFadeInIncrement]="employeesPr.length" class="flex flex-col">
         <en-item-employee *ngFor="let employee of employeesPr" [employee]="employee"></en-item-employee>
       </ul>
     </article>
