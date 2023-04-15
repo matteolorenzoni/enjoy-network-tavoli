@@ -1,1 +1,27 @@
-<p>statistics works!</p>
+<div *ngIf="displayChartEvent" class="mx-auto mb-12 max-w-xl rounded-lg bg-slate-900 p-4 sm:mb-20 sm:bg-transparent">
+  <p class="mb-4 rounded-lg bg-slate-800 py-1 text-center uppercase text-slate-300">Eventi</p>
+  <div class="m-auto">
+    <canvas
+      baseChart
+      [type]="'pie'"
+      [datasets]="pieChartDatasetsEvent"
+      [labels]="pieChartLabelsEvent"
+      [options]="pieChartOptions"
+      [plugins]="pieChartPlugins">
+    </canvas>
+  </div>
+</div>
+
+<div *ngIf="displayChartEvent" class="mx-auto mb-12 max-w-lg rounded-lg bg-slate-900 p-4 sm:mb-20 sm:bg-transparent">
+  <p class="mb-4 rounded-lg bg-slate-800 py-1 text-center uppercase text-slate-300">Dipendenti</p>
+  <div>
+    <canvas
+      baseChart
+      [type]="'pie'"
+      [datasets]="pieChartDatasetsEmployee"
+      [labels]="pieChartLabelsEmployee"
+      [options]="pieChartOptions"
+      [plugins]="pieChartPlugins">
+    </canvas>
+  </div>
+</div>
