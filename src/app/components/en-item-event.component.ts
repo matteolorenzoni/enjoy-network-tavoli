@@ -15,8 +15,8 @@ import { FileGeneratorService } from '../services/file-generator.service';
   selector: 'en-item-event[event]',
   template: `
     <li class="my-4 mx-auto w-full overflow-hidden rounded-lg bg-slate-900 md:w-3/5">
-      <div role="button" class="relative hover:cursor-pointer" (click)="toggleOpen()">
-        <img [src]="event.props.imageUrl" [alt]="dateFormatted + '_image'" class="aspect-square object-contain " />
+      <div role="button" class="center relative aspect-square h-full hover:cursor-pointer" (click)="toggleOpen()">
+        <img [src]="event.props.imageUrl" [alt]="dateFormatted + '_image'" class="rounded-lg" />
         <div
           [@fadeInAnimation]
           *ngIf="false"
