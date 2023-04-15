@@ -1,6 +1,15 @@
 import { Component, Input, SimpleChanges } from '@angular/core';
-import { faCircleCheck, faCircleXmark, faPen, faTrash } from '@fortawesome/free-solid-svg-icons';
-import { EmployeeDTO } from '../models/collection';
+import {
+  faCircleCheck,
+  faCircleXmark,
+  faCrown,
+  faMagnifyingGlass,
+  faPen,
+  faTrash,
+  faUserTie,
+  IconDefinition
+} from '@fortawesome/free-solid-svg-icons';
+import { RoleType } from '../models/enum';
 import { Employee } from '../models/type';
 import { EmployeeService } from '../services/employee.service';
 import { ToastService } from '../services/toast.service';
@@ -9,21 +18,21 @@ import { ToastService } from '../services/toast.service';
   selector: 'en-item-employee[employee]',
   template: `
     <li class="flex h-14 items-center gap-2 text-slate-300">
-      <ng-container *ngIf="employeeProps.isActive; else elseTemplate">
+      <ng-container *ngIf="employee.props.isActive; else elseTemplate">
         <fa-icon [icon]="activeIcon" class="text-emerald-600"></fa-icon>
       </ng-container>
       <ng-template #elseTemplate>
         <fa-icon [icon]="notActiveIcon" class="text-red-600"></fa-icon>
       </ng-template>
-      <div class="center mx-2 w-full shrink-0 basis-20 rounded bg-primary-60/70 text-white">
-        {{ employeeProps.role | uppercase | slice: 0:5 }}
+      <div class="center mx-2 w-full shrink-0 basis-20 rounded bg-slate-800 text-white">
+        <fa-icon [icon]="employeeRoleIcon"></fa-icon>
       </div>
-      <div class="shrink truncate">{{ employeeProps.name }} {{ employeeProps.lastName }}</div>
+      <div class="shrink truncate">{{ employee.props.name }} {{ employee.props.lastName }}</div>
       <div class="ml-auto flex shrink-0 gap-4 px-1">
         <fa-icon
           [icon]="modifyIcon"
           class="transition duration-150 ease-in-out hover:cursor-pointer active:scale-90 active:text-slate-500"
-          [routerLink]="['./', employeeUid]"></fa-icon>
+          [routerLink]="['./', employee.uid]"></fa-icon>
         <fa-icon
           [icon]="deleteIcon"
           role="button"
@@ -48,18 +57,28 @@ export class EnItemEmployeeComponent {
   notActiveIcon = faCircleXmark;
   modifyIcon = faPen;
   deleteIcon = faTrash;
+  adminIcon = faCrown;
+  employeeIcon = faUserTie;
+  inspectorIcon = faMagnifyingGlass;
 
-  // TODO: capire se questa parte si puo rimuovere e restituire direttamente il valore
   /* Employee */
-  employeeUid = '';
-  employeeProps!: EmployeeDTO;
+  employeeRoleIcon!: IconDefinition;
 
   constructor(private employeeService: EmployeeService, private toastService: ToastService) {}
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['employee']) {
-      this.employeeUid = this.employee.uid;
-      this.employeeProps = this.employee.props;
+      switch (this.employee.props.role) {
+        case RoleType.ADMINISTRATOR:
+          this.employeeRoleIcon = this.adminIcon;
+          break;
+        case RoleType.PR:
+          this.employeeRoleIcon = this.employeeIcon;
+          break;
+        default:
+          this.employeeRoleIcon = this.inspectorIcon;
+          break;
+      }
     }
   }
 
@@ -68,12 +87,12 @@ export class EnItemEmployeeComponent {
 
     const text = 'Sei sicuro di voler eliminare questo dipendente?';
     if (window.confirm(text) === true) {
-      if (!this.employeeUid) {
+      if (!this.employee) {
         throw new Error('Parametri non validi');
       }
 
       this.employeeService
-        .deleteEmployee(this.employeeUid)
+        .deleteEmployee(this.employee.uid)
         .then(() => {
           this.toastService.showSuccess('Dipendente eliminato');
         })
