@@ -2,6 +2,7 @@ import { Employee, Assignment, Event } from 'src/app/models/type';
 import { Component } from '@angular/core';
 import { EventService } from 'src/app/services/event.service';
 import { ChartDataset, ChartOptions } from 'chart.js';
+import { RoleType } from 'src/app/models/enum';
 import { ToastService } from '../../services/toast.service';
 import { AssignmentService } from '../../services/assignment.service';
 import { EmployeeService } from '../../services/employee.service';
@@ -14,6 +15,7 @@ import { EmployeeService } from '../../services/employee.service';
 export class StatisticsComponent {
   /* Employee */
   employees: Employee[] = [];
+  employeesPr: Employee[] = [];
 
   /* Event */
   events: Event[] = [];
@@ -83,6 +85,9 @@ export class StatisticsComponent {
     try {
       this.events = await this.eventService.getEvents();
       this.employees = await this.employeeService.getEmployees();
+      this.employeesPr = this.employees.filter(
+        (employee: Employee) => employee.props.role === RoleType.PR && employee.props.name !== '---'
+      );
       this.assignments = await this.assignmentService.getAssignments();
 
       /* Chart event */
@@ -97,19 +102,21 @@ export class StatisticsComponent {
       this.displayChartEvent = true;
 
       /* Employee employee */
-      this.employees.forEach((employee: Employee) => {
-        const tmp = this.assignments
-          .filter((assignment: Assignment) => assignment.props.employeeUid === employee.uid)
-          .reduce((acc: number, assignment: Assignment) => acc + assignment.props.personMarked, 0);
-
-        if (tmp > 0) {
-          this.pieChartLabelsEmployee.push(`${employee.props.name} ${employee.props.lastName}`);
-          this.pieChartDatasetsEmployee[0].data.push(tmp);
-        }
+      this.employeesPr.forEach((employee: Employee) => {
+        this.pieChartLabelsEmployee.push(`${employee.props.name} ${employee.props.lastName}`);
+        this.pieChartDatasetsEmployee[0].data.push(
+          this.assignments
+            .filter((assignment: Assignment) => assignment.props.employeeUid === employee.uid)
+            .reduce((acc: number, assignment: Assignment) => acc + assignment.props.personMarked, 0)
+        );
       });
       this.displayChartEmployee = true;
     } catch (error: any) {
       this.toastService.showError(error);
     }
+  }
+
+  onEmployeeSelected(event: any): void {
+    console.log(event);
   }
 }
