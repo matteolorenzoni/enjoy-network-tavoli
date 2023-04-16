@@ -5,6 +5,7 @@ import { DocumentData, DocumentReference, DocumentSnapshot } from 'firebase-admi
 import { ParticipationDTO, EventDTO, TableDTO, AssignmentDTO, ClientDTO } from './collection';
 import { ShorterUrlResponse, SMS, SMSResponse } from './type';
 import { SMSStatusType } from './enum';
+import { logger } from 'firebase-functions';
 
 admin.initializeApp();
 
@@ -51,7 +52,7 @@ export const testParticipatiOnCreate = functions.firestore
           modifiedAt: new Date()
         });
     } catch (error) {
-      console.error(JSON.stringify(error));
+      logger.error(error);
     }
   });
 
@@ -120,7 +121,7 @@ export const testParticipatiOnUpdate = functions.firestore
         }
       }
     } catch (error) {
-      console.error(JSON.stringify(error));
+      logger.error(error);
     }
   });
 
@@ -149,7 +150,7 @@ export const testAssignmentOnUpdate = functions.firestore.document('assignments/
       return change.after.ref;
     }
   } catch (error) {
-    console.error(JSON.stringify(error));
+    logger.error(error);
     return null;
   }
 });
@@ -168,7 +169,7 @@ export const testClientOnUpdate = functions.firestore.document('clients/{clientI
     });
     await batch.commit();
   } catch (error) {
-    console.error(JSON.stringify(error));
+    logger.error(error);
   }
 });
 
@@ -186,7 +187,7 @@ export const testClientOnDelete = functions.firestore.document('clients/{clientI
     });
     await batch.commit();
   } catch (error) {
-    console.error(JSON.stringify(error));
+    logger.error(error);
   }
 });
 
@@ -206,8 +207,8 @@ export const testVisibilityChange = functions.https.onRequest(async (request, re
 
   //   response.send('ok');
   // } catch (error) {
-  //   console.log(error);
-  //   console.log(JSON.stringify(error));
+  // logger.error(error);
+  // response.status(500).send('Errore, contattare staffer');
   // }
   try {
     const participation = request.query.participation as string;
@@ -234,14 +235,13 @@ export const testVisibilityChange = functions.https.onRequest(async (request, re
     // res send 200
     response.send('Partecipazioni scannerizzate');
   } catch (error) {
-    console.log(error);
-    console.log(JSON.stringify(error));
-    response.send('Error');
+    logger.error(error);
+    response.status(500).send('Errore, contattare staffer');
   }
 });
 
 /* -------------------------------------------------------------------------------------------------------------------------------
--------------------------------------------------------- PRO --------------------------------------------------------------------
+-------------------------------------------------------- PROD --------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------------- */
 export const sendSms = functions.firestore
   .document('PROD_participations/{participationId}')
@@ -303,7 +303,7 @@ export const sendSms = functions.firestore
         });
       }
     } catch (error) {
-      console.error(JSON.stringify(error));
+      logger.error(error);
     }
   });
 
@@ -335,9 +335,8 @@ export const receiveSms = functions.https.onRequest(async (request, response) =>
 
     response.send('ok');
   } catch (error) {
-    console.log(error);
-    console.log(JSON.stringify(error));
-    response.send('Error');
+    logger.error(error);
+    response.status(500).send('Errore, contattare staffer');
   }
 });
 
@@ -381,7 +380,7 @@ export const participatiOnCreate = functions.firestore
           modifiedAt: new Date()
         });
     } catch (error) {
-      console.error(JSON.stringify(error));
+      logger.error(error);
     }
   });
 
@@ -450,7 +449,7 @@ export const participatiOnUpdate = functions.firestore
         }
       }
     } catch (error) {
-      console.error(JSON.stringify(error));
+      logger.error(error);
     }
   });
 
@@ -479,7 +478,7 @@ export const assignmentOnUpdate = functions.firestore.document('PROD_assignments
       return change.after.ref;
     }
   } catch (error) {
-    console.error(JSON.stringify(error));
+    logger.error(error);
     return null;
   }
 });
@@ -500,7 +499,7 @@ export const clientOnUpdate = functions.firestore.document('PROD_clients/{client
     });
     await batch.commit();
   } catch (error) {
-    console.error(JSON.stringify(error));
+    logger.error(error);
   }
 });
 
@@ -540,8 +539,8 @@ export const visibilityChange = functions.https.onRequest(async (request, respon
 
   //   response.send('ok');
   // } catch (error) {
-  //   console.log(error);
-  //   console.log(JSON.stringify(error));
+  // logger.error(error);
+  // response.status(500).send('Errore, contattare staffer');
   // }
   try {
     const participation = request.query.participation as string;
@@ -568,8 +567,7 @@ export const visibilityChange = functions.https.onRequest(async (request, respon
     // res send 200
     response.send('Partecipazioni scannerizzate');
   } catch (error) {
-    console.log(error);
-    console.log(JSON.stringify(error));
-    response.send('Error');
+    logger.error(error);
+    response.status(500).send('Errore, contattare staffer');
   }
 });
