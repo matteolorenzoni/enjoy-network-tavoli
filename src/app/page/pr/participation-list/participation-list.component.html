@@ -6,7 +6,7 @@
     <fa-icon [icon]="filterIcon" class="mr-2"></fa-icon>
     FILTRI
   </button>
-  <ul [@staggeredFadeInIncrement]="participations.length" class="flex flex-col divide-y divide-gray-700">
+  <ul [@staggeredFadeInIncrement]="participations.length" class="flex flex-col gap-2">
     <en-item-participation *ngFor="let item of participations" [participation]="item"></en-item-participation>
   </ul>
   <div
