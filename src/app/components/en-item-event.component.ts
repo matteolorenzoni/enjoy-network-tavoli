@@ -32,16 +32,7 @@ import { FileGeneratorService } from '../services/file-generator.service';
         </div>
       </div>
       <div [@expandEventItemDetailsAnimation] *ngIf="isOpen" class="overflow-hidden bg-slate-900 p-2 text-white">
-        <ul class="divide-y divide-slate-700">
-          <li *ngFor="let info of eventInfo" class="flex items-center px-2 py-1">
-            <div
-              class="flex shrink-0 basis-32 items-center justify-start whitespace-normal break-all text-sm font-semibold uppercase text-primary-50">
-              {{ info.label }}
-            </div>
-            <div class="whitespace-pre-wrap text-base font-normal text-slate-300 ">{{ info.value }}</div>
-          </li>
-        </ul>
-        <ul class="mt-4 flex gap-2">
+        <ul class="flex gap-2">
           <li
             *ngFor="let icon of itemNavigationMenu"
             [routerLink]="icon.link"
@@ -80,6 +71,15 @@ import { FileGeneratorService } from '../services/file-generator.service';
           (click)="deleteEvent($event)">
           ELIMINA
         </button>
+        <ul class="mt-4 divide-y divide-slate-700">
+          <li *ngFor="let info of eventInfo" class="flex items-center px-2 py-1">
+            <div
+              class="flex shrink-0 basis-32 items-center justify-start whitespace-normal break-all text-sm font-semibold uppercase text-primary-50">
+              {{ info.label }}
+            </div>
+            <div class="whitespace-pre-wrap text-base font-normal text-slate-300 ">{{ info.value }}</div>
+          </li>
+        </ul>
       </div>
     </li>
   `,
