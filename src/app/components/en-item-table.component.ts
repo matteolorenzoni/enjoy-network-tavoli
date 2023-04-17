@@ -14,19 +14,19 @@ import { UserService } from '../services/user.service';
   template: `
     <li
       role="button"
-      class="group flex h-16 w-full items-center justify-between gap-4 overflow-hidden rounded-lg p-2 hover:cursor-pointer active:bg-slate-900"
+      class="uration-150 group flex w-full items-center justify-between gap-4 overflow-hidden rounded-lg py-4 ease-in-out hover:cursor-pointer active:scale-95"
       (click)="goToClient()">
       <div class="flex grow flex-col truncate sm:flex-row sm:items-center sm:gap-4">
         <p class="truncate text-slate-300">
           <fa-icon *ngIf="isFidelityTable" class="mr-1 text-yellow-500" [icon]="crownIcon"></fa-icon>
           {{ table.props.name }}
         </p>
-        <p *ngIf="employeeIsAdmin" class="text-[10px] text-slate-400 sm:text-sm">
+        <p *ngIf="employeeIsAdmin" class="truncate text-[10px] text-slate-400 sm:text-sm">
           {{ employeeOwnTable?.props?.name }} {{ employeeOwnTable?.props?.lastName }}
         </p>
       </div>
       <div class="h-full shrink-0">
-        <p class="center m-auto h-full rounded-lg bg-neutral px-6 text-center text-slate-300">
+        <p class="center m-auto h-full rounded-lg bg-neutral px-5 py-3 text-center text-slate-300">
           {{ table.props.personsActive }}
         </p>
       </div>
