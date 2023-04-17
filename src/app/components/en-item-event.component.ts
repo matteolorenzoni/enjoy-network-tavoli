@@ -31,48 +31,53 @@ import { FileGeneratorService } from '../services/file-generator.service';
           </p>
         </div>
       </div>
-      <div [@expandEventItemDetailsAnimation] *ngIf="isOpen" class="overflow-hidden bg-slate-900 p-2 text-white">
-        <ul class="flex gap-2">
-          <li
-            *ngFor="let icon of itemNavigationMenu"
-            [routerLink]="icon.link"
-            class="flex w-1/3 flex-col items-center rounded bg-primary-65 p-1 transition duration-150 ease-in-out hover:cursor-pointer active:scale-90 active:bg-primary-50 active:shadow-lg">
-            <a><fa-icon [icon]="icon.definition"></fa-icon></a>
-            <span class="text-xs xs:text-sm">{{ icon.name }}</span>
-          </li>
-        </ul>
-        <div class="flex gap-2">
+      <div
+        [@expandEventItemDetailsAnimation]
+        *ngIf="isOpen"
+        class="flex flex-col gap-4 overflow-hidden bg-slate-900 p-4 text-white">
+        <div>
+          <ul class="flex gap-2">
+            <li
+              *ngFor="let icon of itemNavigationMenu"
+              [routerLink]="icon.link"
+              class="flex w-1/3 flex-col items-center rounded bg-primary-65 p-1 transition duration-150 ease-in-out hover:cursor-pointer active:scale-90 active:bg-primary-50 active:shadow-lg">
+              <a><fa-icon [icon]="icon.definition"></fa-icon></a>
+              <span class="text-xs xs:text-sm">{{ icon.name }}</span>
+            </li>
+          </ul>
+          <div class="flex gap-2">
+            <button
+              type="button"
+              role="button"
+              class="mt-2 inline-block w-full rounded bg-cyan-600 px-6 py-2.5 text-xs font-extrabold uppercase shadow-md transition duration-150 ease-in-out hover:cursor-pointer active:scale-90 active:bg-cyan-800"
+              (click)="downloadPDFTables()">
+              PDF Tavoli
+            </button>
+            <button
+              type="button"
+              role="button"
+              class="mt-2 inline-block w-full rounded bg-cyan-600 px-6 py-2.5 text-xs font-extrabold uppercase shadow-md transition duration-150 ease-in-out hover:cursor-pointer active:scale-90 active:bg-cyan-800"
+              (click)="downloadPDFParticipants()">
+              PDF Partecipanti
+            </button>
+          </div>
           <button
             type="button"
             role="button"
-            class="mt-2 inline-block w-full rounded bg-cyan-600 px-6 py-2.5 text-xs font-extrabold uppercase shadow-md transition duration-150 ease-in-out hover:cursor-pointer active:scale-90 active:bg-cyan-800"
-            (click)="downloadPDFTables()">
-            PDF Tavoli
+            class="mt-2 inline-block w-full rounded bg-indigo-600 px-6 py-2.5 text-xs font-extrabold uppercase shadow-md transition duration-150 ease-in-out hover:cursor-pointer active:scale-90 active:bg-indigo-800"
+            (click)="showMessageNotSend()">
+            Messaggi non inviati
           </button>
           <button
             type="button"
             role="button"
-            class="mt-2 inline-block w-full rounded bg-cyan-600 px-6 py-2.5 text-xs font-extrabold uppercase shadow-md transition duration-150 ease-in-out hover:cursor-pointer active:scale-90 active:bg-cyan-800"
-            (click)="downloadPDFParticipants()">
-            PDF Partecipanti
+            class="mt-2 inline-block w-full rounded bg-red-600 px-6 py-2.5 text-xs font-extrabold uppercase shadow-md transition duration-150 ease-in-out hover:cursor-pointer active:scale-90 active:bg-red-800"
+            (click)="deleteEvent($event)">
+            ELIMINA
           </button>
         </div>
-        <button
-          type="button"
-          role="button"
-          class="mt-2 inline-block w-full rounded bg-indigo-600 px-6 py-2.5 text-xs font-extrabold uppercase shadow-md transition duration-150 ease-in-out hover:cursor-pointer active:scale-90 active:bg-indigo-800"
-          (click)="showMessageNotSend()">
-          Messaggi non inviati
-        </button>
-        <button
-          type="button"
-          role="button"
-          class="mt-2 inline-block w-full rounded bg-red-600 px-6 py-2.5 text-xs font-extrabold uppercase shadow-md transition duration-150 ease-in-out hover:cursor-pointer active:scale-90 active:bg-red-800"
-          (click)="deleteEvent($event)">
-          ELIMINA
-        </button>
-        <ul class="mt-4 divide-y divide-slate-700">
-          <li *ngFor="let info of eventInfo" class="flex items-center px-2 py-1">
+        <ul class="divide-y divide-slate-800">
+          <li *ngFor="let info of eventInfo" class="flex items-center py-1">
             <div
               class="flex shrink-0 basis-32 items-center justify-start whitespace-normal break-all text-sm font-semibold uppercase text-primary-50">
               {{ info.label }}
