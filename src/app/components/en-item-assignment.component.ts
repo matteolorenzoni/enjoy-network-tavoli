@@ -85,6 +85,9 @@ export class EnItemAssignmentComponent {
       .subscribe((newPersonAssigned) => {
         if (!this.ea.assignment) return;
 
+        /* Check if the value is different from the previous one */
+        if (this.ea.assignment.props.maxPersonMarkable === newPersonAssigned) return;
+
         if (!newPersonAssigned) {
           this.formPersonAssigned.setValue(this.ea.assignment.props.maxPersonMarkable);
           this.toastService.showErrorMessage('Il valore deve essere un numero');
@@ -94,31 +97,30 @@ export class EnItemAssignmentComponent {
         if (newPersonAssigned < this.ea.assignment.props.personMarked) {
           this.formPersonAssigned.setValue(this.ea.assignment.props.maxPersonMarkable);
           this.toastService.showErrorMessage(
-            'Il valore non può essere inferiore al numero di persone che hanno già ricevuto il ticket'
+            newPersonAssigned < 0
+              ? 'Il valore non può essere negativo'
+              : 'Il valore non può essere inferiore al numero di persone che hanno già ricevuto il ticket'
           );
           return;
         }
 
-        /* Check if the value is different from the previous one */
-        if (this.ea.assignment.props.maxPersonMarkable !== newPersonAssigned) {
-          /* Check if the value is less than the max person */
-          const hypotheticalPersonAssigned =
-            this.ea.assignment.props.maxPersonMarkable + newPersonAssigned - this.ea.assignment.props.maxPersonMarkable;
-          if (hypotheticalPersonAssigned <= this.eventMaxPerson) {
-            /* Update the value */
-            this.assignmentService
-              .updateAssignmentPersonAssignedProp(this.ea.assignment.uid, newPersonAssigned)
-              .then(() => {
-                this.toastService.showSuccess('Elemento modificato');
-              })
-              .catch((err: Error) => {
-                this.toastService.showError(err);
-              });
-          } else {
-            /* Reset the value */
-            this.formPersonAssigned.setValue(this.ea.assignment.props.maxPersonMarkable);
-            this.toastService.showErrorMessage('Non puoi assegnare più persone di quelle disponibili');
-          }
+        /* Check if the value is less than the max person */
+        const hypotheticalPersonAssigned =
+          this.ea.assignment.props.maxPersonMarkable + newPersonAssigned - this.ea.assignment.props.maxPersonMarkable;
+        if (hypotheticalPersonAssigned <= this.eventMaxPerson) {
+          /* Update the value */
+          this.assignmentService
+            .updateAssignmentPersonAssignedProp(this.ea.assignment.uid, newPersonAssigned)
+            .then(() => {
+              this.toastService.showSuccess('Elemento modificato');
+            })
+            .catch((err: Error) => {
+              this.toastService.showError(err);
+            });
+        } else {
+          /* Reset the value */
+          this.formPersonAssigned.setValue(this.ea.assignment.props.maxPersonMarkable);
+          this.toastService.showErrorMessage('Non puoi assegnare più persone di quelle disponibili');
         }
       });
 
