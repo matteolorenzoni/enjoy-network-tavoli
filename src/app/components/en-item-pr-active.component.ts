@@ -8,7 +8,7 @@ import { ToastService } from '../services/toast.service';
 @Component({
   selector: 'en-item-pr-active[employee]',
   template: `
-    <li class="flex items-center gap-4 rounded py-4 px-4 text-slate-300">
+    <li class="flex flex-nowrap items-center rounded-md py-4 text-slate-300">
       <div class="shrink-0 basis-40 truncate xs:basis-48">{{ employee.props.name }} {{ employee.props.lastName }}</div>
       <div class="grow truncate">{{ employee.props.zone }}</div>
       <fa-icon
