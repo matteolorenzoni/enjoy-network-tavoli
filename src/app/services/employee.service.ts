@@ -89,14 +89,16 @@ export class EmployeeService {
 
     const employees: Employee[][] = await Promise.all(employeePromises);
 
-    return employees.flat();
+    // order by name and lastName
+    return employees.flat().sort((a, b) => a.props.name.localeCompare(b.props.name));
   }
 
   public async getEmployeesByRole(role: RoleType): Promise<Employee[]> {
-    const roleConstraint = where('role', '==', role);
-    const notNameConstraint = where('name', '!=', '---');
-    const nameOrderBy = orderBy('name', 'asc');
-    const constraints: QueryConstraint[] = [roleConstraint, notNameConstraint, nameOrderBy];
+    const roleConstraint: QueryConstraint = where('role', '==', role);
+    const notNameConstraint: QueryConstraint = where('name', '!=', '---');
+    const nameOrderBy: QueryConstraint = orderBy('name', 'asc');
+    const lastNameOrderBy: QueryConstraint = orderBy('lastName', 'asc');
+    const constraints: QueryConstraint[] = [roleConstraint, notNameConstraint, nameOrderBy, lastNameOrderBy];
     const employees: Employee[] = await this.firebaseReadService.getDocumentsByMultipleConstraints(
       environment.collection.EMPLOYEES,
       constraints,
