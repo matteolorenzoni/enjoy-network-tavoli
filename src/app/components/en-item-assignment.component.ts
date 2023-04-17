@@ -9,7 +9,7 @@ import { EmployeeAssignment } from '../models/type';
 
 @Component({
   selector: 'en-item-assignment[ea][eventMaxPerson]',
-  template: ` <li class="my-2 flex h-12 flex-nowrap items-center text-slate-300">
+  template: ` <li class="flex flex-nowrap items-center rounded-md py-4 text-slate-300">
     <div class="grow-2 basis-40 truncate sm:w-max">{{ ea.employee.props.name }} {{ ea.employee.props.lastName }}</div>
     <div class="hidden grow basis-20 text-sm sm:flex sm:basis-24">{{ ea.employee.props.zone | uppercase }}</div>
     <div class="flex basis-36 justify-end gap-1 ">
