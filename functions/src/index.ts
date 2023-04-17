@@ -125,6 +125,52 @@ export const testParticipatiOnUpdate = functions.firestore
     }
   });
 
+export const testParticipatiOnDelete = functions.firestore
+  .document('participations/{participationId}')
+  .onDelete(async (snap) => {
+    try {
+      /* Reduce table */
+      const participationDTO = snap.data() as ParticipationDTO;
+      const { tableUid, isScanned, isActive } = participationDTO;
+      const valueIsScanned = isScanned ? -1 : 0;
+      const valueIsActive = isActive ? -1 : 0;
+      await admin
+        .firestore()
+        .doc(`tables/${tableUid}`)
+        .update({
+          personsTotal: admin.firestore.FieldValue.increment(-1),
+          personsActive: admin.firestore.FieldValue.increment(valueIsActive),
+          personsScanned: admin.firestore.FieldValue.increment(valueIsScanned),
+          modifiedAt: new Date()
+        });
+
+      /* Reduce assignment */
+      const table = await admin.firestore().doc(`tables/${tableUid}`).get();
+      const tableDTO = table.data() as TableDTO;
+      const { eventUid, employeeUid } = tableDTO;
+
+      const assignmentDocument = await admin
+        .firestore()
+        .collection('assignments')
+        .where('eventUid', '==', eventUid)
+        .where('employeeUid', '==', employeeUid)
+        .get();
+
+      if (assignmentDocument.docs.length === 0) return;
+
+      const assignmentUid = assignmentDocument.docs[0].id as string;
+      await admin
+        .firestore()
+        .doc(`assignments/${assignmentUid}`)
+        .update({
+          personMarked: admin.firestore.FieldValue.increment(valueIsActive),
+          modifiedAt: new Date()
+        });
+    } catch (error) {
+      logger.error(error);
+    }
+  });
+
 export const testAssignmentOnUpdate = functions.firestore.document('assignments/{assignmentId}').onUpdate((change) => {
   try {
     const data = change.after.data() as AssignmentDTO;
@@ -453,6 +499,52 @@ export const participatiOnUpdate = functions.firestore
     }
   });
 
+export const participatiOnDelete = functions.firestore
+  .document('PROD_participations/{participationId}')
+  .onDelete(async (snap) => {
+    try {
+      /* Reduce table */
+      const participationDTO = snap.data() as ParticipationDTO;
+      const { tableUid, isScanned, isActive } = participationDTO;
+      const valueIsScanned = isScanned ? -1 : 0;
+      const valueIsActive = isActive ? -1 : 0;
+      await admin
+        .firestore()
+        .doc(`PROD_tables/${tableUid}`)
+        .update({
+          personsTotal: admin.firestore.FieldValue.increment(-1),
+          personsActive: admin.firestore.FieldValue.increment(valueIsActive),
+          personsScanned: admin.firestore.FieldValue.increment(valueIsScanned),
+          modifiedAt: new Date()
+        });
+
+      /* Reduce assignment */
+      const table = await admin.firestore().doc(`PROD_tables/${tableUid}`).get();
+      const tableDTO = table.data() as TableDTO;
+      const { eventUid, employeeUid } = tableDTO;
+
+      const assignmentDocument = await admin
+        .firestore()
+        .collection('PROD_assignments')
+        .where('eventUid', '==', eventUid)
+        .where('employeeUid', '==', employeeUid)
+        .get();
+
+      if (assignmentDocument.docs.length === 0) return;
+
+      const assignmentUid = assignmentDocument.docs[0].id as string;
+      await admin
+        .firestore()
+        .doc(`PROD_assignments/${assignmentUid}`)
+        .update({
+          personMarked: admin.firestore.FieldValue.increment(valueIsActive),
+          modifiedAt: new Date()
+        });
+    } catch (error) {
+      logger.error(error);
+    }
+  });
+
 export const assignmentOnUpdate = functions.firestore.document('PROD_assignments/{assignmentId}').onUpdate((change) => {
   try {
     const data = change.after.data() as AssignmentDTO;
@@ -569,5 +661,35 @@ export const visibilityChange = functions.https.onRequest(async (request, respon
   } catch (error) {
     logger.error(error);
     response.status(500).send('Errore, contattare staffer');
+  }
+});
+
+export const reSendSMS = functions.https.onRequest(async (request, response) => {
+  try {
+    const participationUid = request.query.participationUid as string;
+
+    const documentParticipation: DocumentSnapshot<DocumentData> = await admin
+      .firestore()
+      .doc(`PROD_participations/${participationUid}`)
+      .get();
+
+    if (!documentParticipation.exists) {
+      response.send({ message: 'Partecipazione non trovata' });
+      return;
+    }
+
+    const participationDTO = documentParticipation.data() as ParticipationDTO;
+    participationDTO.modifiedAt = new Date();
+
+    /* Delete participation */
+    await admin.firestore().doc(`PROD_participations/${participationUid}`).delete();
+
+    // Re-create participation
+    await admin.firestore().collection('PROD_participations').add(participationDTO);
+
+    response.status(200).send({ message: 'Eseguito nuovo tentativo' });
+  } catch (error) {
+    logger.error(error);
+    response.status(500).send({ message: 'Errore, contattare staffer' });
   }
 });
