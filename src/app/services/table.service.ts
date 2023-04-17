@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { QueryConstraint, where } from '@angular/fire/firestore';
+import { orderBy, QueryConstraint, where } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { participationConverter, tableConverter } from '../models/converter';
@@ -50,7 +50,8 @@ export class TableService {
     const eventUidConstraint: QueryConstraint = where('eventUid', '==', eventUid);
     const employeeUidConstraint: QueryConstraint = where('employeeUid', '==', employeeUid);
     const isActiveConstraint: QueryConstraint = where('isActive', '==', true);
-    const constraints: QueryConstraint[] = [eventUidConstraint, isActiveConstraint];
+    const nameOrderBy: QueryConstraint = orderBy('name');
+    const constraints: QueryConstraint[] = [eventUidConstraint, isActiveConstraint, nameOrderBy];
     if (employeeUid) {
       constraints.push(employeeUidConstraint);
     }

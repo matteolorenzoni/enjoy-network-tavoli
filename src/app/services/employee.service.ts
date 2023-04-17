@@ -1,7 +1,7 @@
 import { environment } from 'src/environments/environment';
 import { UserCredential } from '@angular/fire/auth';
 import { Injectable } from '@angular/core';
-import { documentId, QueryConstraint, where } from 'firebase/firestore';
+import { documentId, orderBy, QueryConstraint, where } from 'firebase/firestore';
 import { Observable } from 'rxjs';
 import { UserService } from './user.service';
 import { AssignmentDTO } from '../models/collection';
@@ -26,14 +26,6 @@ export class EmployeeService {
   ) {}
 
   /* ------------------------------------------- GET ------------------------------------------- */
-  public async getEmployees(): Promise<Employee[]> {
-    const employees: Employee[] = await this.firebaseReadService.getAllDocuments(
-      environment.collection.EMPLOYEES,
-      employeeConverter
-    );
-    return employees;
-  }
-
   public async getEmployee(employeeUid: string): Promise<Employee> {
     const employee: Employee = await this.firebaseReadService.getDocumentByUid(
       environment.collection.EMPLOYEES,
@@ -98,6 +90,19 @@ export class EmployeeService {
     const employees: Employee[][] = await Promise.all(employeePromises);
 
     return employees.flat();
+  }
+
+  public async getEmployeesByRole(role: RoleType): Promise<Employee[]> {
+    const roleConstraint = where('role', '==', role);
+    const notNameConstraint = where('name', '!=', '---');
+    const nameOrderBy = orderBy('name', 'asc');
+    const constraints: QueryConstraint[] = [roleConstraint, notNameConstraint, nameOrderBy];
+    const employees: Employee[] = await this.firebaseReadService.getDocumentsByMultipleConstraints(
+      environment.collection.EMPLOYEES,
+      constraints,
+      employeeConverter
+    );
+    return employees;
   }
 
   public getRealTimeAllEmployees(): Observable<Employee[]> {

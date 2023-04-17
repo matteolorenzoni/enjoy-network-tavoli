@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { documentId, QueryConstraint, where } from '@angular/fire/firestore';
+import { documentId, orderBy, QueryConstraint, where } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { assignmentConverter, eventConverter } from '../models/converter';
@@ -24,8 +24,11 @@ export class EventService {
 
   /* ------------------------------------------- GET ------------------------------------------- */
   public async getEvents(): Promise<Event[]> {
-    const events: Event[] = await this.firebaseReadService.getAllDocuments(
+    const dateOrderBy = orderBy('date', 'desc');
+    const constraints: QueryConstraint[] = [dateOrderBy];
+    const events: Event[] = await this.firebaseReadService.getDocumentsByMultipleConstraints(
       environment.collection.EVENTS,
+      constraints,
       eventConverter
     );
     return events;
@@ -41,11 +44,14 @@ export class EventService {
   }
 
   public getRealTimeAllEvents(): Observable<Event[]> {
-    const employees: Observable<Event[]> = this.firebaseReadService.getRealTimeAllDocuments(
+    const dateOrderBy = orderBy('date', 'desc');
+    const constraints: QueryConstraint[] = [dateOrderBy];
+    const events: Observable<Event[]> = this.firebaseReadService.getRealTimeDocumentsByMultipleConstraints(
       environment.collection.EVENTS,
+      constraints,
       eventConverter
     );
-    return employees;
+    return events;
   }
 
   public async getEventsByUids(eventUids: string[]): Promise<Event[]> {
@@ -66,7 +72,7 @@ export class EventService {
 
     const events: Event[][] = await Promise.all(eventPromises);
 
-    return events.flat();
+    return events.flat().sort((a, b) => (a.props.date.getTime() < b.props.date.getTime() ? 1 : -1));
   }
 
   public async getEventByCode(code: string): Promise<Event | null> {

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { documentId, QueryConstraint, where } from '@angular/fire/firestore';
+import { documentId, orderBy, QueryConstraint, where } from '@angular/fire/firestore';
 import { environment } from 'src/environments/environment';
 import { clientConverter } from '../models/converter';
 import { Client } from '../models/type';
@@ -21,13 +21,15 @@ export class ClientService {
 
   /* ------------------------------------------- GET ------------------------------------------- */
   public async getAllClients(): Promise<Client[]> {
-    const clients: Client[] = await this.firebaseReadService.getAllDocuments(
-      environment.collection.CLIENTS,
+    const nameOrderBy = orderBy('name');
+    const lastNameOrderBy = orderBy('lastName');
+    const constraints = [nameOrderBy, lastNameOrderBy];
+    const clients: Client[] = await this.firebaseReadService.getDocumentsByMultipleConstraints(
+      environment.collection.PARTICIPATIONS,
+      constraints,
       clientConverter
     );
-    return clients.sort(
-      (a, b) => a.props.name.localeCompare(b.props.name) && a.props.lastName.localeCompare(b.props.lastName)
-    );
+    return clients;
   }
 
   public async getClient(clientUid: string): Promise<Client> {
