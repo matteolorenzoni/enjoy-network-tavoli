@@ -29,10 +29,23 @@ export class ClientManagementComponent {
     private toastService: ToastService
   ) {
     /* Init form */
-    this.clientForm = new FormGroup({
+    this.clientForm = new FormGroup<{
+      name: FormControl<string | null>;
+      lastName: FormControl<string | null>;
+      phone: FormControl<number | null>;
+    }>({
       name: new FormControl(null, [Validators.required, Validators.pattern(/[\S]/)]),
       lastName: new FormControl(null, [Validators.required, Validators.pattern(/[\S]/)]),
       phone: new FormControl(null, [Validators.required, Validators.pattern(/^\d{9,10}$/)])
+    });
+
+    /* Subscribe to phone changes */
+    this.clientForm.get('phone')?.valueChanges.subscribe(() => {
+      this.client = undefined;
+      this.clientForm.patchValue({
+        name: null,
+        lastName: null
+      });
     });
   }
 
@@ -65,13 +78,12 @@ export class ClientManagementComponent {
   }
 
   public onSubmit() {
-    if (!this.clientForm.valid) {
-      this.toastService.showErrorMessage('Inserire valori validi');
+    if (!this.client) {
       return;
     }
 
-    if (!this.client) {
-      this.toastService.showErrorMessage('Nessun cliente selezionato');
+    if (!this.clientForm.valid) {
+      this.toastService.showErrorMessage('Inserire valori validi');
       return;
     }
 
