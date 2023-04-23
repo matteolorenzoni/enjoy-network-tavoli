@@ -13,6 +13,7 @@ import {
   onSnapshot
 } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
+import { LoaderService } from '../../loader.service';
 
 @Injectable({
   providedIn: 'root'
@@ -21,7 +22,7 @@ export class FirebaseReadService {
   /* Firebase */
   private db!: Firestore;
 
-  constructor() {
+  constructor(private loaderService: LoaderService) {
     this.db = getFirestore();
   }
 
@@ -31,9 +32,14 @@ export class FirebaseReadService {
     documentUid: string,
     converter: FirestoreDataConverter<T>
   ): Promise<T> {
+    this.loaderService.show();
+
+    /* Get the document */
     const collectionRef = collection(this.db, collectionName).withConverter(converter);
     const docRef = doc(collectionRef, documentUid);
     const docSnap = await getDoc(docRef);
+
+    this.loaderService.hide();
 
     /* If the document does not exist, throw an error */
     if (!docSnap.exists()) throw new Error(`Documento non trovato DEBUG: ${collectionName} - ${documentUid}`);
@@ -44,17 +50,25 @@ export class FirebaseReadService {
 
   /* Get all documents in a collection */
   public async getAllDocuments<T>(collectionName: string, converter: FirestoreDataConverter<T>): Promise<T[]> {
+    this.loaderService.show();
+
+    /* Get the documents */
     const documents: T[] = [];
     const collectionRef = collection(this.db, collectionName).withConverter(converter);
     const querySnapshot = await getDocs(collectionRef);
     querySnapshot.forEach((item: QueryDocumentSnapshot<T>) => {
       documents.push(item.data());
     });
+
+    this.loaderService.hide();
+
     return documents;
   }
 
   /* Get in real time all documents in a collection */
   public getRealTimeAllDocuments<T>(collectionName: string, converter: FirestoreDataConverter<T>): Observable<T[]> {
+    this.loaderService.show();
+
     const observable = new Observable<T[]>((observer) => {
       const collectionRef = collection(this.db, collectionName).withConverter(converter);
       onSnapshot(
@@ -71,6 +85,9 @@ export class FirebaseReadService {
         }
       );
     });
+
+    this.loaderService.hide();
+
     return observable;
   }
 
@@ -80,6 +97,8 @@ export class FirebaseReadService {
     constraints: QueryConstraint[],
     converter: FirestoreDataConverter<T>
   ): Promise<T[]> {
+    this.loaderService.show();
+
     const documents: T[] = [];
     const collectionRef = collection(this.db, collectionName).withConverter(converter);
     const q = query(collectionRef, ...constraints);
@@ -87,6 +106,9 @@ export class FirebaseReadService {
     querySnapshot.forEach((item: QueryDocumentSnapshot<T>) => {
       documents.push(item.data());
     });
+
+    this.loaderService.hide();
+
     return documents;
   }
 
@@ -96,6 +118,8 @@ export class FirebaseReadService {
     constraints: QueryConstraint[],
     converter: FirestoreDataConverter<T>
   ): Observable<T[]> {
+    this.loaderService.show();
+
     const observable = new Observable<T[]>((observer) => {
       const collectionRef = collection(this.db, collectionName).withConverter(converter);
       const q = query(collectionRef, ...constraints);
@@ -113,17 +137,9 @@ export class FirebaseReadService {
         }
       );
     });
+
+    this.loaderService.hide();
+
     return observable;
   }
-
-  /* Get the count of all documents in a collection that match the constraints */
-  // public async getDocumentsByMultipleConstraintsCount(
-  //   collectionName: string,
-  //   constraints: QueryConstraint[]
-  // ): Promise<AggregateQuerySnapshot<{ count: AggregateField<number> }>> {
-  //   const collectionRef = collection(this.db, collectionName);
-  //   const q = query(collectionRef, ...constraints);
-  //   const aggregateField = await getCountFromServer(q);
-  //   return aggregateField;
-  // }
 }
