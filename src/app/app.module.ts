@@ -56,6 +56,7 @@ import { InspectorParticipationListComponent } from './page/inspector/inspector-
 import { BackBarComponent } from './layout/back-bar/back-bar.component';
 import { TicketManualValidationComponent } from './page/inspector/ticket-manual-validation/ticket-manual-validation.component';
 import { ClientManagementComponent } from './page/administrator/client/client-management/client-management.component';
+import { EnLoaderComponent } from './components/en-loader.component';
 
 @NgModule({
   declarations: [
@@ -98,7 +99,8 @@ import { ClientManagementComponent } from './page/administrator/client/client-ma
     InspectorParticipationListComponent,
     BackBarComponent,
     TicketManualValidationComponent,
-    ClientManagementComponent
+    ClientManagementComponent,
+    EnLoaderComponent
   ],
   imports: [
     BrowserModule,
