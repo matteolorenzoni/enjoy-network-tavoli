@@ -114,7 +114,7 @@ export class ClientManagementComponent {
   /* ------------------------------------------- Methods ------------------------------------------- */
   async downloadPDF() {
     try {
-      const clients = await this.clientService.getAllClients();
+      const clients = await this.clientService.getClients();
       const headerNames = ['Numero', 'Nome', 'Cognome', 'Telefono'];
       const keys = ['name', 'lastName', 'phone'];
       const fileName = 'clienti';
@@ -127,7 +127,7 @@ export class ClientManagementComponent {
 
   async downloadCSV() {
     try {
-      const clients = await this.clientService.getAllClients();
+      const clients = await this.clientService.getClients();
       const headerNames = ['Numero', 'Nome', 'Cognome', 'Telefono'];
       const keys = ['name', 'lastName', 'phone'];
       const fileName = 'clienti';
