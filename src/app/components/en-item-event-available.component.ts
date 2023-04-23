@@ -7,7 +7,7 @@ import { Event } from 'src/app/models/type';
   template: `
     <li
       role="button"
-      class="group relative my-4 mx-auto flex aspect-square w-full flex-col overflow-hidden rounded-lg bg-slate-900 hover:cursor-pointer md:w-3/5"
+      class="group relative my-4 mx-auto flex aspect-square w-full flex-col overflow-hidden rounded-lg bg-slate-900 duration-150 ease-in-out hover:cursor-pointer active:scale-95 md:w-3/5"
       (click)="goToSelector()">
       <img [src]="event.props.imageUrl" alt="foto-evento" class="w-full" />
       <div class="absolute left-0 bottom-0 flex w-full p-2 backdrop-blur">
