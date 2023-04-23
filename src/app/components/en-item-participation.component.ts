@@ -52,29 +52,29 @@ import { Participation } from '../models/type';
         </ng-template>
       </div>
 
-      <div class="flex shrink-0 gap-4">
+      <div class="flex shrink-0 gap-3 text-xl text-slate-300">
         <fa-icon
           *ngIf="reSendSMSButton"
           [icon]="rotateIcon"
           role="button"
-          class="text-lg text-slate-300 transition duration-150 ease-in-out hover:cursor-pointer active:scale-90 active:text-slate-500"
+          class="p-1 transition duration-150 ease-in-out hover:cursor-pointer active:text-slate-500"
           (click)="reSendSMS()"></fa-icon>
         <fa-icon
           *ngIf="canShare"
           [icon]="shareIcon"
           role="button"
-          class="text-lg text-slate-300 transition duration-150 ease-in-out hover:cursor-pointer active:scale-90 active:text-slate-500"
+          class="p-1 transition duration-150 ease-in-out hover:cursor-pointer active:text-slate-500"
           (click)="shareTicketLink(participation.uid)"></fa-icon>
         <fa-icon
           *ngIf="!canShare"
           [icon]="copyIcon"
           role="button"
-          class="text-lg text-slate-300  transition duration-150 ease-in-out hover:cursor-pointer active:scale-90 active:text-slate-500"
+          class="p-1 transition duration-150 ease-in-out hover:cursor-pointer active:text-slate-500"
           (click)="copyTicketLink(participation.uid)"></fa-icon>
         <fa-icon
           [icon]="deleteIcon"
           role="button"
-          class="text-lg text-slate-300 transition duration-150 ease-in-out hover:cursor-pointer active:scale-90 active:text-slate-500"
+          class="p-1 transition duration-150 ease-in-out hover:cursor-pointer active:text-slate-500"
           (click)="updateParticipationNotActive()"></fa-icon>
       </div>
 

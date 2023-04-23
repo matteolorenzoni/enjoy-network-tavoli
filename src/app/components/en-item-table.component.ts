@@ -14,7 +14,7 @@ import { UserService } from '../services/user.service';
   template: `
     <li
       role="button"
-      class="uration-150 group flex w-full items-center justify-between gap-4 overflow-hidden rounded-lg py-4 ease-in-out hover:cursor-pointer active:scale-95"
+      class="group flex w-full items-center justify-between gap-4 overflow-hidden rounded-lg py-4 duration-150 ease-in-out hover:cursor-pointer active:scale-[.98]"
       (click)="goToClient()">
       <div class="flex grow flex-col truncate sm:flex-row sm:items-center sm:gap-4">
         <p class="truncate text-slate-300">
