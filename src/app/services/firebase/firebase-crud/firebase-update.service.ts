@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Firestore, doc, getFirestore, collection, writeBatch, deleteField, updateDoc } from '@angular/fire/firestore';
 import { Client, Employee, Event, Participation, Table } from 'src/app/models/type';
+import { LoaderService } from '../../loader.service';
 import { Assignment } from '../../../models/type';
 
 @Injectable({
@@ -10,7 +11,7 @@ export class FirebaseUpdateService {
   /* Firebase */
   private db!: Firestore;
 
-  constructor() {
+  constructor(private loaderService: LoaderService) {
     this.db = getFirestore();
   }
 
@@ -18,6 +19,8 @@ export class FirebaseUpdateService {
     collectionName: string,
     data: Event | Assignment | Employee | Table | Participation | Client
   ): Promise<void> {
+    this.loaderService.show();
+
     const { uid, props } = data;
 
     /* Sanitize props */
@@ -29,12 +32,16 @@ export class FirebaseUpdateService {
     const collectionRef = collection(this.db, collectionName);
     const docRef = doc(collectionRef, uid);
     await updateDoc(docRef, props);
+
+    this.loaderService.hide();
   }
 
   public async updateDocuments(
     collectionName: string,
     data: Event[] | Assignment[] | Employee[] | Table[] | Participation[] | Client[]
   ): Promise<void> {
+    this.loaderService.show();
+
     const batch = writeBatch(this.db);
     const collectionRef = collection(this.db, collectionName);
     data.forEach((item) => {
@@ -50,13 +57,19 @@ export class FirebaseUpdateService {
       batch.update(docRef, props);
     });
     await batch.commit();
+
+    this.loaderService.hide();
   }
 
   public async updateDocumentProps(collectionName: string, uid: string, props: any): Promise<void> {
+    this.loaderService.show();
+
     const propsUpdated = { ...props, modifiedAt: new Date() };
     const collectionRef = collection(this.db, collectionName);
     const docRef = doc(collectionRef, uid);
     await updateDoc(docRef, propsUpdated);
+
+    this.loaderService.hide();
   }
 
   public async updateDocumentsProps(
@@ -64,6 +77,8 @@ export class FirebaseUpdateService {
     data: Event[] | Assignment[] | Employee[] | Table[] | Participation[] | Client[],
     props: Partial<typeof data[0]['props']>
   ): Promise<void> {
+    this.loaderService.show();
+
     const propsUpdated = { ...props, modifiedAt: new Date() };
     const batch = writeBatch(this.db);
     const collectionRef = collection(this.db, collectionName);
@@ -72,5 +87,7 @@ export class FirebaseUpdateService {
       batch.update(docRef, propsUpdated);
     });
     await batch.commit();
+
+    this.loaderService.hide();
   }
 }
