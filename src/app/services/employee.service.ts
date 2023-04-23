@@ -108,8 +108,9 @@ export class EmployeeService {
   }
 
   public getRealTimeAllEmployees(): Observable<Employee[]> {
-    const employees: Observable<Employee[]> = this.firebaseReadService.getRealTimeAllDocuments(
+    const employees: Observable<Employee[]> = this.firebaseReadService.getRealTimeDocumentsByMultipleConstraints(
       environment.collection.EMPLOYEES,
+      [],
       employeeConverter
     );
     return employees;

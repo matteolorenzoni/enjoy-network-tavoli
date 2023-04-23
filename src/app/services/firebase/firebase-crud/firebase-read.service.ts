@@ -48,49 +48,6 @@ export class FirebaseReadService {
     return docSnap.data() as T;
   }
 
-  /* Get all documents in a collection */
-  public async getAllDocuments<T>(collectionName: string, converter: FirestoreDataConverter<T>): Promise<T[]> {
-    this.loaderService.show();
-
-    /* Get the documents */
-    const documents: T[] = [];
-    const collectionRef = collection(this.db, collectionName).withConverter(converter);
-    const querySnapshot = await getDocs(collectionRef);
-    querySnapshot.forEach((item: QueryDocumentSnapshot<T>) => {
-      documents.push(item.data());
-    });
-
-    this.loaderService.hide();
-
-    return documents;
-  }
-
-  /* Get in real time all documents in a collection */
-  public getRealTimeAllDocuments<T>(collectionName: string, converter: FirestoreDataConverter<T>): Observable<T[]> {
-    this.loaderService.show();
-
-    const observable = new Observable<T[]>((observer) => {
-      const collectionRef = collection(this.db, collectionName).withConverter(converter);
-      onSnapshot(
-        collectionRef,
-        (querySnapshot) => {
-          const documents: T[] = [];
-          querySnapshot.forEach((item: QueryDocumentSnapshot<T>) => {
-            documents.push(item.data());
-          });
-          observer.next(documents);
-        },
-        (error) => {
-          throw new Error(`${error.message} DEBUG: ${collectionName}`);
-        }
-      );
-    });
-
-    this.loaderService.hide();
-
-    return observable;
-  }
-
   /* Get all documents in a collection that match the constraints */
   public async getDocumentsByMultipleConstraints<T>(
     collectionName: string,

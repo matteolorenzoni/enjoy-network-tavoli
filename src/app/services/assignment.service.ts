@@ -20,8 +20,9 @@ export class AssignmentService {
 
   /* ------------------------------------------- GET ------------------------------------------- */
   public async getAssignments(): Promise<Assignment[]> {
-    const assignments: Assignment[] = await this.firebaseReadService.getAllDocuments(
+    const assignments: Assignment[] = await this.firebaseReadService.getDocumentsByMultipleConstraints(
       environment.collection.ASSIGNMENTS,
+      [],
       assignmentConverter
     );
     return assignments;
