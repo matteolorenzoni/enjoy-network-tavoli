@@ -62,13 +62,9 @@ export const expandEventItemDetailsAnimation = trigger('expandEventItemDetailsAn
 // Event item in the event-list
 export const staggeredFadeInIncrement = trigger('staggeredFadeInIncrement', [
   transition(':increment', [
-    query(
-      ':enter',
-      [
-        style({ opacity: 0, transform: 'translateY(50px)' }),
-        stagger(100, [animate('600ms ease-out', style({ opacity: 1, transform: 'translateY(0)' }))])
-      ],
-      { optional: true }
-    )
+    query(':enter', [
+      style({ opacity: 0, transform: 'translateY(50px)' }),
+      stagger(80, [animate('200ms ease-out', style({ opacity: 1, transform: 'translateY(0)' }))])
+    ])
   ])
 ]);
