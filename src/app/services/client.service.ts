@@ -25,7 +25,7 @@ export class ClientService {
     const lastNameOrderBy = orderBy('lastName');
     const constraints = [nameOrderBy, lastNameOrderBy];
     const clients: Client[] = await this.firebaseReadService.getDocumentsByMultipleConstraints(
-      environment.collection.PARTICIPATIONS,
+      environment.collection.CLIENTS,
       constraints,
       clientConverter
     );
