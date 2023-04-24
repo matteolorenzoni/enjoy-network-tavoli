@@ -5,9 +5,12 @@ import { BehaviorSubject } from 'rxjs';
   providedIn: 'root'
 })
 export class LoaderService {
+  httpRequestsActive = 0;
   loader$ = new BehaviorSubject<boolean>(false);
 
   show(): void {
+    this.httpRequestsActive += 1;
+
     this.loader$.next(true);
 
     document.body.style.overflow = 'hidden';
@@ -16,10 +19,14 @@ export class LoaderService {
   }
 
   hide(): void {
-    this.loader$.next(false);
+    this.httpRequestsActive -= 1;
 
-    document.body.style.overflow = 'auto';
-    document.body.style.height = 'auto';
-    document.body.style.touchAction = 'auto';
+    if (this.httpRequestsActive <= 0) {
+      this.loader$.next(false);
+
+      document.body.style.overflow = 'auto';
+      document.body.style.height = 'auto';
+      document.body.style.touchAction = 'auto';
+    }
   }
 }
