@@ -19,7 +19,10 @@ import { FileGeneratorService } from '../services/file-generator.service';
         role="button"
         class="center relative aspect-square h-full duration-150 ease-in-out hover:cursor-pointer active:scale-95"
         (click)="toggleOpen()">
-        <img [src]="event.props.imageUrl" [alt]="dateFormatted + '_image'" class="rounded-lg" />
+        <img
+          [src]="event.props.imageUrl"
+          [alt]="dateFormatted + '_image'"
+          class="aspect-square rounded-lg object-fill" />
         <div
           [@fadeInAnimation]
           *ngIf="false"
