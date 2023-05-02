@@ -66,7 +66,9 @@ export enum PlaceType {
   DIVINO = 'Divino',
   ACQUE_MINERALI = 'Acque Minerali',
   PELLARIA = 'Pellaria',
-  MARINA_BAY = 'Marina Bay'
+  MARINA_BAY = 'Marina Bay',
+  IMOLA = 'Imola',
+  LUGO = 'Lugo'
 }
 
 export enum ParticipationType {
