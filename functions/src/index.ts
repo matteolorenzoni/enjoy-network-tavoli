@@ -1,9 +1,9 @@
 import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
 import axios from 'axios';
-import { DocumentData, DocumentReference, DocumentSnapshot } from 'firebase-admin/firestore';
+import { DocumentData, DocumentReference, DocumentSnapshot, QuerySnapshot } from 'firebase-admin/firestore';
 import { ParticipationDTO, EventDTO, TableDTO, AssignmentDTO, ClientDTO } from './collection';
-import { ShorterUrlResponse, SMS, SMSResponse } from './type';
+import { ShorterUrlResponse, SMS, SMSResponse, Participation } from './type';
 import { SMSStatusType } from './enum';
 import { logger } from 'firebase-functions';
 
@@ -12,7 +12,7 @@ admin.initializeApp();
 /* -------------------------------------------------------------------------------------------------------------------------------
 -------------------------------------------------------- TEST --------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------------- */
-export const testParticipatiOnCreate = functions.firestore
+export const z_participatiOnCreate = functions.firestore
   .document('participations/{participationId}')
   .onCreate(async (snap, context) => {
     const participationDTO = snap.data() as ParticipationDTO;
@@ -56,7 +56,7 @@ export const testParticipatiOnCreate = functions.firestore
     }
   });
 
-export const testParticipatiOnUpdate = functions.firestore
+export const z_participatiOnUpdate = functions.firestore
   .document('participations/{participationId}')
   .onUpdate(async (change, context) => {
     try {
@@ -125,7 +125,7 @@ export const testParticipatiOnUpdate = functions.firestore
     }
   });
 
-export const testParticipatiOnDelete = functions.firestore
+export const z_participatiOnDelete = functions.firestore
   .document('participations/{participationId}')
   .onDelete(async (snap) => {
     try {
@@ -171,7 +171,7 @@ export const testParticipatiOnDelete = functions.firestore
     }
   });
 
-export const testAssignmentOnUpdate = functions.firestore.document('assignments/{assignmentId}').onUpdate((change) => {
+export const z_assignmentOnUpdate = functions.firestore.document('assignments/{assignmentId}').onUpdate((change) => {
   try {
     const data = change.after.data() as AssignmentDTO;
     const previousData = change.before.data() as AssignmentDTO;
@@ -201,7 +201,7 @@ export const testAssignmentOnUpdate = functions.firestore.document('assignments/
   }
 });
 
-export const testClientOnUpdate = functions.firestore.document('clients/{clientId}').onUpdate(async (change) => {
+export const z_clientOnUpdate = functions.firestore.document('clients/{clientId}').onUpdate(async (change) => {
   try {
     const data = change.after.data() as ClientDTO;
     const { name, lastName, phone } = data;
@@ -219,7 +219,7 @@ export const testClientOnUpdate = functions.firestore.document('clients/{clientI
   }
 });
 
-export const testClientOnDelete = functions.firestore.document('clients/{clientId}').onDelete(async (snapshot) => {
+export const z_clientOnDelete = functions.firestore.document('clients/{clientId}').onDelete(async (snapshot) => {
   try {
     const data = snapshot.data() as ClientDTO;
     const { phone } = data;
@@ -237,7 +237,7 @@ export const testClientOnDelete = functions.firestore.document('clients/{clientI
   }
 });
 
-export const testVisibilityChange = functions.https.onRequest(async (request, response) => {
+export const z_visibilityChange = functions.https.onRequest(async (request, response) => {
   // try {
   //   const participations = request.body.participations as Participation[];
 
@@ -297,57 +297,13 @@ export const sendSms = functions.firestore
     const { eventUid, tableUid, name, phone } = participationDTO;
 
     try {
-      /* -------------------------------------------------------- Get event -------------------------------------------------------- */
+      /*  Get event  */
       const document: DocumentData = await admin.firestore().doc(`PROD_events/${eventUid}`).get();
       const eventDTO = document.data() as EventDTO;
       const { message } = eventDTO;
 
-      /* --------------------------------------------------- Fidelity --------------------------------------------------- */
-      const FIDELITY_MESSAGE =
-        'Ciao {{CLIENT}}\nGrazie per aver completato la tua fidelity card, ecco il tuo ticket per Lunedì 24 Aprile.\n\n{{LINK}}';
-
-      /* -------------------------------------------------------- Shorter url -------------------------------------------------------- */
-      const urlToReduce = `https://enjoy-network-tavoli.web.app/ticket?participation=${participationUid}`;
-      const request_urlShortener = `https://api.shrtco.de/v2/shorten?url=${encodeURIComponent(urlToReduce)}`;
-      const response_urlShortener = await axios.get(request_urlShortener);
-      const link = (response_urlShortener.data as ShorterUrlResponse).result.full_short_link;
-
-      /* -------------------------------------------------------- Send sms -------------------------------------------------------- */
-      /* Replace params */
-      const fidelityTables = process.env.FIDELITY_TABLES_UIDS?.split(',') || [];
-      const messageToSend = fidelityTables.includes(tableUid) ? FIDELITY_MESSAGE : message;
-      let messageClone = messageToSend.replace('{{CLIENT}}', name);
-      messageClone = messageClone.replace('{{LINK}}', link);
-
-      /* Headers */
-      const username = process.env.USERNAME;
-      const password = process.env.PASSWORD;
-      const credentials = btoa(`${username}:${password}`);
-      const headers = {
-        'Content-Type': 'application/x-www-form-urlencoded',
-        Authorization: `Basic ${credentials}`
-      };
-
-      /* Create sms */
-      const request_urlSmsHosting = 'https://api.smshosting.it/rest/api/sms/send';
-      const sms: SMS = {
-        from: 'Enjoy N.',
-        to: `39${phone}`,
-        transactionId: eventUid,
-        text: messageClone,
-        statusCallback: 'https://us-central1-enjoy-network-tavoli.cloudfunctions.net/receiveSms',
-        sandbox: false
-      };
-
-      const response = await axios.post(request_urlSmsHosting, sms, { headers });
-      const smsResponse = response.data as SMSResponse;
-
-      if (smsResponse.smsNotInserted > 0) {
-        snap.ref.update({
-          statusSMS: smsResponse.sms[0].statusDetail,
-          modifiedAt: new Date()
-        });
-      }
+      /* Send sms */
+      await sendSMS(participationUid, name, phone, eventUid, message, tableUid);
     } catch (error) {
       logger.error(error);
     }
@@ -664,32 +620,131 @@ export const visibilityChange = functions.https.onRequest(async (request, respon
   }
 });
 
-export const reSendSMS = functions.https.onRequest(async (request, response) => {
+export const scheduleMessageIsReceived = functions.pubsub.schedule('every 4 hours').onRun(async (context) => {
   try {
-    const participationUid = request.query.participationUid as string;
+    /* General */
+    const twoHoursAgo = new Date(new Date().getTime() - 2 * 60 * 60 * 1000);
 
-    const documentParticipation: DocumentSnapshot<DocumentData> = await admin
+    /* Get events */
+    const eventDocuments: QuerySnapshot<DocumentData> = await admin
       .firestore()
-      .doc(`PROD_participations/${participationUid}`)
+      .collection('PROD_events')
+      .where('date', '>', new Date())
       .get();
+    const futureEvents = eventDocuments.docs.map((event) => {
+      const eventDTO = event.data() as EventDTO;
+      return { uid: event.id, props: eventDTO };
+    });
 
-    if (!documentParticipation.exists) {
-      response.send({ message: 'Partecipazione non trovata' });
-      return;
-    }
+    /* Get participations */
+    const participations: Participation[] = [];
+    const participationDocuments: QuerySnapshot<DocumentData> = await admin
+      .firestore()
+      .collection('PROD_participations')
+      .where('isActive', '==', true)
+      .where('isScanned', '==', false)
+      .where('messageIsReceived', '==', false)
+      .where('messageAttempt', '<', 4)
+      .where(
+        'eventUid',
+        'in',
+        futureEvents.map((event) => event.uid)
+      )
+      .get();
+    participationDocuments.forEach((participation) => {
+      const participationDTO = participation.data() as ParticipationDTO;
+      participations.push({ uid: participation.id, props: participationDTO });
+    });
 
-    const participationDTO = documentParticipation.data() as ParticipationDTO;
-    participationDTO.modifiedAt = new Date();
+    /* Send sms for all participations that have not received the message in the last 2 hours */
+    /* Date filter here because in firestore isn't possible execute query with inequality on two fields */
+    futureEvents.forEach((event) => {
+      const { message } = event.props;
+      const participationsToResendSMS: Participation[] = participations.filter(
+        (participation) =>
+          participation.props.eventUid === event.uid &&
+          participation.props.modifiedAt &&
+          participation.props.modifiedAt.getTime() < twoHoursAgo.getTime()
+      );
 
-    /* Delete participation */
-    await admin.firestore().doc(`PROD_participations/${participationUid}`).delete();
-
-    // Re-create participation
-    await admin.firestore().collection('PROD_participations').add(participationDTO);
-
-    response.status(200).send({ message: 'Eseguito nuovo tentativo' });
+      participationsToResendSMS.forEach(async (participation) => {
+        const { name, phone, eventUid, tableUid } = participation.props;
+        await sendSMS(participation.uid, name, phone, eventUid, message, tableUid);
+      });
+    });
   } catch (error) {
     logger.error(error);
-    response.status(500).send({ message: 'Errore, contattare staffer' });
   }
 });
+
+/* -------------------------------------------------------------------------------------------------------------------------------
+-------------------------------------------------------- GENERAL --------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------- */
+const sendSMS = async (
+  participationUid: string,
+  clientName: string,
+  clientPhone: string,
+  eventUid: string,
+  eventMessage: string,
+  tableUid: string
+): Promise<void> => {
+  try {
+    /*  Fidelity  */
+    const FIDELITY_MESSAGE =
+      'Ciao {{CLIENT}}\nGrazie per aver completato la tua fidelity card, ecco il tuo ticket per Lunedì 24 Aprile.\n\n{{LINK}}';
+
+    /*  Shorter url  */
+    const urlToReduce = `https://enjoy-network-tavoli.web.app/ticket?participation=${participationUid}`;
+    const request_urlShortener = `https://api.shrtco.de/v2/shorten?url=${encodeURIComponent(urlToReduce)}`;
+    const response_urlShortener = await axios.get(request_urlShortener);
+    const link = (response_urlShortener.data as ShorterUrlResponse).result.full_short_link;
+
+    /*  Send sms  */
+    /* Replace params */
+    const fidelityTables = process.env.FIDELITY_TABLES_UIDS?.split(',') || [];
+    const messageToSend = fidelityTables.includes(tableUid) ? FIDELITY_MESSAGE : eventMessage;
+    let messageClone = messageToSend.replace('{{CLIENT}}', clientName);
+    messageClone = messageClone.replace('{{LINK}}', link);
+
+    /* Headers */
+    const username = process.env.USERNAME;
+    const password = process.env.PASSWORD;
+    const credentials = btoa(`${username}:${password}`);
+    const headers = {
+      'Content-Type': 'application/x-www-form-urlencoded',
+      Authorization: `Basic ${credentials}`
+    };
+
+    /* Create sms */
+    const request_urlSmsHosting = 'https://api.smshosting.it/rest/api/sms/send';
+    const sms: SMS = {
+      from: 'Enjoy N.',
+      to: `39${clientPhone}`,
+      transactionId: eventUid,
+      text: messageClone,
+      statusCallback: 'https://us-central1-enjoy-network-tavoli.cloudfunctions.net/receiveSms',
+      sandbox: false
+    };
+
+    /* Send sms */
+    const response = await axios.post(request_urlSmsHosting, sms, { headers });
+
+    /* Update participation about sms status */
+    const smsResponse = response.data as SMSResponse;
+    const document: DocumentReference<DocumentData> = admin.firestore().doc(`PROD_participations/${participationUid}`);
+    const participationDTO = (await document.get()).data() as ParticipationDTO;
+    const messageAttempt = participationDTO.messageAttempt || 0;
+    document.update({
+      messageAttempt: messageAttempt + 1,
+      modifiedAt: new Date()
+    });
+    if (smsResponse.smsNotInserted > 0) {
+      document.update({
+        statusSMS: smsResponse.sms[0].statusDetail,
+        modifiedAt: new Date()
+      });
+    }
+  } catch (error) {
+    logger.error(error);
+  }
+};
