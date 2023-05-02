@@ -62,7 +62,11 @@ export enum RoleType {
 export enum PlaceType {
   BACCARA = 'Baccara',
   INDIE = 'Indie',
-  CUPOLE = 'Cupole'
+  CUPOLE = 'Cupole',
+  DIVINO = 'Divino',
+  ACQUE_MINERALI = 'Acque Minerali',
+  PELLARIA = 'Pellaria',
+  MARINA_BAY = 'Marina Bay'
 }
 
 export enum ParticipationType {
