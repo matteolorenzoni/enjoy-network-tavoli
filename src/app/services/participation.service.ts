@@ -51,6 +51,7 @@ export class ParticipationService {
           phone: client.props.phone,
           isScanned: false,
           isActive: true,
+          messageAttempt: 0,
           messageIsReceived: false,
           statusSMS: SMSStatusType.NOTDELIVERED
         }

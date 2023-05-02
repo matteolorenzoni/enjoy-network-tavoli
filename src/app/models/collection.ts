@@ -63,6 +63,7 @@ export type ParticipationDTO = {
   isScanned: boolean;
   scannedAt?: Date;
   scannedFrom?: string;
+  messageAttempt: number;
   messageIsReceived: boolean;
   statusSMS: SMSErrorType | SMSStatusType;
   isActive: boolean;
