@@ -122,7 +122,7 @@ export class ClientGeneratorComponent implements OnInit {
         return;
       }
 
-      const text = `Questo numero appartiene a: ${client.props.name} ${client.props.lastName}, lo vuoi aggiungere al tavolo?`;
+      const text = `Questo numero appartiene a ${client.props.name} ${client.props.lastName}, lo vuoi aggiungere al tavolo?`;
       if (window.confirm(text) === true) {
         await this.addParticipation(client);
         this.isLoading = false;
