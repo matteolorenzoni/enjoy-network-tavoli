@@ -8,10 +8,9 @@ import {
   faRotateRight,
   faTrash
 } from '@fortawesome/free-solid-svg-icons';
-import { Component, Input } from '@angular/core';
+import { Component, Input, SimpleChanges } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
-import { HttpClient } from '@angular/common/http';
 import { SessionStorageService } from '../services/sessionstorage.service';
 import { ToastService } from '../services/toast.service';
 import { ParticipationService } from '../services/participation.service';
@@ -52,6 +51,22 @@ import { Participation } from '../models/type';
         </ng-template>
       </div>
 
+      <div *ngIf="showNewAttempt" class="animate-pulse rounded bg-red-800 p-2 text-center text-xs">
+        <ng-container *ngIf="participation.props.messageAttempt < 3; else elseTemplate">
+          <p>Tentativo n°{{ participation.props.messageAttempt + 1 }} alle</p>
+          <p>
+            {{ newAttempt | date: 'dd/MM/YYYY' }} -
+            {{ newAttempt | date: 'HH:mm' }}
+          </p>
+        </ng-container>
+        <ng-template #elseTemplate>
+          <div role="button" class="cursor-pointer" (click)="maxAttemptInfo()">
+            <p>🚨Attenzione🚨</p>
+            <p>Clicca per info</p>
+          </div>
+        </ng-template>
+      </div>
+
       <div class="flex shrink-0 gap-3 text-xl text-slate-300">
         <fa-icon
           *ngIf="canShare"
@@ -89,6 +104,8 @@ export class EnItemParticipationComponent {
 
   /* Employee */
   employeeUid: string | null = null;
+  showNewAttempt?: boolean;
+  newAttempt?: Date;
 
   /* Icons */
   rotateIcon = faRotateRight;
@@ -107,7 +124,6 @@ export class EnItemParticipationComponent {
 
   /* ------------------------------ Constructor ------------------------------ */
   constructor(
-    private http: HttpClient,
     private route: ActivatedRoute,
     private participationService: ParticipationService,
     private sessionStorageService: SessionStorageService,
@@ -119,6 +135,19 @@ export class EnItemParticipationComponent {
   ngOnInit(): void {
     this.eventUid = this.route.snapshot.paramMap.get('eventUid');
     this.employeeUid = this.sessionStorageService.getEmployeeUid();
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['participation']) {
+      const { currentValue } = changes['participation'];
+      const participationDTO = (currentValue as Participation).props;
+      const { messageIsReceived, modifiedAt } = participationDTO;
+      if (!messageIsReceived && modifiedAt) {
+        const timestamp = modifiedAt.getTime();
+        this.showNewAttempt = timestamp < Date.now() - 20 * 60 * 1000;
+        this.newAttempt = new Date(timestamp + 3 * 60 * 60 * 1000);
+      }
+    }
   }
 
   /* ------------------------------ Methods ------------------------------ */
@@ -160,5 +189,11 @@ export class EnItemParticipationComponent {
           this.toastService.showError(error);
         });
     }
+  }
+
+  maxAttemptInfo(): void {
+    alert(
+      "Superato il numero di tentativi per l'invio del messaggio. Inviare manualmente attraverso il pulsante di share sulla destra e successivamente contattare uno staffer."
+    );
   }
 }
