@@ -52,8 +52,8 @@ import { Participation } from '../models/type';
       </div>
 
       <div *ngIf="showNewAttempt" class="animate-pulse rounded bg-red-800 p-2 text-center text-xs">
-        <ng-container *ngIf="participation.props.messageAttempt < 3; else elseTemplate">
-          <p>Tentativo n°{{ participation.props.messageAttempt + 1 }} alle</p>
+        <ng-container *ngIf="(participation.props.messageAttempt || 1) < 3; else elseTemplate">
+          <p>Tentativo n°{{ (participation.props.messageAttempt || 1) + 1 }} alle</p>
           <p>
             {{ newAttempt | date: 'dd/MM/YYYY' }} -
             {{ newAttempt | date: 'HH:mm' }}

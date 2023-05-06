@@ -189,9 +189,8 @@ export class EnItemEventComponent {
       .then((participations: Participation[]) => {
         const partNoMessage = participations.map((item) => {
           const name = `${item.props.name} ${item.props.lastName}`;
-          const { phone } = item.props;
-          const messageAttempt = item.props.messageAttempt || 0;
-          return `${name} - ${phone} (${messageAttempt})`;
+          const { phone, messageAttempt } = item.props;
+          return `${name} - ${phone} (${messageAttempt || 1})`;
         });
 
         const alertText = partNoMessage.length > 0 ? partNoMessage.join('\n') : 'Tutti i messaggi sono stati inviati';

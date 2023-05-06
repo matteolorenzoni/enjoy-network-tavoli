@@ -736,9 +736,8 @@ const sendSMS = async (
     const smsResponse = response.data as SMSResponse;
     const document: DocumentReference<DocumentData> = admin.firestore().doc(`PROD_participations/${participationUid}`);
     const participationDTO = (await document.get()).data() as ParticipationDTO;
-    const messageAttempt = participationDTO.messageAttempt || 0;
     document.update({
-      messageAttempt: messageAttempt + 1,
+      messageAttempt: (participationDTO.messageAttempt || 0) + 1,
       modifiedAt: new Date()
     });
     if (smsResponse.smsNotInserted > 0) {
