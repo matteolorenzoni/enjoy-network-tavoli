@@ -1,7 +1,7 @@
 import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
 import axios from 'axios';
-import { DocumentData, DocumentReference, DocumentSnapshot, QuerySnapshot } from 'firebase-admin/firestore';
+import { DocumentData, DocumentReference, DocumentSnapshot, QuerySnapshot, Timestamp } from 'firebase-admin/firestore';
 import { ParticipationDTO, EventDTO, TableDTO, AssignmentDTO, ClientDTO } from './collection';
 import { ShorterUrlResponse, SMS, SMSResponse, Participation } from './type';
 import { SMSStatusType } from './enum';
@@ -620,16 +620,18 @@ export const visibilityChange = functions.https.onRequest(async (request, respon
   }
 });
 
-export const scheduleMessageIsReceived = functions.pubsub.schedule('every 4 hours').onRun(async (context) => {
+export const scheduleMessageIsReceived = functions.pubsub.schedule('every 3 hours').onRun(async (context) => {
   try {
     /* General */
-    const twoHoursAgo = new Date(new Date().getTime() - 2 * 60 * 60 * 1000);
+    const oneHourAndHalfAgo = new Date(new Date().getTime() - 1.5 * 60 * 60 * 1000);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
 
     /* Get events */
     const eventDocuments: QuerySnapshot<DocumentData> = await admin
       .firestore()
       .collection('PROD_events')
-      .where('date', '>', new Date())
+      .where('date', '>=', today)
       .get();
     const futureEvents = eventDocuments.docs.map((event) => {
       const eventDTO = event.data() as EventDTO;
@@ -664,7 +666,8 @@ export const scheduleMessageIsReceived = functions.pubsub.schedule('every 4 hour
         (participation) =>
           participation.props.eventUid === event.uid &&
           participation.props.modifiedAt &&
-          participation.props.modifiedAt.getTime() < twoHoursAgo.getTime()
+          new Date((participation.props.modifiedAt as unknown as Timestamp).seconds * 1000).getTime() <
+            oneHourAndHalfAgo.getTime()
       );
 
       participationsToResendSMS.forEach(async (participation) => {
