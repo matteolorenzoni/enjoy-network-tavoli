@@ -187,14 +187,14 @@ export class EnItemEventComponent {
     this.participationService
       .getParticipationsWithNoMessageByEventUid(this.event.uid)
       .then((participations: Participation[]) => {
-        const partNoMessafe = participations.map((item) => {
+        const partNoMessage = participations.map((item) => {
           const name = `${item.props.name} ${item.props.lastName}`;
           const { phone } = item.props;
           const messageAttempt = item.props.messageAttempt || 0;
           return `${name} - ${phone} (${messageAttempt})`;
         });
 
-        const alertText = partNoMessafe.length > 0 ? partNoMessafe.join('\n') : 'Tutti i messaggi sono stati inviati';
+        const alertText = partNoMessage.length > 0 ? partNoMessage.join('\n') : 'Tutti i messaggi sono stati inviati';
         alert(alertText);
       })
       .catch((err: Error) => {
