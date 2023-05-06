@@ -187,12 +187,15 @@ export class EnItemEventComponent {
     this.participationService
       .getParticipationsWithNoMessageByEventUid(this.event.uid)
       .then((participations: Participation[]) => {
-        const forAlert = participations.map(
-          (item) => `${item.props.name} ${item.props.lastName} - ${item.props.phone}`
-        );
+        const partNoMessafe = participations.map((item) => {
+          const name = `${item.props.name} ${item.props.lastName}`;
+          const { phone } = item.props;
+          const messageAttempt = item.props.messageAttempt || 0;
+          return `${name} - ${phone} (${messageAttempt})`;
+        });
 
-        const msg = forAlert && forAlert.length > 0 ? forAlert.join('\n') : 'Tutti i messaggi sono stati inviati';
-        alert(msg);
+        const alertText = partNoMessafe.length > 0 ? partNoMessafe.join('\n') : 'Tutti i messaggi sono stati inviati';
+        alert(alertText);
       })
       .catch((err: Error) => {
         this.toastService.showError(err);
