@@ -199,6 +199,9 @@ export class EnItemParticipationComponent {
   }
 
   toggleIcons(): void {
+    if (!this.participation.props.isActive) {
+      return;
+    }
     this.itemRef.nativeElement.style.transform = `translateX(${this.isOpen ? 0 : -80}px)`;
     this.itemRef.nativeElement.style.transition = 'transform 0.5s ease-in-out';
     this.isOpen = !this.isOpen;
