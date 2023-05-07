@@ -51,7 +51,9 @@ import { Participation } from '../models/type';
         </ng-template>
       </div>
 
-      <div *ngIf="showNewAttempt" class="animate-pulse rounded bg-red-800 p-2 text-center text-xs">
+      <div
+        *ngIf="!participation.props.messageIsReceived"
+        class="animate-pulse rounded bg-red-800 p-2 text-center text-xs">
         <ng-container *ngIf="(participation.props.messageAttempt || 1) < 3; else elseTemplate">
           <p>Tentativo n°{{ (participation.props.messageAttempt || 1) + 1 }} alle</p>
           <p>
@@ -104,7 +106,6 @@ export class EnItemParticipationComponent {
 
   /* Employee */
   employeeUid: string | null = null;
-  showNewAttempt?: boolean;
   newAttempt?: Date;
 
   /* Icons */
@@ -144,7 +145,6 @@ export class EnItemParticipationComponent {
       const { messageIsReceived, modifiedAt } = participationDTO;
       if (!messageIsReceived && modifiedAt) {
         const timestamp = modifiedAt.getTime();
-        this.showNewAttempt = timestamp < Date.now() - 20 * 60 * 1000;
         this.newAttempt = new Date(timestamp + 3 * 60 * 60 * 1000);
       }
     }
