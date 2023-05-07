@@ -60,7 +60,7 @@ import { Participation } from '../models/type';
           </p>
         </ng-container>
         <ng-template #elseTemplate>
-          <div role="button" class="cursor-pointer" (click)="maxAttemptInfo()">
+          <div role="button" (click)="maxAttemptInfo()">
             <p>🚨Attenzione🚨</p>
             <p>Clicca per info</p>
           </div>

@@ -31,12 +31,12 @@ import { ToastService } from '../services/toast.service';
       <div class="ml-auto flex shrink-0 gap-4 px-1">
         <fa-icon
           [icon]="modifyIcon"
-          class="transition duration-150 ease-in-out hover:cursor-pointer active:scale-90 active:text-slate-500"
+          class="transition active:text-slate-500"
           [routerLink]="['./', employee.uid]"></fa-icon>
         <fa-icon
           [icon]="deleteIcon"
           role="button"
-          class="transition duration-150 ease-in-out hover:cursor-pointer active:scale-90 active:text-slate-500"
+          class="transition active:text-slate-500"
           (click)="deleteEmployee($event)"></fa-icon>
       </div>
     </li>

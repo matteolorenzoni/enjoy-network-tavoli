@@ -2,7 +2,7 @@
   <button
     type="button"
     role="button"
-    class="w-full rounded rounded-r-none bg-slate-800 p-2 shadow-md transition duration-150 ease-in-out hover:cursor-pointer active:scale-90"
+    class="w-full rounded rounded-r-none bg-slate-800 p-2 shadow-md"
     (click)="downloadPDF()">
     <fa-icon [icon]="pdfIcon" class="text-xl text-slate-300"></fa-icon>
     <span class="ml-2 text-slate-300">PDF</span>
@@ -10,7 +10,7 @@
   <button
     type="button"
     role="button"
-    class="w-full rounded rounded-l-none bg-slate-800 p-2 shadow-md transition duration-150 ease-in-out hover:cursor-pointer active:scale-90"
+    class="w-full rounded rounded-l-none bg-slate-800 p-2 shadow-md"
     (click)="downloadCSV()">
     <fa-icon [icon]="csvIcon" class="text-xl text-slate-300"></fa-icon>
     <span class="ml-2 text-slate-300">CSV</span>
@@ -78,7 +78,7 @@
       <button
         type="submit"
         role="button"
-        class="mt-2 inline-block w-full rounded bg-primary-60 px-6 py-2.5 text-xs font-extrabold uppercase shadow-md enabled:transition enabled:duration-150 enabled:ease-in-out enabled:hover:cursor-pointer enabled:active:scale-90 enabled:active:bg-primary-40 disabled:bg-primary-60/10 disabled:text-slate-800"
+        class="inline-block w-full rounded bg-primary-60 px-6 py-2.5 text-xs font-extrabold uppercase shadow-md enabled:active:bg-primary-40 disabled:bg-primary-60/10 disabled:text-slate-800"
         [disabled]="!clientForm.valid">
         Aggiorna
       </button>
@@ -86,7 +86,7 @@
       <button
         type="button"
         role="button"
-        class="mt-2 inline-block w-full rounded bg-red-600 px-6 py-2.5 text-xs font-extrabold uppercase shadow-md transition duration-150 ease-in-out hover:cursor-pointer active:scale-90 active:bg-red-800"
+        class="inline-block w-full rounded bg-red-600 px-6 py-2.5 text-xs font-extrabold uppercase shadow-md active:bg-red-800"
         (click)="deleteClient()">
         Elimina
       </button>

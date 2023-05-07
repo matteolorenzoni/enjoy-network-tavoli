@@ -84,14 +84,16 @@
       <!-- Buttons -->
       <div class="flex gap-4">
         <button
+          role="button"
           [disabled]="!canGoToTheEvent || buttonDecision !== ''"
-          class="grow-1 rounded bg-emerald-500 p-2 text-lg font-bold text-white transition duration-150 ease-in-out active:scale-90 active:bg-emerald-700 disabled:cursor-not-allowed disabled:bg-emerald-500/20 disabled:text-slate-500"
+          class="grow-1 rounded bg-emerald-500 p-2 text-lg font-bold text-white active:bg-emerald-700 disabled:cursor-not-allowed disabled:bg-emerald-500/20 disabled:text-slate-500"
           (click)="acceptParticipation()">
           ACCETTA
         </button>
         <button
+          role="button"
           [disabled]="!canGoToTheEvent || buttonDecision !== ''"
-          class="grow-1 rounded bg-red-500 p-2 text-lg font-bold text-white transition duration-150 ease-in-out active:scale-90 active:bg-red-700 disabled:cursor-not-allowed disabled:bg-red-500/20 disabled:text-slate-500"
+          class="grow-1 rounded bg-red-500 p-2 text-lg font-bold text-white active:bg-red-700 disabled:cursor-not-allowed disabled:bg-red-500/20 disabled:text-slate-500"
           (click)="rejectParticipation()">
           RIFIUTA
         </button>

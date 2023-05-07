@@ -14,7 +14,7 @@ import { ToastService } from '../services/toast.service';
       <fa-icon
         [icon]="addIcon"
         role="button"
-        class="text-xl transition duration-150 ease-in-out hover:cursor-pointer active:scale-90 active:text-slate-500"
+        class="text-xl active:text-slate-500"
         (click)="addAssignment(employee.uid)"></fa-icon>
     </li>
   `,

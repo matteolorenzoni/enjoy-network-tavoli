@@ -15,10 +15,7 @@ import { FileGeneratorService } from '../services/file-generator.service';
   selector: 'en-item-event[event]',
   template: `
     <li class="my-4 mx-auto w-full overflow-hidden rounded-lg bg-slate-900 md:w-3/5 ">
-      <div
-        role="button"
-        class="center relative aspect-square h-full duration-150 ease-in-out hover:cursor-pointer active:scale-95"
-        (click)="toggleOpen()">
+      <div role="button" class="center relative aspect-square h-full" (click)="toggleOpen()">
         <img
           [src]="event.props.imageUrl"
           [alt]="dateFormatted + '_image'"
@@ -41,13 +38,14 @@ import { FileGeneratorService } from '../services/file-generator.service';
         [@expandEventItemDetailsAnimation]
         *ngIf="isOpen"
         class="flex flex-col gap-4 overflow-hidden bg-slate-900 p-4 text-white">
-        <div>
+        <div class="flex flex-col gap-2">
           <ul class="flex gap-2">
             <li
               *ngFor="let icon of itemNavigationMenu"
               [routerLink]="icon.link"
-              class="flex w-1/3 flex-col items-center rounded bg-primary-65 p-1 transition duration-150 ease-in-out hover:cursor-pointer active:scale-95 active:bg-primary-50 active:shadow-lg">
-              <a><fa-icon [icon]="icon.definition"></fa-icon></a>
+              role="button"
+              class="flex w-1/3 flex-col items-center rounded bg-primary-65 p-1 active:bg-primary-50 active:shadow-lg">
+              <fa-icon [icon]="icon.definition"></fa-icon>
               <span class="text-xs xs:text-sm">{{ icon.name }}</span>
             </li>
           </ul>
@@ -55,14 +53,14 @@ import { FileGeneratorService } from '../services/file-generator.service';
             <button
               type="button"
               role="button"
-              class="mt-2 inline-block w-full rounded bg-cyan-600 px-6 py-2.5 text-xs font-extrabold uppercase shadow-md transition duration-150 ease-in-out hover:cursor-pointer active:scale-95 active:bg-cyan-800"
+              class="inline-block w-full rounded bg-cyan-600 px-6 py-2.5 text-xs font-extrabold uppercase shadow-md active:bg-cyan-800"
               (click)="downloadPDFTables()">
               PDF Tavoli
             </button>
             <button
               type="button"
               role="button"
-              class="mt-2 inline-block w-full rounded bg-cyan-600 px-6 py-2.5 text-xs font-extrabold uppercase shadow-md transition duration-150 ease-in-out hover:cursor-pointer active:scale-95 active:bg-cyan-800"
+              class="inline-block w-full rounded bg-cyan-600 px-6 py-2.5 text-xs font-extrabold uppercase shadow-md active:bg-cyan-800"
               (click)="downloadPDFParticipants()">
               PDF Partecipanti
             </button>
@@ -70,14 +68,14 @@ import { FileGeneratorService } from '../services/file-generator.service';
           <button
             type="button"
             role="button"
-            class="mt-2 inline-block w-full rounded bg-indigo-600 px-6 py-2.5 text-xs font-extrabold uppercase shadow-md transition duration-150 ease-in-out hover:cursor-pointer active:scale-95 active:bg-indigo-800"
+            class="inline-block w-full rounded bg-indigo-600 px-6 py-2.5 text-xs font-extrabold uppercase shadow-md active:bg-indigo-800"
             (click)="showMessageNotSend()">
             Messaggi non inviati
           </button>
           <button
             type="button"
             role="button"
-            class="mt-2 inline-block w-full rounded bg-red-600 px-6 py-2.5 text-xs font-extrabold uppercase shadow-md transition duration-150 ease-in-out hover:cursor-pointer active:scale-95 active:bg-red-800"
+            class="inline-block w-full rounded bg-red-600 px-6 py-2.5 text-xs font-extrabold uppercase shadow-md active:bg-red-800"
             (click)="deleteEvent($event)">
             ELIMINA
           </button>
