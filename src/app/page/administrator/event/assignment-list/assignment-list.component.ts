@@ -7,11 +7,7 @@ import { ToastService } from 'src/app/services/toast.service';
 import { faArrowLeft, faFilter, faList } from '@fortawesome/free-solid-svg-icons';
 import { Location } from '@angular/common';
 import { EmployeeService } from 'src/app/services/employee.service';
-import {
-  fadeInCreateItemAnimation,
-  slideInCreateItemHeader,
-  staggeredFadeInIncrement
-} from 'src/app/animations/animations';
+import { fadeInCreateItemAnimation, staggeredFadeInIncrement } from 'src/app/animations/animations';
 import { AssignmentService } from 'src/app/services/assignment.service';
 import { UserService } from 'src/app/services/user.service';
 import { environment } from 'src/environments/environment';
@@ -20,7 +16,7 @@ import { environment } from 'src/environments/environment';
   selector: 'app-assignment-list',
   templateUrl: './assignment-list.component.html',
   styleUrls: ['./assignment-list.component.scss'],
-  animations: [slideInCreateItemHeader, fadeInCreateItemAnimation, staggeredFadeInIncrement]
+  animations: [fadeInCreateItemAnimation, staggeredFadeInIncrement]
 })
 export class AssignmentListComponent {
   /* Icons */

@@ -36,18 +36,6 @@ export const toastAnimation = trigger('toastAnimation', [
 ]);
 
 // Item main
-export const slideInCreateItemHeader = trigger('slideInCreateItemHeader', [
-  transition(':enter', [
-    style({ transform: 'translateY(-100%)', opacity: 0 }),
-    animate('600ms ease-out', style({ transform: 'translateY(0%)', opacity: 1 }))
-  ]),
-  transition(':leave', [
-    style({ transform: 'translateY(0%)', opacity: 1 }),
-    animate('600ms ease-out', style({ transform: 'translateY(-100%)', opacity: 0 }))
-  ])
-]);
-
-// Item main
 export const fadeInCreateItemAnimation = trigger('fadeInCreateItemAnimation', [
   transition(':enter', [style({ opacity: 0 }), animate('600ms 600ms ease-out', style({ opacity: 1 }))]),
   transition(':leave', [style({ opacity: 1 }), animate('600ms 600ms ease-out', style({ opacity: 0 }))])

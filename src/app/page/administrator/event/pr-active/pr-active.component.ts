@@ -1,10 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { faArrowLeft, faFilter } from '@fortawesome/free-solid-svg-icons';
-import {
-  slideInCreateItemHeader,
-  fadeInCreateItemAnimation,
-  staggeredFadeInIncrement
-} from 'src/app/animations/animations';
+import { fadeInCreateItemAnimation, staggeredFadeInIncrement } from 'src/app/animations/animations';
 import { Location } from '@angular/common';
 import { Employee } from 'src/app/models/type';
 import { ActivatedRoute } from '@angular/router';
@@ -15,7 +11,7 @@ import { ToastService } from '../../../../services/toast.service';
   selector: 'app-pr-active',
   templateUrl: './pr-active.component.html',
   styleUrls: ['./pr-active.component.scss'],
-  animations: [slideInCreateItemHeader, fadeInCreateItemAnimation, staggeredFadeInIncrement]
+  animations: [fadeInCreateItemAnimation, staggeredFadeInIncrement]
 })
 export class PrActiveComponent implements OnInit {
   /* Icons */

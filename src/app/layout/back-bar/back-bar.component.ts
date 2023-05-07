@@ -1,13 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
-import { slideInCreateItemHeader } from 'src/app/animations/animations';
 
 @Component({
   selector: 'app-back-bar',
   templateUrl: './back-bar.component.html',
-  styleUrls: ['./back-bar.component.scss'],
-  animations: [slideInCreateItemHeader]
+  styleUrls: ['./back-bar.component.scss']
 })
 export class BackBarComponent implements OnInit {
   /* Icons */
