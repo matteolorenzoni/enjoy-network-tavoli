@@ -1,5 +1,5 @@
 import { NgModule, isDevMode } from '@angular/core';
-import { BrowserModule, HAMMER_GESTURE_CONFIG, HammerModule } from '@angular/platform-browser';
+import { BrowserModule } from '@angular/platform-browser';
 import { QRCodeModule } from 'angularx-qrcode';
 
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -57,7 +57,6 @@ import { BackBarComponent } from './layout/back-bar/back-bar.component';
 import { TicketManualValidationComponent } from './page/inspector/ticket-manual-validation/ticket-manual-validation.component';
 import { ClientManagementComponent } from './page/administrator/client/client-management/client-management.component';
 import { EnLoaderComponent } from './components/en-loader.component';
-import { MyHammerConfig } from './animations/gesture';
 
 @NgModule({
   declarations: [
@@ -113,7 +112,6 @@ import { MyHammerConfig } from './animations/gesture';
     FontAwesomeModule,
     ZXingScannerModule,
     NgChartsModule,
-    HammerModule,
     ServiceWorkerModule.register('ngsw-worker.js', {
       enabled: !isDevMode(),
       // Register the ServiceWorker as soon as the application is stable
@@ -125,13 +123,7 @@ import { MyHammerConfig } from './animations/gesture';
     provideFirestore(() => getFirestore()),
     provideStorage(() => getStorage())
   ],
-  providers: [
-    DatePipe,
-    {
-      provide: HAMMER_GESTURE_CONFIG,
-      useClass: MyHammerConfig
-    }
-  ],
+  providers: [DatePipe],
   bootstrap: [AppComponent]
 })
 export class AppModule {}
