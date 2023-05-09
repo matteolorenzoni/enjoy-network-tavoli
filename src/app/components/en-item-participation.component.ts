@@ -111,6 +111,7 @@ export class EnItemParticipationComponent {
   /* Employee */
   employeeUid: string | null = null;
   newAttempt?: Date;
+  attemptsHours = [9, 12, 15, 18, 21, 24];
 
   /* Subscriptions */
   subIsActive!: Subscription;
@@ -151,8 +152,7 @@ export class EnItemParticipationComponent {
       const participationDTO = (currentValue as Participation).props;
       const { messageIsReceived, modifiedAt } = participationDTO;
       if (!messageIsReceived && modifiedAt) {
-        const timestamp = modifiedAt.getTime();
-        this.newAttempt = new Date(timestamp + 3 * 60 * 60 * 1000);
+        this.newAttempt = this.getClosestTime();
       }
     }
   }
@@ -211,5 +211,16 @@ export class EnItemParticipationComponent {
     alert(
       "Superato il numero di tentativi per l'invio del messaggio. Inviare manualmente attraverso il pulsante di share sulla destra e successivamente contattare uno staffer."
     );
+  }
+
+  getClosestTime() {
+    const timestamp = new Date().getTime() + 60 * 60 * 1000 + 30 * 60 * 1000;
+    const hours = new Date(timestamp).getHours();
+    const closestHour = this.attemptsHours.find((hour) => hour > hours) || this.attemptsHours[0];
+
+    const newAttempt = new Date(timestamp);
+    newAttempt.setHours(closestHour, 0, 0, 0);
+
+    return newAttempt;
   }
 }
