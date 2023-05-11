@@ -6,6 +6,7 @@ import { ParticipationDTO, EventDTO, TableDTO, AssignmentDTO, ClientDTO } from '
 import { ShorterUrlResponse, SMS, SMSResponse, Participation } from './type';
 import { SMSStatusType } from './enum';
 import { logger } from 'firebase-functions';
+import { debug } from 'firebase-functions/logger';
 
 admin.initializeApp();
 
@@ -620,7 +621,7 @@ export const visibilityChange = functions.https.onRequest(async (request, respon
   }
 });
 
-export const scheduleMessageIsReceived = functions.pubsub.schedule('every 3 hours').onRun(async (context) => {
+export const scheduleMessageIsReceived = functions.pubsub.schedule('0 0,9,12,15,18,21 * * *').onRun(async (context) => {
   try {
     /* General */
     const oneHourAndHalfAgo = new Date(new Date().getTime() - 1.5 * 60 * 60 * 1000);
@@ -637,6 +638,7 @@ export const scheduleMessageIsReceived = functions.pubsub.schedule('every 3 hour
       const eventDTO = event.data() as EventDTO;
       return { uid: event.id, props: eventDTO };
     });
+    debug(futureEvents);
 
     /* Get participations */
     const participations: Participation[] = [];
@@ -669,6 +671,8 @@ export const scheduleMessageIsReceived = functions.pubsub.schedule('every 3 hour
           new Date((participation.props.modifiedAt as unknown as Timestamp).seconds * 1000).getTime() <
             oneHourAndHalfAgo.getTime()
       );
+      debug(event.props.name);
+      debug(participationsToResendSMS);
 
       participationsToResendSMS.forEach(async (participation) => {
         const { name, phone, eventUid, tableUid } = participation.props;
