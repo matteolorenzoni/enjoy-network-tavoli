@@ -13,6 +13,55 @@ admin.initializeApp();
 /* -------------------------------------------------------------------------------------------------------------------------------
 -------------------------------------------------------- TEST --------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------------- */
+// Replace BUCKET_NAME
+const client = new admin.firestore.v1.FirestoreAdminClient();
+const bucket = 'gs://enjoy-network-backup';
+
+export const scheduledFirestoreExport = functions.pubsub
+  .schedule('0 0 * * 1-5')
+  .timeZone('Europe/Rome')
+  .onRun((context) => {
+    // set timezone
+    process.env.TZ = 'Europe/Rome';
+
+    const projectId = process.env.GCP_PROJECT || process.env.GCLOUD_PROJECT;
+
+    if (!projectId) {
+      logger.error('GCP_PROJECT / GCLOUD_PROJECT environment variables not set.');
+      throw new Error('GCP_PROJECT / GCLOUD_PROJECT environment variables not set.');
+    }
+
+    const databaseName = client.databasePath(projectId, '(default)');
+
+    return client
+      .exportDocuments({
+        name: databaseName,
+        outputUriPrefix: bucket,
+        // Leave collectionIds empty to export all collections or set to a list of collection IDs to export,
+        // collectionIds: ['users', 'posts']
+        collectionIds: [
+          'PROD_assignments',
+          'PROD_clients',
+          'PROD_employees',
+          'PROD_events',
+          'PROD_participations',
+          'PROD_tables'
+        ]
+      })
+      .then((responses) => {
+        const response = responses[0];
+        debug(`Operation Name: ${response['name']}`);
+        return;
+      })
+      .catch((err) => {
+        logger.error(err);
+        throw new Error('Export operation failed');
+      });
+  });
+
+/* -------------------------------------------------------------------------------------------------------------------------------
+-------------------------------------------------------- TEST --------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------- */
 export const z_participatiOnCreate = functions.firestore
   .document('participations/{participationId}')
   .onCreate(async (snap, context) => {
@@ -621,68 +670,71 @@ export const visibilityChange = functions.https.onRequest(async (request, respon
   }
 });
 
-export const scheduleMessageIsReceived = functions.pubsub.schedule('0 0,9,12,15,18,21 * * *').onRun(async (context) => {
-  try {
-    /* General */
-    const oneHourAndHalfAgo = new Date(new Date().getTime() - 1.5 * 60 * 60 * 1000);
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
+export const scheduleMessageIsReceived = functions.pubsub
+  .schedule('0 0,9,12,15,18,21 * * *')
+  .timeZone('Europe/Rome')
+  .onRun(async (context) => {
+    try {
+      /* General */
+      const oneHourAndHalfAgo = new Date(new Date().getTime() - 1.5 * 60 * 60 * 1000);
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
 
-    /* Get events */
-    const eventDocuments: QuerySnapshot<DocumentData> = await admin
-      .firestore()
-      .collection('PROD_events')
-      .where('date', '>=', today)
-      .get();
-    const futureEvents = eventDocuments.docs.map((event) => {
-      const eventDTO = event.data() as EventDTO;
-      return { uid: event.id, props: eventDTO };
-    });
-    debug(futureEvents);
-
-    /* Get participations */
-    const participations: Participation[] = [];
-    const participationDocuments: QuerySnapshot<DocumentData> = await admin
-      .firestore()
-      .collection('PROD_participations')
-      .where('isActive', '==', true)
-      .where('isScanned', '==', false)
-      .where('messageIsReceived', '==', false)
-      .where('messageAttempt', '<', 4)
-      .where(
-        'eventUid',
-        'in',
-        futureEvents.map((event) => event.uid)
-      )
-      .get();
-    participationDocuments.forEach((participation) => {
-      const participationDTO = participation.data() as ParticipationDTO;
-      participations.push({ uid: participation.id, props: participationDTO });
-    });
-
-    /* Send sms for all participations that have not received the message in the last 2 hours */
-    /* Date filter here because in firestore isn't possible execute query with inequality on two fields */
-    futureEvents.forEach((event) => {
-      const { message } = event.props;
-      const participationsToResendSMS: Participation[] = participations.filter(
-        (participation) =>
-          participation.props.eventUid === event.uid &&
-          participation.props.modifiedAt &&
-          new Date((participation.props.modifiedAt as unknown as Timestamp).seconds * 1000).getTime() <
-            oneHourAndHalfAgo.getTime()
-      );
-      debug(event.props.name);
-      debug(participationsToResendSMS);
-
-      participationsToResendSMS.forEach(async (participation) => {
-        const { name, phone, eventUid, tableUid } = participation.props;
-        await sendSMS(participation.uid, name, phone, eventUid, message, tableUid);
+      /* Get events */
+      const eventDocuments: QuerySnapshot<DocumentData> = await admin
+        .firestore()
+        .collection('PROD_events')
+        .where('date', '>=', today)
+        .get();
+      const futureEvents = eventDocuments.docs.map((event) => {
+        const eventDTO = event.data() as EventDTO;
+        return { uid: event.id, props: eventDTO };
       });
-    });
-  } catch (error) {
-    logger.error(error);
-  }
-});
+      debug(futureEvents);
+
+      /* Get participations */
+      const participations: Participation[] = [];
+      const participationDocuments: QuerySnapshot<DocumentData> = await admin
+        .firestore()
+        .collection('PROD_participations')
+        .where('isActive', '==', true)
+        .where('isScanned', '==', false)
+        .where('messageIsReceived', '==', false)
+        .where('messageAttempt', '<', 4)
+        .where(
+          'eventUid',
+          'in',
+          futureEvents.map((event) => event.uid)
+        )
+        .get();
+      participationDocuments.forEach((participation) => {
+        const participationDTO = participation.data() as ParticipationDTO;
+        participations.push({ uid: participation.id, props: participationDTO });
+      });
+
+      /* Send sms for all participations that have not received the message in the last 2 hours */
+      /* Date filter here because in firestore isn't possible execute query with inequality on two fields */
+      futureEvents.forEach((event) => {
+        const { message } = event.props;
+        const participationsToResendSMS: Participation[] = participations.filter(
+          (participation) =>
+            participation.props.eventUid === event.uid &&
+            participation.props.modifiedAt &&
+            new Date((participation.props.modifiedAt as unknown as Timestamp).seconds * 1000).getTime() <
+              oneHourAndHalfAgo.getTime()
+        );
+        debug(event.props.name);
+        debug(participationsToResendSMS);
+
+        participationsToResendSMS.forEach(async (participation) => {
+          const { name, phone, eventUid, tableUid } = participation.props;
+          await sendSMS(participation.uid, name, phone, eventUid, message, tableUid);
+        });
+      });
+    } catch (error) {
+      logger.error(error);
+    }
+  });
 
 /* -------------------------------------------------------------------------------------------------------------------------------
 -------------------------------------------------------- GENERAL --------------------------------------------------------------------
