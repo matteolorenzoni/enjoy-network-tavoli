@@ -1,8 +1,8 @@
 import { environment } from 'src/environments/environment';
-import { UserCredential } from '@angular/fire/auth';
 import { Injectable } from '@angular/core';
 import { documentId, orderBy, QueryConstraint, where } from 'firebase/firestore';
 import { Observable } from 'rxjs';
+import { UserCredential } from 'firebase/auth';
 import { UserService } from './user.service';
 import { AssignmentDTO } from '../models/collection';
 import { Assignment, Employee } from '../models/type';

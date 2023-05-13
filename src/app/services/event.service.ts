@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { documentId, orderBy, QueryConstraint, where } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
+import { orderBy, QueryConstraint, where, documentId } from 'firebase/firestore';
 import { assignmentConverter, eventConverter } from '../models/converter';
 import { Assignment, Event } from '../models/type';
 import { FirebaseCreateService } from './firebase/firebase-crud/firebase-create.service';

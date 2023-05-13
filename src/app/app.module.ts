@@ -6,12 +6,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { ReactiveFormsModule } from '@angular/forms';
-import { provideFirestore, getFirestore } from '@angular/fire/firestore';
-import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
-import { provideAuth, getAuth } from '@angular/fire/auth';
-import { provideStorage, getStorage } from '@angular/fire/storage';
 import { DatePipe } from '@angular/common';
-import { environment } from 'src/environments/environment';
 import { HttpClientModule } from '@angular/common/http';
 import { ZXingScannerModule } from '@zxing/ngx-scanner';
 import { NgChartsModule } from 'ng2-charts';
@@ -117,13 +112,14 @@ import { EnLoaderComponent } from './components/en-loader.component';
       // Register the ServiceWorker as soon as the application is stable
       // or after 30 seconds (whichever comes first).
       registrationStrategy: 'registerWhenStable:30000'
-    }),
-    provideFirebaseApp(() => initializeApp(environment.firebase)),
-    provideAuth(() => getAuth()),
-    provideFirestore(() => getFirestore()),
-    provideStorage(() => getStorage())
+    })
   ],
   providers: [DatePipe],
   bootstrap: [AppComponent]
 })
 export class AppModule {}
+
+// provideFirebaseApp(() => initializeApp(environment.firebase)),
+// provideAuth(() => getAuth()),
+// provideFirestore(() => getFirestore()),
+// provideStorage(() => getStorage())

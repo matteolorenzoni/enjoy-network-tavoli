@@ -1,29 +1,28 @@
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
 import {
   Firestore,
+  FirestoreDataConverter,
+  collection,
   doc,
   getDoc,
-  collection,
-  getDocs,
-  query,
-  getFirestore,
   QueryConstraint,
+  getDocs,
   QueryDocumentSnapshot,
-  FirestoreDataConverter,
-  onSnapshot
-} from '@angular/fire/firestore';
-import { Observable } from 'rxjs';
+  onSnapshot,
+  query
+} from 'firebase/firestore';
 import { LoaderService } from '../../loader.service';
+import { InitializeService } from '../initialize.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class FirebaseReadService {
-  /* Firebase */
-  private db!: Firestore;
+  private db: Firestore;
 
-  constructor(private loaderService: LoaderService) {
-    this.db = getFirestore();
+  constructor(private initializeService: InitializeService, private loaderService: LoaderService) {
+    this.db = this.initializeService.getDb();
   }
 
   /* Get a single document by its uid */

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { orderBy, QueryConstraint, where } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
+import { QueryConstraint, where, orderBy } from 'firebase/firestore';
 import { participationConverter, tableConverter } from '../models/converter';
 import { Participation, Table } from '../models/type';
 import { FirebaseCreateService } from './firebase/firebase-crud/firebase-create.service';

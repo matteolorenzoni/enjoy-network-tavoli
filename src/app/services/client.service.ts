@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { orderBy, QueryConstraint, where } from '@angular/fire/firestore';
 import { environment } from 'src/environments/environment';
+import { QueryConstraint, orderBy, where } from 'firebase/firestore';
 import { clientConverter } from '../models/converter';
 import { Client } from '../models/type';
 import { FirebaseCreateService } from './firebase/firebase-crud/firebase-create.service';

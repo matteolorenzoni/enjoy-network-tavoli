@@ -1,18 +1,18 @@
 import { Injectable } from '@angular/core';
-import { Firestore, doc, getFirestore, collection, writeBatch, deleteField, updateDoc } from '@angular/fire/firestore';
 import { Client, Employee, Event, Participation, Table } from 'src/app/models/type';
+import { Firestore, deleteField, collection, doc, updateDoc, writeBatch } from 'firebase/firestore';
 import { LoaderService } from '../../loader.service';
 import { Assignment } from '../../../models/type';
+import { InitializeService } from '../initialize.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class FirebaseUpdateService {
-  /* Firebase */
-  private db!: Firestore;
+  private db: Firestore;
 
-  constructor(private loaderService: LoaderService) {
-    this.db = getFirestore();
+  constructor(private initializeService: InitializeService, private loaderService: LoaderService) {
+    this.db = this.initializeService.getDb();
   }
 
   public async updateDocument(

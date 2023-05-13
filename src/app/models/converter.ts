@@ -1,12 +1,12 @@
 import { AssignmentDTO, ClientDTO, EmployeeDTO, EventDTO, ParticipationDTO, TableDTO } from 'src/app/models/collection';
 import {
-  DocumentData,
   FirestoreDataConverter,
+  WithFieldValue,
+  DocumentData,
   QueryDocumentSnapshot,
   SnapshotOptions,
-  Timestamp,
-  WithFieldValue
-} from '@angular/fire/firestore';
+  Timestamp
+} from 'firebase/firestore';
 import { Assignment, Client, Employee, Event, Participation, Table } from './type';
 
 export const employeeConverter: FirestoreDataConverter<Employee> = {

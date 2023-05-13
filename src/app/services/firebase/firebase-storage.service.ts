@@ -1,26 +1,25 @@
 import { DatePipe } from '@angular/common';
 import { Injectable } from '@angular/core';
 import {
-  deleteObject,
   FirebaseStorage,
-  getDownloadURL,
-  getStorage,
   ref,
+  UploadTaskSnapshot,
   uploadBytesResumable,
-  UploadTaskSnapshot
-} from '@angular/fire/storage';
+  getDownloadURL,
+  deleteObject
+} from 'firebase/storage';
 import { EventDTO } from 'src/app/models/collection';
 import { environment } from 'src/environments/environment';
+import { InitializeService } from './initialize.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class FirebaseStorageService {
-  /* Firebase */
-  private storage!: FirebaseStorage;
+  private storage: FirebaseStorage;
 
-  constructor(private datePipe: DatePipe) {
-    this.storage = getStorage();
+  constructor(private initializeService: InitializeService, private datePipe: DatePipe) {
+    this.storage = this.initializeService.getStorage();
   }
 
   public async addPhotoToEvent(event: EventDTO, photo: File): Promise<string> {

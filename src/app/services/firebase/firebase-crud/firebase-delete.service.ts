@@ -1,16 +1,16 @@
 import { Injectable } from '@angular/core';
-import { Firestore, doc, deleteDoc, getFirestore, collection, writeBatch } from '@angular/fire/firestore';
+import { Firestore, collection, deleteDoc, doc, writeBatch } from 'firebase/firestore';
 import { LoaderService } from '../../loader.service';
+import { InitializeService } from '../initialize.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class FirebaseDeleteService {
-  /* Firebase */
-  private db!: Firestore;
+  private db: Firestore;
 
-  constructor(private loaderService: LoaderService) {
-    this.db = getFirestore();
+  constructor(private initializeService: InitializeService, private loaderService: LoaderService) {
+    this.db = this.initializeService.getDb();
   }
 
   public async deleteDocumentByUid(collectionName: string, documentUid: string): Promise<void> {

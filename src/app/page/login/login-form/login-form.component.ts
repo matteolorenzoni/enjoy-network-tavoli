@@ -1,11 +1,11 @@
 import { SessionStorageService } from 'src/app/services/sessionstorage.service';
-import { UserCredential } from '@angular/fire/auth';
 import { Component, EventEmitter, Output, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { faAt, faKey } from '@fortawesome/free-solid-svg-icons';
 import { UserService } from 'src/app/services/user.service';
 import { ToastService } from 'src/app/services/toast.service';
 import { translateFirebaseErrorMessage } from 'src/app/translate/translate';
+import { UserCredential } from 'firebase/auth';
 import { FirebaseLoginErrorType, InputType } from '../../../models/enum';
 
 @Component({

@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
-import { Auth, onAuthStateChanged, updatePassword, User, AuthError } from '@angular/fire/auth';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ToastService } from 'src/app/services/toast.service';
 import { Location } from '@angular/common';
+import { AuthError, User, onAuthStateChanged, updatePassword } from 'firebase/auth';
+import { InitializeService } from 'src/app/services/firebase/initialize.service';
 
 @Component({
   selector: 'app-update-password',
@@ -19,8 +20,12 @@ export class UpdatePasswordComponent {
 
   user: User | null = null;
 
-  constructor(private auth: Auth, private location: Location, private toastService: ToastService) {
-    onAuthStateChanged(auth, (user) => {
+  constructor(
+    private location: Location,
+    private initializeService: InitializeService,
+    private toastService: ToastService
+  ) {
+    onAuthStateChanged(this.initializeService.getAuth(), (user) => {
       this.user = user;
     });
 

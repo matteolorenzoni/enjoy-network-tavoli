@@ -1,17 +1,18 @@
 import { RoleType } from 'src/app/models/enum';
 import { Injectable } from '@angular/core';
-import {
-  Auth,
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-  signOut,
-  User,
-  UserCredential
-} from '@angular/fire/auth';
 import { Router } from '@angular/router';
 import { environment } from 'src/environments/environment';
+import {
+  User,
+  UserCredential,
+  createUserWithEmailAndPassword,
+  onAuthStateChanged,
+  signInWithEmailAndPassword,
+  signOut
+} from 'firebase/auth';
 import { FirebaseReadService } from './firebase/firebase-crud/firebase-read.service';
 import { employeeConverter } from '../models/converter';
+import { InitializeService } from './firebase/initialize.service';
 
 @Injectable({
   providedIn: 'root'
@@ -20,8 +21,12 @@ export class UserService {
   userUid = '';
   userRole: RoleType = RoleType.PR;
 
-  constructor(private auth: Auth, private router: Router, private firebaseReadService: FirebaseReadService) {
-    this.auth.onAuthStateChanged((user) => {
+  constructor(
+    private router: Router,
+    private initializeService: InitializeService,
+    private firebaseReadService: FirebaseReadService
+  ) {
+    onAuthStateChanged(this.initializeService.getAuth(), (user) => {
       if (user) {
         this.userUid = user.uid;
       }
@@ -42,15 +47,20 @@ export class UserService {
     }
   }
 
+  // TODO: eliminarla
   public async getCurrentUserRole(): Promise<string> {
     return new Promise((resolve, reject) => {
-      this.auth.onAuthStateChanged((user) => {
-        if (user) {
-          const role = this.getRole(user);
-          resolve(role);
-        }
-        reject();
-      }, reject);
+      onAuthStateChanged(
+        this.initializeService.getAuth(),
+        (user) => {
+          if (user) {
+            const role = this.getRole(user);
+            resolve(role);
+          }
+          reject();
+        },
+        reject
+      );
     });
   }
 
@@ -59,15 +69,15 @@ export class UserService {
   }
 
   public register(email: string, password: string): Promise<UserCredential> {
-    return createUserWithEmailAndPassword(this.auth, email, password);
+    return createUserWithEmailAndPassword(this.initializeService.getAuth(), email, password);
   }
 
   public login(email: string, password: string): Promise<UserCredential> {
-    return signInWithEmailAndPassword(this.auth, email, password);
+    return signInWithEmailAndPassword(this.initializeService.getAuth(), email, password);
   }
 
   public logout(): Promise<void> {
     this.router.navigate(['/login']);
-    return signOut(this.auth);
+    return signOut(this.initializeService.getAuth());
   }
 }

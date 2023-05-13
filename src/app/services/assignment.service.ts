@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { QueryConstraint, where } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
+import { QueryConstraint, where } from 'firebase/firestore';
 import { FirebaseReadService } from './firebase/firebase-crud/firebase-read.service';
 import { FirebaseCreateService } from './firebase/firebase-crud/firebase-create.service';
 import { FirebaseUpdateService } from './firebase/firebase-crud/firebase-update.service';

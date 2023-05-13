@@ -1,27 +1,18 @@
 import { Injectable } from '@angular/core';
-import {
-  DocumentData,
-  DocumentReference,
-  Firestore,
-  addDoc,
-  getFirestore,
-  collection,
-  doc,
-  setDoc
-} from '@angular/fire/firestore';
 import { Assignment, Client, CustomError, Employee, Event, Table } from 'src/app/models/type';
+import { Firestore, DocumentReference, DocumentData, collection, addDoc, doc, setDoc } from 'firebase/firestore';
 import { Participation } from '../../../models/type';
 import { LoaderService } from '../../loader.service';
+import { InitializeService } from '../initialize.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class FirebaseCreateService {
-  /* Firebase */
-  private db!: Firestore;
+  private db: Firestore;
 
-  constructor(private loaderService: LoaderService) {
-    this.db = getFirestore();
+  constructor(private initializeService: InitializeService, private loaderService: LoaderService) {
+    this.db = this.initializeService.getDb();
   }
 
   public async addDocument(

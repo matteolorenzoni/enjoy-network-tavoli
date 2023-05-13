@@ -1,8 +1,8 @@
 /* eslint-disable operator-linebreak */
 import { Injectable } from '@angular/core';
-import { orderBy, QueryConstraint, where } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
+import { QueryConstraint, where, orderBy } from 'firebase/firestore';
 import { SMSStatusType, ParticipationType } from '../models/enum';
 import { Client, Participation } from '../models/type';
 import { participationConverter } from '../models/converter';
