@@ -1,21 +1,34 @@
 import { UserService } from 'src/app/services/user.service';
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot } from '@angular/router';
+import { Observable, map, skipWhile } from 'rxjs';
+import { EmployeeService } from '../services/employee.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthGuard {
-  constructor(private userService: UserService) {}
+  constructor(private userService: UserService, private employeeService: EmployeeService) {}
 
-  async canActivate(route: ActivatedRouteSnapshot): Promise<boolean> {
-    const role = await this.userService.getCurrentUserRole();
-    const path = route.routeConfig?.path;
-    if (role === path) {
-      return true;
-    }
+  public canActivate(route: ActivatedRouteSnapshot): Observable<Promise<boolean>> {
+    return this.userService.getUserSubject().pipe(
+      skipWhile((user) => !user),
+      map(async (user) => {
+        if (!user) {
+          this.userService.logout();
+          return false;
+        }
 
-    this.userService.logout();
-    return false;
+        const { role } = (await this.employeeService.getEmployee(user.uid)).props;
+        const path = route.routeConfig?.path;
+
+        if (role !== path) {
+          this.userService.logout();
+          return false;
+        }
+
+        return true;
+      })
+    );
   }
 }

@@ -1,9 +1,9 @@
+import { UserService } from 'src/app/services/user.service';
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ToastService } from 'src/app/services/toast.service';
 import { Location } from '@angular/common';
-import { AuthError, User, onAuthStateChanged, updatePassword } from 'firebase/auth';
-import { InitializeService } from 'src/app/services/firebase/initialize.service';
+import { AuthError, User, updatePassword } from 'firebase/auth';
 
 @Component({
   selector: 'app-update-password',
@@ -18,14 +18,10 @@ export class UpdatePasswordComponent {
   /* Label */
   lblButton = 'Cambia password';
 
-  user: User | null = null;
+  user?: User;
 
-  constructor(
-    private location: Location,
-    private initializeService: InitializeService,
-    private toastService: ToastService
-  ) {
-    onAuthStateChanged(this.initializeService.getAuth(), (user) => {
+  constructor(private location: Location, private userService: UserService, private toastService: ToastService) {
+    this.userService.getUserSubject().subscribe((user) => {
       this.user = user;
     });
 

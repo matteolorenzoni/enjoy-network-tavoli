@@ -9,17 +9,13 @@ import { Toast } from '../models/type';
   providedIn: 'root'
 })
 export class ToastService {
-  employeeUid = '';
-
   toast$ = new BehaviorSubject<Toast>({
     type: null,
     message: null,
     isVisible: false
   });
 
-  constructor(private userService: UserService, private customErrorService: CustomErrorService) {
-    this.employeeUid = this.userService.getUserUid();
-  }
+  constructor(private userService: UserService, private customErrorService: CustomErrorService) {}
 
   /* Success */
   public showSuccess(message: string): void {
@@ -28,18 +24,15 @@ export class ToastService {
 
   /* Error */
   public showError(err: Error): void {
-    this.customErrorService.createCustomError(err.message, err.stack || '', this.employeeUid);
+    const employeeUid = this.userService.getUserUid();
+    this.customErrorService.createCustomError(err.message, err.stack || '', employeeUid);
     console.error(err.message);
     this.show(ToastType.ERROR, err.message.split('DEBUG:')[0]);
   }
 
   public showErrorMessage(message: string): void {
-    function stackTrace() {
-      const err = new Error();
-      return err.stack;
-    }
-
-    this.customErrorService.createCustomError(message, stackTrace() || '', this.employeeUid);
+    const employeeUid = this.userService.getUserUid();
+    this.customErrorService.createCustomError(message, new Error().stack || '', employeeUid);
     console.error(message);
     this.show(ToastType.ERROR, message.split('DEBUG:')[0]);
   }
