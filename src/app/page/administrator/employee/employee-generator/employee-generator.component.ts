@@ -1,11 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { RoleType } from 'src/app/models/enum';
+import { FirebaseLoginErrorType, RoleType } from 'src/app/models/enum';
 import { EmployeeService } from 'src/app/services/employee.service';
 import { ToastService } from 'src/app/services/toast.service';
 import { Location } from '@angular/common';
 import { Employee } from 'src/app/models/type';
+import { FirebaseError } from 'firebase/app';
+import { translateFirebaseErrorMessage } from 'src/app/translate/translate';
 
 @Component({
   selector: 'app-employee-generator',
@@ -92,35 +94,35 @@ export class EmployeeGeneratorComponent implements OnInit {
     }
   }
 
-  public onSubmit() {
-    this.isLoading = true;
-    const { name, lastName, role, phone, zone, email, isActive } = this.employeeForm.getRawValue();
+  public async onSubmit() {
+    try {
+      this.isLoading = true;
+      const { name, lastName, role, phone, zone, email, isActive } = this.employeeForm.getRawValue();
 
-    const employee: Employee = {
-      uid: this.employeeUid ?? '',
-      props: {
-        name: name.trim().replace(/\s\s+/g, ' '),
-        lastName: lastName?.trim().replace(/\s\s+/g, ' ') || null,
-        role: role || null,
-        phone: phone || null,
-        zone: zone?.trim().replace(/\s\s+/g, ' ') || null,
-        email: email?.trim().replace(/\s\s+/g, ' ') || null,
-        isActive: isActive || false
+      const employee: Employee = {
+        uid: this.employeeUid ?? '',
+        props: {
+          name: name.trim().replace(/\s\s+/g, ' '),
+          lastName: lastName?.trim().replace(/\s\s+/g, ' ') || null,
+          role: role || null,
+          phone: phone || null,
+          zone: zone?.trim().replace(/\s\s+/g, ' ') || null,
+          email: email?.trim().replace(/\s\s+/g, ' ') || null,
+          isActive: isActive || false
+        }
+      };
+
+      await this.employeeService.addOrUpdateEmployee(email, employee);
+
+      this.employeeForm.reset();
+      this.location.back();
+      this.toastService.showSuccess(this.employeeUid ? 'Dipendente aggiornato' : 'Dipendente creato');
+    } catch (err: unknown) {
+      this.isLoading = false;
+      if (err instanceof FirebaseError) {
+        const errorMessageTranslated = translateFirebaseErrorMessage(err.code as FirebaseLoginErrorType);
+        this.toastService.showErrorMessage(errorMessageTranslated);
       }
-    };
-
-    this.employeeService
-      .addOrUpdateEmployee(email, employee)
-      .then(() => {
-        this.employeeForm.reset();
-        this.location.back();
-        this.toastService.showSuccess(this.employeeUid ? 'Dipendente aggiornato' : 'Dipendente creato');
-      })
-      .catch((err: Error) => {
-        this.toastService.showError(err);
-      })
-      .finally(() => {
-        this.isLoading = false;
-      });
+    }
   }
 }

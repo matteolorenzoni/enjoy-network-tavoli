@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import {
+  Auth,
   User,
   UserCredential,
   createUserWithEmailAndPassword,
@@ -15,10 +16,12 @@ import { InitializeService } from './firebase/initialize.service';
   providedIn: 'root'
 })
 export class UserService {
+  private auth: Auth;
   private userSubject = new BehaviorSubject<User | undefined>(undefined);
 
   constructor(private router: Router, private initializeService: InitializeService) {
-    onAuthStateChanged(this.initializeService.getAuth(), (user) => {
+    this.auth = this.initializeService.getAuth();
+    onAuthStateChanged(this.auth, (user) => {
       this.userSubject.next(user || undefined);
     });
   }
@@ -29,25 +32,22 @@ export class UserService {
   }
 
   public getUserUid(): string {
-    const user = this.userSubject.value;
-    if (!user) {
-      this.logout();
-      throw new Error('Utente non trovato');
-    }
-    return user.uid;
+    return this.userSubject.value?.uid || '';
   }
 
   /* ------------------------------------------- HTTP Methods ------------------------------------------- */
-  public register(email: string, password: string): Promise<UserCredential> {
-    return createUserWithEmailAndPassword(this.initializeService.getAuth(), email, password);
+  public async register(email: string, password: string): Promise<UserCredential> {
+    const userCredential = await createUserWithEmailAndPassword(this.auth, email, password);
+    return userCredential;
   }
 
-  public login(email: string, password: string): Promise<UserCredential> {
-    return signInWithEmailAndPassword(this.initializeService.getAuth(), email, password);
+  public async login(email: string, password: string) {
+    const userCredential = await signInWithEmailAndPassword(this.auth, email, password);
+    return userCredential;
   }
 
-  public logout(): Promise<void> {
+  public async logout(): Promise<void> {
     this.router.navigate(['/login']);
-    return signOut(this.initializeService.getAuth());
+    await signOut(this.auth);
   }
 }

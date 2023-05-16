@@ -5,7 +5,7 @@ import { faAt, faKey } from '@fortawesome/free-solid-svg-icons';
 import { UserService } from 'src/app/services/user.service';
 import { ToastService } from 'src/app/services/toast.service';
 import { translateFirebaseErrorMessage } from 'src/app/translate/translate';
-import { UserCredential } from 'firebase/auth';
+import { FirebaseError } from 'firebase/app';
 import { FirebaseLoginErrorType, InputType } from '../../../models/enum';
 
 @Component({
@@ -50,28 +50,31 @@ export class LoginFormComponent implements OnInit {
    * @param password
    * @returns Promise<UserCredential>
    */
-  public onSubmit() {
-    if (this.loginForm.valid) {
-      this.isLoading = true;
-      const emailForm = this.loginForm.get('email')?.value;
-      const passwordForm = this.loginForm.get('password')?.value;
-      this.userService
-        .login(emailForm, passwordForm)
-        .then(async (userCredential: UserCredential) => {
-          this.isLoading = false;
-          if (userCredential !== null) {
-            const { uid } = userCredential.user;
-            this.sessionStorageService.setEmployeePropsInSessionStorage(uid);
+  public async onSubmit() {
+    try {
+      if (this.loginForm.valid) {
+        this.isLoading = true;
+        const emailForm = this.loginForm.get('email')?.value;
+        const passwordForm = this.loginForm.get('password')?.value;
 
-            /* Go to dashboard */
-            this.setSectionEvent.emit(true);
-          }
-        })
-        .catch((err: Error) => {
-          this.isLoading = false;
-          const errorMessageTranslated = translateFirebaseErrorMessage(err.message as FirebaseLoginErrorType);
-          this.toastService.showErrorMessage(errorMessageTranslated);
-        });
+        const userCredential = await this.userService.login(emailForm, passwordForm);
+        this.isLoading = false;
+
+        /* Go to dashboard */
+        this.setSectionEvent.emit(true);
+
+        // TODO: eliminare
+        if (userCredential !== null) {
+          const { uid } = userCredential.user;
+          this.sessionStorageService.setEmployeePropsInSessionStorage(uid);
+        }
+      }
+    } catch (err: unknown) {
+      this.isLoading = false;
+      if (err instanceof FirebaseError) {
+        const errorMessageTranslated = translateFirebaseErrorMessage(err.code as FirebaseLoginErrorType);
+        this.toastService.showErrorMessage(errorMessageTranslated);
+      }
     }
   }
 
