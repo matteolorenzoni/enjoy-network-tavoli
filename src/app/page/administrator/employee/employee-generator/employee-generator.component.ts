@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { FirebaseLoginErrorType, RoleType } from 'src/app/models/enum';
+import { FirebaseErrorCode, RoleType } from 'src/app/models/enum';
 import { EmployeeService } from 'src/app/services/employee.service';
 import { ToastService } from 'src/app/services/toast.service';
 import { Location } from '@angular/common';
@@ -120,7 +120,7 @@ export class EmployeeGeneratorComponent implements OnInit {
     } catch (err: unknown) {
       this.isLoading = false;
       if (err instanceof FirebaseError) {
-        const errorMessageTranslated = translateFirebaseErrorMessage(err.code as FirebaseLoginErrorType);
+        const errorMessageTranslated = translateFirebaseErrorMessage(err.code as FirebaseErrorCode);
         this.toastService.showErrorMessage(errorMessageTranslated);
       }
     }

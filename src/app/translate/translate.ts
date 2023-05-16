@@ -1,23 +1,28 @@
-import { FirebaseLoginErrorType } from '../models/enum';
+import { FirebaseErrorCode } from '../models/enum';
 
-export const translateFirebaseErrorMessage = (errorMessage: FirebaseLoginErrorType) => {
+export const translateFirebaseErrorMessage = (errorMessage: FirebaseErrorCode) => {
   switch (errorMessage) {
-    case FirebaseLoginErrorType.INVALID_EMAIL:
-      return 'Email non valida';
-    case FirebaseLoginErrorType.USER_DISABLED:
+    case FirebaseErrorCode.USER_DISABLED:
       return 'Utente disabilitato';
-    case FirebaseLoginErrorType.USER_NOT_FOUND:
+    case FirebaseErrorCode.USER_NOT_FOUND:
       return 'Utente non trovato';
-    case FirebaseLoginErrorType.WRONG_PASSWORD:
+    case FirebaseErrorCode.WRONG_PASSWORD:
       return 'Password errata';
-    case FirebaseLoginErrorType.TOO_MANY_ATTEMPTS_TRY_LATER:
+    case FirebaseErrorCode.TOO_MANY_ATTEMPTS_TRY_LATER:
       return 'Troppi tentativi, riprova più tardi';
-    case FirebaseLoginErrorType.OPERATION_NOT_ALLOWED:
-      return 'Operazione non consentita';
-    case FirebaseLoginErrorType.INVALID_PASSWORD:
+    case FirebaseErrorCode.INVALID_PASSWORD:
       return 'Password non valida';
-    case FirebaseLoginErrorType.EMAIL_NOT_FOUND:
+    case FirebaseErrorCode.EMAIL_NOT_FOUND:
       return 'Email non trovata';
+
+    case FirebaseErrorCode.EMAIL_ALREADY_IN_USE:
+      return 'Email già in uso';
+    case FirebaseErrorCode.INVALID_EMAIL:
+      return 'Email non valida';
+    case FirebaseErrorCode.OPERATION_NOT_ALLOWED:
+      return 'Operazione non consentita, contattare uno staffer';
+    case FirebaseErrorCode.WEAK_PASSWORD:
+      return 'Password debole';
     default:
       return 'Errore sconosciuto';
   }

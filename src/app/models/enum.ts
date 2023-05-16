@@ -42,15 +42,18 @@ export enum ToastType {
   INFO = 'info'
 }
 
-export enum FirebaseLoginErrorType {
-  INVALID_EMAIL = 'Firebase: Error (auth/invalid-email).',
-  USER_DISABLED = 'Firebase: Error (auth/user-disabled).',
-  USER_NOT_FOUND = 'Firebase: Error (auth/user-not-found).',
-  WRONG_PASSWORD = 'Firebase: Error (auth/wrong-password).',
-  TOO_MANY_ATTEMPTS_TRY_LATER = 'Firebase: Error (auth/too-many-requests).',
-  OPERATION_NOT_ALLOWED = 'Firebase: Error (auth/operation-not-allowed).',
-  INVALID_PASSWORD = 'Firebase: Error (auth/invalid-password).',
-  EMAIL_NOT_FOUND = 'Firebase: Error (auth/email-not-found).'
+export enum FirebaseErrorCode {
+  USER_DISABLED = 'auth/user-disabled',
+  USER_NOT_FOUND = 'auth/user-not-found',
+  WRONG_PASSWORD = 'auth/wrong-password',
+  TOO_MANY_ATTEMPTS_TRY_LATER = 'auth/too-many-requests',
+  INVALID_PASSWORD = 'auth/invalid-password',
+  EMAIL_NOT_FOUND = 'auth/email-not-found',
+
+  EMAIL_ALREADY_IN_USE = 'auth/email-already-in-use',
+  INVALID_EMAIL = 'auth/invalid-email',
+  OPERATION_NOT_ALLOWED = 'auth/operation-not-allowed',
+  WEAK_PASSWORD = 'auth/weak-password'
 }
 
 export enum RoleType {
