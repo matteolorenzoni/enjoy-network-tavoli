@@ -27,14 +27,14 @@ export class DashboardComponent implements OnInit {
         { link: '/dashboard/administrator/employees', name: 'Dipendenti', definition: faUserTie },
         { link: '/dashboard/administrator/client', name: 'Clienti', definition: faUsers },
         { link: '/dashboard/administrator/statistics', name: 'Statistiche', definition: faChartPie },
-        { link: '/dashboard/setting', name: 'Impostazioni', definition: faGear }
+        { link: '/dashboard/administrator/setting', name: 'Impostazioni', definition: faGear }
       ]
     },
     {
       role: RoleType.PR,
       icons: [
         { link: '/dashboard/pr/events', name: 'Eventi', definition: faCalendarDay },
-        { link: '/dashboard/setting', name: 'Impostazioni', definition: faGear }
+        { link: '/dashboard/pr/setting', name: 'Impostazioni', definition: faGear }
       ]
     },
     {
@@ -43,7 +43,7 @@ export class DashboardComponent implements OnInit {
         { link: '/dashboard/inspector/scanner', name: 'Scanner', definition: faQrcode },
         { link: '/dashboard/inspector/ticket-manual-validation', name: 'Ticket', definition: faTicket },
         // { link: '/dashboard/inspector/participation-list', name: 'Tavoli', definition: faPeopleGroup },
-        { link: '/dashboard/setting', name: 'Impostazioni', definition: faGear }
+        { link: '/dashboard/inspector/setting', name: 'Impostazioni', definition: faGear }
       ]
     }
   ];

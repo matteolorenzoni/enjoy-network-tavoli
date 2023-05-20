@@ -57,6 +57,10 @@ const routes: Routes = [
           /* Statistics */
           { path: 'statistics', component: StatisticsComponent },
 
+          /* Settings */
+          { path: 'setting', component: SettingComponent },
+          { path: 'setting/update-password', component: UpdatePasswordComponent },
+
           /* Page not found */
           { path: '**', component: PageNotFoundComponent }
         ]
@@ -65,6 +69,7 @@ const routes: Routes = [
         path: 'pr',
         canActivate: [AuthGuard],
         children: [
+          /* Events */
           { path: 'events', component: EventActiveComponent },
           { path: 'events/:eventUid/tables', component: TableListComponent },
           { path: 'events/:eventUid/tables/:tableUid', component: TableGeneratorComponent },
@@ -74,6 +79,10 @@ const routes: Routes = [
             component: ClientGeneratorComponent
           },
 
+          /* Settings */
+          { path: 'setting', component: SettingComponent },
+          { path: 'setting/update-password', component: UpdatePasswordComponent },
+
           /* Page not found */
           { path: '**', component: PageNotFoundComponent }
         ]
@@ -82,16 +91,23 @@ const routes: Routes = [
         path: 'inspector',
         canActivate: [AuthGuard],
         children: [
+          /* Scanner */
           { path: 'scanner', component: ScannerComponent },
+
+          /* Ticket Manual Validation */
           { path: 'ticket-manual-validation', component: TicketManualValidationComponent },
+
+          /* Participation list */
           // { path: 'participation-list', component: InspectorParticipationListComponent },
+
+          /* Settings */
+          { path: 'setting', component: SettingComponent },
+          { path: 'setting/update-password', component: UpdatePasswordComponent },
 
           /* Page not found */
           { path: '**', component: PageNotFoundComponent }
         ]
       },
-      { path: 'setting', component: SettingComponent },
-      { path: 'setting/update-password', component: UpdatePasswordComponent },
 
       /* Page not found */
       { path: '**', component: PageNotFoundComponent }
