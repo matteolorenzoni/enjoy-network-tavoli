@@ -1,5 +1,8 @@
 <app-back-bar></app-back-bar>
-<form class="flex flex-col gap-12 xs:gap-16" [formGroup]="clientForm" (ngSubmit)="onSubmit()">
+<form
+  class="mb-16 flex flex-col gap-12 xs:gap-4"
+  [formGroup]="clientNumberForm"
+  (ngSubmit)="checkIfClientAlreadyExists()">
   <div class="group relative z-0 mt-8 w-full">
     <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pr-4 pl-2 text-slate-200">+ 39</div>
     <input
@@ -13,58 +16,36 @@
       placeholder="Numero di telefono"
       required />
     <button
-      type="button"
-      class="absolute right-2.5 bottom-2.5 rounded-lg bg-primary-60 px-4 py-2 text-sm font-medium text-black hover:bg-white hover:text-primary-50 focus:outline-none"
-      (click)="checkIfClientAlreadyExists()">
+      type="submit"
+      class="absolute right-2.5 bottom-2.5 rounded-lg bg-primary-60 px-4 py-2 text-sm font-medium text-black hover:bg-white hover:text-primary-50 focus:outline-none">
       Cerca
     </button>
   </div>
+</form>
 
-  <ng-container *ngIf="phoneIsChecked">
-    <div class="group relative z-0 w-full">
-      <input
-        type="text"
-        name="name_input"
-        id="name_input"
-        class="peer block w-full appearance-none bg-transparent py-2.5 px-0 text-base text-primary-100 focus:text-primary-60 focus:outline-none focus:ring-0 disabled:cursor-not-allowed disabled:bg-neutral"
-        formControlName="name"
-        autocomplete="off"
-        placeholder=" "
-        required />
-      <label
-        for="name_input"
-        class="absolute top-3 -z-10 origin-[0] -translate-y-6 scale-75 transform text-base text-primary-100 duration-300 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100 peer-focus:left-0 peer-focus:-translate-y-6 peer-focus:scale-75 peer-focus:font-medium peer-focus:text-primary-60">
-        Nome
-      </label>
-      <hr class="border-primary-100 peer-focus:border-primary-60" />
-    </div>
+<form *ngIf="phoneIsChecked" class="flex flex-col gap-12 xs:gap-4" [formGroup]="clientInfoForm" (ngSubmit)="onSubmit()">
+  <en-input
+    [name]="'name'"
+    [fieldName]="'Nome'"
+    [placeholder]="'Nome nuovo cliente'"
+    [fc]="'name'"
+    [required]="true"></en-input>
 
-    <div class="group relative z-0 w-full">
-      <input
-        type="text"
-        name="last_name_input"
-        id="last_name_input"
-        class="peer block w-full appearance-none bg-transparent py-2.5 px-0 text-base text-primary-100 focus:text-primary-60 focus:outline-none focus:ring-0 disabled:cursor-not-allowed disabled:bg-neutral"
-        formControlName="lastName"
-        autocomplete="off"
-        placeholder=" "
-        required />
-      <label
-        for="last_name_input"
-        class="absolute top-3 -z-10 origin-[0] -translate-y-6 scale-75 transform text-base text-primary-100 duration-300 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100 peer-focus:left-0 peer-focus:-translate-y-6 peer-focus:scale-75 peer-focus:font-medium peer-focus:text-primary-60">
-        Cognome
-      </label>
-      <hr class="border-primary-100 peer-focus:border-primary-60" />
-    </div>
+  <en-input
+    [name]="'last_name'"
+    [fieldName]="'Cognome'"
+    [placeholder]="'Cognome nuovo cliente'"
+    [fc]="'lastName'"
+    [required]="true"
+    [leftRemPadding]="5.5"></en-input>
 
-    <div class="mx-auto w-52">
-      <en-button
-        buttonName="login-button"
-        [buttonText]="lblButton"
-        buttonType="submit"
-        [buttonIsDisabled]="!clientForm.valid"
-        palette="primary"
-        [isLoading]="isLoading"></en-button>
-    </div>
-  </ng-container>
+  <div class="mx-auto w-52">
+    <en-button
+      buttonName="login-button"
+      [buttonText]="lblButton"
+      buttonType="submit"
+      [buttonIsDisabled]="!clientInfoForm.valid || !clientNumberForm.valid"
+      palette="primary"
+      [isLoading]="isLoading"></en-button>
+  </div>
 </form>

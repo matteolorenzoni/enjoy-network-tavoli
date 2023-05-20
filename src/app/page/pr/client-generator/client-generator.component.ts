@@ -26,7 +26,8 @@ export class ClientGeneratorComponent implements OnInit {
   tableUid: string | null = null;
 
   /* Form */
-  clientForm: FormGroup;
+  clientNumberForm: FormGroup;
+  clientInfoForm: FormGroup;
   phoneIsChecked = false;
   isLoading: boolean;
 
@@ -43,20 +44,23 @@ export class ClientGeneratorComponent implements OnInit {
     private toastService: ToastService
   ) {
     /* Init form */
-    this.clientForm = new FormGroup({
-      name: new FormControl(null, [Validators.required, Validators.pattern(/[\S]/)]),
-      lastName: new FormControl(null, [Validators.required, Validators.pattern(/[\S]/)]),
+    this.clientNumberForm = new FormGroup({
       phone: new FormControl(null, [Validators.required, Validators.pattern(/^\d{9,10}$/)])
     });
 
+    this.clientInfoForm = new FormGroup({
+      name: new FormControl(null, [Validators.required, Validators.pattern(/[\S]/)]),
+      lastName: new FormControl(null, [Validators.required, Validators.pattern(/[\S]/)])
+    });
+
     /* Disable name and last name until phone is checked */
-    this.clientForm.controls['name'].disable();
-    this.clientForm.controls['lastName'].disable();
+    this.clientInfoForm.controls['name'].disable();
+    this.clientInfoForm.controls['lastName'].disable();
 
     /* Reset name and last name when phone is changed */
-    this.clientForm.controls['phone'].valueChanges.subscribe(() => {
-      this.clientForm.controls['name'].reset();
-      this.clientForm.controls['lastName'].reset();
+    this.clientNumberForm.controls['phone'].valueChanges.subscribe(() => {
+      this.clientInfoForm.controls['name'].reset();
+      this.clientInfoForm.controls['lastName'].reset();
       this.phoneIsChecked = false;
     });
 
@@ -72,15 +76,16 @@ export class ClientGeneratorComponent implements OnInit {
 
   /* ------------------------------------------- Http Methods ------------------------------------------- */
   public async onSubmit() {
-    if (this.clientForm.invalid) {
-      this.toastService.showInfo('Inserire i dati correttamente');
-      return;
-    }
-
     try {
+      if (this.clientInfoForm.invalid) {
+        this.toastService.showErrorMessage('Inserire i dati correttamente', false);
+        return;
+      }
+
       this.isLoading = true;
 
-      const { name, lastName, phone } = this.clientForm.value;
+      const { phone } = this.clientNumberForm.value;
+      const { name, lastName } = this.clientInfoForm.value;
 
       const client: Client = {
         uid: '',
@@ -103,22 +108,29 @@ export class ClientGeneratorComponent implements OnInit {
   }
 
   public async checkIfClientAlreadyExists() {
-    if (!this.clientForm.value.phone) {
-      this.toastService.showInfo('Inserire un numero di telefono');
+    if (!this.clientNumberForm.value.phone) {
+      this.toastService.showErrorMessage('Inserire un numero di telefono', false);
       return;
     }
 
     try {
       this.isLoading = true;
 
-      const client = await this.clientService.getClientByPhone(this.clientForm.value.phone);
+      const client = await this.clientService.getClientByPhone(this.clientNumberForm.value.phone);
 
       if (!client) {
         this.toastService.showInfo('Cliente non ancora registrato, inserire i dati');
         this.phoneIsChecked = true;
-        this.clientForm.controls['name'].enable();
-        this.clientForm.controls['lastName'].enable();
+        this.clientInfoForm.controls['name'].enable();
+        this.clientInfoForm.controls['lastName'].enable();
         this.isLoading = false;
+
+        // focus on name input
+        setTimeout(() => {
+          const element = document.getElementById('name_input');
+          if (!element) return;
+          element.focus();
+        }, 0);
         return;
       }
 
@@ -134,29 +146,21 @@ export class ClientGeneratorComponent implements OnInit {
   }
 
   public async addClient(client: Client): Promise<void> {
-    try {
-      await this.clientService.addClient(client);
-    } catch (err) {
-      throw err as Error;
-    }
+    await this.clientService.addClient(client);
   }
 
   public async addParticipation(client: Client): Promise<void> {
     if (!this.eventUid || !this.employeeUid || !this.tableUid) {
       throw new Error('Parametri non validi');
     }
-
-    try {
-      const isTableFidelity = environment.fidelityTables.includes(this.tableUid);
-      await this.participationService.addParticipation(this.eventUid, this.tableUid, client, isTableFidelity);
-    } catch (err) {
-      throw err as Error;
-    }
+    const isTableFidelity = environment.fidelityTables.includes(this.tableUid);
+    await this.participationService.addParticipation(this.eventUid, this.tableUid, client, isTableFidelity);
   }
 
   /* ------------------------------------------- Methods ------------------------------------------- */
   public goBack() {
-    this.clientForm.reset();
+    this.clientNumberForm.reset();
+    this.clientInfoForm.reset();
     this.location.back();
     this.toastService.showSuccess('Ticket inviato');
   }
