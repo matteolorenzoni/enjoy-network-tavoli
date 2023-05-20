@@ -52,6 +52,7 @@ import { BackBarComponent } from './layout/back-bar/back-bar.component';
 import { TicketManualValidationComponent } from './page/inspector/ticket-manual-validation/ticket-manual-validation.component';
 import { ClientManagementComponent } from './page/administrator/client/client-management/client-management.component';
 import { EnLoaderComponent } from './components/en-loader.component';
+import { EnInputComponent } from './components/en-input.component';
 
 @NgModule({
   declarations: [
@@ -95,7 +96,8 @@ import { EnLoaderComponent } from './components/en-loader.component';
     BackBarComponent,
     TicketManualValidationComponent,
     ClientManagementComponent,
-    EnLoaderComponent
+    EnLoaderComponent,
+    EnInputComponent
   ],
   imports: [
     BrowserModule,
