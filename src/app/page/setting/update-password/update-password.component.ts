@@ -37,12 +37,12 @@ export class UpdatePasswordComponent {
       const repeatNewPassword = this.passwordForm.controls['repeatNewPassword'].value;
 
       if (!this.user) {
-        this.toastService.showErrorMessage('Utente non autenticato');
+        this.toastService.showErrorMessage('Utente non autenticato', false);
         return;
       }
 
       if (newPassword !== repeatNewPassword) {
-        this.toastService.showErrorMessage('Le password non coincidono');
+        this.toastService.showErrorMessage('Le password non coincidono', false);
         return;
       }
 
@@ -58,7 +58,7 @@ export class UpdatePasswordComponent {
         .catch((error: AuthError) => {
           const { code } = error;
           if (code === 'auth/requires-recent-login') {
-            this.toastService.showErrorMessage('Devi rieffettuare il login per cambiare la password');
+            this.toastService.showErrorMessage('Devi rieffettuare il login per cambiare la password', false);
           } else {
             this.toastService.showError(error);
           }
@@ -67,7 +67,7 @@ export class UpdatePasswordComponent {
           this.isLoading = false;
         });
     } else {
-      this.toastService.showErrorMessage('La password deve essere lunga almeno 8 caratteri');
+      this.toastService.showErrorMessage('La password deve essere lunga almeno 8 caratteri', false);
     }
   }
 }

@@ -20,6 +20,14 @@ import { ControlContainer, FormGroupDirective } from '@angular/forms';
         [required]="required" />
     </div>
   `,
+  styles: [
+    `
+      :host {
+        display: block;
+        width: 100%;
+      }
+    `
+  ],
   viewProviders: [{ provide: ControlContainer, useExisting: FormGroupDirective }]
 })
 export class EnInputComponent {
