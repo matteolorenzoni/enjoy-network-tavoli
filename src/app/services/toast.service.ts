@@ -30,9 +30,11 @@ export class ToastService {
     this.show(ToastType.ERROR, err.message.split('DEBUG:')[0]);
   }
 
-  public showErrorMessage(message: string): void {
-    const employeeUid = this.userService.getUserUid();
-    this.customErrorService.createCustomError(message, new Error().stack || '', employeeUid);
+  public showErrorMessage(message: string, saveError = true): void {
+    if (saveError) {
+      const employeeUid = this.userService.getUserUid();
+      this.customErrorService.createCustomError(message, new Error().stack || '', employeeUid);
+    }
     console.error(message);
     this.show(ToastType.ERROR, message.split('DEBUG:')[0]);
   }
