@@ -1,56 +1,49 @@
 <app-back-bar></app-back-bar>
-<form class="flex flex-col gap-12 xs:gap-16" [formGroup]="employeeForm" (ngSubmit)="onSubmit()">
-  <div class="group relative z-0 w-full">
-    <input
-      type="text"
-      name="name_input"
-      id="name_input"
-      class="peer block w-full appearance-none bg-transparent py-2.5 px-0 text-base text-primary-100 focus:text-primary-60 focus:outline-none focus:ring-0"
-      formControlName="name"
-      placeholder=" "
-      required />
-    <label
-      for="name_input"
-      class="absolute top-3 -z-10 origin-[0] -translate-y-6 scale-75 transform text-base text-primary-100 duration-300 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100 peer-focus:left-0 peer-focus:-translate-y-6 peer-focus:scale-75 peer-focus:font-medium peer-focus:text-primary-60">
-      Nome
-    </label>
-    <hr class="border-primary-100 peer-focus:border-primary-60" />
+<!-- TODO: Mettere di colore diverso la select quando è disabilitata -->
+<form class="flex flex-col gap-4 xs:gap-8" [formGroup]="employeeForm" (ngSubmit)="onSubmit()">
+  <div class="flex gap-4 rounded-lg border border-slate-700 bg-slate-800 p-4 pl-2">
+    <label for="place_select" class=""> Ruolo </label>
+    <select
+      id="role_select"
+      class="grow cursor-pointer appearance-none rounded-lg bg-transparent text-sm uppercase focus:outline-none focus:ring-0"
+      formControlName="role">
+      <option
+        *ngFor="let item of roles; let i = index"
+        [selected]="i === 0"
+        [value]="item"
+        class="cursor-pointer bg-slate-900 text-slate-200">
+        {{ item }}
+      </option>
+    </select>
   </div>
 
-  <div class="group relative z-0 w-full">
-    <input
-      type="text"
-      name="last_name_input"
-      id="last_name_input"
-      class="peer block w-full appearance-none py-2.5 px-0 text-base text-primary-100 focus:text-primary-60 focus:outline-none focus:ring-0 enabled:bg-transparent disabled:cursor-not-allowed"
-      formControlName="lastName"
-      placeholder=" "
-      required />
-    <label
-      for="last_name_input"
-      class="absolute top-3 -z-10 origin-[0] -translate-y-6 scale-75 transform text-base text-primary-100 duration-300 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100 peer-focus:left-0 peer-focus:-translate-y-6 peer-focus:scale-75 peer-focus:font-medium peer-focus:text-primary-60">
-      Cognome
-    </label>
-    <hr class="border-primary-100 peer-focus:border-primary-60" />
-  </div>
+  <en-input
+    [type]="'email'"
+    [size]="30"
+    [name]="'email'"
+    [fc]="'email'"
+    [fieldName]="'Email'"
+    [placeholder]="'mbackeseck69@live.it'"
+    [required]="true"
+    [leftRemPadding]="4"></en-input>
 
-  <div class="group relative z-0 w-full">
-    <input
-      type="email"
-      size="30"
-      name="email_input"
-      id="email_input"
-      class="peer block w-full appearance-none py-2.5 px-0 text-base text-primary-100 focus:text-primary-60 focus:outline-none focus:ring-0 enabled:bg-transparent disabled:cursor-not-allowed"
-      formControlName="email"
-      placeholder=" "
-      required />
-    <label
-      for="email_input"
-      class="absolute top-3 -z-10 origin-[0] -translate-y-6 scale-75 transform text-base text-primary-100 duration-300 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100 peer-focus:left-0 peer-focus:-translate-y-6 peer-focus:scale-75 peer-focus:font-medium peer-focus:text-primary-60 peer-disabled:-translate-y-8">
-      Email
-    </label>
-    <hr class="border-primary-100 peer-focus:border-primary-60" />
-  </div>
+  <en-input
+    [type]="'text'"
+    [name]="'name'"
+    [fc]="'name'"
+    [fieldName]="'Nome'"
+    [placeholder]="'Mbacke'"
+    [required]="true"
+    [leftRemPadding]="4"></en-input>
+
+  <en-input
+    [type]="'text'"
+    [name]="'last_name'"
+    [fc]="'lastName'"
+    [fieldName]="'Cognome'"
+    [placeholder]="'Seck'"
+    [required]="true"
+    [leftRemPadding]="5.8"></en-input>
 
   <!-- <div class="group relative z-0 w-full">
     <input
@@ -69,57 +62,24 @@
     <hr class="border-primary-100 peer-focus:border-primary-60" />
   </div> -->
 
-  <div class="group relative z-0 w-full">
-    <label for="place_select" class="block text-xs text-primary-100 group-active:text-primary-60"> Ruolo </label>
-    <select
-      id="role_select"
-      class="peer block w-full appearance-none py-2.5 px-0 text-sm text-primary-100 focus:border-gray-200 focus:text-primary-60 focus:outline-none focus:ring-0 enabled:bg-transparent disabled:cursor-not-allowed"
-      formControlName="role">
-      <option
-        *ngFor="let item of roles; let i = index"
-        [selected]="i === 0"
-        [value]="item"
-        class="bg-black py-1 text-primary-60">
-        {{ item }}
-      </option>
-    </select>
-    <hr class="border-primary-100 peer-focus:border-primary-60" />
-  </div>
+  <en-input
+    [type]="'tel'"
+    [pattern]="'[0-9]{10}'"
+    [name]="'tel'"
+    [fc]="'phone'"
+    [fieldName]="'Numero di telefono'"
+    [placeholder]="'334 5124799'"
+    [required]="true"
+    [leftRemPadding]="10.5"></en-input>
 
-  <div class="group relative z-0 w-full">
-    <input
-      type="tel"
-      pattern="[0-9]{10}"
-      name="tel_input"
-      id="tel_input"
-      class="peer block w-full appearance-none py-2.5 px-0 text-base text-primary-100 focus:text-primary-60 focus:outline-none focus:ring-0 enabled:bg-transparent disabled:cursor-not-allowed"
-      formControlName="phone"
-      placeholder=" "
-      required />
-    <label
-      for="tel_input"
-      class="absolute top-3 -z-10 origin-[0] -translate-y-6 scale-75 transform text-base text-primary-100 duration-300 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100 peer-focus:left-0 peer-focus:-translate-y-6 peer-focus:scale-75 peer-focus:font-medium peer-focus:text-primary-60">
-      Numero di telefono
-    </label>
-    <hr class="border-primary-100 peer-focus:border-primary-60" />
-  </div>
-
-  <div class="group relative z-0 w-full">
-    <input
-      type="text"
-      name="zone_input"
-      id="zone_input"
-      class="peer block w-full appearance-none py-2.5 px-0 text-base text-primary-100 focus:text-primary-60 focus:outline-none focus:ring-0 enabled:bg-transparent disabled:cursor-not-allowed"
-      formControlName="zone"
-      placeholder=" "
-      required />
-    <label
-      for="zone_input"
-      class="absolute top-3 -z-10 origin-[0] -translate-y-6 scale-75 transform text-base text-primary-100 duration-300 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100 peer-focus:left-0 peer-focus:-translate-y-6 peer-focus:scale-75 peer-focus:font-medium peer-focus:text-primary-60">
-      Zona
-    </label>
-    <hr class="border-primary-100 peer-focus:border-primary-60" />
-  </div>
+  <en-input
+    [type]="'text'"
+    [name]="'zone'"
+    [fc]="'zone'"
+    [fieldName]="'Zona'"
+    [placeholder]="'Massa Lombarda'"
+    [required]="true"
+    [leftRemPadding]="4"></en-input>
 
   <div class="group relative z-0 flex w-full">
     <label class="relative inline-flex cursor-pointer items-center">
