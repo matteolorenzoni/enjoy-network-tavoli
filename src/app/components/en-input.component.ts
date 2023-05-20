@@ -4,38 +4,33 @@ import { ControlContainer, FormGroupDirective } from '@angular/forms';
 @Component({
   selector: 'en-input[name][fieldName][fc]',
   template: `
-    <div class="relative">
-      <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center p-2 text-sm uppercase text-slate-200">
+    <div class="group flex gap-4 rounded-lg border-slate-700 bg-slate-800 p-4">
+      <label [for]="name + '_input'" class="shrink-0 text-sm uppercase text-slate-200 peer-disabled:text-red-800">
         {{ fieldName }}
-      </div>
+      </label>
       <input
         [type]="type"
+        [size]="size || 100"
+        [pattern]="pattern || '.*'"
         [name]="name + '_input'"
         [id]="name + '_input'"
-        class="block w-full rounded-lg border border-slate-700 bg-slate-800 p-4 pl-16 text-sm text-slate-200 placeholder-slate-500 focus:outline-none focus:ring-2"
-        [ngStyle]="{ 'padding-left': leftRemPadding > 0 ? leftRemPadding + 'rem' : '4rem' }"
+        class="w-full grow bg-transparent text-sm focus:outline-none disabled:cursor-not-allowed disabled:placeholder:text-gray-800"
         [formControlName]="fc"
         autocomplete="off"
         [placeholder]="placeholder || ''"
         [required]="required" />
     </div>
   `,
-  styles: [
-    `
-      :host {
-        display: block;
-        width: 100%;
-      }
-    `
-  ],
   viewProviders: [{ provide: ControlContainer, useExisting: FormGroupDirective }]
 })
 export class EnInputComponent {
   @Input() fieldName!: string;
   @Input() type = 'text';
+  @Input() pattern?: string | RegExp;
+  @Input() size?: number;
   @Input() name!: string;
   @Input() placeholder?: string;
   @Input() fc!: string;
   @Input() required = false;
-  @Input() leftRemPadding = 0;
+  @Input() leftRemPadding?: number;
 }
