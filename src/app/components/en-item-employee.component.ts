@@ -9,7 +9,7 @@ import {
   faUserTie,
   IconDefinition
 } from '@fortawesome/free-solid-svg-icons';
-import { RoleType } from '../models/enum';
+import { RoleType } from 'src/app/models/enum';
 import { Employee } from '../models/type';
 import { EmployeeService } from '../services/employee.service';
 import { ToastService } from '../services/toast.service';

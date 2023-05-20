@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { documentId, orderBy, QueryConstraint, where } from 'firebase/firestore';
 import { Observable } from 'rxjs';
 import { UserCredential } from 'firebase/auth';
+import { RoleType } from 'src/app/models/enum';
 import { UserService } from './user.service';
 import { AssignmentDTO } from '../models/collection';
 import { Assignment, Employee } from '../models/type';
@@ -10,7 +11,6 @@ import { FirebaseCreateService } from './firebase/firebase-crud/firebase-create.
 import { FirebaseDeleteService } from './firebase/firebase-crud/firebase-delete.service';
 import { FirebaseReadService } from './firebase/firebase-crud/firebase-read.service';
 import { FirebaseUpdateService } from './firebase/firebase-crud/firebase-update.service';
-import { RoleType } from '../models/enum';
 import { assignmentConverter, employeeConverter } from '../models/converter';
 
 @Injectable({

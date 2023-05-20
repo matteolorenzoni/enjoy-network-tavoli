@@ -1,4 +1,3 @@
-import { SessionStorageService } from 'src/app/services/sessionstorage.service';
 import { Component, EventEmitter, Output, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { faAt, faKey } from '@fortawesome/free-solid-svg-icons';
@@ -28,11 +27,7 @@ export class LoginFormComponent implements OnInit {
   isLoading: boolean;
 
   /* ---------------------------- constructor ---------------------------- */
-  constructor(
-    private userService: UserService,
-    private sessionStorageService: SessionStorageService,
-    private toastService: ToastService
-  ) {
+  constructor(private userService: UserService, private toastService: ToastService) {
     this.loginForm = new FormGroup({
       email: new FormControl('', [Validators.required]),
       password: new FormControl('', [Validators.required])
@@ -57,17 +52,11 @@ export class LoginFormComponent implements OnInit {
         const emailForm = this.loginForm.get('email')?.value;
         const passwordForm = this.loginForm.get('password')?.value;
 
-        const userCredential = await this.userService.login(emailForm, passwordForm);
+        await this.userService.login(emailForm, passwordForm);
         this.isLoading = false;
 
         /* Go to dashboard */
         this.setSectionEvent.emit(true);
-
-        // TODO: eliminare
-        if (userCredential !== null) {
-          const { uid } = userCredential.user;
-          this.sessionStorageService.setEmployeePropsInSessionStorage(uid);
-        }
       }
     } catch (err: unknown) {
       this.isLoading = false;

@@ -4,11 +4,11 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ClientService } from 'src/app/services/client.service';
 import { ToastService } from 'src/app/services/toast.service';
 import { ParticipationService } from 'src/app/services/participation.service';
-import { SessionStorageService } from 'src/app/services/sessionstorage.service';
 import { Client } from 'src/app/models/type';
 import { UtilsService } from 'src/app/services/utils.service';
 import { Location } from '@angular/common';
 import { environment } from 'src/environments/environment';
+import { UserService } from 'src/app/services/user.service';
 
 @Component({
   selector: 'app-client-generator',
@@ -36,9 +36,9 @@ export class ClientGeneratorComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private location: Location,
+    private userService: UserService,
     private clientService: ClientService,
     private participationService: ParticipationService,
-    private sessionStorageService: SessionStorageService,
     private utilsService: UtilsService,
     private toastService: ToastService
   ) {
@@ -65,8 +65,8 @@ export class ClientGeneratorComponent implements OnInit {
 
   /* ------------------------------------------- Lifecycle ------------------------------------------- */
   ngOnInit(): void {
+    this.employeeUid = this.userService.getUserUid();
     this.eventUid = this.route.snapshot.paramMap.get('eventUid');
-    this.employeeUid = this.sessionStorageService.getEmployeeUid();
     this.tableUid = this.route.snapshot.paramMap.get('tableUid');
   }
 

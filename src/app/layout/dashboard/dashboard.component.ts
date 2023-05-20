@@ -1,5 +1,5 @@
 import { UserService } from 'src/app/services/user.service';
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import {
   faCalendarDay,
   faChartPie,
@@ -10,8 +10,7 @@ import {
   faUserTie
 } from '@fortawesome/free-solid-svg-icons';
 import { BottomNavigation } from 'src/app/models/type';
-import { SessionStorageService } from '../../services/sessionstorage.service';
-import { RoleType } from '../../models/enum';
+import { RoleType } from 'src/app/models/enum';
 
 @Component({
   selector: 'app-dashboard',
@@ -50,24 +49,10 @@ export class DashboardComponent implements OnInit {
   ];
   bottomNavigation?: BottomNavigation;
 
-  constructor(
-    public sessionStorageService: SessionStorageService,
-    private userService: UserService,
-    private cdref: ChangeDetectorRef
-  ) {}
+  constructor(private userService: UserService) {}
 
-  ngOnInit(): void {
-    const employeeRole = this.sessionStorageService.getEmployeeRole();
-
-    if (!employeeRole) {
-      this.userService.logout();
-    }
-
+  async ngOnInit(): Promise<void> {
+    const employeeRole: RoleType = await this.userService.getUserRole();
     this.bottomNavigation = this.navigationMenuSettings.find((item) => item.role === employeeRole);
-    if (!this.bottomNavigation) this.userService.logout();
-  }
-
-  ngAfterContentChecked() {
-    this.cdref.detectChanges();
   }
 }

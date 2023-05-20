@@ -10,10 +10,10 @@ import {
 import { Component, ElementRef, Input, SimpleChanges, ViewChild } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
-import { SessionStorageService } from '../services/sessionstorage.service';
 import { ToastService } from '../services/toast.service';
 import { ParticipationService } from '../services/participation.service';
 import { Participation } from '../models/type';
+import { UserService } from '../services/user.service';
 
 @Component({
   selector: 'en-item-participation[participation]',
@@ -134,16 +134,16 @@ export class EnItemParticipationComponent {
   /* ------------------------------ Constructor ------------------------------ */
   constructor(
     private route: ActivatedRoute,
+    private userService: UserService,
     private participationService: ParticipationService,
-    private sessionStorageService: SessionStorageService,
     private toastService: ToastService
   ) {
     this.canShare = navigator.share !== undefined;
   }
 
   ngOnInit(): void {
+    this.employeeUid = this.userService.getUserUid();
     this.eventUid = this.route.snapshot.paramMap.get('eventUid');
-    this.employeeUid = this.sessionStorageService.getEmployeeUid();
   }
 
   ngOnChanges(changes: SimpleChanges): void {

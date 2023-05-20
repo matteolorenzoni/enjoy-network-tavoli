@@ -5,7 +5,7 @@ import { ToastService } from 'src/app/services/toast.service';
 import { TableService } from 'src/app/services/table.service';
 import { Location } from '@angular/common';
 import { Table } from 'src/app/models/type';
-import { SessionStorageService } from '../../../services/sessionstorage.service';
+import { UserService } from 'src/app/services/user.service';
 
 @Component({
   selector: 'app-table-generator',
@@ -33,8 +33,8 @@ export class TableGeneratorComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private location: Location,
+    private userService: UserService,
     private tableService: TableService,
-    private sessionStorage: SessionStorageService,
     private toastService: ToastService
   ) {
     this.tableForm = new FormGroup({
@@ -47,8 +47,8 @@ export class TableGeneratorComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.employeeUid = this.userService.getUserUid();
     this.eventUid = this.route.snapshot.paramMap.get('eventUid');
-    this.employeeUid = this.sessionStorage.getEmployeeUid();
     this.tableUid = this.route.snapshot.paramMap.get('tableUid');
     this.tableUid = this.tableUid === 'null' ? null : this.tableUid;
 

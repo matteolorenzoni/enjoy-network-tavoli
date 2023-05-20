@@ -2,7 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { loginFormAnimation, loginFormAnimation2 } from 'src/app/animations/animations';
 import { RoleType } from 'src/app/models/enum';
-import { SessionStorageService } from 'src/app/services/sessionstorage.service';
+import { EmployeeService } from 'src/app/services/employee.service';
+import { UserService } from 'src/app/services/user.service';
 
 @Component({
   selector: 'app-login',
@@ -14,23 +15,22 @@ export class LoginComponent implements OnInit {
   /** Section to display */
   section = 0;
 
-  constructor(private router: Router, public sessionStorageService: SessionStorageService) {}
+  constructor(private router: Router, private userService: UserService, private employeeService: EmployeeService) {}
 
   ngOnInit(): void {
-    sessionStorage.clear();
+    this.userService.logout();
   }
 
   incrementSection() {
     this.section += 1;
   }
 
-  goToDashboard() {
+  async goToDashboard() {
     this.incrementSection();
-    const employeeRole = this.sessionStorageService.getEmployeeRole();
-    if (employeeRole) {
-      this.router.navigate([
-        employeeRole !== RoleType.INSPECTOR ? `./dashboard/${employeeRole}/events` : `./${employeeRole}/event-selector`
-      ]);
-    }
+
+    const employeeRole = await this.userService.getUserRole();
+    this.router.navigate([
+      employeeRole !== RoleType.INSPECTOR ? `./dashboard/${employeeRole}/events` : `./${employeeRole}/event-selector`
+    ]);
   }
 }
