@@ -1,11 +1,13 @@
 <app-back-bar></app-back-bar>
-<!-- TODO: Mettere di colore diverso la select quando è disabilitata -->
 <form class="flex flex-col gap-4 xs:gap-8" [formGroup]="employeeForm" (ngSubmit)="onSubmit()">
-  <div class="flex gap-4 rounded-lg border border-slate-700 bg-slate-800 p-4 pl-2">
+  <div
+    class="flex gap-4 rounded-lg border border-slate-700 bg-slate-800 p-4 pl-2"
+    [ngClass]="{ 'cursor-not-allowed border-gray-900 bg-gray-900': employeeUid }">
     <label for="place_select" class=""> Ruolo </label>
     <select
       id="role_select"
       class="grow cursor-pointer appearance-none rounded-lg bg-transparent text-sm uppercase focus:outline-none focus:ring-0"
+      [ngClass]="{ 'cursor-not-allowed': employeeUid }"
       formControlName="role">
       <option
         *ngFor="let item of roles; let i = index"
