@@ -31,6 +31,7 @@ import { ToastService } from '../services/toast.service';
       <div class="ml-auto flex shrink-0 gap-4 px-1">
         <fa-icon
           [icon]="modifyIcon"
+          role="button"
           class="transition active:text-slate-500"
           [routerLink]="['./', employee.uid]"></fa-icon>
         <fa-icon

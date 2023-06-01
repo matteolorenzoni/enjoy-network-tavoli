@@ -6,10 +6,13 @@ import { Event } from 'src/app/models/type';
   selector: 'en-item-event-available',
   template: `
     <li
-      role="button"
       class="group relative my-4 mx-auto flex aspect-square w-full flex-col overflow-hidden rounded-lg bg-slate-900 md:w-3/5"
       (click)="goToSelector()">
-      <img [src]="event.props.imageUrl" alt="foto-evento" class="aspect-square rounded-lg object-fill" />
+      <img
+        role="button"
+        [src]="event.props.imageUrl"
+        alt="foto-evento"
+        class="aspect-square rounded-lg object-fill active:scale-[0.98]" />
 
       <div class="absolute left-0 bottom-0 flex w-full p-2 backdrop-blur">
         <div>

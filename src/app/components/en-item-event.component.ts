@@ -14,12 +14,13 @@ import { FileGeneratorService } from '../services/file-generator.service';
 @Component({
   selector: 'en-item-event[event]',
   template: `
-    <li class="my-4 mx-auto w-full overflow-hidden rounded-lg bg-slate-900 md:w-3/5 ">
-      <div role="button" class="center relative aspect-square h-full" (click)="toggleOpen()">
+    <li class="my-4 mx-auto w-full overflow-hidden rounded-lg bg-slate-900 md:w-3/5">
+      <div class="center relative aspect-square h-full" (click)="toggleOpen()">
         <img
+          role="button"
           [src]="event.props.imageUrl"
           [alt]="dateFormatted + '_image'"
-          class="aspect-square rounded-lg object-fill" />
+          class="aspect-square rounded-lg object-fill active:scale-[0.98]" />
         <div
           [@fadeInAnimation]
           *ngIf="false"
