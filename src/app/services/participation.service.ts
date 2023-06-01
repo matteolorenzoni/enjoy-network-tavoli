@@ -52,8 +52,8 @@ export class ParticipationService {
           isScanned: false,
           isActive: true,
           messageAttempt: 0,
-          messageIsReceived: false,
-          statusSMS: SMSStatusType.NOTDELIVERED
+          messageIsReceived: true, // BUG: change to false
+          statusSMS: SMSStatusType.DELIVERED // BUG: change to PENDING
         }
       };
 

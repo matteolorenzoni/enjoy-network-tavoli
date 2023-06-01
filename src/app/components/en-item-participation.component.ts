@@ -15,6 +15,7 @@ import { ParticipationService } from '../services/participation.service';
 import { Participation } from '../models/type';
 import { UserService } from '../services/user.service';
 
+// BUG: restore from commit on 01/06/2023 at 23:48
 @Component({
   selector: 'en-item-participation[participation]',
   template: `
@@ -22,7 +23,7 @@ import { UserService } from '../services/user.service';
       class="overflow-hidden rounded-md"
       [ngClass]="{
         'bg-slate-900': participation.props.messageIsReceived && participation.props.isActive,
-        'bg-red-700': !participation.props.messageIsReceived && participation.props.isActive,
+        'bg-red-700': (participation.props.messageAttempt || 0) >= 4 && participation.props.isActive,
         'bg-emerald-400/50': participation.props.scannedAt && participation.props.isActive,
         'bg-slate-800 opacity-20': !participation.props.isActive
       }">
@@ -52,22 +53,23 @@ import { UserService } from '../services/user.service';
             </ng-template>
           </div>
 
+          <!-- *ngIf="!participation.props.messageIsReceived && participation.props.isActive" -->
           <div
-            *ngIf="participation.props.isActive && !participation.props.messageIsReceived"
+            *ngIf="(participation.props.messageAttempt || 1) > 3"
             class="animate-pulse rounded bg-red-800 p-2 text-center text-xs">
-            <ng-container *ngIf="(participation.props.messageAttempt || 1) < 3; else elseTemplate">
+            <!-- <ng-container *ngIf="(participation.props.messageAttempt || 1) < 3; else elseTemplate">
               <p>Tentativo n°{{ (participation.props.messageAttempt || 1) + 1 }} alle</p>
               <p>
                 {{ newAttempt | date: 'dd/MM/YYYY' }} -
                 {{ newAttempt | date: 'HH:mm' }}
               </p>
             </ng-container>
-            <ng-template #elseTemplate>
-              <div role="button" (click)="maxAttemptInfo()">
-                <p>🚨Attenzione🚨</p>
-                <p>Clicca per info</p>
-              </div>
-            </ng-template>
+            <ng-template #elseTemplate> -->
+            <div role="button" (click)="maxAttemptInfo()">
+              <p>🚨Attenzione🚨</p>
+              <p>Clicca per info</p>
+            </div>
+            <!-- </ng-template> -->
           </div>
         </div>
 
