@@ -77,7 +77,7 @@ export class ScannerComponent {
   /* ------------------------------------ Hot listener ------------------------------------ */
   @HostListener('window:visibilitychange')
   visibilityChangeScanParticipations() {
-    const path = environment.production ? 'visibilityChange' : 'testVisibilityChange';
+    const path = environment.production ? 'visibilityChange' : 'z_visibilityChange';
     this.participationsToScan.forEach((participation) => {
       const url = `https://us-central1-enjoy-network-tavoli.cloudfunctions.net/${path}?participation=${participation.participation.uid}&scannedFrom=${this.employeeUid}`;
       navigator.sendBeacon(url);
@@ -201,7 +201,7 @@ export class ScannerComponent {
       (participation) => participation.uid === participationUid
     );
 
-    // Participation active and not scanned
+    // Participation not active
     if (!participationNotScannedYet) {
       this.getParticipationFromNoList(participationUid);
       return;
