@@ -31,7 +31,6 @@ export class ScannerComponent {
   availableDevices: MediaDeviceInfo[] = [];
   availableDevicesChecked = false;
   currentDevice?: MediaDeviceInfo;
-  hasDevices?: boolean;
   hasPermission?: boolean;
   formatsEnabled: BarcodeFormat[] = [BarcodeFormat.QR_CODE];
   enabled = false;
@@ -108,8 +107,6 @@ export class ScannerComponent {
     this.participationService
       .getParticipationByUid(participationUid)
       .then((participation) => {
-        this.cameraContainer.nativeElement.style.display = 'none';
-        this.infoContainer.nativeElement.style.display = 'none';
         this.participation = participation;
 
         const { isActive, isScanned } = participation.props;
@@ -154,18 +151,14 @@ export class ScannerComponent {
   onCamerasFound(devices: MediaDeviceInfo[]): void {
     if (!this.availableDevicesChecked) {
       this.availableDevicesChecked = true;
-      this.cameraContainer.nativeElement.style.display = 'none';
-      this.infoContainer.nativeElement.style.display = 'flex';
       this.availableDevices = devices;
-      this.hasDevices = Boolean(devices && devices.length);
     }
   }
 
   onCamerasNotFound(): void {
+    console.log('no cam');
     if (!this.availableDevicesChecked) {
       this.availableDevicesChecked = true;
-      this.cameraContainer.nativeElement.style.display = 'none';
-      this.infoContainer.nativeElement.style.display = 'flex';
       this.lblCameraInfo = 'Nessuna camera trovata';
       this.toastService.showErrorMessage('Nessuna camera trovata');
     }
@@ -173,12 +166,16 @@ export class ScannerComponent {
 
   onDeviceSelectChange(event: Event) {
     const { value } = event.target as HTMLSelectElement;
-    const device = this.availableDevices.find((x) => x.deviceId === value);
-    if (!this.participation) {
-      this.cameraContainer.nativeElement.style.display = device ? 'flex' : 'none';
-      this.infoContainer.nativeElement.style.display = device ? 'none' : 'flex';
+    if (value === '') {
+      this.enabled = false;
+      this.currentDevice = undefined;
+      return;
     }
-    this.enabled = Boolean(device);
+
+    const device = this.availableDevices.find((x) => x.deviceId === value);
+    this.toastService.showSuccess(`${value} ||| ${this.availableDevices.map((x) => x.label).join(', ')}`);
+
+    this.enabled = true;
     this.currentDevice = device;
   }
 
@@ -212,8 +209,6 @@ export class ScannerComponent {
   }
 
   getParticipationFromList(participation: Participation) {
-    this.cameraContainer.nativeElement.style.display = 'none';
-    this.infoContainer.nativeElement.style.display = 'none';
     this.participation = participation;
 
     /* If participation is already scanned, show error */
@@ -239,14 +234,6 @@ export class ScannerComponent {
   }
 
   onResetParticipation() {
-    if (this.currentDevice) {
-      this.cameraContainer.nativeElement.style.display = 'flex';
-      this.infoContainer.nativeElement.style.display = 'none';
-    } else {
-      if (!this.cameraContainer || !this.infoContainer) return;
-      this.cameraContainer.nativeElement.style.display = 'none';
-      this.infoContainer.nativeElement.style.display = 'flex';
-    }
     this.participation = undefined;
     this.participationAlreadyScanned = false;
     this.participationNoGoodMotivation = undefined;

@@ -3,16 +3,18 @@
     id="devices_select"
     class="text-smplaceholder-gray-400 block w-full rounded-lg border border-slate-700 bg-slate-800 p-2.5 text-white"
     (change)="onDeviceSelectChange($event)">
-    <option value="" [selected]="!currentDevice">Nessuna camera</option>
+    <option value="" [selected]="true">Nessuna camera</option>
     <option *ngFor="let device of availableDevices" [value]="device.deviceId">{{ device.label }}</option>
   </select>
 
-  <div #cameraContainer class="scanner-container w-full overflow-hidden rounded-lg">
+  <div
+    *ngIf="currentDevice && participation"
+    #cameraContainer
+    class="scanner-container w-full overflow-hidden rounded-lg">
     <zxing-scanner
       [enable]="enabled"
       [device]="currentDevice"
       [formats]="formatsEnabled"
-      (camerasFound)="onCamerasFound($event)"
       (permissionResponse)="onHasPermission($event)"
       (camerasFound)="onCamerasFound($event)"
       (camerasNotFound)="onCamerasNotFound()"
@@ -20,7 +22,10 @@
     </zxing-scanner>
   </div>
 
-  <div #infoContainer class="center hidden aspect-square w-full max-w-3xl flex-col gap-4 rounded-lg bg-slate-800 p-8">
+  <div
+    *ngIf="!currentDevice"
+    #infoContainer
+    class="center aspect-square w-full max-w-3xl flex-col gap-4 rounded-lg bg-slate-800 p-8">
     <fa-icon [icon]="banIcon" class="pb-4 text-8xl text-slate-300"></fa-icon>
     <p class="text-center text-slate-300">{{ lblCameraInfo }}</p>
   </div>
