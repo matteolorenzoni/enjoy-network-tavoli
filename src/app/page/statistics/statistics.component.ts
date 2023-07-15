@@ -1,7 +1,7 @@
 import { Employee, Assignment, Event } from 'src/app/models/type';
 import { Component } from '@angular/core';
 import { EventService } from 'src/app/services/event.service';
-import { ChartDataset, ChartOptions } from 'chart.js';
+import { ChartConfiguration, ChartDataset, ChartOptions } from 'chart.js';
 import { RoleType } from 'src/app/models/enum';
 import { ToastService } from '../../services/toast.service';
 import { AssignmentService } from '../../services/assignment.service';
@@ -14,7 +14,6 @@ import { EmployeeService } from '../../services/employee.service';
 })
 export class StatisticsComponent {
   /* Employee */
-  employees: Employee[] = [];
   employeesPr: Employee[] = [];
 
   /* Event */
@@ -24,7 +23,7 @@ export class StatisticsComponent {
   assignments: Assignment[] = [];
 
   /* Chart general */
-  pieChartOptions: ChartOptions<'pie'> = {
+  chartOptionsPie: ChartOptions<'pie'> = {
     responsive: true,
     maintainAspectRatio: false,
     elements: { arc: { borderWidth: 0 } },
@@ -35,7 +34,26 @@ export class StatisticsComponent {
       }
     }
   };
-  pieChartPlugins = [];
+  that = this;
+  chartOptionsLine: ChartOptions<'line'> = {
+    responsive: true,
+    maintainAspectRatio: false,
+    scales: {
+      x: {
+        position: 'bottom',
+        grid: { color: 'rgba(100, 100, 100, 0.3)' },
+        ticks: {
+          color: '#cbd5e1'
+        }
+      },
+      y: {
+        position: 'left',
+        beginAtZero: true,
+        grid: { color: 'rgba(100, 100, 100, 0.3)' },
+        ticks: { color: '#cbd5e1' }
+      }
+    }
+  };
   palette: string[] = [
     '#8ecae6',
     '#219ebc',
@@ -53,7 +71,6 @@ export class StatisticsComponent {
   ];
 
   /* Chart event */
-  displayChartEvent = false;
   pieChartLabelsEvent: (string | string[])[] = [];
   pieChartDatasetsEvent: ChartDataset<'pie', number[]>[] = [
     {
@@ -63,7 +80,6 @@ export class StatisticsComponent {
   ];
 
   /* Employee employee */
-  displayChartEmployee = false;
   pieChartLabelsEmployee: (string | string[])[] = [];
   pieChartDatasetsEmployee: ChartDataset<'pie', number[]>[] = [
     {
@@ -71,6 +87,21 @@ export class StatisticsComponent {
       backgroundColor: this.palette
     }
   ];
+
+  /* Trend employee employee */
+  pieChartDatasetsTrendEmployee: ChartConfiguration<'line'>['data'] = {
+    labels: [],
+    datasets: [
+      {
+        data: [],
+        fill: true,
+        tension: 0.5,
+        pointBackgroundColor: '#fff',
+        borderColor: '#8ecae6',
+        backgroundColor: '#8ecae6'
+      }
+    ]
+  };
 
   /* ------------------------------ Constructor ------------------------------ */
   constructor(
@@ -84,39 +115,70 @@ export class StatisticsComponent {
   async ngOnInit(): Promise<void> {
     try {
       this.events = await this.eventService.getEvents();
-      this.employees = await this.employeeService.getEmployees();
-      this.employeesPr = this.employees.filter(
-        (employee: Employee) => employee.props.role === RoleType.PR && employee.props.name !== '---'
-      );
+      this.employeesPr = await this.employeeService.getEmployeesByRole(RoleType.PR);
       this.assignments = await this.assignmentService.getAssignments();
 
       /* Chart event */
-      this.events.forEach((event: Event) => {
-        this.pieChartLabelsEvent.push(event.props.name);
-        this.pieChartDatasetsEvent[0].data.push(
-          this.assignments
-            .filter((assignment: Assignment) => assignment.props.eventUid === event.uid)
-            .reduce((acc: number, assignment: Assignment) => acc + assignment.props.personMarked, 0)
-        );
-      });
-      this.displayChartEvent = true;
+      this.setEventChart();
 
       /* Employee employee */
-      this.employeesPr.forEach((employee: Employee) => {
-        this.pieChartLabelsEmployee.push(`${employee.props.name} ${employee.props.lastName}`);
-        this.pieChartDatasetsEmployee[0].data.push(
-          this.assignments
-            .filter((assignment: Assignment) => assignment.props.employeeUid === employee.uid)
-            .reduce((acc: number, assignment: Assignment) => acc + assignment.props.personMarked, 0)
-        );
-      });
-      this.displayChartEmployee = true;
+      this.setEmployeeChart();
+
+      /* Trend employee employee */
+      this.setTrendEmployeeChart(this.employeesPr[0].uid);
     } catch (error: any) {
       this.toastService.showError(error);
     }
   }
 
+  /* ------------------------------ Methods ------------------------------ */
   onEmployeeSelected(event: any): void {
-    console.log(event);
+    const { value } = event.target as HTMLSelectElement;
+    this.setTrendEmployeeChart(value);
+  }
+
+  setEventChart(): void {
+    this.events.forEach((event: Event) => {
+      this.pieChartLabelsEvent.push(event.props.name);
+      this.pieChartDatasetsEvent[0].data.push(
+        this.assignments
+          .filter((assignment: Assignment) => assignment.props.eventUid === event.uid)
+          .reduce((acc: number, assignment: Assignment) => acc + assignment.props.personMarked, 0)
+      );
+    });
+    this.pieChartDatasetsEvent = [...this.pieChartDatasetsEvent];
+  }
+
+  setEmployeeChart(): void {
+    this.employeesPr.forEach((employee: Employee) => {
+      this.pieChartLabelsEmployee.push(`${employee.props.name} ${employee.props.lastName}`);
+      this.pieChartDatasetsEmployee[0].data.push(
+        this.assignments
+          .filter((assignment: Assignment) => assignment.props.employeeUid === employee.uid)
+          .reduce((acc: number, assignment: Assignment) => acc + assignment.props.personMarked, 0)
+      );
+    });
+    this.pieChartDatasetsEmployee = [...this.pieChartDatasetsEmployee];
+  }
+
+  setTrendEmployeeChart(employeeUid: string): void {
+    console.log(employeeUid);
+    // const assignmentSelected = this.assignments.filter(
+    //   (assignment: Assignment) => assignment.props.employeeUid === employeeUid
+    // );
+    // const eventsWithAssignment: Event[] = this.events.filter((event: Event) =>
+    //   assignmentSelected.find((assignment: Assignment) => assignment.props.eventUid === event.uid)
+    // );
+    // const labels: string[][] = [];
+    // const dataSource: number[] = [];
+    // assignmentSelected.forEach((assignment: Assignment) => {
+    //   labels.push(
+    //     this.events.find((event: Event) => event.uid === assignment.props.eventUid)?.props.name.split(' ') || []
+    //   );
+    //   dataSource.push(assignment.props.personMarked);
+    // });
+    // this.pieChartDatasetsTrendEmployee.labels = eventsWithAssignment.map((event: Event) => event.props.name.split(' '));
+    // this.pieChartDatasetsTrendEmployee.datasets[0].data = dataSource;
+    // this.pieChartDatasetsTrendEmployee = { ...this.pieChartDatasetsTrendEmployee };
   }
 }
