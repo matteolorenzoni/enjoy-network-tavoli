@@ -13,9 +13,7 @@ import { EmployeeAssignment } from '../models/type';
     <div class="grow-2 basis-40 truncate sm:w-max">{{ ea.employee.props.name }} {{ ea.employee.props.lastName }}</div>
     <div class="hidden grow basis-20 text-sm sm:flex sm:basis-24">{{ ea.employee.props.zone | uppercase }}</div>
     <div class="flex basis-36 justify-end gap-1 ">
-      <div class="center mr-1">
-        {{ ea.assignment?.props?.personMarked }}/{{ ea.assignment?.props?.maxPersonMarkable }}
-      </div>
+      <div class="center mr-1">{{ ea.assignment?.props?.personMarked }}/{{ ea.assignment?.props?.personMarkable }}</div>
       <div class="center relative flex h-6 w-24 flex-row rounded-lg bg-transparent text-black">
         <button
           data-action="decrement"
@@ -86,16 +84,16 @@ export class EnItemAssignmentComponent {
         if (!this.ea.assignment) return;
 
         /* Check if the value is different from the previous one */
-        if (this.ea.assignment.props.maxPersonMarkable === newPersonAssigned) return;
+        if (this.ea.assignment.props.personMarkable === newPersonAssigned) return;
 
         if (!newPersonAssigned) {
-          this.formPersonAssigned.setValue(this.ea.assignment.props.maxPersonMarkable);
+          this.formPersonAssigned.setValue(this.ea.assignment.props.personMarkable);
           this.toastService.showErrorMessage('Il valore deve essere un numero');
           return;
         }
 
         if (newPersonAssigned < this.ea.assignment.props.personMarked) {
-          this.formPersonAssigned.setValue(this.ea.assignment.props.maxPersonMarkable);
+          this.formPersonAssigned.setValue(this.ea.assignment.props.personMarkable);
           this.toastService.showErrorMessage(
             newPersonAssigned < 0
               ? 'Il valore non può essere negativo'
@@ -106,7 +104,7 @@ export class EnItemAssignmentComponent {
 
         /* Check if the value is less than the max person */
         const hypotheticalPersonAssigned =
-          this.ea.assignment.props.maxPersonMarkable + newPersonAssigned - this.ea.assignment.props.maxPersonMarkable;
+          this.ea.assignment.props.personMarkable + newPersonAssigned - this.ea.assignment.props.personMarkable;
         if (hypotheticalPersonAssigned <= this.eventMaxPerson) {
           /* Update the value */
           this.assignmentService
@@ -119,7 +117,7 @@ export class EnItemAssignmentComponent {
             });
         } else {
           /* Reset the value */
-          this.formPersonAssigned.setValue(this.ea.assignment.props.maxPersonMarkable);
+          this.formPersonAssigned.setValue(this.ea.assignment.props.personMarkable);
           this.toastService.showErrorMessage('Non puoi assegnare più persone di quelle disponibili');
         }
       });
@@ -143,7 +141,7 @@ export class EnItemAssignmentComponent {
     if (changes['ea']) {
       if (this.ea.assignment) {
         /* Form PersonAssigned */
-        this.formPersonAssigned.setValue(this.ea.assignment.props.maxPersonMarkable);
+        this.formPersonAssigned.setValue(this.ea.assignment.props.personMarkable);
         if (!this.ea.assignment.props.isActive) {
           this.formPersonAssigned.disable();
         }

@@ -39,7 +39,7 @@ export class AssignmentListComponent {
   employeesAssignments: EmployeeAssignment[] = [];
   personMarked = 0;
   personMarkedFromEmployeeDeleted = 0;
-  maxPersonMarkable = 0;
+  personMarkable = 0;
   eventMaxPerson = 0;
 
   /* -------------------------------------- Constructor -------------------------------------- */
@@ -99,7 +99,7 @@ export class AssignmentListComponent {
       )
       .subscribe({
         next(assignments: Assignment[]) {
-          that.maxPersonMarkable = assignments.reduce((acc, item) => acc + item.props.maxPersonMarkable, 0);
+          that.personMarkable = assignments.reduce((acc, item) => acc + item.props.personMarkable, 0);
           that.personMarked = assignments.reduce((acc, item) => acc + item.props.personMarked, 0);
 
           that.getEmployee(assignments);

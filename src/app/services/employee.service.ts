@@ -149,7 +149,7 @@ export class EmployeeService {
     const assignmentsToMinimize: Assignment[] = assignments.filter((item) => item.props.personMarked > 0);
     assignmentsToMinimize.forEach(async (assignment) => {
       const propsToUpdate: Partial<AssignmentDTO> = {
-        maxPersonMarkable: assignment.props.maxPersonMarkable,
+        personMarkable: assignment.props.personMarkable,
         isActive: false
       };
       await this.firebaseUpdateService.updateDocumentsProps(

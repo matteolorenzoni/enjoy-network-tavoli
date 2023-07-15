@@ -89,7 +89,7 @@ export class ParticipationListComponent implements OnInit {
             return;
           }
 
-          that.canAddClient = data[0].props.maxPersonMarkable > data[0].props.personMarked;
+          that.canAddClient = data[0].props.personMarkable > data[0].props.personMarked;
         },
         error(error: Error) {
           that.toastService.showError(error);

@@ -131,7 +131,7 @@ export class TableListComponent implements OnInit {
       .subscribe({
         next(data: Assignment[]) {
           that.eventPersonMarked = data.reduce((acc, item) => acc + item.props.personMarked, 0);
-          that.eventMaxPersonAssigned = data.reduce((acc, item) => acc + item.props.maxPersonMarkable, 0);
+          that.eventMaxPersonAssigned = data.reduce((acc, item) => acc + item.props.personMarkable, 0);
         },
         error(error: Error) {
           that.toastService.showError(error);

@@ -31,8 +31,8 @@ export type EmployeeDTO = {
 export type AssignmentDTO = {
   eventUid: string;
   employeeUid: string;
+  personMarkable: number;
   personMarked: number;
-  maxPersonMarkable: number;
   isActive: boolean;
   createdAt?: Date;
   modifiedAt?: Date;

@@ -84,22 +84,22 @@ export class AssignmentService {
         eventUid,
         employeeUid,
         isActive: true,
-        personMarked: 0,
-        maxPersonMarkable: 0
+        personMarkable: 0,
+        personMarked: 0
       }
     };
     await this.firebaseCreateService.addDocument(environment.collection.ASSIGNMENTS, assignment);
   }
 
   /* ------------------------------------------- UPDATE ------------------------------------------- */
-  public async updateAssignmentPersonAssignedProp(assignmentUid: string, maxPersonMarkable: number): Promise<void> {
+  public async updateAssignmentPersonAssignedProp(assignmentUid: string, personMarkable: number): Promise<void> {
     const assignment: Assignment = await this.firebaseReadService.getDocumentByUid(
       environment.collection.ASSIGNMENTS,
       assignmentUid,
       assignmentConverter
     );
     if (assignment) {
-      const propsToUpdate = { maxPersonMarkable };
+      const propsToUpdate = { personMarkable };
       await this.firebaseUpdateService.updateDocumentsProps(
         environment.collection.ASSIGNMENTS,
         [assignment],

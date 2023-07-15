@@ -95,8 +95,8 @@ export const assignmentConverter: FirestoreDataConverter<Assignment> = {
     const data: AssignmentDTO = {
       eventUid: props.eventUid,
       employeeUid: props.employeeUid,
+      personMarkable: props.personMarkable,
       personMarked: props.personMarked,
-      maxPersonMarkable: props.maxPersonMarkable,
       isActive: props.isActive,
       createdAt: props.createdAt || new Date(),
       modifiedAt: props.modifiedAt || new Date()
@@ -110,8 +110,8 @@ export const assignmentConverter: FirestoreDataConverter<Assignment> = {
       props: {
         eventUid: data.eventUid,
         employeeUid: data.employeeUid,
+        personMarkable: data.personMarkable,
         personMarked: data.personMarked,
-        maxPersonMarkable: data.maxPersonMarkable,
         isActive: data.isActive,
         createdAt: data.modifiedAt && new Date((data.createdAt as unknown as Timestamp).seconds * 1000),
         modifiedAt: data.modifiedAt && new Date((data.modifiedAt as unknown as Timestamp).seconds * 1000)

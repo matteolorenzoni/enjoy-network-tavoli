@@ -235,7 +235,7 @@ export const z_assignmentOnUpdate = functions.firestore.document('assignments/{a
     if (!isActive) {
       if (personMarked > 0) {
         const propsToUpdate = {
-          maxPersonMarkable: personMarked,
+          personMarkable: personMarked,
           modifiedAt: new Date()
         };
         return change.after.ref.set(propsToUpdate, { merge: true });
@@ -565,7 +565,7 @@ export const assignmentOnUpdate = functions.firestore.document('PROD_assignments
     if (!isActive) {
       if (personMarked > 0) {
         const propsToUpdate = {
-          maxPersonMarkable: personMarked,
+          personMarkable: personMarked,
           modifiedAt: new Date()
         };
         return change.after.ref.set(propsToUpdate, { merge: true });
