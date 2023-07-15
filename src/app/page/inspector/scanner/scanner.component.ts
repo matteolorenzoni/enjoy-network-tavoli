@@ -149,6 +149,7 @@ export class ScannerComponent {
 
   /* ------------------------------------ Camera methods ------------------------------------ */
   onCamerasFound(devices: MediaDeviceInfo[]): void {
+    console.log('onCamerasFound');
     if (!this.availableDevicesChecked) {
       this.availableDevicesChecked = true;
       this.availableDevices = devices;
@@ -156,7 +157,7 @@ export class ScannerComponent {
   }
 
   onCamerasNotFound(): void {
-    console.log('no cam');
+    console.log('onCamerasNotFound');
     if (!this.availableDevicesChecked) {
       this.availableDevicesChecked = true;
       this.lblCameraInfo = 'Nessuna camera trovata';
@@ -165,35 +166,43 @@ export class ScannerComponent {
   }
 
   onDeviceSelectChange(event: Event) {
+    console.log('onDeviceSelectChange');
     const { value } = event.target as HTMLSelectElement;
-    if (value === '') {
+    const device = this.availableDevices.find((x) => x.deviceId === value);
+
+    if (!device) {
       this.enabled = false;
       this.currentDevice = undefined;
+      this.onResetParticipation();
       return;
     }
-
-    const device = this.availableDevices.find((x) => x.deviceId === value);
-    this.toastService.showSuccess(`${value} ||| ${this.availableDevices.map((x) => x.label).join(', ')}`);
 
     this.enabled = true;
     this.currentDevice = device;
   }
 
   onHasPermission(has: boolean) {
+    console.log('onHasPermission');
     this.hasPermission = has;
+    if (!has) {
+      this.toastService.showErrorMessage('Permessi alla camera negati');
+    }
   }
 
   onScanSuccess(resultString: string) {
+    console.log('onScanSuccess');
     if (this.participation || this.lastParticipationUid === resultString) return;
     this.getParticipation(resultString);
   }
 
   onScanNoSuccess() {
+    console.log('onScanNoSuccess');
     this.toastService.showErrorMessage('Si è verificato un errore durante la scansione, riprovare');
   }
 
   /* ------------------------------------ Methods ------------------------------------ */
   getParticipation(participationUid: string) {
+    this.lastParticipationUid = participationUid;
     const participationNotScannedYet = this.participationsActive.find(
       (participation) => participation.uid === participationUid
     );
@@ -205,7 +214,6 @@ export class ScannerComponent {
     }
 
     this.getParticipationFromList(participationNotScannedYet);
-    this.lastParticipationUid = participationUid;
   }
 
   getParticipationFromList(participation: Participation) {
@@ -237,5 +245,6 @@ export class ScannerComponent {
     this.participation = undefined;
     this.participationAlreadyScanned = false;
     this.participationNoGoodMotivation = undefined;
+    this.lastParticipationUid = undefined;
   }
 }

@@ -8,7 +8,7 @@
   </select>
 
   <div
-    *ngIf="currentDevice && participation"
+    *ngIf="!availableDevicesChecked || (currentDevice && !participation)"
     #cameraContainer
     class="scanner-container w-full overflow-hidden rounded-lg">
     <zxing-scanner
@@ -23,7 +23,7 @@
   </div>
 
   <div
-    *ngIf="!currentDevice"
+    *ngIf="availableDevicesChecked && !currentDevice"
     #infoContainer
     class="center aspect-square w-full max-w-3xl flex-col gap-4 rounded-lg bg-slate-800 p-8">
     <fa-icon [icon]="banIcon" class="pb-4 text-8xl text-slate-300"></fa-icon>
