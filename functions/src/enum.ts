@@ -18,7 +18,7 @@ export enum SMSErrorType {
 export enum SMSStatusType {
   PENDING = 'PENDING',
   SENT = 'SENT',
-  NOSENT = 'NOSENT',
+  NO_SENT = 'NOSENT',
   DELIVERED = 'DELIVERED',
-  NOTDELIVERED = 'NOTDELIVERED'
+  NOT_DELIVERED = 'NOTDELIVERED'
 }

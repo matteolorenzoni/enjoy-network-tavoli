@@ -1,4 +1,5 @@
 import { ParticipationDTO } from './collection';
+import { SMSStatusType } from './enum';
 
 export type ShorterUrlResponse = {
   ok: boolean;
@@ -30,6 +31,28 @@ export type SMSInfo = {
   to: string;
   status: 'INSERTED' | 'NOT_INSERTED';
   statusDetail?: 'BADNUMBERFORMAT' | 'DUPLICATESMS' | 'BLACKLIST';
+};
+
+export type SMSSearchInfo = {
+  id: number;
+  status: SMSStatusType;
+  sentDate: Date | string;
+  price: number;
+  from: string;
+  insertDate: Date | string;
+  deliveryDate: Date | string;
+  text: string;
+  to: string;
+  transactionId: string;
+};
+
+export type SMSSend = {
+  metadata: {
+    count: number;
+    offset: number;
+    limit: number;
+  };
+  smsList: SMSSearchInfo[];
 };
 
 export type Participation = {

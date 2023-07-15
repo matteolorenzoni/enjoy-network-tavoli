@@ -1,24 +1,25 @@
 import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
-import axios from 'axios';
-import { DocumentData, DocumentReference, DocumentSnapshot, QuerySnapshot, Timestamp } from 'firebase-admin/firestore';
+import axios, { AxiosResponse } from 'axios';
+import { DocumentData, DocumentReference, DocumentSnapshot, QuerySnapshot } from 'firebase-admin/firestore';
 import { ParticipationDTO, EventDTO, TableDTO, AssignmentDTO, ClientDTO } from './collection';
-import { ShorterUrlResponse, SMS, SMSResponse, Participation } from './type';
+import { Participation, ShorterUrlResponse, SMS, SMSResponse, SMSSearchInfo, SMSSend } from './type';
 import { SMSStatusType } from './enum';
 import { logger } from 'firebase-functions';
 import { debug } from 'firebase-functions/logger';
+
+import { onRequest } from 'firebase-functions/v2/https';
 
 admin.initializeApp();
 
 /* -------------------------------------------------------------------------------------------------------------------------------
 -------------------------------------------------------- TEST --------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------------- */
-// Replace BUCKET_NAME
 const client = new admin.firestore.v1.FirestoreAdminClient();
 const bucket = 'gs://enjoy-network-backup';
 
 export const scheduledFirestoreExport = functions.pubsub
-  .schedule('0 0 * * 1-5')
+  .schedule('0 0 * * 1,3,5')
   .timeZone('Europe/Rome')
   .onRun((context) => {
     // set timezone
@@ -359,7 +360,7 @@ export const sendSms = functions.firestore
     }
   });
 
-export const receiveSms = functions.https.onRequest(async (request, response) => {
+export const receiveSms_v2 = onRequest({ cors: true }, async (request, response) => {
   try {
     const { transactionId, to, status } = request.body;
 
@@ -670,16 +671,93 @@ export const visibilityChange = functions.https.onRequest(async (request, respon
   }
 });
 
+// export const scheduleMessageIsReceived = functions.pubsub
+//   .schedule('0 0,9,12,15,18,21 * * *')
+//   .timeZone('Europe/Rome')
+//   .onRun(async (context) => {
+//     try {
+//       /* General */
+//       const oneHourAndHalfAgo = new Date(new Date().getTime() - 1.5 * 60 * 60 * 1000);
+//       const today = new Date();
+//       today.setHours(0, 0, 0, 0);
+//
+//       /* Get events */
+//       const eventDocuments: QuerySnapshot<DocumentData> = await admin
+//         .firestore()
+//         .collection('PROD_events')
+//         .where('date', '>=', today)
+//         .get();
+//       const futureEvents = eventDocuments.docs.map((event) => {
+//         const eventDTO = event.data() as EventDTO;
+//         return { uid: event.id, props: eventDTO };
+//       });
+//       debug(futureEvents);
+//
+//       /* Get participations */
+//       const participations: Participation[] = [];
+//       const participationDocuments: QuerySnapshot<DocumentData> = await admin
+//         .firestore()
+//         .collection('PROD_participations')
+//         .where('isActive', '==', true)
+//         .where('isScanned', '==', false)
+//         .where('messageIsReceived', '==', false)
+//         .where('messageAttempt', '<', 4)
+//         .where(
+//           'eventUid',
+//           'in',
+//           futureEvents.map((event) => event.uid)
+//         )
+//         .get();
+//       participationDocuments.forEach((participation) => {
+//         const participationDTO = participation.data() as ParticipationDTO;
+//         participations.push({ uid: participation.id, props: participationDTO });
+//       });
+//
+//       /* Send sms for all participations that have not received the message in the last 2 hours */
+//       /* Date filter here because in firestore isn't possible execute query with inequality on two fields */
+//       futureEvents.forEach((event) => {
+//         const { message } = event.props;
+//         const participationsToResendSMS: Participation[] = participations.filter(
+//           (participation) =>
+//             participation.props.eventUid === event.uid &&
+//             participation.props.modifiedAt &&
+//             new Date((participation.props.modifiedAt as unknown as Timestamp).seconds * 1000).getTime() <
+//               oneHourAndHalfAgo.getTime()
+//         );
+//         debug(event.props.name);
+//         debug(participationsToResendSMS);
+//
+//         participationsToResendSMS.forEach(async (participation) => {
+//           const { name, phone, eventUid, tableUid } = participation.props;
+//           await sendSMS(participation.uid, name, phone, eventUid, message, tableUid);
+//         });
+//       });
+//     } catch (error) {
+//       logger.error(error);
+//     }
+//   });
+
 export const scheduleMessageIsReceived = functions.pubsub
   .schedule('0 0,9,12,15,18,21 * * *')
   .timeZone('Europe/Rome')
   .onRun(async (context) => {
-    try {
-      /* General */
-      const oneHourAndHalfAgo = new Date(new Date().getTime() - 1.5 * 60 * 60 * 1000);
-      const today = new Date();
-      today.setHours(0, 0, 0, 0);
+    /* Headers */
+    const username = process.env.USERNAME;
+    const password = process.env.PASSWORD;
+    const credentials = btoa(`${username}:${password}`);
+    const headers = {
+      'Content-Type': 'application/x-www-form-urlencoded',
+      Authorization: `Basic ${credentials}`
+    };
 
+    /* General */
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const oneHourAndHalfAgo = new Date();
+    oneHourAndHalfAgo.setHours(oneHourAndHalfAgo.getHours() - 1);
+    oneHourAndHalfAgo.setMinutes(oneHourAndHalfAgo.getMinutes() - 30);
+
+    try {
       /* Get events */
       const eventDocuments: QuerySnapshot<DocumentData> = await admin
         .firestore()
@@ -690,45 +768,62 @@ export const scheduleMessageIsReceived = functions.pubsub
         const eventDTO = event.data() as EventDTO;
         return { uid: event.id, props: eventDTO };
       });
-      debug(futureEvents);
+      debug(futureEvents.map((event) => event.props.name));
 
-      /* Get participations */
-      const participations: Participation[] = [];
-      const participationDocuments: QuerySnapshot<DocumentData> = await admin
-        .firestore()
-        .collection('PROD_participations')
-        .where('isActive', '==', true)
-        .where('isScanned', '==', false)
-        .where('messageIsReceived', '==', false)
-        .where('messageAttempt', '<', 4)
-        .where(
-          'eventUid',
-          'in',
-          futureEvents.map((event) => event.uid)
-        )
-        .get();
-      participationDocuments.forEach((participation) => {
-        const participationDTO = participation.data() as ParticipationDTO;
-        participations.push({ uid: participation.id, props: participationDTO });
-      });
+      futureEvents.forEach(async (event) => {
+        const smsSentUrl = `https://api.smshosting.it/rest/api/sms/search?transactionId=${event.uid}&limit=1000`;
+        const smsSentResponse: AxiosResponse<SMSSend, any> = await axios.get(smsSentUrl, { headers });
+        const data = smsSentResponse.data;
 
-      /* Send sms for all participations that have not received the message in the last 2 hours */
-      /* Date filter here because in firestore isn't possible execute query with inequality on two fields */
-      futureEvents.forEach((event) => {
-        const { message } = event.props;
-        const participationsToResendSMS: Participation[] = participations.filter(
-          (participation) =>
-            participation.props.eventUid === event.uid &&
-            participation.props.modifiedAt &&
-            new Date((participation.props.modifiedAt as unknown as Timestamp).seconds * 1000).getTime() <
-              oneHourAndHalfAgo.getTime()
+        /* Sms delivered */
+        const smsDelivered: SMSSearchInfo[] = data.smsList.filter((sms) => sms.status === SMSStatusType.DELIVERED);
+        debug(`Messaggi consegnati per ${event.props.name}: ${smsDelivered.length}`);
+
+        /* Sms not delivered */
+        const smsNotDelivered: SMSSearchInfo[] = data.smsList.filter(
+          (sms) => sms.status === SMSStatusType.NOT_DELIVERED
         );
-        debug(event.props.name);
-        debug(participationsToResendSMS);
+        debug(`Messaggi non consegnati per ${event.props.name}: ${smsNotDelivered.length}`);
+
+        /* Sms sent */
+        const smsSent: SMSSearchInfo[] = data.smsList.filter((sms) => sms.status === SMSStatusType.SENT);
+        debug(`Messaggi inviati per ${event.props.name}: ${smsSent.length}`);
+
+        /* Sms to send again */
+        const smsToCheckIfToSendAgain: SMSSearchInfo[] = [...smsSent, ...smsNotDelivered];
+        const smsToSendAgain: SMSSearchInfo[] = smsToCheckIfToSendAgain.filter(
+          (sms) => !smsDelivered.map((sms) => sms.to).includes(sms.to)
+        );
+        const smsPhone = smsToSendAgain.map((sms) => sms.to);
+        const smsPhoneUnique = [...new Set(smsPhone)].map((phone) => phone.substring(2));
+        debug(`Messaggi da rinviare di nuovo per ${event.props.name}: ${smsPhoneUnique.length}`);
+
+        /* There must be at least one phone number to send the message for firebase query */
+        if (smsPhoneUnique.length === 0) return;
+
+        /* Get participations */
+        const participationsToResendSMS: Participation[] = [];
+        const participationDocuments: QuerySnapshot<DocumentData> = await admin
+          .firestore()
+          .collection('PROD_participations')
+          .where('eventUid', '==', event.uid)
+          .where('phone', 'in', smsPhoneUnique)
+          .where('isActive', '==', true)
+          .where('isScanned', '==', false)
+          .where('messageAttempt', '<', 4)
+          .get();
+        participationDocuments.forEach((participation) => {
+          const participationDTO = participation.data() as ParticipationDTO;
+
+          if (!participationDTO.createdAt || participationDTO.createdAt.getTime() > oneHourAndHalfAgo.getTime()) return;
+          participationsToResendSMS.push({ uid: participation.id, props: participationDTO });
+        });
+        debug(`Numeri da reinviare sms: ${participationsToResendSMS.map((p) => p.props.phone)}`);
 
         participationsToResendSMS.forEach(async (participation) => {
+          debug(participation);
           const { name, phone, eventUid, tableUid } = participation.props;
-          await sendSMS(participation.uid, name, phone, eventUid, message, tableUid);
+          await sendSMS(participation.uid, name, phone, eventUid, event.props.message, tableUid);
         });
       });
     } catch (error) {
@@ -781,7 +876,7 @@ const sendSMS = async (
       to: `39${clientPhone}`,
       transactionId: eventUid,
       text: messageClone,
-      statusCallback: 'https://us-central1-enjoy-network-tavoli.cloudfunctions.net/receiveSms',
+      statusCallback: 'https://receivesmsv2-j7jdl53eta-uc.a.run.app',
       sandbox: false
     };
 
