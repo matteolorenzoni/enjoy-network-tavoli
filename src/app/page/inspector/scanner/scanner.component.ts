@@ -7,6 +7,8 @@ import { ParticipationService } from 'src/app/services/participation.service';
 import { UserService } from 'src/app/services/user.service';
 import { ActivatedRoute } from '@angular/router';
 import { environment } from 'src/environments/environment';
+// eslint-disable-next-line import/no-extraneous-dependencies
+import { Html5QrcodeScanner } from 'html5-qrcode';
 import { ToastService } from '../../../services/toast.service';
 
 @Component({
@@ -53,6 +55,7 @@ export class ScannerComponent {
   employeeUid = '';
 
   /* ------------------------------------ Constructor ------------------------------------ */
+  scanner?: Html5QrcodeScanner;
   constructor(
     private route: ActivatedRoute,
     private userService: UserService,
@@ -61,6 +64,19 @@ export class ScannerComponent {
   ) {
     this.employeeUid = this.userService.getUserUid();
     this.eventUid = this.route.snapshot.queryParams['event'] || undefined;
+  }
+
+  ngAfterViewInit(): void {
+    this.scanner = new Html5QrcodeScanner('reader', { fps: 10, qrbox: 250 }, /* verbose= */ false);
+    this.scanner.render(this.successHtml5Qrcode, this.errorHtml5Qrcode);
+  }
+
+  successHtml5Qrcode(result: string) {
+    console.log(result);
+  }
+
+  errorHtml5Qrcode(error: any) {
+    console.log(error);
   }
 
   /* ------------------------------------ Lifecycle Hooks ------------------------------------ */

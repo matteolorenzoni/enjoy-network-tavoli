@@ -7,7 +7,7 @@
     <option *ngFor="let device of availableDevices" [value]="device.deviceId">{{ device.label }}</option>
   </select>
 
-  <div
+  <!-- <div
     *ngIf="!availableDevicesChecked || (currentDevice && !participation)"
     #cameraContainer
     class="scanner-container w-full overflow-hidden rounded-lg">
@@ -20,6 +20,9 @@
       (camerasNotFound)="onCamerasNotFound()"
       (scanSuccess)="onScanSuccess($event)">
     </zxing-scanner>
+  </div> -->
+  <div *ngIf="!participation" class="scanner-container w-full overflow-hidden rounded-lg">
+    <div id="reader"></div>
   </div>
 
   <div
@@ -53,7 +56,7 @@
     <p *ngIf="participation.props.isActive && participation.props.isScanned && participationAlreadyScanned">
       <span class="font-bold underline">Ora entrata</span>
       <br />
-      <span>{{ participation.props.scannedAt | date: 'HH:mm:ss' }}</span>
+      <span>{{ participation.props.scannedAt | date : 'HH:mm:ss' }}</span>
     </p>
     <p *ngIf="participationNoGoodMotivation">
       <span class="font-bold underline">Motivazione</span>
