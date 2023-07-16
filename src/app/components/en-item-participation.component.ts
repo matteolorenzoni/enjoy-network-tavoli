@@ -22,9 +22,10 @@ import { UserService } from '../services/user.service';
     <li
       class="overflow-hidden rounded-md"
       [ngClass]="{
-        'bg-slate-900': participation.props.messageIsReceived && participation.props.isActive,
+        'bg-slate-900':
+          participation.props.messageIsReceived && !participation.props.isScanned && participation.props.isActive,
         'bg-red-700': (participation.props.messageAttempt || 0) >= 4 && participation.props.isActive,
-        'bg-emerald-400/50': participation.props.scannedAt && participation.props.isActive,
+        'bg-emerald-400/50': participation.props.isScanned && participation.props.isActive,
         'bg-slate-800 opacity-20': !participation.props.isActive
       }">
       <div #itemRef class="relative flex cursor-pointer ">
@@ -40,15 +41,15 @@ import { UserService } from '../services/user.service';
             <ng-container *ngIf="participation.props.scannedAt; else elseTemplate">
               <p class="truncate text-xs text-slate-400">
                 <fa-icon class="pr-1" [icon]="qrCodeIcon"></fa-icon>
-                {{ participation.props.scannedAt | date: 'dd/MM/YYYY' }} -
-                {{ participation.props.scannedAt | date: 'HH:mm' }}
+                {{ participation.props.scannedAt | date : 'dd/MM/YYYY' }} -
+                {{ participation.props.scannedAt | date : 'HH:mm' }}
               </p>
             </ng-container>
             <ng-template #elseTemplate>
               <p class="truncate text-xs text-slate-400">
                 <fa-icon class="pr-1" [icon]="calendarIcon"></fa-icon>
-                {{ participation.props.modifiedAt | date: 'dd/MM/YYYY' }} -
-                {{ participation.props.modifiedAt | date: 'HH:mm' }}
+                {{ participation.props.modifiedAt | date : 'dd/MM/YYYY' }} -
+                {{ participation.props.modifiedAt | date : 'HH:mm' }}
               </p>
             </ng-template>
           </div>
