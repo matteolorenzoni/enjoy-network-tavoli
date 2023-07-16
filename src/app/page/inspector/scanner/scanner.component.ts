@@ -8,7 +8,15 @@ import { UserService } from 'src/app/services/user.service';
 import { ActivatedRoute } from '@angular/router';
 import { environment } from 'src/environments/environment';
 // eslint-disable-next-line import/no-extraneous-dependencies
-import { Html5QrcodeScanner } from 'html5-qrcode';
+import {
+  Html5Qrcode,
+  Html5QrcodeResult,
+  Html5QrcodeScanType,
+  Html5QrcodeScanner,
+  Html5QrcodeSupportedFormats
+} from 'html5-qrcode';
+// eslint-disable-next-line import/no-extraneous-dependencies
+import { Html5QrcodeError } from 'html5-qrcode/esm/core';
 import { ToastService } from '../../../services/toast.service';
 
 @Component({
@@ -55,7 +63,7 @@ export class ScannerComponent {
   employeeUid = '';
 
   /* ------------------------------------ Constructor ------------------------------------ */
-  scanner?: Html5QrcodeScanner;
+  scanner?: Html5Qrcode;
   constructor(
     private route: ActivatedRoute,
     private userService: UserService,
@@ -67,16 +75,26 @@ export class ScannerComponent {
   }
 
   ngAfterViewInit(): void {
-    this.scanner = new Html5QrcodeScanner('reader', { fps: 10, qrbox: 250 }, /* verbose= */ false);
-    this.scanner.render(this.successHtml5Qrcode, this.errorHtml5Qrcode);
-  }
+    const qrCodeSuccessCallback = (decodedText: string, decodedResult: Html5QrcodeResult) => {
+      // handle the scanned code as you like, for example:
+      console.log(`Code matched = ${decodedText}`, decodedResult);
+    };
 
-  successHtml5Qrcode(result: string) {
-    console.log(result);
-  }
+    const qrCodeErrorCallback = (errorMessage: string, error: Html5QrcodeError) => {
+      // handle the scanned code as you like, for example:
+      console.log(errorMessage, error);
+    };
 
-  errorHtml5Qrcode(error: any) {
-    console.log(error);
+    const config = {
+      fps: 10,
+      qrbox: { width: 100, height: 100 },
+      rememberLastUsedCamera: true,
+      supportedScanTypes: [Html5QrcodeScanType.SCAN_TYPE_CAMERA],
+      formatsToSupport: [Html5QrcodeSupportedFormats.QR_CODE]
+    };
+
+    const html5QrcodeScanner = new Html5QrcodeScanner('reader', config, /* verbose= */ false);
+    html5QrcodeScanner.render(qrCodeSuccessCallback, qrCodeErrorCallback);
   }
 
   /* ------------------------------------ Lifecycle Hooks ------------------------------------ */
