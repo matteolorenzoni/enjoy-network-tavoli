@@ -1,11 +1,11 @@
 <main class="mx-auto h-screen max-w-3xl p-4">
   <form class="flex h-full flex-col gap-6 pt-24" [formGroup]="eventForm" (ngSubmit)="onSubmit()">
-    <p class="mx-auto w-fit rounded-lg bg-gray-900 py-1 px-4 text-center uppercase text-slate-300">
+    <p class="mx-auto w-fit rounded-lg bg-gray-900 px-4 py-1 text-center uppercase text-slate-300">
       Inserire codice evento
     </p>
-    <p class="mx-auto w-fit rounded-lg bg-gray-900 py-1 px-4 text-center text-[10px] uppercase text-slate-300">🔥</p>
+    <p class="mx-auto w-fit rounded-lg bg-gray-900 px-4 py-1 text-center text-[10px] uppercase text-slate-300">🔥</p>
     <div class="group relative w-full">
-      <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pr-4 pl-4 text-slate-300">Codice</div>
+      <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4 pr-4 text-slate-300">Codice</div>
       <input
         type="text"
         pattern="[0-9]{10}"
@@ -18,7 +18,7 @@
       <button
         type="submit"
         role="button"
-        class="absolute right-4 bottom-2.5 rounded-lg bg-primary-60 px-4 py-2 text-sm font-medium text-black active:bg-white active:text-primary-50">
+        class="absolute bottom-2.5 right-4 rounded-lg bg-primary-60 px-4 py-2 text-sm font-medium text-black active:bg-white active:text-primary-50">
         Cerca
       </button>
     </div>

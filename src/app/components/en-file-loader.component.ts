@@ -7,7 +7,7 @@ import { fadeInAnimation } from '../animations/animations';
     [@fadeInAnimation]
     for="dropzone-file"
     class="flex h-40 w-full cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-600 bg-gray-700 active:border-gray-500 active:bg-gray-600">
-    <div class="flex flex-col items-center justify-center pt-5 pb-6">
+    <div class="flex flex-col items-center justify-center pb-6 pt-5">
       <svg
         aria-hidden="true"
         class="mb-3 h-10 w-10 text-gray-400"

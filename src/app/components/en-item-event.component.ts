@@ -14,7 +14,7 @@ import { FileGeneratorService } from '../services/file-generator.service';
 @Component({
   selector: 'en-item-event[event]',
   template: `
-    <li class="my-4 mx-auto w-full overflow-hidden rounded-lg bg-slate-900 md:w-3/5">
+    <li class="mx-auto my-4 w-full overflow-hidden rounded-lg bg-slate-900 md:w-3/5">
       <div class="center relative aspect-square h-full" (click)="toggleOpen()">
         <img
           role="button"
@@ -24,12 +24,12 @@ import { FileGeneratorService } from '../services/file-generator.service';
         <div
           [@fadeInAnimation]
           *ngIf="false"
-          class="absolute inset-0 left-0 bottom-0 flex h-full flex-col items-center justify-end p-4 text-white ">
+          class="absolute inset-0 bottom-0 left-0 flex h-full flex-col items-center justify-end p-4 text-white ">
           <p
-            class="mb-2 max-w-full truncate rounded-lg bg-primary-60/70 py-1 px-4 text-center text-base font-semibold xs:text-lg">
+            class="mb-2 max-w-full truncate rounded-lg bg-primary-60/70 px-4 py-1 text-center text-base font-semibold xs:text-lg">
             {{ event.props.name }}
           </p>
-          <p class="rounded-lg bg-primary-60/70 py-1 px-2 text-center text-xs xs:text-sm ">
+          <p class="rounded-lg bg-primary-60/70 px-2 py-1 text-center text-xs xs:text-sm ">
             {{ dateFormatted }} <br />
             {{ event.props.place }}
           </p>

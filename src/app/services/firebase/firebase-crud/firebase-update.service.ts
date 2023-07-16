@@ -75,7 +75,7 @@ export class FirebaseUpdateService {
   public async updateDocumentsProps(
     collectionName: string,
     data: Event[] | Assignment[] | Employee[] | Table[] | Participation[] | Client[],
-    props: Partial<typeof data[0]['props']>
+    props: Partial<(typeof data)[0]['props']>
   ): Promise<void> {
     this.loaderService.show();
 

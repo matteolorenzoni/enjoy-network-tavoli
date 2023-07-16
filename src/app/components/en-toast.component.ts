@@ -16,7 +16,7 @@ import { ToastService } from '../services/toast.service';
         'bg-red-600': toast.type === ToastType.ERROR,
         'bg-gray-400': toast.type === ToastType.INFO
       }"
-      class="absolute bottom-0 mx-auto flex w-[80%] max-w-3xl items-center rounded-lg py-3 px-6 font-roboto text-base font-medium text-white"
+      class="absolute bottom-0 mx-auto flex w-[80%] max-w-3xl items-center rounded-lg px-6 py-3 font-roboto text-base font-medium text-white"
       role="alert">
       <svg
         aria-hidden="true"
